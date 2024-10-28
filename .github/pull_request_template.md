@@ -1,4 +1,4 @@
-## :어깨를_으쓱하는_남성: Description
+## :man_shrugging: Description
 
 <!-- 구현 한 기능에 대해 작성해 주세요. -->
 
