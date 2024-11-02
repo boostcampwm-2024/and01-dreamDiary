@@ -2,29 +2,28 @@ package com.boostcamp.dreamteam.dreamdiary.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.font.FontFamily
-
-import androidx.compose.ui.text.googlefonts.GoogleFont
 import androidx.compose.ui.text.googlefonts.Font
+import androidx.compose.ui.text.googlefonts.GoogleFont
 import com.boostcamp.dreamteam.dreamdiary.R
 
 val provider = GoogleFont.Provider(
     providerAuthority = "com.google.android.gms.fonts",
     providerPackage = "com.google.android.gms",
-    certificates = R.array.com_google_android_gms_fonts_certs
+    certificates = R.array.com_google_android_gms_fonts_certs,
 )
 
 val bodyFontFamily = FontFamily(
     Font(
         googleFont = GoogleFont("Nanum Gothic"),
         fontProvider = provider,
-    )
+    ),
 )
 
 val displayFontFamily = FontFamily(
     Font(
         googleFont = GoogleFont("Poppins"),
         fontProvider = provider,
-    )
+    ),
 )
 
 // Default Material 3 typography values
