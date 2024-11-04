@@ -47,7 +47,7 @@ internal fun DiaryCard(
         ) {
             diary.images.firstOrNull()?.let {
                 AsyncImage(
-                    model = diary.images.firstOrNull(),
+                    model = it,
                     contentDescription = "${diary.title} 이미지",
                     modifier = Modifier
                         .fillMaxWidth()
