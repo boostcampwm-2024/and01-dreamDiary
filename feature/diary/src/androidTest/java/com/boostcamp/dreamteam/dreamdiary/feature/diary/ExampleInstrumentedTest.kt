@@ -19,7 +19,7 @@ class ExampleInstrumentedTest {
         val appContext = InstrumentationRegistry.getInstrumentation().targetContext
         assertEquals(
             "com.boostcamp.dreamteam.dreamdiary.feature.diary.test",
-            appContext.packageName
+            appContext.packageName,
         )
     }
 }
