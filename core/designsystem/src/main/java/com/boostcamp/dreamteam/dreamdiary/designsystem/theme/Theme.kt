@@ -1,4 +1,4 @@
-package com.boostcamp.dreamteam.dreamdiary.ui.theme
+package com.boostcamp.dreamteam.dreamdiary.designsystem.theme
 
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme

@@ -65,5 +65,5 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
     coreLibraryDesugaring(libs.desugar.jdk.libs)
 
-    implementation(libs.androidx.ui.text.google.fonts)
+    implementation(projects.core.designsystem)
 }
