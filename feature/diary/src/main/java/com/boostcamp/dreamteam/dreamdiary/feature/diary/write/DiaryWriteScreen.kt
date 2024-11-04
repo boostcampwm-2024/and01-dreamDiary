@@ -45,106 +45,105 @@ fun DiaryWriteScreen() {
 
     val scrollState = rememberScrollState()
 
-    MaterialTheme {
-        Scaffold(
-            topBar = {
-                TopAppBar(
-                    title = { Text(text = "") },
-                    navigationIcon = {
-                        IconButton(onClick = { /*TODO*/ }) {
-                            Icon(
-                                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                                contentDescription = "Back"
-                            )
-                        }
-                    },
-                    actions = {
-                        IconButton(onClick = { /*TODO*/ }) {
-                            Icon(
-                                imageVector = Icons.Filled.Check,
-                                contentDescription = "Save"
-                            )
-                        }
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text(text = "") },
+                navigationIcon = {
+                    IconButton(onClick = { /*TODO*/ }) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = "Back"
+                        )
                     }
-                )
-            }
+                },
+                actions = {
+                    IconButton(onClick = { /*TODO*/ }) {
+                        Icon(
+                            imageVector = Icons.Filled.Check,
+                            contentDescription = "Save"
+                        )
+                    }
+                },
+            )
+        },
+
         ) { innerPadding ->
-            Column(
-                modifier = Modifier
-                    .padding(innerPadding)
-                    .verticalScroll(scrollState)
+        Column(
+            modifier = Modifier
+                .padding(innerPadding)
+                .verticalScroll(scrollState)
+        ) {
+            Row(
+                modifier = Modifier.padding(horizontal = 16.dp),
+                horizontalArrangement = Arrangement.spacedBy(10.dp)
             ) {
                 Row(
-                    modifier = Modifier.padding(horizontal = 16.dp),
-                    horizontalArrangement = Arrangement.spacedBy(10.dp)
+                    modifier = Modifier.clickable {
+                        /*TODO*/
+                    }
                 ) {
-                    Row(
-                        modifier = Modifier.clickable {
-                            /*TODO*/
-                        }
-                    ) {
-                        Icon(Icons.Filled.DateRange, contentDescription = "날짜 선택")
-                        Text(text = "2024년 10월 28일 월요일")
-                    }
-
-                    Row(
-                        modifier = Modifier.clickable {
-                            /*TODO*/
-                        }
-                    ) {
-                        Icon(Icons.Outlined.Timer, contentDescription = "시간 선택")
-                        Text(text = "23:00 ~ 9:00")
-                    }
+                    Icon(Icons.Filled.DateRange, contentDescription = "날짜 선택")
+                    Text(text = "2024년 10월 28일 월요일")
                 }
 
-                Box(modifier = Modifier.padding(vertical = 4.dp))
-
-                Row(modifier = Modifier.padding(horizontal = 16.dp)) {
-                    Row {
-                        Icon(Icons.AutoMirrored.Outlined.Label, contentDescription = "카테고리")
-                        Text(text = "악몽, 개꿈, 귀신")
+                Row(
+                    modifier = Modifier.clickable {
+                        /*TODO*/
                     }
+                ) {
+                    Icon(Icons.Outlined.Timer, contentDescription = "시간 선택")
+                    Text(text = "23:00 ~ 9:00")
                 }
-
-                Box(modifier = Modifier.padding(vertical = 12.dp))
-
-                BasicTextField(
-                    value = "",
-                    onValueChange = { /*TODO*/ },
-                    modifier = Modifier
-                        .padding(horizontal = 16.dp)
-                        .fillMaxWidth(),
-                    decorationBox = { innerTextField ->
-                        if ("".isEmpty()) {
-                            Text(
-                                text = "제목을 입력하세요",
-                                style = TextStyle(color = Color.Gray)
-                            )
-                        }
-                        innerTextField()
-                    }
-                )
-
-                Box(modifier = Modifier.padding(vertical = 12.dp))
-
-                BasicTextField(
-                    value = "",
-                    onValueChange = { /*TODO*/ },
-                    modifier = Modifier
-                        .padding(horizontal = 16.dp)
-                        .fillMaxWidth()
-                        .height(300.dp),
-                    decorationBox = { innerTextField ->
-                        if ("".isEmpty()) {
-                            Text(
-                                text = "내용을 입력하세요",
-                                style = TextStyle(color = Color.Gray)
-                            )
-                        }
-                        innerTextField()
-                    }
-                )
             }
+
+            Box(modifier = Modifier.padding(vertical = 4.dp))
+
+            Row(modifier = Modifier.padding(horizontal = 16.dp)) {
+                Row {
+                    Icon(Icons.AutoMirrored.Outlined.Label, contentDescription = "카테고리")
+                    Text(text = "악몽, 개꿈, 귀신")
+                }
+            }
+
+            Box(modifier = Modifier.padding(vertical = 12.dp))
+
+            BasicTextField(
+                value = "",
+                onValueChange = { /*TODO*/ },
+                modifier = Modifier
+                    .padding(horizontal = 16.dp)
+                    .fillMaxWidth(),
+                decorationBox = { innerTextField ->
+                    if ("".isEmpty()) {
+                        Text(
+                            text = "제목을 입력하세요",
+                            style = TextStyle(color = MaterialTheme.colorScheme.secondary)
+                        )
+                    }
+                    innerTextField()
+                }
+            )
+
+            Box(modifier = Modifier.padding(vertical = 12.dp))
+
+            BasicTextField(
+                value = "",
+                onValueChange = { /*TODO*/ },
+                modifier = Modifier
+                    .padding(horizontal = 16.dp)
+                    .fillMaxWidth()
+                    .height(300.dp),
+                decorationBox = { innerTextField ->
+                    if ("".isEmpty()) {
+                        Text(
+                            text = "내용을 입력하세요",
+                            style = TextStyle(color = MaterialTheme.colorScheme.secondary)
+                        )
+                    }
+                    innerTextField()
+                }
+            )
         }
     }
 }
