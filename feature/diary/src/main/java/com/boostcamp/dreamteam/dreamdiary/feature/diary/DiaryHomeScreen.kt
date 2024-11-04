@@ -31,8 +31,9 @@ import com.boostcamp.dreamteam.dreamdiary.feature.diary.components.diariesPrevie
 
 @Composable
 fun DiaryHomeScreen() {
+    // FIXME: viewmodel에서 다이어리 불러오기
     DiaryHomeScreenContent(
-        diaries = emptyList(), // FIXME: viewmodel에서 다이어리 불러오기
+        diaries = emptyList(),
         onMenuClick = { /*TODO*/ },
         onSearchClick = { /*TODO*/ },
         onNotificationClick = { /*TODO*/ },
