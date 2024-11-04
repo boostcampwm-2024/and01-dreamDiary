@@ -10,7 +10,7 @@ import kotlinx.coroutines.CoroutineScope
 @Composable
 fun rememberAppState(
     coroutineScope: CoroutineScope = rememberCoroutineScope(),
-    navController: NavHostController = rememberNavController()
+    navController: NavHostController = rememberNavController(),
 ) = DreamDiaryAppState(
     coroutineScope = coroutineScope,
     navController = navController,
@@ -19,5 +19,5 @@ fun rememberAppState(
 @Stable
 class DreamDiaryAppState(
     val navController: NavHostController,
-    coroutineScope: CoroutineScope
+    coroutineScope: CoroutineScope,
 )

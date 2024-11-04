@@ -10,13 +10,13 @@ import com.boostcamp.dreamteam.dreamdiary.ui.DreamDiaryAppState
 @Composable
 fun DreamDiaryNavHost(
     appState: DreamDiaryAppState,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val navController = appState.navController
     NavHost(
         navController = navController,
         startDestination = DiaryWriteRoute,
-        modifier = modifier
+        modifier = modifier,
     ) {
         diaryWriteScreen()
     }

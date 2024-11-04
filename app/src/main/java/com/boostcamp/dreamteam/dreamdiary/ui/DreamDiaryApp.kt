@@ -8,7 +8,7 @@ import com.boostcamp.dreamteam.dreamdiary.ui.theme.DreamdiaryTheme
 @Composable
 internal fun DreamDiaryApp(
     appState: DreamDiaryAppState = rememberAppState(),
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     DreamdiaryTheme {
         DreamDiaryNavHost(appState = appState)
