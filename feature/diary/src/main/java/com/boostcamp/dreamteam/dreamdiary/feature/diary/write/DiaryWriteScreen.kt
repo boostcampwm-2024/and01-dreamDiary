@@ -42,7 +42,6 @@ import androidx.compose.ui.unit.sp
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DiaryWriteScreen() {
-
     val scrollState = rememberScrollState()
 
     Scaffold(
@@ -53,7 +52,7 @@ fun DiaryWriteScreen() {
                     IconButton(onClick = { /*TODO*/ }) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Back"
+                            contentDescription = "Back",
                         )
                     }
                 },
@@ -61,27 +60,27 @@ fun DiaryWriteScreen() {
                     IconButton(onClick = { /*TODO*/ }) {
                         Icon(
                             imageVector = Icons.Filled.Check,
-                            contentDescription = "Save"
+                            contentDescription = "Save",
                         )
                     }
                 },
             )
         },
-
-        ) { innerPadding ->
+    ) { innerPadding ->
         Column(
             modifier = Modifier
                 .padding(innerPadding)
-                .verticalScroll(scrollState)
+                .verticalScroll(scrollState),
         ) {
             Row(
                 modifier = Modifier.padding(horizontal = 16.dp),
-                horizontalArrangement = Arrangement.spacedBy(10.dp)
+                horizontalArrangement = Arrangement.spacedBy(10.dp),
             ) {
                 Row(
                     modifier = Modifier.clickable {
-                        /*TODO*/
-                    }
+                        // TODO
+                    },
+                    verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Icon(Icons.Filled.DateRange, contentDescription = "날짜 선택")
                     Text(text = "2024년 10월 28일 월요일")
@@ -89,8 +88,9 @@ fun DiaryWriteScreen() {
 
                 Row(
                     modifier = Modifier.clickable {
-                        /*TODO*/
-                    }
+                        // TODO
+                    },
+                    verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Icon(Icons.Outlined.Timer, contentDescription = "시간 선택")
                     Text(text = "23:00 ~ 9:00")
@@ -99,11 +99,12 @@ fun DiaryWriteScreen() {
 
             Box(modifier = Modifier.padding(vertical = 4.dp))
 
-            Row(modifier = Modifier.padding(horizontal = 16.dp)) {
-                Row {
-                    Icon(Icons.AutoMirrored.Outlined.Label, contentDescription = "카테고리")
-                    Text(text = "악몽, 개꿈, 귀신")
-                }
+            Row(
+                modifier = Modifier.padding(horizontal = 16.dp),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Icon(Icons.AutoMirrored.Outlined.Label, contentDescription = "카테고리")
+                Text(text = "악몽, 개꿈, 귀신")
             }
 
             Box(modifier = Modifier.padding(vertical = 12.dp))
@@ -118,11 +119,11 @@ fun DiaryWriteScreen() {
                     if ("".isEmpty()) {
                         Text(
                             text = "제목을 입력하세요",
-                            style = TextStyle(color = MaterialTheme.colorScheme.secondary)
+                            style = TextStyle(color = MaterialTheme.colorScheme.secondary),
                         )
                     }
                     innerTextField()
-                }
+                },
             )
 
             Box(modifier = Modifier.padding(vertical = 12.dp))
@@ -138,28 +139,26 @@ fun DiaryWriteScreen() {
                     if ("".isEmpty()) {
                         Text(
                             text = "내용을 입력하세요",
-                            style = TextStyle(color = MaterialTheme.colorScheme.secondary)
+                            style = TextStyle(color = MaterialTheme.colorScheme.secondary),
                         )
                     }
                     innerTextField()
-                }
+                },
             )
         }
     }
 }
-
 
 @Composable
 fun LabelSelectMenu() {
     val items = listOf("악몽 으악", "나쁜 꿈", "개꿈", "Menu item")
     val checkedState = remember { mutableStateListOf(false, false, false, false) }
 
-
     Column(
         modifier = Modifier
             .width(200.dp)
             .padding(16.dp)
-            .verticalScroll(rememberScrollState())
+            .verticalScroll(rememberScrollState()),
     ) {
         items.forEachIndexed { index, text ->
             Row(
@@ -167,16 +166,16 @@ fun LabelSelectMenu() {
                     .fillMaxWidth()
                     .padding(8.dp)
                     .background(Color.White),
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
                     text = text,
                     modifier = Modifier.weight(1f),
-                    fontSize = 16.sp
+                    fontSize = 16.sp,
                 )
                 Checkbox(
                     checked = checkedState[index],
-                    onCheckedChange = { checkedState[index] = it }
+                    onCheckedChange = { checkedState[index] = it },
                 )
             }
             if (index < items.size - 1) {
@@ -184,12 +183,11 @@ fun LabelSelectMenu() {
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(1.dp)
-                        .background(Color.LightGray)
+                        .background(Color.LightGray),
                 )
             }
         }
     }
-
 }
 
 @Composable
