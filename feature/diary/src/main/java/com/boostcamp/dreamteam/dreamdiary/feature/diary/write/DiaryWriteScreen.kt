@@ -34,10 +34,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.boostcamp.dreamteam.dreamdiary.feature.diary.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -52,7 +54,7 @@ fun DiaryWriteScreen() {
                     IconButton(onClick = { /*TODO*/ }) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Back",
+                            contentDescription = stringResource(R.string.write_back),
                         )
                     }
                 },
@@ -60,7 +62,7 @@ fun DiaryWriteScreen() {
                     IconButton(onClick = { /*TODO*/ }) {
                         Icon(
                             imageVector = Icons.Filled.Check,
-                            contentDescription = "Save",
+                            contentDescription = stringResource(R.string.write_save),
                         )
                     }
                 },
@@ -82,7 +84,7 @@ fun DiaryWriteScreen() {
                     },
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
-                    Icon(Icons.Filled.DateRange, contentDescription = "날짜 선택")
+                    Icon(Icons.Filled.DateRange, contentDescription = stringResource(R.string.write_save_calendar))
                     Text(text = "2024년 10월 28일 월요일")
                 }
 
@@ -92,7 +94,7 @@ fun DiaryWriteScreen() {
                     },
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
-                    Icon(Icons.Outlined.Timer, contentDescription = "시간 선택")
+                    Icon(Icons.Outlined.Timer, contentDescription = stringResource(R.string.write_select_time))
                     Text(text = "23:00 ~ 9:00")
                 }
             }
@@ -103,7 +105,7 @@ fun DiaryWriteScreen() {
                 modifier = Modifier.padding(horizontal = 16.dp),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                Icon(Icons.AutoMirrored.Outlined.Label, contentDescription = "카테고리")
+                Icon(Icons.AutoMirrored.Outlined.Label, contentDescription = stringResource(R.string.write_category))
                 Text(text = "악몽, 개꿈, 귀신")
             }
 
@@ -118,7 +120,7 @@ fun DiaryWriteScreen() {
                 decorationBox = { innerTextField ->
                     if ("".isEmpty()) {
                         Text(
-                            text = "제목을 입력하세요",
+                            text = stringResource(R.string.write_text_title),
                             style = TextStyle(color = MaterialTheme.colorScheme.secondary),
                         )
                     }
@@ -138,7 +140,7 @@ fun DiaryWriteScreen() {
                 decorationBox = { innerTextField ->
                     if ("".isEmpty()) {
                         Text(
-                            text = "내용을 입력하세요",
+                            text = stringResource(R.string.write_text_content),
                             style = TextStyle(color = MaterialTheme.colorScheme.secondary),
                         )
                     }
