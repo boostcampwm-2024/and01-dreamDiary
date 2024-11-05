@@ -1,10 +1,10 @@
-package com.boostcamp.dreamteam.dreamdiary.ui.theme
+package com.boostcamp.dreamteam.dreamdiary.designsystem.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.googlefonts.Font
 import androidx.compose.ui.text.googlefonts.GoogleFont
-import com.boostcamp.dreamteam.dreamdiary.R
+import com.boostcamp.dreamteam.dreamdiary.designsystem.R
 
 val provider = GoogleFont.Provider(
     providerAuthority = "com.google.android.gms.fonts",
