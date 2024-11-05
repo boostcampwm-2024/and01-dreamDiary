@@ -1,9 +1,7 @@
 package com.boostcamp.dreamteam.dreamdiary.feature.diary.write
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -22,6 +20,7 @@ import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.outlined.Timer
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -33,7 +32,6 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
@@ -99,7 +97,7 @@ fun DiaryWriteScreen() {
                 }
             }
 
-            Box(modifier = Modifier.padding(vertical = 4.dp))
+            Spacer(modifier = Modifier.height(8.dp))
 
             Row(
                 modifier = Modifier.padding(horizontal = 16.dp),
@@ -109,7 +107,7 @@ fun DiaryWriteScreen() {
                 Text(text = "악몽, 개꿈, 귀신")
             }
 
-            Box(modifier = Modifier.padding(vertical = 12.dp))
+            Spacer(modifier = Modifier.height(24.dp))
 
             BasicTextField(
                 value = "",
@@ -128,7 +126,7 @@ fun DiaryWriteScreen() {
                 },
             )
 
-            Box(modifier = Modifier.padding(vertical = 12.dp))
+            Spacer(modifier = Modifier.height(24.dp))
 
             BasicTextField(
                 value = "",
@@ -159,15 +157,13 @@ fun LabelSelectMenu() {
     Column(
         modifier = Modifier
             .width(200.dp)
-            .padding(16.dp)
             .verticalScroll(rememberScrollState()),
     ) {
         items.forEachIndexed { index, text ->
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(8.dp)
-                    .background(Color.White),
+                    .padding(8.dp),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
@@ -181,12 +177,7 @@ fun LabelSelectMenu() {
                 )
             }
             if (index < items.size - 1) {
-                Spacer(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(1.dp)
-                        .background(Color.LightGray),
-                )
+                HorizontalDivider()
             }
         }
     }
