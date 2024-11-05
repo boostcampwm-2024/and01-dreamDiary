@@ -18,7 +18,7 @@ fun DreamDiaryNavHost(
     val navController = appState.navController
     NavHost(
         navController = navController,
-        startDestination = DiaryWriteRoute,
+        startDestination = DiaryHomeRoute,
         modifier = modifier,
     ) {
         diaryHomeScreen(
