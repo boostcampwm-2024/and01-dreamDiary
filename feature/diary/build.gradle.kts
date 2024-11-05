@@ -39,32 +39,44 @@ android {
 }
 
 dependencies {
+    implementation(project(":core:model"))
 
     implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.activity.compose)
-    implementation(platform(libs.androidx.compose.bom))
-
-    implementation(libs.androidx.ui)
-    implementation(libs.androidx.ui.graphics)
-    implementation(libs.androidx.ui.tooling.preview)
-
-    debugImplementation(libs.androidx.ui.tooling)
-    debugImplementation(libs.androidx.ui.tooling.preview)
-    debugImplementation(libs.androidx.ui.test.manifest)
-
-    implementation(libs.androidx.material3)
-    implementation(libs.androidx.material.icons.extended)
-    implementation(libs.androidx.material.icons.extended.android)
-
     implementation(libs.androidx.appcompat)
-    implementation(libs.material)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 
+    // Core
+    implementation(libs.androidx.activity.compose)
+
+    // Jetpack Compose
+    implementation(platform(libs.androidx.compose.bom))
+    implementation(libs.androidx.ui)
+    implementation(libs.androidx.ui.graphics)
+    implementation(libs.androidx.ui.tooling.preview)
+    debugImplementation(libs.androidx.ui.tooling)
+    debugImplementation(libs.androidx.ui.test.manifest)
+
+    // Material 3
+    implementation(libs.material)
+    implementation(libs.androidx.material3)
+    implementation(libs.androidx.material.icons)
+    implementation(libs.androidx.material.icons.android)
+
+    // Coil
+    implementation(libs.bundles.coil)
+
+    // Navigation
     implementation(libs.androidx.navigation.compose)
-    implementation(libs.androidx.hilt.navigation.compose)
+
+    // Hilt
     ksp(libs.hilt.compiler)
     implementation(libs.hilt.android)
+
+    // Hilt Navigation
+    implementation(libs.androidx.hilt.navigation.compose)
+
+    // Serialization
     implementation(libs.kotlinx.serialization.json.jvm)
 }
