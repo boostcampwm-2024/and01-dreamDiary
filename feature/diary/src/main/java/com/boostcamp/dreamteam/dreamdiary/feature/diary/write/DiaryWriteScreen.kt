@@ -47,7 +47,7 @@ fun DiaryWriteScreen() {
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(text = "") },
+                title = {  },
                 navigationIcon = {
                     IconButton(onClick = { /*TODO*/ }) {
                         Icon(
