@@ -7,7 +7,7 @@ import javax.inject.Inject
 class GetDiariesUseCase @Inject constructor(
     private val diaryRepository: DiaryRepository
 ) {
-    operator fun invoke(): List<Diary> {
+    suspend operator fun invoke(): List<Diary> {
         return diaryRepository.getAllDiaryFromFireBase()
     }
 }

@@ -2,13 +2,14 @@ package com.boostcamp.dreamteam.dreamdiary.core.data.repository
 
 import com.boostcamp.dreamteam.dreamdiary.core.datastore.FirebaseDataSource
 import com.boostcamp.dreamteam.dreamdiary.core.model.Diary
+import com.boostcamp.dreamteam.dreamdiary.core.model.Label
 import javax.inject.Inject
 
 class DiaryRepository @Inject constructor(
     private val firebaseDataSource: FirebaseDataSource
 ) {
-    fun getAllDiaryFromFireBase(): List<Diary> {
-        return firebaseDataSource.getAllDiary()
+    suspend fun getAllDiaryFromFireBase(): List<Diary> {
+        return firebaseDataSource.getAllDiaries()
     }
 
     fun setDiaryToFireBase(diary: Diary) {
