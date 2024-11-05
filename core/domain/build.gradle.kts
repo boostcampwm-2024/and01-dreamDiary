@@ -1,5 +1,6 @@
 plugins {
     alias(libs.plugins.dreamdiary.android.library)
+    alias(libs.plugins.ksp)
 }
 
 android {
@@ -20,5 +21,10 @@ android {
 }
 
 dependencies {
+    implementation(project(":core:model"))
     implementation(projects.core.data)
+
+    // Hilt
+    ksp(libs.hilt.compiler)
+    implementation(libs.hilt.core)
 }
