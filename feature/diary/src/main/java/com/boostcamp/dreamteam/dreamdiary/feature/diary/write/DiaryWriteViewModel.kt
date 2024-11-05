@@ -9,9 +9,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import javax.inject.Inject
 
 @HiltViewModel
-class DiaryWriteViewModel
-@Inject
-constructor() : ViewModel() {
+class DiaryWriteViewModel @Inject constructor() : ViewModel() {
     private val _uiState: MutableStateFlow<DiaryWriteUiState> =
         MutableStateFlow(DiaryWriteUiState("", ""))
     val uiState: StateFlow<DiaryWriteUiState> = _uiState.asStateFlow()
