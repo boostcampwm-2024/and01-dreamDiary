@@ -20,5 +20,6 @@ android {
 }
 
 dependencies {
+    implementation(project(":core:model"))
     implementation(projects.core.data)
 }

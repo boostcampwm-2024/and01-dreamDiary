@@ -25,15 +25,18 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.boostcamp.dreamteam.dreamdiary.core.model.Diary
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.components.DiaryListTab
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.components.diariesPreview
 
 @Composable
-fun DiaryHomeScreen() {
-    // FIXME: viewmodel에서 다이어리 불러오기
+fun DiaryHomeScreen(viewModel: DiaryViewModel = hiltViewModel()) {
+    val state by viewModel.diaryHomeUIState.collectAsStateWithLifecycle()
+    val diaries = state.diaries
     DiaryHomeScreenContent(
-        diaries = emptyList(),
+        diaries = diaries,
         onMenuClick = { /*TODO*/ },
         onSearchClick = { /*TODO*/ },
         onNotificationClick = { /*TODO*/ },
