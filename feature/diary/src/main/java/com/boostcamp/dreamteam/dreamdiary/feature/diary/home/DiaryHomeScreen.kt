@@ -30,15 +30,18 @@ import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.components.DiaryLis
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.components.diariesPreview
 
 @Composable
-fun DiaryHomeScreen() {
+fun DiaryHomeScreen(
+    onDiaryClick: (Diary) -> Unit,
+    onFabClick: () -> Unit,
+) {
     // FIXME: viewmodel에서 다이어리 불러오기
     DiaryHomeScreenContent(
         diaries = emptyList(),
         onMenuClick = { /*TODO*/ },
         onSearchClick = { /*TODO*/ },
         onNotificationClick = { /*TODO*/ },
-        onDiaryClick = { /*TODO: 상세 화면으로 이동*/ },
-        onFabClick = { /*TODO: 새 일기 작성*/ },
+        onDiaryClick = onDiaryClick,
+        onFabClick = onFabClick,
     )
 }
 
