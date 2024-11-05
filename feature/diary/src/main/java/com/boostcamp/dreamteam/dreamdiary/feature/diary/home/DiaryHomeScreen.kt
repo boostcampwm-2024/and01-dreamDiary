@@ -26,7 +26,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.boostcamp.dreamteam.dreamdiary.core.model.Diary
+import com.boostcamp.dreamteam.dreamdiary.feature.diary.DiaryViewModel
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.components.DiaryCalendarTab
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.components.DiaryListTab
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.components.diariesPreview
@@ -35,10 +38,12 @@ import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.components.diariesP
 fun DiaryHomeScreen(
     onDiaryClick: (Diary) -> Unit,
     onFabClick: () -> Unit,
+    viewModel: DiaryViewModel = hiltViewModel(),
 ) {
-    // FIXME: viewmodel에서 다이어리 불러오기
+    val state by viewModel.diaryHomeUIState.collectAsStateWithLifecycle()
+    val diaries = state.diaries
     DiaryHomeScreenContent(
-        diaries = emptyList(),
+        diaries = diaries,
         onMenuClick = { /*TODO*/ },
         onSearchClick = { /*TODO*/ },
         onNotificationClick = { /*TODO*/ },
