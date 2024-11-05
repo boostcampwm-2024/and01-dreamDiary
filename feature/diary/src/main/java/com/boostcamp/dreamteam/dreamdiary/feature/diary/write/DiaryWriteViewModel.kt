@@ -12,8 +12,8 @@ import javax.inject.Inject
 class DiaryWriteViewModel
 @Inject
 constructor() : ViewModel() {
-
-    private val _uiState: MutableStateFlow<DiaryWriteUiState> = MutableStateFlow(DiaryWriteUiState("", ""))
+    private val _uiState: MutableStateFlow<DiaryWriteUiState> =
+        MutableStateFlow(DiaryWriteUiState("", ""))
     val uiState: StateFlow<DiaryWriteUiState> = _uiState.asStateFlow()
 
     fun setTitle(title: String) {

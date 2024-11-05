@@ -119,7 +119,7 @@ fun DiaryWriteScreen(
                 modifier = Modifier
                     .padding(horizontal = 16.dp)
                     .clickable {
-                        /* TODO */
+                        // TODO
                     },
                 verticalAlignment = Alignment.CenterVertically,
             ) {
@@ -168,7 +168,6 @@ fun DiaryWriteScreen(
         }
     }
 }
-
 
 @Composable
 @Preview(showBackground = true)
