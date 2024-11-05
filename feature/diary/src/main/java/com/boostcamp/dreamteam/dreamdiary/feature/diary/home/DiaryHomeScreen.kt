@@ -1,6 +1,7 @@
 package com.boostcamp.dreamteam.dreamdiary.feature.diary.home
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
@@ -26,6 +27,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.boostcamp.dreamteam.dreamdiary.core.model.Diary
+import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.components.DiaryCalendarTab
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.components.DiaryListTab
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.components.diariesPreview
 
@@ -56,6 +58,9 @@ private fun DiaryHomeScreenContent(
     onDiaryClick: (Diary) -> Unit = {},
     onFabClick: () -> Unit = {},
 ) {
+    var selectedTabIndex by remember { mutableIntStateOf(0) }
+    val tabs = listOf("일기", "달력")
+
     Scaffold(
         modifier = modifier,
         topBar = {
@@ -76,12 +81,20 @@ private fun DiaryHomeScreenContent(
             }
         },
     ) { innerPadding ->
-        var selectedTabIndex by remember { mutableIntStateOf(0) }
-        val tabs = listOf("일기", "달력")
-        Column(modifier = Modifier.padding(innerPadding)) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding),
+        ) {
             PrimaryTabRow(
                 selectedTabIndex = selectedTabIndex,
-                indicator = { TabRowDefaults.SecondaryIndicator() },
+                indicator = {
+                    TabRowDefaults.SecondaryIndicator(
+                        modifier = Modifier.tabIndicatorOffset(
+                            selectedTabIndex = selectedTabIndex,
+                        ),
+                    )
+                },
             ) {
                 tabs.forEachIndexed { index, title ->
                     Tab(
@@ -93,8 +106,13 @@ private fun DiaryHomeScreenContent(
             }
 
             when (selectedTabIndex) {
-                0 -> DiaryListTab(diaries = diaries, onDiaryClick = onDiaryClick)
-                1 -> TODO("Not yet implemented")
+                0 -> DiaryListTab(
+                    diaries = diaries,
+                    modifier = Modifier.fillMaxSize(),
+                    onDiaryClick = onDiaryClick,
+                )
+
+                1 -> DiaryCalendarTab()
             }
         }
     }
