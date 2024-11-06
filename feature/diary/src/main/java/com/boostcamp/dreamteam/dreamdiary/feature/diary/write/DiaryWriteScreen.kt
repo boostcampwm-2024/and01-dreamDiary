@@ -25,6 +25,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -35,12 +36,25 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.R
+import com.boostcamp.dreamteam.dreamdiary.feature.diary.write.model.DiaryWriteEvent
+import kotlinx.coroutines.flow.collectLatest
 
 @Composable
-fun DiaryWriteScreen(viewModel: DiaryWriteViewModel = hiltViewModel()) {
+fun DiaryWriteScreen(
+    viewModel: DiaryWriteViewModel = hiltViewModel(),
+    onBackClick: () -> Unit,
+) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     val (title, content) = uiState
+
+    LaunchedEffect(Unit) {
+        viewModel.event.collectLatest {
+            when (it) {
+                DiaryWriteEvent.AddSuccess -> onBackClick()
+            }
+        }
+    }
 
     DiaryWriteScreen(
         title = title,
@@ -48,6 +62,7 @@ fun DiaryWriteScreen(viewModel: DiaryWriteViewModel = hiltViewModel()) {
         onTitleChange = viewModel::setTitle,
         onContentChange = viewModel::setContent,
         onClickSave = viewModel::addDreamDiary,
+        onBackClick = onBackClick,
     )
 }
 
@@ -59,6 +74,7 @@ fun DiaryWriteScreen(
     onTitleChange: (String) -> Unit,
     onContentChange: (String) -> Unit,
     onClickSave: () -> Unit,
+    onBackClick: () -> Unit,
 ) {
     val scrollState = rememberScrollState()
 
@@ -67,7 +83,7 @@ fun DiaryWriteScreen(
             TopAppBar(
                 title = { },
                 navigationIcon = {
-                    IconButton(onClick = { /*TODO*/ }) {
+                    IconButton(onClick = { onBackClick() }) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = stringResource(R.string.write_back),
@@ -180,5 +196,6 @@ fun PreviewDiaryListScreen() {
         onTitleChange = {},
         onContentChange = {},
         onClickSave = {},
+        onBackClick = {},
     )
 }
