@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import com.boostcamp.dreamteam.dreamdiary.core.model.Diary
 import com.boostcamp.dreamteam.dreamdiary.core.model.Label
+import com.boostcamp.dreamteam.dreamdiary.designsystem.theme.DreamdiaryTheme
 
 @Composable
 internal fun DiaryCard(
@@ -101,11 +102,12 @@ internal fun DiaryCard(
 @Preview
 @Composable
 private fun DiaryCardPreview() {
-    // TODO: 테마 적용
-    DiaryCard(
-        diary = diaryPreview1,
-        modifier = Modifier.fillMaxWidth(),
-    )
+    DreamdiaryTheme {
+        DiaryCard(
+            diary = diaryPreview1,
+            modifier = Modifier.fillMaxWidth(),
+        )
+    }
 }
 
 internal val diaryPreview1 = Diary(
