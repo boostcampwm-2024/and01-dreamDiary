@@ -5,7 +5,7 @@ import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 
-internal data class DisplayableDateTime(
+data class DisplayableDateTime(
     val value: ZonedDateTime,
     val formatted: String,
 )
