@@ -9,21 +9,21 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.boostcamp.dreamteam.dreamdiary.core.model.Diary
 import com.boostcamp.dreamteam.dreamdiary.designsystem.theme.DreamdiaryTheme
+import com.boostcamp.dreamteam.dreamdiary.feature.diary.models.DiaryUi
 
 @Composable
 internal fun DiaryListTab(
-    diaries: List<Diary>,
+    diaries: List<DiaryUi>,
     modifier: Modifier = Modifier,
-    onDiaryClick: (Diary) -> Unit = {},
+    onDiaryClick: (DiaryUi) -> Unit = {},
 ) {
     LazyColumn(
         modifier = modifier,
         contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
-        items(diaries) { diary: Diary ->
+        items(diaries) { diary ->
             DiaryCard(
                 diary = diary,
                 modifier = Modifier.fillMaxWidth(),
@@ -41,7 +41,7 @@ private fun DiaryListTabPreview() {
     }
 }
 
-internal val diariesPreview: List<Diary> = listOf(
+internal val diariesPreview = listOf(
     diaryPreview1,
     diaryPreview2,
 )

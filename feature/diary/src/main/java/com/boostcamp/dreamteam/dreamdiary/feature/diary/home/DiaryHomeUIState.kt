@@ -1,8 +1,8 @@
 package com.boostcamp.dreamteam.dreamdiary.feature.diary.home
 
-import com.boostcamp.dreamteam.dreamdiary.core.model.Diary
+import com.boostcamp.dreamteam.dreamdiary.feature.diary.models.DiaryUi
 
 data class DiaryHomeUIState(
-    val diaries: List<Diary> = listOf(),
+    val diaries: List<DiaryUi> = listOf(),
     val loading: Boolean = false,
 )
