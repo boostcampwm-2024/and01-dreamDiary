@@ -104,7 +104,6 @@ fun DiaryWriteScreen(
             ) {
                 Row(
                     modifier = Modifier.clickable {
-
                     },
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
@@ -178,7 +177,7 @@ fun DiaryWriteScreen(
         }
         if (isLabelSelectionDialogOpen) {
             LabelSelectionDialog(
-                labelList = listOf("악몽", "개꿈", "귀신"),
+                labelList = listOf("악몽", "개꿈", "귀신"), // 라벨 viewmodel에서 가져오기
                 onDismissRequest = { isLabelSelectionDialogOpen = false },
                 searchValue = searchValue,
                 searchValueChange = onSearchValueChange,
