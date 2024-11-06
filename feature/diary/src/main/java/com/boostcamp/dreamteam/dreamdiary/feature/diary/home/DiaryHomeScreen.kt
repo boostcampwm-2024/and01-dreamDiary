@@ -27,10 +27,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.boostcamp.dreamteam.dreamdiary.designsystem.theme.DreamdiaryTheme
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.components.DiaryCalendarTab
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.components.DiaryListTab
-import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.components.diariesPreview
+import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.components.pagedDiariesPreview
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.models.DiaryUi
 
 @Composable
@@ -40,7 +42,7 @@ fun DiaryHomeScreen(
     viewModel: DiaryHomeViewModel = hiltViewModel(),
 ) {
     val state by viewModel.diaryHomeUIState.collectAsStateWithLifecycle()
-    val diaries = state.diaries
+    val diaries = viewModel.dreamDiaries.collectAsLazyPagingItems()
     DiaryHomeScreenContent(
         diaries = diaries,
         onMenuClick = { /*TODO*/ },
@@ -54,7 +56,7 @@ fun DiaryHomeScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun DiaryHomeScreenContent(
-    diaries: List<DiaryUi>,
+    diaries: LazyPagingItems<DiaryUi>,
     modifier: Modifier = Modifier,
     onMenuClick: () -> Unit = {},
     onSearchClick: () -> Unit = {},
@@ -169,7 +171,7 @@ private fun DiaryHomeScreenTopAppBar(
 private fun DiaryHomeScreenContentPreview() {
     DreamdiaryTheme {
         DiaryHomeScreenContent(
-            diaries = diariesPreview,
+            diaries = pagedDiariesPreview.collectAsLazyPagingItems(),
         )
     }
 }
