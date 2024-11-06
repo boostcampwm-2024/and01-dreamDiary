@@ -25,8 +25,6 @@ android {
 }
 
 dependencies {
-    implementation(projects.core.datastore)
-
     implementation(projects.core.model)
     // Hilt
     ksp(libs.hilt.compiler)
