@@ -47,6 +47,7 @@ fun DiaryWriteScreen(viewModel: DiaryWriteViewModel = hiltViewModel()) {
         content = content,
         onTitleChange = viewModel::setTitle,
         onContentChange = viewModel::setContent,
+        onClickSave = viewModel::addDreamDiary,
     )
 }
 
@@ -57,6 +58,7 @@ fun DiaryWriteScreen(
     content: String,
     onTitleChange: (String) -> Unit,
     onContentChange: (String) -> Unit,
+    onClickSave: () -> Unit,
 ) {
     val scrollState = rememberScrollState()
 
@@ -73,7 +75,7 @@ fun DiaryWriteScreen(
                     }
                 },
                 actions = {
-                    IconButton(onClick = { /*TODO*/ }) {
+                    IconButton(onClick = { onClickSave() }) {
                         Icon(
                             imageVector = Icons.Filled.Check,
                             contentDescription = stringResource(R.string.write_save),
@@ -177,5 +179,6 @@ fun PreviewDiaryListScreen() {
         content = "",
         onTitleChange = {},
         onContentChange = {},
+        onClickSave = {},
     )
 }
