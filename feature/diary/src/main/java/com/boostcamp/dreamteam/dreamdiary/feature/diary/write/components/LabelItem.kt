@@ -16,6 +16,7 @@ import androidx.compose.ui.unit.dp
 internal fun LabelItem(
     modifier: Modifier = Modifier,
     label: String,
+    isChecked: Boolean,
     onCheckChanged: (Boolean) -> Unit,
 ) {
     Row(
@@ -25,7 +26,7 @@ internal fun LabelItem(
     ) {
         Text(text = label)
         Checkbox(
-            checked = false,
+            checked = isChecked,
             onCheckedChange = onCheckChanged,
             modifier = Modifier,
         )
@@ -40,6 +41,7 @@ fun LabelItemPreview() {
             .width(200.dp)
             .padding(4.dp),
         label = "악몽",
+        isChecked = true,
         onCheckChanged = {},
     )
 }

@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.verticalScroll
@@ -26,6 +27,9 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -35,18 +39,21 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.R
+import com.boostcamp.dreamteam.dreamdiary.feature.diary.write.components.LabelSelectionDialog
 
 @Composable
 fun DiaryWriteScreen(viewModel: DiaryWriteViewModel = hiltViewModel()) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    val (title, content) = uiState
+    val (title, content, searchValue, labels, selectedLabels) = uiState
 
     DiaryWriteScreen(
         title = title,
         content = content,
+        searchValue = searchValue,
         onTitleChange = viewModel::setTitle,
         onContentChange = viewModel::setContent,
+        onSearchValueChange = viewModel::setSearchValue,
     )
 }
 
@@ -55,10 +62,13 @@ fun DiaryWriteScreen(viewModel: DiaryWriteViewModel = hiltViewModel()) {
 fun DiaryWriteScreen(
     title: String,
     content: String,
+    searchValue: String,
     onTitleChange: (String) -> Unit,
     onContentChange: (String) -> Unit,
+    onSearchValueChange: (String) -> Unit,
 ) {
     val scrollState = rememberScrollState()
+    var isLabelSelectionDialogOpen by remember { mutableStateOf(false) }
 
     Scaffold(
         topBar = {
@@ -94,7 +104,7 @@ fun DiaryWriteScreen(
             ) {
                 Row(
                     modifier = Modifier.clickable {
-                        // TODO
+
                     },
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
@@ -119,7 +129,7 @@ fun DiaryWriteScreen(
                 modifier = Modifier
                     .padding(horizontal = 16.dp)
                     .clickable {
-                        // TODO
+                        isLabelSelectionDialogOpen = true
                     },
                 verticalAlignment = Alignment.CenterVertically,
             ) {
@@ -166,6 +176,16 @@ fun DiaryWriteScreen(
                 },
             )
         }
+        if (isLabelSelectionDialogOpen) {
+            LabelSelectionDialog(
+                labelList = listOf("악몽", "개꿈", "귀신"),
+                onDismissRequest = { isLabelSelectionDialogOpen = false },
+                searchValue = searchValue,
+                searchValueChange = onSearchValueChange,
+                selectedLabels = listOf(true, false, false),
+                modifier = Modifier.width(400.dp),
+            )
+        }
     }
 }
 
@@ -175,7 +195,9 @@ fun PreviewDiaryListScreen() {
     DiaryWriteScreen(
         title = "",
         content = "",
+        searchValue = "",
         onTitleChange = {},
         onContentChange = {},
+        onSearchValueChange = {},
     )
 }

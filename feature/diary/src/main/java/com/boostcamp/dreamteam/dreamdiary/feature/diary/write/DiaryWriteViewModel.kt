@@ -20,4 +20,12 @@ class DiaryWriteViewModel @Inject constructor() : ViewModel() {
     fun setContent(content: String) {
         _uiState.value = _uiState.value.copy(content = content)
     }
+
+    fun setSearchValue(searchValue: String) {
+        _uiState.value = _uiState.value.copy(searchValue = searchValue)
+    }
+
+    fun setLabels(labels: List<String>) {
+        _uiState.value = _uiState.value.copy(labels = labels)
+    }
 }

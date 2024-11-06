@@ -13,7 +13,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -30,9 +29,10 @@ import androidx.compose.ui.window.Dialog
 @Composable
 fun LabelSelectionDialog(
     onDismissRequest: () -> Unit,
-    labelList: List<String>, // 어캐하지 -> check 된 것을 같이 넘길까?
+    labelList: List<String>,
     searchValue: String,
-    isCheckList: List<Boolean>,
+    searchValueChange: (String) -> Unit,
+    selectedLabels: List<Boolean>,
     modifier: Modifier = Modifier,
 ) {
     Dialog(onDismissRequest = onDismissRequest) {
@@ -51,7 +51,7 @@ fun LabelSelectionDialog(
                 ) {
                     TextField(
                         value = searchValue,
-                        onValueChange = {},
+                        onValueChange = { searchValueChange(it) },
                         modifier = Modifier.fillMaxWidth(),
                         label = { Text("검색") },
                         trailingIcon = {
@@ -67,21 +67,22 @@ fun LabelSelectionDialog(
                                 )
                             }
                         },
+                        singleLine = true,
                     )
                 }
 
                 Spacer(modifier = Modifier.height(8.dp))
 
                 Column(modifier = Modifier.fillMaxWidth()) {
-                    labelList.forEach {
+                    labelList.forEachIndexed { index, label ->
                         LabelItem(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(start = 8.dp),
-                            label = it,
-                            onCheckChanged = {},
+                            label = label,
+                            isChecked = selectedLabels[index],
+                            onCheckChanged = { !selectedLabels[index] },
                         )
-                        HorizontalDivider()
                     }
                 }
 
@@ -91,10 +92,10 @@ fun LabelSelectionDialog(
                     modifier = Modifier.align(Alignment.End),
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
-                    TextButton(onClick = { onDismissRequest() }) {
+                    TextButton(onClick = onDismissRequest) {
                         Text("취소")
                     }
-                    TextButton(onClick = { /* TODO: confirm action */ }) {
+                    TextButton(onClick = { onDismissRequest() }) {
                         Text("확인")
                     }
                 }
@@ -110,7 +111,8 @@ fun LabelSelectionDialogPreview() {
         onDismissRequest = {},
         labelList = listOf("악몽", "개꿈", "귀신"),
         searchValue = "",
-        isCheckList = listOf(false, false, false),
-        modifier = Modifier.width(200.dp),
+        searchValueChange = {},
+        selectedLabels = listOf(true, false, false),
+        modifier = Modifier.width(400.dp),
     )
 }
