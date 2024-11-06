@@ -11,13 +11,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.boostcamp.dreamteam.dreamdiary.designsystem.theme.DreamdiaryTheme
 
 @Composable
 internal fun LabelItem(
-    modifier: Modifier = Modifier,
     label: String,
     isChecked: Boolean,
-    onCheckChanged: (Boolean) -> Unit,
+    onCheckChange: (Boolean) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     Row(
         modifier = modifier,
@@ -27,21 +28,22 @@ internal fun LabelItem(
         Text(text = label)
         Checkbox(
             checked = isChecked,
-            onCheckedChange = onCheckChanged,
-            modifier = Modifier,
+            onCheckedChange = onCheckChange,
         )
     }
 }
 
 @Preview(showBackground = true)
 @Composable
-fun LabelItemPreview() {
-    LabelItem(
-        modifier = Modifier
-            .width(200.dp)
-            .padding(4.dp),
-        label = "악몽",
-        isChecked = true,
-        onCheckChanged = {},
-    )
+private fun LabelItemPreview() {
+    DreamdiaryTheme {
+        LabelItem(
+            modifier = Modifier
+                .width(200.dp)
+                .padding(4.dp),
+            label = "악몽",
+            isChecked = true,
+            onCheckChange = {},
+        )
+    }
 }

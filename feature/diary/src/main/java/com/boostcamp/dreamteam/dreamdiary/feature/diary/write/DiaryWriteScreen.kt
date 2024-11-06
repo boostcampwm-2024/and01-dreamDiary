@@ -39,13 +39,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.boostcamp.dreamteam.dreamdiary.designsystem.theme.DreamdiaryTheme
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.R
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.write.components.LabelSelectionDialog
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.write.model.DiaryWriteEvent
 import kotlinx.coroutines.flow.collectLatest
 
 @Composable
-fun DiaryWriteScreen(
+internal fun DiaryWriteScreen(
     viewModel: DiaryWriteViewModel = hiltViewModel(),
     onBackClick: () -> Unit,
 ) {
@@ -75,7 +76,7 @@ fun DiaryWriteScreen(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DiaryWriteScreen(
+private fun DiaryWriteScreen(
     title: String,
     content: String,
     searchValue: String,
@@ -199,7 +200,7 @@ fun DiaryWriteScreen(
                 labelList = listOf("악몽", "개꿈", "귀신"),
                 onDismissRequest = { isLabelSelectionDialogOpen = false },
                 searchValue = searchValue,
-                searchValueChange = onSearchValueChange,
+                onSearchValueChange = onSearchValueChange,
                 selectedLabels = listOf(true, false, false),
                 modifier = Modifier.width(400.dp),
             )
@@ -209,15 +210,17 @@ fun DiaryWriteScreen(
 
 @Composable
 @Preview(showBackground = true)
-fun PreviewDiaryListScreen() {
-    DiaryWriteScreen(
-        title = "",
-        content = "",
-        searchValue = "",
-        onTitleChange = {},
-        onContentChange = {},
-        onClickSave = {},
-        onBackClick = {},
-        onSearchValueChange = {},
-    )
+private fun PreviewDiaryListScreen() {
+    DreamdiaryTheme {
+        DiaryWriteScreen(
+            title = "",
+            content = "",
+            searchValue = "",
+            onTitleChange = {},
+            onContentChange = {},
+            onClickSave = {},
+            onBackClick = {},
+            onSearchValueChange = {},
+        )
+    }
 }

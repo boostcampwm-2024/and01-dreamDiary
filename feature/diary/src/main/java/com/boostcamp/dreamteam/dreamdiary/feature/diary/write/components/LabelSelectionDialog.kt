@@ -25,22 +25,22 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import com.boostcamp.dreamteam.dreamdiary.designsystem.theme.DreamdiaryTheme
 
 @Composable
-fun LabelSelectionDialog(
+internal fun LabelSelectionDialog(
     onDismissRequest: () -> Unit,
     labelList: List<String>,
     searchValue: String,
-    searchValueChange: (String) -> Unit,
+    onSearchValueChange: (String) -> Unit,
     selectedLabels: List<Boolean>,
     modifier: Modifier = Modifier,
 ) {
     Dialog(onDismissRequest = onDismissRequest) {
         Surface(
-            modifier = modifier
-                .fillMaxWidth(),
             shape = MaterialTheme.shapes.medium,
             color = MaterialTheme.colorScheme.surface,
+            modifier = modifier,
         ) {
             Column(
                 modifier = Modifier.verticalScroll(rememberScrollState()),
@@ -51,7 +51,7 @@ fun LabelSelectionDialog(
                 ) {
                     TextField(
                         value = searchValue,
-                        onValueChange = { searchValueChange(it) },
+                        onValueChange = { onSearchValueChange(it) },
                         modifier = Modifier.fillMaxWidth(),
                         label = { Text("검색") },
                         trailingIcon = {
@@ -81,7 +81,7 @@ fun LabelSelectionDialog(
                                 .padding(start = 8.dp),
                             label = label,
                             isChecked = selectedLabels[index],
-                            onCheckChanged = { !selectedLabels[index] },
+                            onCheckChange = { !selectedLabels[index] },
                         )
                     }
                 }
@@ -94,7 +94,7 @@ fun LabelSelectionDialog(
                 ) {
                     TextButton(onClick = {
                         onDismissRequest()
-                        searchValueChange("")
+                        onSearchValueChange("")
                     }) {
                         Text("취소")
                     }
@@ -109,13 +109,16 @@ fun LabelSelectionDialog(
 
 @Preview(showBackground = true)
 @Composable
-fun LabelSelectionDialogPreview() {
-    LabelSelectionDialog(
-        onDismissRequest = {},
-        labelList = listOf("악몽", "개꿈", "귀신"),
-        searchValue = "",
-        searchValueChange = {},
-        selectedLabels = listOf(true, false, false),
-        modifier = Modifier.width(400.dp),
-    )
+private fun LabelSelectionDialogPreview() {
+    DreamdiaryTheme {
+        LabelSelectionDialog(
+            onDismissRequest = {},
+            labelList = listOf("악몽", "개꿈", "귀신"),
+            searchValue = "",
+            onSearchValueChange = {},
+            selectedLabels = listOf(true, false, false),
+            modifier = Modifier.width(400.dp),
+        )
+    }
+
 }
