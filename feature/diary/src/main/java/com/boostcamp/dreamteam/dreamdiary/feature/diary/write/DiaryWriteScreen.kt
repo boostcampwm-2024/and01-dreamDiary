@@ -93,7 +93,7 @@ fun DiaryWriteScreen(
             TopAppBar(
                 title = { },
                 navigationIcon = {
-                    IconButton(onClick = { /*TODO*/ }) {
+                    IconButton(onClick = { onBackClick() }) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = stringResource(R.string.write_back),
@@ -101,7 +101,7 @@ fun DiaryWriteScreen(
                     }
                 },
                 actions = {
-                    IconButton(onClick = { /*TODO*/ }) {
+                    IconButton(onClick = { onClickSave() }) {
                         Icon(
                             imageVector = Icons.Filled.Check,
                             contentDescription = stringResource(R.string.write_save),
