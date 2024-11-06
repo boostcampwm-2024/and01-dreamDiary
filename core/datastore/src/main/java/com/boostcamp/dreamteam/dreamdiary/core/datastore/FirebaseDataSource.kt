@@ -8,9 +8,7 @@ import javax.inject.Inject
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
-class FirebaseDataSource
-    @Inject
-    constructor() {
+class FirebaseDataSource @Inject constructor() {
         private val db = FirebaseFirestore.getInstance()
 
         suspend fun getAllDiaries(): List<Diary> {

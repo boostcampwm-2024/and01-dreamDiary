@@ -4,9 +4,7 @@ import com.boostcamp.dreamteam.dreamdiary.core.datastore.FirebaseDataSource
 import com.boostcamp.dreamteam.dreamdiary.core.model.Diary
 import javax.inject.Inject
 
-class DiaryRepository
-    @Inject
-    constructor(
+class DiaryRepository @Inject constructor(
         private val firebaseDataSource: FirebaseDataSource,
     ) {
         suspend fun getAllDiaryFromFireBase(): List<Diary> {
