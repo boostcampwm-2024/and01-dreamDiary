@@ -26,11 +26,14 @@ android {
 
 dependencies {
     implementation(projects.core.model)
-
+    // Hilt
     ksp(libs.hilt.compiler)
     implementation(libs.hilt.android)
 
     implementation(libs.androidx.room.runtime)
     ksp(libs.androidx.room.compiler)
     implementation(libs.androidx.room.ktx)
+
+    // firebase
+    implementation(libs.firebase.firestore)
 }
