@@ -34,7 +34,7 @@ internal class DefaultDreamDiaryRepository @Inject constructor(
     override fun getDreamDiaries(): Flow<PagingData<Diary>> {
         return Pager(
             config = PagingConfig(pageSize = 100),
-            pagingSourceFactory = { dreamDiaryDao.getDreamDiaries() }
+            pagingSourceFactory = { dreamDiaryDao.getDreamDiaries() },
         ).flow.map { pagingData ->
             pagingData.map {
                 it.toDomain()

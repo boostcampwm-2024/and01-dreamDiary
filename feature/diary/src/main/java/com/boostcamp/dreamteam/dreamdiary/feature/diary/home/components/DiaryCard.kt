@@ -124,7 +124,7 @@ internal val diaryPreview1 = DiaryUi(
         LabelUi("기쁨"),
         LabelUi("행복"),
         LabelUi("환희"),
-    )
+    ),
 )
 
 internal val diaryPreview2 = DiaryUi(
@@ -137,5 +137,5 @@ internal val diaryPreview2 = DiaryUi(
     labels = listOf(
         LabelUi("슬픔"),
         LabelUi("우울"),
-    )
+    ),
 )

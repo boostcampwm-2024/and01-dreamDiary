@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class GetDreamDiariesUseCase @Inject constructor(
-    private val dreamDiaryRepository: DreamDiaryRepository
+    private val dreamDiaryRepository: DreamDiaryRepository,
 ) {
     operator fun invoke(): Flow<PagingData<Diary>> {
         return dreamDiaryRepository.getDreamDiaries()
