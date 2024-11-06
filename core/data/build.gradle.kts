@@ -1,6 +1,8 @@
 plugins {
     alias(libs.plugins.dreamdiary.android.library)
     alias(libs.plugins.ksp)
+    alias(libs.plugins.room)
+
 }
 
 android {
@@ -18,6 +20,9 @@ android {
             )
         }
     }
+    room {
+        schemaDirectory("$projectDir/schemas")
+    }
 }
 
 dependencies {
@@ -27,4 +32,8 @@ dependencies {
     // Hilt
     ksp(libs.hilt.compiler)
     implementation(libs.hilt.android)
+
+    implementation(libs.androidx.room.runtime)
+    ksp(libs.androidx.room.compiler)
+    implementation(libs.androidx.room.ktx)
 }
