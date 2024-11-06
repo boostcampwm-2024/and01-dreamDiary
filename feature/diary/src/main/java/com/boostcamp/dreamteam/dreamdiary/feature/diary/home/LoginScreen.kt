@@ -1,11 +1,7 @@
 package com.boostcamp.dreamteam.dreamdiary.feature.diary.home
 
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -65,7 +61,7 @@ private fun LoginScreenContent(
                 .padding(innerPadding)
                 .padding(horizontal = 50.dp)
                 .padding(top = 150.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+            verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             Surface(
                 modifier = Modifier.size(60.dp),
@@ -75,20 +71,20 @@ private fun LoginScreenContent(
             }
             Text(
                 stringResource(R.string.login_dream_diary),
-                fontSize = 40.sp
+                fontSize = 40.sp,
             )
             Spacer(modifier = Modifier.height(350.dp))
             OutlinedButton(
                 modifier = modifier.fillMaxWidth(),
                 onClick = onGitHubLogInClick,
-                shape = RoundedCornerShape(8.dp)
+                shape = RoundedCornerShape(8.dp),
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Icon(
                         painter = painterResource(R.drawable.github_icon),
                         contentDescription = stringResource(R.string.login_github_icon),
                         modifier = Modifier.size(24.dp),
-                        tint = Color.Unspecified
+                        tint = Color.Unspecified,
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(stringResource(R.string.login_github_login))
@@ -98,14 +94,14 @@ private fun LoginScreenContent(
             OutlinedButton(
                 modifier = modifier.fillMaxWidth(),
                 onClick = onGoogleLogInClick,
-                shape = RoundedCornerShape(8.dp)
+                shape = RoundedCornerShape(8.dp),
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Icon(
                         painter = painterResource(R.drawable.google_icon),
                         contentDescription = stringResource(R.string.login_google_icon),
                         modifier = Modifier.size(24.dp),
-                        tint = Color.Unspecified
+                        tint = Color.Unspecified,
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(stringResource(R.string.login_google_login))
@@ -117,11 +113,11 @@ private fun LoginScreenContent(
                 style = TextStyle(
                     color = Color.Gray,
                     fontSize = 12.sp,
-                    textDecoration = TextDecoration.Underline // 밑줄 추가
+                    textDecoration = TextDecoration.Underline,
                 ),
                 modifier = Modifier.clickable {
                     onNotLogInClick()
-                }
+                },
             )
         }
     }
