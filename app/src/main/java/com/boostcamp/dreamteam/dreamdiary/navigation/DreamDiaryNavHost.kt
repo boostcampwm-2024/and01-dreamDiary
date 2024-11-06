@@ -22,7 +22,8 @@ fun DreamDiaryNavHost(
         modifier = modifier,
     ) {
         diaryHomeScreen(
-            onDiaryClick = { /*TODO: 상세 화면으로 이동*/ },
+            onDiaryClick = {
+            },
             onFabClick = {
                 navController.navigateToDiaryWriteScreen(
                     navOptions = navOptions {
@@ -32,6 +33,8 @@ fun DreamDiaryNavHost(
             },
         )
 
-        diaryWriteScreen()
+        diaryWriteScreen(
+            onBackClick = navController::navigateUp,
+        )
     }
 }
