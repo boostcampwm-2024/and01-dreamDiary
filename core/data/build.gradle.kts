@@ -36,4 +36,6 @@ dependencies {
 
     // firebase
     implementation(libs.firebase.firestore)
+
+    implementation(libs.androidx.paging.runtime)
 }
