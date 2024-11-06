@@ -1,4 +1,4 @@
-package com.boostcamp.dreamteam.dreamdiary.feature.diary
+package com.boostcamp.dreamteam.dreamdiary.feature.diary.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -10,7 +10,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class DiaryViewModel @Inject constructor(
+class DiaryHomeViewModel @Inject constructor(
     getDiariesUseCase: GetDiariesUseCase,
 ) : ViewModel() {
     private val _diaryHomeUIState: MutableStateFlow<DiaryHomeUIState> =
