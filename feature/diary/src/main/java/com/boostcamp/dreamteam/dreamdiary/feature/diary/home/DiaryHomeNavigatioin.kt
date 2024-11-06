@@ -4,7 +4,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
-import com.boostcamp.dreamteam.dreamdiary.core.model.Diary
+import com.boostcamp.dreamteam.dreamdiary.feature.diary.models.DiaryUi
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -13,7 +13,7 @@ data object DiaryHomeRoute
 fun NavController.navigateToDiaryHomeScreen(navOptions: NavOptions) = navigate(route = DiaryHomeRoute, navOptions)
 
 fun NavGraphBuilder.diaryHomeScreen(
-    onDiaryClick: (Diary) -> Unit,
+    onDiaryClick: (DiaryUi) -> Unit,
     onFabClick: () -> Unit,
 ) {
     composable<DiaryHomeRoute> {

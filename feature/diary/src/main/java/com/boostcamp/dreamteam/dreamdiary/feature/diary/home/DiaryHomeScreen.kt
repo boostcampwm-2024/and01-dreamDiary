@@ -12,7 +12,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.PrimaryTabRow
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Tab
@@ -28,17 +27,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.boostcamp.dreamteam.dreamdiary.core.model.Diary
-import com.boostcamp.dreamteam.dreamdiary.feature.diary.DiaryViewModel
+import com.boostcamp.dreamteam.dreamdiary.designsystem.theme.DreamdiaryTheme
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.components.DiaryCalendarTab
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.components.DiaryListTab
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.components.diariesPreview
+import com.boostcamp.dreamteam.dreamdiary.feature.diary.models.DiaryUi
 
 @Composable
 fun DiaryHomeScreen(
-    onDiaryClick: (Diary) -> Unit,
+    onDiaryClick: (DiaryUi) -> Unit,
     onFabClick: () -> Unit,
-    viewModel: DiaryViewModel = hiltViewModel(),
+    viewModel: DiaryHomeViewModel = hiltViewModel(),
 ) {
     val state by viewModel.diaryHomeUIState.collectAsStateWithLifecycle()
     val diaries = state.diaries
@@ -55,12 +54,12 @@ fun DiaryHomeScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun DiaryHomeScreenContent(
-    diaries: List<Diary>,
+    diaries: List<DiaryUi>,
     modifier: Modifier = Modifier,
     onMenuClick: () -> Unit = {},
     onSearchClick: () -> Unit = {},
     onNotificationClick: () -> Unit = {},
-    onDiaryClick: (Diary) -> Unit = {},
+    onDiaryClick: (DiaryUi) -> Unit = {},
     onFabClick: () -> Unit = {},
 ) {
     var selectedTabIndex by remember { mutableIntStateOf(0) }
@@ -168,8 +167,7 @@ private fun DiaryHomeScreenTopAppBar(
 @Preview
 @Composable
 private fun DiaryHomeScreenContentPreview() {
-    // TODO: 테마 적용
-    MaterialTheme {
+    DreamdiaryTheme {
         DiaryHomeScreenContent(
             diaries = diariesPreview,
         )

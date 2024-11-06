@@ -28,12 +28,15 @@ import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import com.boostcamp.dreamteam.dreamdiary.core.model.Diary
 import com.boostcamp.dreamteam.dreamdiary.core.model.Label
+import com.boostcamp.dreamteam.dreamdiary.designsystem.theme.DreamdiaryTheme
+import com.boostcamp.dreamteam.dreamdiary.feature.diary.models.DiaryUi
+import com.boostcamp.dreamteam.dreamdiary.feature.diary.models.toDiaryUi
 
 @Composable
 internal fun DiaryCard(
-    diary: Diary,
+    diary: DiaryUi,
     modifier: Modifier = Modifier,
-    onDiaryClick: (Diary) -> Unit = {},
+    onDiaryClick: (DiaryUi) -> Unit = {},
     containerColor: Color = MaterialTheme.colorScheme.surfaceContainerLowest,
 ) {
     Card(
@@ -71,7 +74,7 @@ internal fun DiaryCard(
                         .padding(2.dp),
                 )
                 Spacer(modifier = Modifier.width(4.dp))
-                Text(text = diary.createdAt, style = MaterialTheme.typography.labelMedium)
+                Text(text = diary.createdAt.formatted, style = MaterialTheme.typography.labelMedium)
 
                 Spacer(modifier = Modifier.width(8.dp))
 
@@ -101,11 +104,12 @@ internal fun DiaryCard(
 @Preview
 @Composable
 private fun DiaryCardPreview() {
-    // TODO: 테마 적용
-    DiaryCard(
-        diary = diaryPreview1,
-        modifier = Modifier.fillMaxWidth(),
-    )
+    DreamdiaryTheme {
+        DiaryCard(
+            diary = diaryPreview1,
+            modifier = Modifier.fillMaxWidth(),
+        )
+    }
 }
 
 internal val diaryPreview1 = Diary(
@@ -120,7 +124,7 @@ internal val diaryPreview1 = Diary(
         Label("행복"),
         Label("환희"),
     ),
-)
+).toDiaryUi()
 
 internal val diaryPreview2 = Diary(
     id = 2,
@@ -133,4 +137,4 @@ internal val diaryPreview2 = Diary(
         Label("슬픔"),
         Label("우울"),
     ),
-)
+).toDiaryUi()

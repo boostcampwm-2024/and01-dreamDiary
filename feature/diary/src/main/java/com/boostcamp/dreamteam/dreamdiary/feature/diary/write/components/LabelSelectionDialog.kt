@@ -92,7 +92,10 @@ fun LabelSelectionDialog(
                     modifier = Modifier.align(Alignment.End),
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
-                    TextButton(onClick = onDismissRequest) {
+                    TextButton(onClick = {
+                        onDismissRequest()
+                        searchValueChange("")
+                    }) {
                         Text("취소")
                     }
                     TextButton(onClick = { onDismissRequest() }) {

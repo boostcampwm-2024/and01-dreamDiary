@@ -26,6 +26,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -40,12 +41,25 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.R
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.write.components.LabelSelectionDialog
+import com.boostcamp.dreamteam.dreamdiary.feature.diary.write.model.DiaryWriteEvent
+import kotlinx.coroutines.flow.collectLatest
 
 @Composable
-fun DiaryWriteScreen(viewModel: DiaryWriteViewModel = hiltViewModel()) {
+fun DiaryWriteScreen(
+    viewModel: DiaryWriteViewModel = hiltViewModel(),
+    onBackClick: () -> Unit,
+) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     val (title, content, searchValue, labels, selectedLabels) = uiState
+
+    LaunchedEffect(Unit) {
+        viewModel.event.collectLatest {
+            when (it) {
+                DiaryWriteEvent.AddSuccess -> onBackClick()
+            }
+        }
+    }
 
     DiaryWriteScreen(
         title = title,
@@ -53,6 +67,8 @@ fun DiaryWriteScreen(viewModel: DiaryWriteViewModel = hiltViewModel()) {
         searchValue = searchValue,
         onTitleChange = viewModel::setTitle,
         onContentChange = viewModel::setContent,
+        onClickSave = viewModel::addDreamDiary,
+        onBackClick = onBackClick,
         onSearchValueChange = viewModel::setSearchValue,
     )
 }
@@ -66,6 +82,8 @@ fun DiaryWriteScreen(
     onTitleChange: (String) -> Unit,
     onContentChange: (String) -> Unit,
     onSearchValueChange: (String) -> Unit,
+    onClickSave: () -> Unit,
+    onBackClick: () -> Unit,
 ) {
     val scrollState = rememberScrollState()
     var isLabelSelectionDialogOpen by remember { mutableStateOf(false) }
@@ -104,6 +122,7 @@ fun DiaryWriteScreen(
             ) {
                 Row(
                     modifier = Modifier.clickable {
+                        // TODO
                     },
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
@@ -177,7 +196,7 @@ fun DiaryWriteScreen(
         }
         if (isLabelSelectionDialogOpen) {
             LabelSelectionDialog(
-                labelList = listOf("악몽", "개꿈", "귀신"), // 라벨 viewmodel에서 가져오기
+                labelList = listOf("악몽", "개꿈", "귀신"),
                 onDismissRequest = { isLabelSelectionDialogOpen = false },
                 searchValue = searchValue,
                 searchValueChange = onSearchValueChange,
@@ -197,6 +216,8 @@ fun PreviewDiaryListScreen() {
         searchValue = "",
         onTitleChange = {},
         onContentChange = {},
+        onClickSave = {},
+        onBackClick = {},
         onSearchValueChange = {},
     )
 }
