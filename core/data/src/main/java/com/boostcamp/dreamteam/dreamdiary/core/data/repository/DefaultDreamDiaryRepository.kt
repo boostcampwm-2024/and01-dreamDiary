@@ -2,6 +2,7 @@ package com.boostcamp.dreamteam.dreamdiary.core.data.repository
 
 import com.boostcamp.dreamteam.dreamdiary.core.data.database.dao.DreamDiaryDao
 import com.boostcamp.dreamteam.dreamdiary.core.data.database.model.DreamDiaryEntity
+import com.boostcamp.dreamteam.dreamdiary.core.data.database.model.LabelEntity
 import java.time.Instant
 import java.util.UUID
 import javax.inject.Inject
@@ -20,6 +21,14 @@ internal class DefaultDreamDiaryRepository @Inject constructor(
                 body = body,
                 createdAt = Instant.now(),
                 updatedAt = Instant.now(),
+            ),
+        )
+    }
+
+    override suspend fun addLabel(label: String) {
+        dreamDiaryDao.insertLabel(
+            LabelEntity(
+                label = label,
             ),
         )
     }

@@ -5,4 +5,6 @@ interface DreamDiaryRepository {
         title: String,
         body: String,
     )
+
+    suspend fun addLabel(label: String)
 }
