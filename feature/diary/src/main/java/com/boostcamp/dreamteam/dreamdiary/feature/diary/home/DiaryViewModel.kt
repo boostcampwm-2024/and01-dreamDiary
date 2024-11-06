@@ -1,4 +1,4 @@
-package com.boostcamp.dreamteam.dreamdiary.feature.diary
+package com.boostcamp.dreamteam.dreamdiary.feature.diary.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
