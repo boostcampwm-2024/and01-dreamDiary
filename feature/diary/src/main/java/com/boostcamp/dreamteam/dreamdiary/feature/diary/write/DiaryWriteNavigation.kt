@@ -11,8 +11,10 @@ data object DiaryWriteRoute
 
 fun NavController.navigateToDiaryWriteScreen(navOptions: NavOptions) = navigate(route = DiaryWriteRoute, navOptions)
 
-fun NavGraphBuilder.diaryWriteScreen() {
+fun NavGraphBuilder.diaryWriteScreen(onBackClick: () -> Unit) {
     composable<DiaryWriteRoute> {
-        DiaryWriteScreen()
+        DiaryWriteScreen(
+            onBackClick = onBackClick,
+        )
     }
 }

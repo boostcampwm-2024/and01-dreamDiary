@@ -32,6 +32,8 @@ fun DreamDiaryNavHost(
             },
         )
 
-        diaryWriteScreen()
+        diaryWriteScreen(
+            onBackClick = navController::navigateUp,
+        )
     }
 }
