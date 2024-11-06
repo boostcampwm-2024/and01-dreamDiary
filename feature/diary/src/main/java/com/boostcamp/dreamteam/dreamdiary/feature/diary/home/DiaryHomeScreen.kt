@@ -37,7 +37,7 @@ import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.components.diariesP
 fun DiaryHomeScreen(
     onDiaryClick: (Diary) -> Unit,
     onFabClick: () -> Unit,
-    viewModel: DiaryViewModel = hiltViewModel(),
+    viewModel: DiaryHomeViewModel = hiltViewModel(),
 ) {
     val state by viewModel.diaryHomeUIState.collectAsStateWithLifecycle()
     val diaries = state.diaries
