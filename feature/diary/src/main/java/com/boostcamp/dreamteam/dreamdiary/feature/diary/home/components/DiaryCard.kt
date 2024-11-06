@@ -26,11 +26,12 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
-import com.boostcamp.dreamteam.dreamdiary.core.model.Diary
-import com.boostcamp.dreamteam.dreamdiary.core.model.Label
 import com.boostcamp.dreamteam.dreamdiary.designsystem.theme.DreamdiaryTheme
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.models.DiaryUi
-import com.boostcamp.dreamteam.dreamdiary.feature.diary.models.toDiaryUi
+import com.boostcamp.dreamteam.dreamdiary.feature.diary.models.LabelUi
+import com.boostcamp.dreamteam.dreamdiary.feature.diary.models.vos.toDisplayableDateTime
+import java.time.Duration
+import java.time.Instant
 
 @Composable
 internal fun DiaryCard(
@@ -112,29 +113,29 @@ private fun DiaryCardPreview() {
     }
 }
 
-internal val diaryPreview1 = Diary(
-    id = 1,
+internal val diaryPreview1 = DiaryUi(
+    id = "1",
     title = "오늘의 일기",
-    content = "오늘은 날씨가 좋았다.",
-    createdAt = "2021-09-01",
-    updatedAt = "2021-09-01",
-    images = emptyList(),
+    content = "오늘은 날씨가 좋았다",
+    createdAt = Instant.now().toDisplayableDateTime(),
+    updatedAt = Instant.now().toDisplayableDateTime(),
+    images = listOf(),
     labels = listOf(
-        Label("기쁨"),
-        Label("행복"),
-        Label("환희"),
-    ),
-).toDiaryUi()
+        LabelUi("기쁨"),
+        LabelUi("행복"),
+        LabelUi("환희"),
+    )
+)
 
-internal val diaryPreview2 = Diary(
-    id = 2,
+internal val diaryPreview2 = DiaryUi(
+    id = "2",
     title = "어제의 일기",
     content = "어제는 날씨가 좋지 않았다.",
-    createdAt = "2021-08-31",
-    updatedAt = "2021-08-31",
-    images = emptyList(),
+    createdAt = Instant.now().minus(Duration.ofDays(1)).toDisplayableDateTime(),
+    updatedAt = Instant.now().minus(Duration.ofDays(1)).toDisplayableDateTime(),
+    images = listOf(),
     labels = listOf(
-        Label("슬픔"),
-        Label("우울"),
-    ),
-).toDiaryUi()
+        LabelUi("슬픔"),
+        LabelUi("우울"),
+    )
+)

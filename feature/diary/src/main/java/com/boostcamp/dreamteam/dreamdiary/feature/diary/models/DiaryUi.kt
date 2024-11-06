@@ -6,7 +6,7 @@ import com.boostcamp.dreamteam.dreamdiary.feature.diary.models.vos.toDisplayable
 import java.time.Instant
 
 data class DiaryUi(
-    val id: Long,
+    val id: String,
     val title: String,
     val content: String,
     val createdAt: DisplayableDateTime,
