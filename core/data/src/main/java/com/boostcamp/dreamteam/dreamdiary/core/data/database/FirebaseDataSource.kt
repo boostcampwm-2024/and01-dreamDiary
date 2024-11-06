@@ -20,8 +20,8 @@ class FirebaseDataSource @Inject constructor() {
                         Log.d("FirestoreData", "${document.id} => ${document.data}")
                         val diary = document.toObject(Diary::class.java)
                         diaries.add(diary)
-                        continuation.resume(diaries)
                     }
+                    continuation.resume(diaries)
                 }
                 .addOnFailureListener { exception ->
                     Log.w("FirestoreData", "Error getting documents: ", exception)
