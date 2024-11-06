@@ -10,16 +10,18 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class DiaryViewModel @Inject constructor(
-    getDiariesUseCase: GetDiariesUseCase,
-) : ViewModel() {
-    private val _diaryHomeUIState: MutableStateFlow<DiaryHomeUIState> =
-        MutableStateFlow(DiaryHomeUIState())
-    val diaryHomeUIState = _diaryHomeUIState.asStateFlow()
+class DiaryViewModel
+    @Inject
+    constructor(
+        getDiariesUseCase: GetDiariesUseCase,
+    ) : ViewModel() {
+        private val _diaryHomeUIState: MutableStateFlow<DiaryHomeUIState> =
+            MutableStateFlow(DiaryHomeUIState())
+        val diaryHomeUIState = _diaryHomeUIState.asStateFlow()
 
-    init {
-        viewModelScope.launch {
-            _diaryHomeUIState.value = DiaryHomeUIState(getDiariesUseCase(), false)
+        init {
+            viewModelScope.launch {
+                _diaryHomeUIState.value = DiaryHomeUIState(getDiariesUseCase(), false)
+            }
         }
     }
-}
