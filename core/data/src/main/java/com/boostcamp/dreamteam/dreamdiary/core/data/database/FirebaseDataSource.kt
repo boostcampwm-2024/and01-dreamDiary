@@ -1,4 +1,4 @@
-package com.boostcamp.dreamteam.dreamdiary.core.datastore
+package com.boostcamp.dreamteam.dreamdiary.core.data.database
 
 import android.util.Log
 import com.boostcamp.dreamteam.dreamdiary.core.model.Diary

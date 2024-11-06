@@ -21,10 +21,11 @@ android {
 }
 
 dependencies {
-    implementation(project(":core:datastore"))
-
     implementation(projects.core.model)
     // Hilt
     ksp(libs.hilt.compiler)
     implementation(libs.hilt.android)
+
+    // firebase
+    implementation(libs.firebase.firestore)
 }

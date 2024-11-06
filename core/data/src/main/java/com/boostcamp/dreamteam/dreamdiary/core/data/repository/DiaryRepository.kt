@@ -1,6 +1,6 @@
 package com.boostcamp.dreamteam.dreamdiary.core.data.repository
 
-import com.boostcamp.dreamteam.dreamdiary.core.datastore.FirebaseDataSource
+import com.boostcamp.dreamteam.dreamdiary.core.data.database.FirebaseDataSource
 import com.boostcamp.dreamteam.dreamdiary.core.model.Diary
 import javax.inject.Inject
 
