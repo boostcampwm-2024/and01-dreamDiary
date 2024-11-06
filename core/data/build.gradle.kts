@@ -25,7 +25,7 @@ android {
 }
 
 dependencies {
-    implementation(project(":core:datastore"))
+    implementation(projects.core.datastore)
 
     implementation(projects.core.model)
     // Hilt
