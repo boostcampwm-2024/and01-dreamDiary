@@ -83,7 +83,7 @@ internal fun LabelSelectionDialog(
                                 .padding(start = 8.dp),
                             label = selectableLabel.label.name,
                             isChecked = selectableLabels[index].isSelected,
-                            onCheckChange = onCheckChange,
+                            onLabelClick = onCheckChange,
                         )
                     }
                 }

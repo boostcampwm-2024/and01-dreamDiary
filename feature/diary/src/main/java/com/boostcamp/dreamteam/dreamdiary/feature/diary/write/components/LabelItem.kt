@@ -1,5 +1,6 @@
 package com.boostcamp.dreamteam.dreamdiary.feature.diary.write.components
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
@@ -18,20 +19,20 @@ import com.boostcamp.dreamteam.dreamdiary.feature.diary.models.LabelUi
 internal fun LabelItem(
     label: String,
     isChecked: Boolean,
-    onCheckChange: (LabelUi) -> Unit,
+    onLabelClick: (LabelUi) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Row(
-        modifier = modifier,
+        modifier = modifier
+            .clickable { onLabelClick(LabelUi(label)) }
+            .padding(8.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Text(text = label)
         Checkbox(
             checked = isChecked,
-            onCheckedChange = { isChecked ->
-                onCheckChange(LabelUi(label))
-            },
+            onCheckedChange = null,
         )
     }
 }
@@ -46,7 +47,7 @@ private fun LabelItemPreview() {
                 .padding(4.dp),
             label = "악몽",
             isChecked = true,
-            onCheckChange = {},
+            onLabelClick = {},
         )
     }
 }
