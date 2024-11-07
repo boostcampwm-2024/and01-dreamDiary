@@ -3,6 +3,7 @@ package com.boostcamp.dreamteam.dreamdiary.feature.diary.write
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.boostcamp.dreamteam.dreamdiary.core.domain.usecase.AddDreamDiaryUseCase
+import com.boostcamp.dreamteam.dreamdiary.feature.diary.models.LabelUi
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.write.model.DiaryWriteEvent
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.write.model.DiaryWriteUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -30,6 +31,22 @@ class DiaryWriteViewModel @Inject constructor(
 
     fun setContent(content: String) {
         _uiState.value = _uiState.value.copy(content = content)
+    }
+
+    fun setSearchValue(searchValue: String) {
+        _uiState.value = _uiState.value.copy(searchValue = searchValue)
+    }
+
+    fun toggleLabel(labelUi: LabelUi) {
+        _uiState.value = _uiState.value.copy(
+            selectableLabels = _uiState.value.selectableLabels.map {
+                if (it.label.name == labelUi.name) {
+                    it.copy(isSelected = !it.isSelected)
+                } else {
+                    it
+                }
+            },
+        )
     }
 
     fun addDreamDiary() {
