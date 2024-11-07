@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "99fe4ad42dc76bf2ace29255e371e197",
+    "identityHash": "55c710c5b13d4a5c2c7517208401c5e1",
     "entities": [
       {
         "tableName": "diary",
@@ -47,12 +47,32 @@
         },
         "indices": [],
         "foreignKeys": []
+      },
+      {
+        "tableName": "label",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`label` TEXT NOT NULL, PRIMARY KEY(`label`))",
+        "fields": [
+          {
+            "fieldPath": "label",
+            "columnName": "label",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "label"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
       }
     ],
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '99fe4ad42dc76bf2ace29255e371e197')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '55c710c5b13d4a5c2c7517208401c5e1')"
     ]
   }
 }
