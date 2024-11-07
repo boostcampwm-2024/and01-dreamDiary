@@ -1,5 +1,7 @@
 package com.boostcamp.dreamteam.dreamdiary.feature.diary.write
 
+import android.database.sqlite.SQLiteConstraintException
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.boostcamp.dreamteam.dreamdiary.core.domain.usecase.AddDreamDiaryUseCase
@@ -26,6 +28,7 @@ class DiaryWriteViewModel @Inject constructor(
 
     private val _event = Channel<DiaryWriteEvent>(64)
     val event = _event.receiveAsFlow()
+
 
     fun setTitle(title: String) {
         _uiState.value = _uiState.value.copy(title = title)
@@ -56,15 +59,23 @@ class DiaryWriteViewModel @Inject constructor(
         val content = _uiState.value.content
         viewModelScope.launch {
             addDreamDiaryUseCase(title, content)
-            _event.trySend(DiaryWriteEvent.AddSuccess)
+            _event.trySend(DiaryWriteEvent.DiaryAddSuccess)
         }
     }
 
     fun addLabel() {
         val addLabel = _uiState.value.searchValue
         viewModelScope.launch {
-            addLabelUseCase(addLabel)
-            _event.trySend(DiaryWriteEvent.AddSuccess)
+            try {
+                addLabelUseCase(addLabel)
+                _event.trySend(DiaryWriteEvent.LabelAddSuccess)
+            } catch (e: SQLiteConstraintException) {
+                Log.d("DiaryWriteViewModel", "addLabel: Duplicate label error - ${e.message}")
+                _event.trySend(DiaryWriteEvent.LabelAddFailure)
+            } catch (e: Exception) {
+                Log.d("DiaryWriteViewModel", "addLabel: ${e.message} ${e.cause}")
+                _event.trySend(DiaryWriteEvent.LabelAddFailure)
+            }
         }
     }
 }
