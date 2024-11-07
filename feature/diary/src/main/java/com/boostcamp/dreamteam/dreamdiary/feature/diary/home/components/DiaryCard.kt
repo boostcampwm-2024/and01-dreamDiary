@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.Label
+import androidx.compose.material.icons.filled.AccessTime
 import androidx.compose.material.icons.filled.CalendarToday
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -18,10 +19,12 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -32,6 +35,10 @@ import com.boostcamp.dreamteam.dreamdiary.feature.diary.models.LabelUi
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.models.vos.toDisplayableDateTime
 import java.time.Duration
 import java.time.Instant
+import java.time.chrono.Chronology
+import java.time.format.DateTimeFormatter
+import java.time.format.DateTimeFormatterBuilder
+import java.time.format.FormatStyle
 
 @Composable
 internal fun DiaryCard(
@@ -40,6 +47,23 @@ internal fun DiaryCard(
     onDiaryClick: (DiaryUi) -> Unit = {},
     containerColor: Color = MaterialTheme.colorScheme.surfaceContainerLowest,
 ) {
+    val locale = Locale.current.platformLocale
+    val dateFormatter = remember(locale) {
+        val pattern = DateTimeFormatterBuilder
+            .getLocalizedDateTimePattern(
+                FormatStyle.FULL, null, Chronology.ofLocale(locale), locale
+            )
+        DateTimeFormatter.ofPattern(pattern)
+    }
+
+    val timeFormatter = remember(locale) {
+        val pattern = DateTimeFormatterBuilder
+            .getLocalizedDateTimePattern(
+                null, FormatStyle.SHORT, Chronology.ofLocale(locale), locale
+            )
+        DateTimeFormatter.ofPattern(pattern)
+    }
+
     Card(
         modifier = modifier.clickable(onClick = { onDiaryClick(diary) }),
         colors = CardDefaults.cardColors().copy(containerColor = containerColor),
@@ -75,7 +99,19 @@ internal fun DiaryCard(
                         .padding(2.dp),
                 )
                 Spacer(modifier = Modifier.width(4.dp))
-                Text(text = diary.createdAt.formatted, style = MaterialTheme.typography.labelMedium)
+                Text(text = diary.updatedAt.value.format(dateFormatter), style = MaterialTheme.typography.labelMedium)
+
+                Spacer(modifier = Modifier.width(4.dp))
+
+                Icon(
+                    imageVector = Icons.Default.AccessTime,
+                    contentDescription = "작성시간",
+                    modifier = Modifier
+                        .height(16.dp)
+                        .padding(2.dp),
+                )
+                Spacer(modifier = Modifier.width(4.dp))
+                Text(text = diary.updatedAt.value.format(timeFormatter), style = MaterialTheme.typography.labelMedium)
 
                 Spacer(modifier = Modifier.width(8.dp))
 
