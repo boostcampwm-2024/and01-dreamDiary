@@ -46,6 +46,7 @@ import com.boostcamp.dreamteam.dreamdiary.feature.diary.R
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.models.LabelUi
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.write.components.LabelSelectionDialog
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.write.model.DiaryWriteEvent
+import com.boostcamp.dreamteam.dreamdiary.feature.diary.write.model.LabelAddFailureReason
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.write.model.SelectableLabel
 import kotlinx.coroutines.flow.collectLatest
 
@@ -67,9 +68,20 @@ internal fun DiaryWriteScreen(
                 is DiaryWriteEvent.LabelAddSuccess -> {
                     Toast.makeText(context, "라벨 추가 성공", Toast.LENGTH_SHORT).show()
                 }
-
                 is DiaryWriteEvent.LabelAddFailure -> {
-                    Toast.makeText(context, "라벨 추가 실패", Toast.LENGTH_SHORT).show()
+                    when (it.labelAddFailureReason) {
+                        LabelAddFailureReason.DUPLICATE_LABEL -> {
+                            Toast.makeText(context, context.getString(R.string.write_duplicate_error), Toast.LENGTH_SHORT).show()
+                        }
+
+                        LabelAddFailureReason.INSUFFICIENT_STORAGE -> {
+                            Toast.makeText(context, context.getString(R.string.write_insufficient_storage_error), Toast.LENGTH_SHORT).show()
+                        }
+
+                        LabelAddFailureReason.UNKNOWN_ERROR -> {
+                            Toast.makeText(context, context.getString(R.string.write_unknown_error), Toast.LENGTH_SHORT).show()
+                        }
+                    }
                 }
             }
         }

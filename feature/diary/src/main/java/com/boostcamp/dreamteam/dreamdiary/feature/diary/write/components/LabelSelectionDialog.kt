@@ -66,7 +66,7 @@ internal fun LabelSelectionDialog(
                                     contentDescription = "Add Label",
                                     modifier = Modifier.clickable {
                                         onClickLabelSave()
-                                    }
+                                    },
                                 )
                             } else {
                                 Icon(
