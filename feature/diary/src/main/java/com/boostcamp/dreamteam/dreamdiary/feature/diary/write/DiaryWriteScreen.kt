@@ -41,8 +41,10 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.boostcamp.dreamteam.dreamdiary.designsystem.theme.DreamdiaryTheme
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.R
+import com.boostcamp.dreamteam.dreamdiary.feature.diary.models.LabelUi
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.write.components.LabelSelectionDialog
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.write.model.DiaryWriteEvent
+import com.boostcamp.dreamteam.dreamdiary.feature.diary.write.model.SelectableLabel
 import kotlinx.coroutines.flow.collectLatest
 
 @Composable
@@ -52,7 +54,7 @@ internal fun DiaryWriteScreen(
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    val (title, content, searchValue, labels) = uiState
+    val (title, content, searchValue, selectableLabels) = uiState
 
     LaunchedEffect(Unit) {
         viewModel.event.collectLatest {
@@ -66,11 +68,13 @@ internal fun DiaryWriteScreen(
         title = title,
         content = content,
         searchValue = searchValue,
+        selectableLabels = selectableLabels,
         onTitleChange = viewModel::setTitle,
         onContentChange = viewModel::setContent,
+        onCheckChange = viewModel::toggleLabel,
+        onSearchValueChange = viewModel::setSearchValue,
         onClickSave = viewModel::addDreamDiary,
         onBackClick = onBackClick,
-        onSearchValueChange = viewModel::setSearchValue,
     )
 }
 
@@ -80,8 +84,10 @@ private fun DiaryWriteScreen(
     title: String,
     content: String,
     searchValue: String,
+    selectableLabels: List<SelectableLabel>,
     onTitleChange: (String) -> Unit,
     onContentChange: (String) -> Unit,
+    onCheckChange: (labelUi: LabelUi) -> Unit,
     onSearchValueChange: (String) -> Unit,
     onClickSave: () -> Unit,
     onBackClick: () -> Unit,
@@ -197,11 +203,11 @@ private fun DiaryWriteScreen(
         }
         if (isLabelSelectionDialogOpen) {
             LabelSelectionDialog(
-                labelList = listOf("악몽", "개꿈", "귀신"),
                 onDismissRequest = { isLabelSelectionDialogOpen = false },
                 searchValue = searchValue,
                 onSearchValueChange = onSearchValueChange,
-                selectedLabels = listOf(true, false, false),
+                selectableLabels = selectableLabels,
+                onCheckChange = onCheckChange,
                 modifier = Modifier.width(400.dp),
             )
         }
@@ -216,8 +222,14 @@ private fun PreviewDiaryListScreen() {
             title = "",
             content = "",
             searchValue = "",
+            selectableLabels = listOf(
+                SelectableLabel(LabelUi("악몽"), isSelected = true),
+                SelectableLabel(LabelUi("개꿈"), isSelected = false),
+                SelectableLabel(LabelUi("귀신"), isSelected = false),
+            ),
             onTitleChange = {},
             onContentChange = {},
+            onCheckChange = {},
             onClickSave = {},
             onBackClick = {},
             onSearchValueChange = {},

@@ -26,14 +26,16 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.boostcamp.dreamteam.dreamdiary.designsystem.theme.DreamdiaryTheme
+import com.boostcamp.dreamteam.dreamdiary.feature.diary.models.LabelUi
+import com.boostcamp.dreamteam.dreamdiary.feature.diary.write.model.SelectableLabel
 
 @Composable
 internal fun LabelSelectionDialog(
     onDismissRequest: () -> Unit,
-    labelList: List<String>,
     searchValue: String,
+    selectableLabels: List<SelectableLabel>,
     onSearchValueChange: (String) -> Unit,
-    selectedLabels: List<Boolean>,
+    onCheckChange: (labelUi: LabelUi) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Dialog(onDismissRequest = onDismissRequest) {
@@ -74,14 +76,14 @@ internal fun LabelSelectionDialog(
                 Spacer(modifier = Modifier.height(8.dp))
 
                 Column(modifier = Modifier.fillMaxWidth()) {
-                    labelList.forEachIndexed { index, label ->
+                    selectableLabels.forEachIndexed { index, selectableLabel ->
                         LabelItem(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(start = 8.dp),
-                            label = label,
-                            isChecked = selectedLabels[index],
-                            onCheckChange = { !selectedLabels[index] },
+                            label = selectableLabel.label.name,
+                            isChecked = selectableLabels[index].isSelected,
+                            onCheckChange = onCheckChange,
                         )
                     }
                 }
@@ -113,10 +115,14 @@ private fun LabelSelectionDialogPreview() {
     DreamdiaryTheme {
         LabelSelectionDialog(
             onDismissRequest = {},
-            labelList = listOf("악몽", "개꿈", "귀신"),
             searchValue = "",
             onSearchValueChange = {},
-            selectedLabels = listOf(true, false, false),
+            onCheckChange = {},
+            selectableLabels = listOf(
+                SelectableLabel(LabelUi("악몽"), isSelected = true),
+                SelectableLabel(LabelUi("개꿈"), isSelected = false),
+                SelectableLabel(LabelUi("귀신"), isSelected = false),
+            ),
             modifier = Modifier.width(400.dp),
         )
     }
