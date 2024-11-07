@@ -2,8 +2,10 @@ package com.boostcamp.dreamteam.dreamdiary.core.data.database.dao
 
 import androidx.room.Dao
 import androidx.room.Insert
+import androidx.room.Query
 import com.boostcamp.dreamteam.dreamdiary.core.data.database.model.DreamDiaryEntity
 import com.boostcamp.dreamteam.dreamdiary.core.data.database.model.LabelEntity
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface DreamDiaryDao {
@@ -12,4 +14,7 @@ interface DreamDiaryDao {
 
     @Insert
     suspend fun insertLabel(labelEntity: LabelEntity)
+
+    @Query("select * from label")
+    fun getLabels(): Flow<List<LabelEntity>>
 }
