@@ -46,9 +46,7 @@ internal fun LabelSelectionDialog(
             color = MaterialTheme.colorScheme.surface,
             modifier = modifier,
         ) {
-            Column(
-                modifier = Modifier.verticalScroll(rememberScrollState()),
-            ) {
+            Column {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier.fillMaxWidth(),
@@ -81,7 +79,7 @@ internal fun LabelSelectionDialog(
 
                 Spacer(modifier = Modifier.height(8.dp))
 
-                Column(modifier = Modifier.fillMaxWidth()) {
+                Column(modifier = Modifier.fillMaxWidth().verticalScroll(rememberScrollState())) {
                     selectableLabels.forEachIndexed { index, selectableLabel ->
                         LabelItem(
                             modifier = Modifier
