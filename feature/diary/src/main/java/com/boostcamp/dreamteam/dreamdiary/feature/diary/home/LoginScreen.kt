@@ -92,25 +92,24 @@ private fun LoginScreenContent(
                 verticalArrangement = Arrangement.spacedBy(8.dp),
             ) {
                 OutlineLoginButton(
-                    Modifier.fillMaxWidth(),
                     onGitHubLogInClick,
                     R.drawable.github_icon,
                     R.string.login_github_icon,
                     R.string.login_github_login,
+                    Modifier.fillMaxWidth(),
                 )
                 OutlineLoginButton(
-                    Modifier.fillMaxWidth(),
                     onGoogleLogInClick,
                     R.drawable.google_icon,
                     R.string.login_google_icon,
                     R.string.login_google_login,
+                    Modifier.fillMaxWidth(),
                 )
                 Spacer(modifier = Modifier.height(5.dp))
                 Text(
                     text = stringResource(R.string.login_now_pass),
                     style = MaterialTheme.typography.labelSmall.copy(
                         color = Color.Gray,
-                        fontSize = 12.sp,
                         textDecoration = TextDecoration.Underline,
                     ),
                     modifier = Modifier.clickable {
@@ -124,11 +123,11 @@ private fun LoginScreenContent(
 
 @Composable
 private fun OutlineLoginButton(
-    modifier: Modifier = Modifier,
     onLogInClick: () -> Unit,
     @DrawableRes icon: Int,
     @StringRes iconDescription: Int,
     @StringRes loginText: Int,
+    modifier: Modifier = Modifier,
 ) {
     OutlinedButton(
         modifier = modifier,
