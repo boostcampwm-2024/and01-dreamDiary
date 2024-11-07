@@ -74,10 +74,10 @@ private fun LoginScreenContent(
                 verticalArrangement = Arrangement.spacedBy(8.dp),
             ) {
                 Box(
-                modifier = Modifier
-                    .size(60.dp)
-                    .clip(RoundedCornerShape(10.dp))
-                    .background(Color(130, 211, 224)),
+                    modifier = Modifier
+                        .size(60.dp)
+                        .clip(RoundedCornerShape(10.dp))
+                        .background(Color(130, 211, 224)),
                 )
                 Text(
                     stringResource(R.string.login_dream_diary),
@@ -90,8 +90,20 @@ private fun LoginScreenContent(
                     .padding(innerPadding),
                 verticalArrangement = Arrangement.spacedBy(8.dp),
             ) {
-                OutlineLoginButton(modifier, onGoogleLogInClick, R.drawable.github_icon, R.string.login_github_icon, R.string.login_github_login)
-                OutlineLoginButton(modifier, onGoogleLogInClick, R.drawable.google_icon, R.string.login_google_icon, R.string.login_google_login)
+                OutlineLoginButton(
+                    modifier,
+                    onGitHubLogInClick,
+                    R.drawable.github_icon,
+                    R.string.login_github_icon,
+                    R.string.login_github_login,
+                )
+                OutlineLoginButton(
+                    modifier,
+                    onGoogleLogInClick,
+                    R.drawable.google_icon,
+                    R.string.login_google_icon,
+                    R.string.login_google_login,
+                )
                 Spacer(modifier = Modifier.height(5.dp))
                 Text(
                     text = stringResource(R.string.login_now_pass),
