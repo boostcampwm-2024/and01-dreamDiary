@@ -1,5 +1,9 @@
 package com.boostcamp.dreamteam.dreamdiary.feature.diary.home
 
+import android.app.Activity
+import android.util.Log
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.background
@@ -22,6 +26,7 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -32,28 +37,41 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.boostcamp.dreamteam.dreamdiary.designsystem.theme.DreamdiaryTheme
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.R
 
 @Composable
 fun LoginScreen(
-    onGitHubLogInClick: () -> Unit,
-    onGoogleLogInClick: () -> Unit,
     onNotLogInClick: () -> Unit,
+    viewModel: LoginViewModel = hiltViewModel(),
 ) {
+    val state by viewModel.loginState.collectAsStateWithLifecycle()
+    val launcher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            viewModel.loginWithGoogle(result.data)
+        }
+    }
     LoginScreenContent(
-        onGitHubLogInClick = onGitHubLogInClick,
-        onGoogleLogInClick = onGoogleLogInClick,
+        onGitHubLogInClick = { /*TODO*/ },
+        onGoogleLogInClick = {
+            val signInIntent = viewModel.getGoogleSignInIntent()
+            launcher.launch(signInIntent)
+                             },
         onNotLogInClick = onNotLogInClick,
     )
 }
 
 @Composable
 private fun LoginScreenContent(
-    modifier: Modifier = Modifier,
     onGitHubLogInClick: () -> Unit = {},
     onGoogleLogInClick: () -> Unit = {},
     onNotLogInClick: () -> Unit = {},
+    modifier: Modifier = Modifier,
 ) {
     Scaffold(
         modifier = modifier,
