@@ -1,5 +1,7 @@
 package com.boostcamp.dreamteam.dreamdiary.feature.diary.home
 
+import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -26,7 +28,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -91,14 +92,14 @@ private fun LoginScreenContent(
                 verticalArrangement = Arrangement.spacedBy(8.dp),
             ) {
                 OutlineLoginButton(
-                    modifier,
+                    Modifier.fillMaxWidth(),
                     onGitHubLogInClick,
                     R.drawable.github_icon,
                     R.string.login_github_icon,
                     R.string.login_github_login,
                 )
                 OutlineLoginButton(
-                    modifier,
+                    Modifier.fillMaxWidth(),
                     onGoogleLogInClick,
                     R.drawable.google_icon,
                     R.string.login_google_icon,
@@ -107,7 +108,7 @@ private fun LoginScreenContent(
                 Spacer(modifier = Modifier.height(5.dp))
                 Text(
                     text = stringResource(R.string.login_now_pass),
-                    style = TextStyle(
+                    style = MaterialTheme.typography.labelSmall.copy(
                         color = Color.Gray,
                         fontSize = 12.sp,
                         textDecoration = TextDecoration.Underline,
@@ -123,15 +124,15 @@ private fun LoginScreenContent(
 
 @Composable
 private fun OutlineLoginButton(
-    modifier: Modifier,
-    onGoogleLogInClick: () -> Unit,
-    icon: Int,
-    iconDescription: Int,
-    loginText: Int,
+    modifier: Modifier = Modifier,
+    onLogInClick: () -> Unit,
+    @DrawableRes icon: Int,
+    @StringRes iconDescription: Int,
+    @StringRes loginText: Int,
 ) {
     OutlinedButton(
-        modifier = modifier.fillMaxWidth(),
-        onClick = onGoogleLogInClick,
+        modifier = modifier,
+        onClick = onLogInClick,
         shape = MaterialTheme.shapes.small,
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
