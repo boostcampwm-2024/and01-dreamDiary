@@ -51,7 +51,10 @@ internal fun DiaryCard(
     val dateFormatter = remember(locale) {
         val pattern = DateTimeFormatterBuilder
             .getLocalizedDateTimePattern(
-                FormatStyle.FULL, null, Chronology.ofLocale(locale), locale
+                FormatStyle.FULL,
+                null,
+                Chronology.ofLocale(locale),
+                locale,
             )
         DateTimeFormatter.ofPattern(pattern)
     }
@@ -59,7 +62,10 @@ internal fun DiaryCard(
     val timeFormatter = remember(locale) {
         val pattern = DateTimeFormatterBuilder
             .getLocalizedDateTimePattern(
-                null, FormatStyle.SHORT, Chronology.ofLocale(locale), locale
+                null,
+                FormatStyle.SHORT,
+                Chronology.ofLocale(locale),
+                locale,
             )
         DateTimeFormatter.ofPattern(pattern)
     }

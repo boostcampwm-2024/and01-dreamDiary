@@ -6,11 +6,11 @@ import androidx.paging.PagingData
 import androidx.paging.map
 import com.boostcamp.dreamteam.dreamdiary.core.data.database.dao.DreamDiaryDao
 import com.boostcamp.dreamteam.dreamdiary.core.data.database.model.DreamDiaryEntity
+import com.boostcamp.dreamteam.dreamdiary.core.data.database.model.LabelEntity
 import com.boostcamp.dreamteam.dreamdiary.core.model.Diary
+import com.boostcamp.dreamteam.dreamdiary.core.model.Label
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import com.boostcamp.dreamteam.dreamdiary.core.data.database.model.LabelEntity
-import com.boostcamp.dreamteam.dreamdiary.core.model.Label
 import java.time.Instant
 import java.util.UUID
 import javax.inject.Inject
