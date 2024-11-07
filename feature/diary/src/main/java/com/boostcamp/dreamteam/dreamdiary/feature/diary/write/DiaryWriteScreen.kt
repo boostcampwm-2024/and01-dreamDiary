@@ -1,5 +1,6 @@
 package com.boostcamp.dreamteam.dreamdiary.feature.diary.write
 
+import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -33,6 +34,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
@@ -44,6 +46,7 @@ import com.boostcamp.dreamteam.dreamdiary.feature.diary.R
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.models.LabelUi
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.write.components.LabelSelectionDialog
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.write.model.DiaryWriteEvent
+import com.boostcamp.dreamteam.dreamdiary.feature.diary.write.model.LabelAddFailureReason
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.write.model.SelectableLabel
 import kotlinx.coroutines.flow.collectLatest
 
@@ -56,10 +59,30 @@ internal fun DiaryWriteScreen(
 
     val (title, content, searchValue, selectableLabels) = uiState
 
+    val context = LocalContext.current
+
     LaunchedEffect(Unit) {
         viewModel.event.collectLatest {
             when (it) {
-                DiaryWriteEvent.AddSuccess -> onBackClick()
+                is DiaryWriteEvent.DiaryAddSuccess -> onBackClick()
+                is DiaryWriteEvent.LabelAddSuccess -> {
+                    Toast.makeText(context, "라벨 추가 성공", Toast.LENGTH_SHORT).show()
+                }
+                is DiaryWriteEvent.LabelAddFailure -> {
+                    when (it.labelAddFailureReason) {
+                        LabelAddFailureReason.DUPLICATE_LABEL -> {
+                            Toast.makeText(context, context.getString(R.string.write_duplicate_error), Toast.LENGTH_SHORT).show()
+                        }
+
+                        LabelAddFailureReason.INSUFFICIENT_STORAGE -> {
+                            Toast.makeText(context, context.getString(R.string.write_insufficient_storage_error), Toast.LENGTH_SHORT).show()
+                        }
+
+                        LabelAddFailureReason.UNKNOWN_ERROR -> {
+                            Toast.makeText(context, context.getString(R.string.write_unknown_error), Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                }
             }
         }
     }
@@ -73,6 +96,7 @@ internal fun DiaryWriteScreen(
         onContentChange = viewModel::setContent,
         onCheckChange = viewModel::toggleLabel,
         onSearchValueChange = viewModel::setSearchValue,
+        onClickLabelSave = viewModel::addLabel,
         onClickSave = viewModel::addDreamDiary,
         onBackClick = onBackClick,
     )
@@ -89,6 +113,7 @@ private fun DiaryWriteScreen(
     onContentChange: (String) -> Unit,
     onCheckChange: (labelUi: LabelUi) -> Unit,
     onSearchValueChange: (String) -> Unit,
+    onClickLabelSave: () -> Unit,
     onClickSave: () -> Unit,
     onBackClick: () -> Unit,
 ) {
@@ -208,6 +233,7 @@ private fun DiaryWriteScreen(
                 onSearchValueChange = onSearchValueChange,
                 selectableLabels = selectableLabels,
                 onCheckChange = onCheckChange,
+                onClickLabelSave = onClickLabelSave,
                 modifier = Modifier.width(400.dp),
             )
         }
@@ -230,6 +256,7 @@ private fun PreviewDiaryListScreen() {
             onTitleChange = {},
             onContentChange = {},
             onCheckChange = {},
+            onClickLabelSave = {},
             onClickSave = {},
             onBackClick = {},
             onSearchValueChange = {},

@@ -1,5 +1,6 @@
 package com.boostcamp.dreamteam.dreamdiary.feature.diary.write.components
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -36,6 +37,7 @@ internal fun LabelSelectionDialog(
     selectableLabels: List<SelectableLabel>,
     onSearchValueChange: (String) -> Unit,
     onCheckChange: (labelUi: LabelUi) -> Unit,
+    onClickLabelSave: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Dialog(onDismissRequest = onDismissRequest) {
@@ -44,9 +46,7 @@ internal fun LabelSelectionDialog(
             color = MaterialTheme.colorScheme.surface,
             modifier = modifier,
         ) {
-            Column(
-                modifier = Modifier.verticalScroll(rememberScrollState()),
-            ) {
+            Column {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier.fillMaxWidth(),
@@ -56,11 +56,15 @@ internal fun LabelSelectionDialog(
                         onValueChange = { onSearchValueChange(it) },
                         modifier = Modifier.fillMaxWidth(),
                         label = { Text("검색") },
+                        placeholder = { Text("검색 및 추가") },
                         trailingIcon = {
                             if (searchValue.isNotEmpty()) {
                                 Icon(
                                     imageVector = Icons.Default.Add,
                                     contentDescription = "Add Label",
+                                    modifier = Modifier.clickable {
+                                        onClickLabelSave()
+                                    },
                                 )
                             } else {
                                 Icon(
@@ -75,7 +79,7 @@ internal fun LabelSelectionDialog(
 
                 Spacer(modifier = Modifier.height(8.dp))
 
-                Column(modifier = Modifier.fillMaxWidth()) {
+                Column(modifier = Modifier.fillMaxWidth().verticalScroll(rememberScrollState())) {
                     selectableLabels.forEachIndexed { index, selectableLabel ->
                         LabelItem(
                             modifier = Modifier
@@ -123,6 +127,7 @@ private fun LabelSelectionDialogPreview() {
                 SelectableLabel(LabelUi("개꿈"), isSelected = false),
                 SelectableLabel(LabelUi("귀신"), isSelected = false),
             ),
+            onClickLabelSave = {},
             modifier = Modifier.width(400.dp),
         )
     }
