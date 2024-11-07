@@ -120,5 +120,4 @@ private fun LabelSelectionDialogPreview() {
             modifier = Modifier.width(400.dp),
         )
     }
-
 }

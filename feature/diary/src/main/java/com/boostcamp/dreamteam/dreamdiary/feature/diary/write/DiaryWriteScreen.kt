@@ -52,7 +52,7 @@ internal fun DiaryWriteScreen(
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    val (title, content, searchValue, labels, selectedLabels) = uiState
+    val (title, content, searchValue, labels) = uiState
 
     LaunchedEffect(Unit) {
         viewModel.event.collectLatest {
