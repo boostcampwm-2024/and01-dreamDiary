@@ -5,6 +5,6 @@ import com.boostcamp.dreamteam.dreamdiary.core.model.Label
 
 fun LabelEntity.toDomain(): Label {
     return Label(
-        name = this.label
+        name = this.label,
     )
 }

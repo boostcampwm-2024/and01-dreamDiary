@@ -66,7 +66,7 @@ internal fun LabelSelectionDialog(
                                     modifier = Modifier.clickable {
                                         onClickLabelSave()
                                         onSearchValueChange("")
-                                    }
+                                    },
                                 )
                             } else {
                                 Icon(
