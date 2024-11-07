@@ -11,5 +11,5 @@ interface DreamDiaryRepository {
 
     suspend fun addLabel(label: String)
 
-    fun getLabels(): Flow<List<Label>>
+    fun getLabels(search: String): Flow<List<Label>>
 }

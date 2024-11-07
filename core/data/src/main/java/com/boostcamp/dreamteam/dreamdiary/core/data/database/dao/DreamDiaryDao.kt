@@ -15,6 +15,6 @@ interface DreamDiaryDao {
     @Insert
     suspend fun insertLabel(labelEntity: LabelEntity)
 
-    @Query("select * from label")
-    fun getLabels(): Flow<List<LabelEntity>>
+    @Query("select * from label where :search is null or label like :search")
+    fun getLabels(search: String?): Flow<List<LabelEntity>>
 }

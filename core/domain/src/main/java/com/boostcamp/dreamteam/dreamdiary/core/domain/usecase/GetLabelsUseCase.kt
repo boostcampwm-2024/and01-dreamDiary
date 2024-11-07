@@ -8,7 +8,7 @@ import javax.inject.Inject
 class GetLabelsUseCase @Inject constructor(
     private val dreamDiaryRepository: DreamDiaryRepository,
 ) {
-    operator fun invoke(): Flow<List<Label>> {
-        return dreamDiaryRepository.getLabels()
+    operator fun invoke(search: String): Flow<List<Label>> {
+        return dreamDiaryRepository.getLabels(search)
     }
 }

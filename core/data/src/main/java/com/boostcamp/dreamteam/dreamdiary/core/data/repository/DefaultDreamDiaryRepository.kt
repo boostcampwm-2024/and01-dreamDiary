@@ -36,7 +36,12 @@ internal class DefaultDreamDiaryRepository @Inject constructor(
         )
     }
 
-    override fun getLabels(): Flow<List<Label>> {
-        return dreamDiaryDao.getLabels().map { list -> list.map { it.toDomain() } }
+    override fun getLabels(search: String): Flow<List<Label>> {
+        val formattedSearch: String? = if (search.isBlank()) {
+            null
+        } else {
+            "%$search%"
+        }
+        return dreamDiaryDao.getLabels(formattedSearch).map { list -> list.map { it.toDomain() } }
     }
 }

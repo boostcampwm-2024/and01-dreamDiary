@@ -20,6 +20,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -96,7 +97,9 @@ class DiaryWriteViewModel @Inject constructor(
 
     private fun collectLabels() {
         viewModelScope.launch {
-            getLabelsUseCase().flowWithStarted(
+            _uiState.flatMapLatest {
+                getLabelsUseCase(it.searchValue)
+            }.flowWithStarted(
                 _uiState.subscriptionCount,
                 SharingStarted.WhileSubscribed(5000L),
             ).collect { labels ->
