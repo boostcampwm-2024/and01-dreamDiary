@@ -11,6 +11,6 @@ interface DreamDiaryDao {
     @Insert
     suspend fun insertDreamDiary(dreamDiaryEntity: DreamDiaryEntity)
 
-    @Query("select * from diary")
+    @Query("select * from diary order by updatedAt desc")
     fun getDreamDiaries(): PagingSource<Int, DreamDiaryEntity>
 }
