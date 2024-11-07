@@ -58,6 +58,7 @@ internal fun LabelSelectionDialog(
                         onValueChange = { onSearchValueChange(it) },
                         modifier = Modifier.fillMaxWidth(),
                         label = { Text("검색") },
+                        placeholder = { Text("검색 및 추가") },
                         trailingIcon = {
                             if (searchValue.isNotEmpty()) {
                                 Icon(
@@ -65,7 +66,6 @@ internal fun LabelSelectionDialog(
                                     contentDescription = "Add Label",
                                     modifier = Modifier.clickable {
                                         onClickLabelSave()
-                                        onSearchValueChange("")
                                     },
                                 )
                             } else {
