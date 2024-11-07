@@ -73,6 +73,7 @@ internal fun DiaryWriteScreen(
         onContentChange = viewModel::setContent,
         onCheckChange = viewModel::toggleLabel,
         onSearchValueChange = viewModel::setSearchValue,
+        onClickLabelSave = viewModel::addLabel,
         onClickSave = viewModel::addDreamDiary,
         onBackClick = onBackClick,
     )
@@ -89,6 +90,7 @@ private fun DiaryWriteScreen(
     onContentChange: (String) -> Unit,
     onCheckChange: (labelUi: LabelUi) -> Unit,
     onSearchValueChange: (String) -> Unit,
+    onClickLabelSave: () -> Unit,
     onClickSave: () -> Unit,
     onBackClick: () -> Unit,
 ) {
@@ -208,6 +210,7 @@ private fun DiaryWriteScreen(
                 onSearchValueChange = onSearchValueChange,
                 selectableLabels = selectableLabels,
                 onCheckChange = onCheckChange,
+                onClickLabelSave = onClickLabelSave,
                 modifier = Modifier.width(400.dp),
             )
         }
@@ -230,6 +233,7 @@ private fun PreviewDiaryListScreen() {
             onTitleChange = {},
             onContentChange = {},
             onCheckChange = {},
+            onClickLabelSave = {},
             onClickSave = {},
             onBackClick = {},
             onSearchValueChange = {},

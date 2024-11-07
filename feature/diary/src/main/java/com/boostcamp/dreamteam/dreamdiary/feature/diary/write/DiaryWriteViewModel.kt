@@ -3,6 +3,7 @@ package com.boostcamp.dreamteam.dreamdiary.feature.diary.write
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.boostcamp.dreamteam.dreamdiary.core.domain.usecase.AddDreamDiaryUseCase
+import com.boostcamp.dreamteam.dreamdiary.core.domain.usecase.AddLabelUseCase
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.models.LabelUi
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.write.model.DiaryWriteEvent
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.write.model.DiaryWriteUiState
@@ -18,6 +19,7 @@ import javax.inject.Inject
 @HiltViewModel
 class DiaryWriteViewModel @Inject constructor(
     private val addDreamDiaryUseCase: AddDreamDiaryUseCase,
+    private val addLabelUseCase: AddLabelUseCase
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(DiaryWriteUiState())
     val uiState: StateFlow<DiaryWriteUiState> = _uiState.asStateFlow()
@@ -54,6 +56,14 @@ class DiaryWriteViewModel @Inject constructor(
         val content = _uiState.value.content
         viewModelScope.launch {
             addDreamDiaryUseCase(title, content)
+            _event.trySend(DiaryWriteEvent.AddSuccess)
+        }
+    }
+
+    fun addLabel() {
+        val addLabel = _uiState.value.searchValue
+        viewModelScope.launch {
+            addLabelUseCase(addLabel)
             _event.trySend(DiaryWriteEvent.AddSuccess)
         }
     }
