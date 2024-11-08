@@ -20,7 +20,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.boostcamp.dreamteam.dreamdiary.designsystem.theme.DreamdiaryTheme
@@ -75,9 +74,8 @@ fun DiaryCalendarHeader(
             )
             Text(
                 text = yearMonth.year.toString(),
-                color = MaterialTheme.colorScheme.secondary,
+                color = MaterialTheme.colorScheme.secondary.copy(alpha = 0.6f),
                 style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Light,
             )
         }
         IconButton(onClick = onNextMonthClick) {
