@@ -1,6 +1,8 @@
 package com.boostcamp.dreamteam.dreamdiary.feature.diary.home.components
 
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.defaultMinSize
@@ -11,6 +13,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
@@ -92,13 +95,14 @@ private fun WeekRow(
 ) {
     Row(modifier = modifier) {
         for (i in 0 until 7) {
+            val date = firstDateOfWeek.plusDays(i.toLong())
             DayCell(
                 modifier = Modifier.weight(1f),
+                isToday = date == LocalDate.now(),
             ) {
-                val day = firstDateOfWeek.plusDays(i.toLong())
                 Text(
-                    text = (day.dayOfMonth).toString(),
-                    color = if (day.month != currentYearMonth.month) {
+                    text = (date.dayOfMonth).toString(),
+                    color = if (date.month != currentYearMonth.month) {
                         MaterialTheme.colorScheme.secondary.copy(alpha = 0.4f)
                     } else {
                         MaterialTheme.colorScheme.onSurface
@@ -115,13 +119,24 @@ private fun WeekRow(
 private fun DayCell(
     modifier: Modifier = Modifier,
     minHeight: Dp = 48.dp,
+    isToday: Boolean = false,
     content: @Composable () -> Unit = {},
 ) {
-    Column(
+    Box(
         modifier = modifier.defaultMinSize(minHeight = minHeight),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally,
+        contentAlignment = Alignment.Center,
     ) {
+        if (isToday) {
+            val circleColor = MaterialTheme.colorScheme.primary
+            Canvas(modifier = Modifier.matchParentSize()) {
+                drawCircle(
+                    color = circleColor,
+                    radius = size.minDimension / 3,
+                    style = Stroke(width = 2.dp.toPx()),
+                )
+            }
+        }
+
         content()
     }
 }
@@ -130,6 +145,6 @@ private fun DayCell(
 @Composable
 private fun CalendarBodyPreview() {
     DreamdiaryTheme {
-        DiaryCalendarBody(yearMonth = YearMonth.of(2024, 1))
+        DiaryCalendarBody(yearMonth = YearMonth.now())
     }
 }
