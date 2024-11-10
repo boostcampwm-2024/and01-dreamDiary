@@ -12,6 +12,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -52,6 +53,8 @@ internal fun DiaryCalendar(
             yearMonth = currentYearMonth,
             onPreviousMonthClick = { currentYearMonth = currentYearMonth.minusMonths(1) },
             onNextMonthClick = { currentYearMonth = currentYearMonth.plusMonths(1) },
+            onTodayClick = { currentYearMonth = YearMonth.now() },
+            modifier = Modifier.fillMaxWidth(),
             onMonthTextClick = { isYearMonthPickerOpen = true },
         )
 
@@ -64,37 +67,52 @@ fun DiaryCalendarHeader(
     yearMonth: YearMonth,
     onPreviousMonthClick: () -> Unit,
     onNextMonthClick: () -> Unit,
+    onTodayClick: () -> Unit,
     modifier: Modifier = Modifier,
     onMonthTextClick: () -> Unit = { },
+    today: YearMonth = YearMonth.now(),
 ) {
-    Row(modifier = modifier, verticalAlignment = Alignment.CenterVertically) {
-        IconButton(onClick = onPreviousMonthClick) {
-            Icon(
-                imageVector = Icons.AutoMirrored.Outlined.ArrowBackIos,
-                contentDescription = stringResource(R.string.calendar_previous_month),
-            )
+    Row(
+        modifier = modifier,
+        horizontalArrangement = Arrangement.SpaceBetween,
+    ) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            IconButton(onClick = onPreviousMonthClick) {
+                Icon(
+                    imageVector = Icons.AutoMirrored.Outlined.ArrowBackIos,
+                    contentDescription = stringResource(R.string.calendar_previous_month),
+                )
+            }
+            Row(
+                modifier = Modifier.clickable(onClick = onMonthTextClick),
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalAlignment = Alignment.Bottom,
+            ) {
+                Text(
+                    text = yearMonth.month.getDisplayName(TextStyle.FULL, Locale.getDefault()),
+                    color = MaterialTheme.colorScheme.onSurface,
+                    style = MaterialTheme.typography.titleLarge,
+                )
+                Text(
+                    text = yearMonth.year.toString(),
+                    color = MaterialTheme.colorScheme.secondary.copy(alpha = 0.6f),
+                    style = MaterialTheme.typography.titleMedium,
+                )
+            }
+            IconButton(onClick = onNextMonthClick) {
+                Icon(
+                    imageVector = Icons.AutoMirrored.Outlined.ArrowForwardIos,
+                    contentDescription = stringResource(R.string.calendar_move_next_month),
+                )
+            }
         }
-        Row(
-            modifier = Modifier.clickable(onClick = onMonthTextClick),
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            verticalAlignment = Alignment.Bottom,
-        ) {
-            Text(
-                text = yearMonth.month.getDisplayName(TextStyle.FULL, Locale.getDefault()),
-                color = MaterialTheme.colorScheme.onSurface,
-                style = MaterialTheme.typography.titleLarge,
-            )
-            Text(
-                text = yearMonth.year.toString(),
-                color = MaterialTheme.colorScheme.secondary.copy(alpha = 0.6f),
-                style = MaterialTheme.typography.titleMedium,
-            )
-        }
-        IconButton(onClick = onNextMonthClick) {
-            Icon(
-                imageVector = Icons.AutoMirrored.Outlined.ArrowForwardIos,
-                contentDescription = stringResource(R.string.calendar_move_next_month),
-            )
+        if (yearMonth != today) {
+            TextButton(onClick = onTodayClick) {
+                Text(
+                    text = stringResource(R.string.calendar_today),
+                    color = MaterialTheme.colorScheme.secondary,
+                )
+            }
         }
     }
 }

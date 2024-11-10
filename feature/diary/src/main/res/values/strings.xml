@@ -18,4 +18,5 @@
     <string name="login_now_pass">지금은 건너뛰기</string>
     <string name="calendar_previous_month">이전 달로 이동</string>
     <string name="calendar_move_next_month">다음 달로 이동</string>
+    <string name="calendar_today">오늘</string>
 </resources>
