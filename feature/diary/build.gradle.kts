@@ -43,10 +43,10 @@ dependencies {
     implementation(projects.core.designsystem)
     implementation(projects.core.domain)
     implementation(projects.core.model)
+    implementation(projects.core.data)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
-    implementation(project(":core:data"))
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
