@@ -89,7 +89,7 @@ private fun DiaryCalendarHeader(
                 verticalAlignment = Alignment.Bottom,
             ) {
                 Text(
-                    text = yearMonth.month.getDisplayName(TextStyle.FULL, Locale.getDefault()),
+                    text = yearMonth.month.getDisplayName(TextStyle.SHORT, Locale.getDefault()),
                     color = MaterialTheme.colorScheme.onSurface,
                     style = MaterialTheme.typography.titleLarge,
                 )
