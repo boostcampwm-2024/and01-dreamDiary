@@ -63,7 +63,7 @@ internal fun DiaryCalendar(
 }
 
 @Composable
-fun DiaryCalendarHeader(
+private fun DiaryCalendarHeader(
     yearMonth: YearMonth,
     onPreviousMonthClick: () -> Unit,
     onNextMonthClick: () -> Unit,
