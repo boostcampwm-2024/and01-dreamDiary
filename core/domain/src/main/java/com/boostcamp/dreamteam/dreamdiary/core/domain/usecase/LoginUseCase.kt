@@ -7,13 +7,13 @@ import javax.inject.Inject
 
 class LoginUseCase @Inject constructor(
     private val googleLogInDataSource: GoogleLogInDataSource,
-    private val authRepository: AuthRepository
+    private val authRepository: AuthRepository,
 ) {
     suspend operator fun invoke(data: Intent?): Result<Unit> {
         return try {
             val token = googleLogInDataSource.handleSignInResult(data)
             if (token != null) {
-                authRepository.saveAuthToken(token)  // 토큰 저장
+                authRepository.saveAuthToken(token)
                 Result.success(Unit)
             } else {
                 Result.failure(Exception("Google sign-in failed"))

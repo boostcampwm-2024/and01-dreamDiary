@@ -14,7 +14,9 @@ import javax.inject.Singleton
 object TokenModule {
     @Provides
     @Singleton
-    fun provideSharedPreferences(@ApplicationContext context: Context): SharedPreferences {
+    fun provideSharedPreferences(
+        @ApplicationContext context: Context,
+    ): SharedPreferences {
         return context.getSharedPreferences("auth_prefs", Context.MODE_PRIVATE)
     }
 }

@@ -12,14 +12,14 @@ import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 class GoogleLogInDataSource @Inject constructor(
-    @ApplicationContext private val context: Context
+    @ApplicationContext private val context: Context,
 ) {
-
     private val googleSignInClient = GoogleSignIn.getClient(
-        context, GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+        context,
+        GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestIdToken(context.getString(R.string.google_client_id))
             .requestEmail()
-            .build()
+            .build(),
     )
 
     fun getSignInIntent(): Intent = googleSignInClient.signInIntent
@@ -35,5 +35,13 @@ class GoogleLogInDataSource @Inject constructor(
         }
     }
 
-
+    fun signOut() {
+        googleSignInClient.signOut().addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                Log.d("GoogleLogInDataSource", "User signed out successfully.")
+            } else {
+                Log.e("GoogleLogInDataSource", "Sign out failed.")
+            }
+        }
+    }
 }

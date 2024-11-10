@@ -15,7 +15,7 @@ import javax.inject.Inject
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     private val loginUseCase: LoginUseCase,
-    private val googleLogInDataSource: GoogleLogInDataSource
+    private val googleLogInDataSource: GoogleLogInDataSource,
 ) : ViewModel() {
     private val _loginState = MutableStateFlow<LoginState>(LoginState.NotLogin)
     val loginState = _loginState.asStateFlow()
@@ -34,5 +34,4 @@ class LoginViewModel @Inject constructor(
             }
         }
     }
-
 }

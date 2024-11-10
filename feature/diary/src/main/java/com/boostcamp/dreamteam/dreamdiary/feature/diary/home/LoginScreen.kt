@@ -1,7 +1,6 @@
 package com.boostcamp.dreamteam.dreamdiary.feature.diary.home
 
 import android.app.Activity
-import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.DrawableRes
@@ -39,31 +38,42 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.boostcamp.dreamteam.dreamdiary.designsystem.theme.DreamdiaryTheme
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.R
+import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.model.LoginState
 
 @Composable
 fun LoginScreen(
-    onNotLogInClick: () -> Unit,
+    navigateToDiaryHomeScreen: () -> Unit,
     viewModel: LoginViewModel = hiltViewModel(),
 ) {
-    val state by viewModel.loginState.collectAsStateWithLifecycle()
+    val loginState by viewModel.loginState.collectAsStateWithLifecycle()
     val launcher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.StartActivityForResult()
+        contract = ActivityResultContracts.StartActivityForResult(),
     ) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
             viewModel.loginWithGoogle(result.data)
         }
     }
-    LoginScreenContent(
-        onGitHubLogInClick = { /*TODO*/ },
-        onGoogleLogInClick = {
-            val signInIntent = viewModel.getGoogleSignInIntent()
-            launcher.launch(signInIntent)
-                             },
-        onNotLogInClick = onNotLogInClick,
-    )
+
+    when (loginState) {
+        is LoginState.Success -> {
+            navigateToDiaryHomeScreen()
+        }
+        is LoginState.Error -> {
+            // TODO: 에러 처리
+        }
+        is LoginState.NotLogin -> {
+            LoginScreenContent(
+                onGitHubLogInClick = { /*TODO*/ },
+                onGoogleLogInClick = {
+                    val signInIntent = viewModel.getGoogleSignInIntent()
+                    launcher.launch(signInIntent)
+                },
+                onNotLogInClick = navigateToDiaryHomeScreen,
+            )
+        }
+    }
 }
 
 @Composable
