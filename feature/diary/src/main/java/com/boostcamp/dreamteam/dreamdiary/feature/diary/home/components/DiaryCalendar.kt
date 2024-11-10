@@ -37,6 +37,17 @@ internal fun DiaryCalendar(
     var isYearMonthPickerOpen by remember { mutableStateOf(false) }
 
     Column(modifier = modifier) {
+        if (isYearMonthPickerOpen) {
+            YearMonthPicker(
+                currentYearMonth = currentYearMonth,
+                onConfirmClick = {
+                    currentYearMonth = it
+                    isYearMonthPickerOpen = false
+                },
+                onCancelClick = { isYearMonthPickerOpen = false },
+            )
+        }
+
         DiaryCalendarHeader(
             yearMonth = currentYearMonth,
             onPreviousMonthClick = { currentYearMonth = currentYearMonth.minusMonths(1) },
