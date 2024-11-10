@@ -33,17 +33,18 @@ internal fun DiaryCalendar(
     modifier: Modifier = Modifier,
     yearMonth: YearMonth = YearMonth.now(),
 ) {
-    var selectedYearMonth by remember { mutableStateOf(yearMonth) }
+    var currentYearMonth by remember { mutableStateOf(yearMonth) }
+    var isYearMonthPickerOpen by remember { mutableStateOf(false) }
 
     Column(modifier = modifier) {
         DiaryCalendarHeader(
-            yearMonth = selectedYearMonth,
-            onPreviousMonthClick = { selectedYearMonth = selectedYearMonth.minusMonths(1) },
-            onNextMonthClick = { selectedYearMonth = selectedYearMonth.plusMonths(1) },
-            onMonthTextClick = { /*TODO: 년 월을 선택하는 dialog 표시*/ },
+            yearMonth = currentYearMonth,
+            onPreviousMonthClick = { currentYearMonth = currentYearMonth.minusMonths(1) },
+            onNextMonthClick = { currentYearMonth = currentYearMonth.plusMonths(1) },
+            onMonthTextClick = { isYearMonthPickerOpen = true },
         )
 
-        DiaryCalendarBody(yearMonth = selectedYearMonth, modifier = Modifier.fillMaxWidth())
+        DiaryCalendarBody(yearMonth = currentYearMonth, modifier = Modifier.fillMaxWidth())
     }
 }
 
