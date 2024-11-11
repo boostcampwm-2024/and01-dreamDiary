@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "55c710c5b13d4a5c2c7517208401c5e1",
+    "identityHash": "faeb53cf060400713976527f3c68305c",
     "entities": [
       {
         "tableName": "diary",
@@ -67,12 +67,62 @@
         },
         "indices": [],
         "foreignKeys": []
+      },
+      {
+        "tableName": "diary_label",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`diaryId` TEXT NOT NULL, `labelId` TEXT NOT NULL, PRIMARY KEY(`diaryId`, `labelId`), FOREIGN KEY(`diaryId`) REFERENCES `diary`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`labelId`) REFERENCES `label`(`label`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "fields": [
+          {
+            "fieldPath": "diaryId",
+            "columnName": "diaryId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "labelId",
+            "columnName": "labelId",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "diaryId",
+            "labelId"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": [
+          {
+            "table": "diary",
+            "onDelete": "NO ACTION",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "diaryId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          },
+          {
+            "table": "label",
+            "onDelete": "NO ACTION",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "labelId"
+            ],
+            "referencedColumns": [
+              "label"
+            ]
+          }
+        ]
       }
     ],
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '55c710c5b13d4a5c2c7517208401c5e1')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'faeb53cf060400713976527f3c68305c')"
     ]
   }
 }
