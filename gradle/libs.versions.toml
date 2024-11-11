@@ -86,4 +86,5 @@ googleServices = { id = "com.google.gms.google-services" }
 
 # 이 프로젝트에서 정의한 컨벤션 플러그인
 dreamdiary-android-library = { id = "dreamdiary.android.library" }
+dreamdiary-android-feature = { id = "dreandiary.android.feature" }
 google-gms-google-services = { id = "com.google.gms.google-services", version.ref = "googleGmsGoogleServices" }
