@@ -97,28 +97,27 @@ class DiaryWriteViewModel @Inject constructor(
 
     private fun collectLabels() {
         viewModelScope.launch {
-            _uiState
-                .flatMapLatest {
-                    getLabelsUseCase(it.searchValue)
-                }.flowWithStarted(
-                    _uiState.subscriptionCount,
-                    SharingStarted.WhileSubscribed(5000L),
-                ).collect { labels ->
-                    _uiState.update { prevUiState ->
-                        val newSelectableLabels = mutableListOf<SelectableLabel>()
-                        for (label in labels) {
-                            var newSelectableLabel = SelectableLabel(label.toLabelUi(), false)
-                            for (selectableLabel in prevUiState.selectableLabels) {
-                                if (label.name == selectableLabel.label.name) {
-                                    newSelectableLabel = newSelectableLabel.copy(isSelected = selectableLabel.isSelected)
-                                    break
-                                }
+            _uiState.flatMapLatest {
+                getLabelsUseCase(it.searchValue)
+            }.flowWithStarted(
+                _uiState.subscriptionCount,
+                SharingStarted.WhileSubscribed(5000L),
+            ).collect { labels ->
+                _uiState.update { prevUiState ->
+                    val newSelectableLabels = mutableListOf<SelectableLabel>()
+                    for (label in labels) {
+                        var newSelectableLabel = SelectableLabel(label.toLabelUi(), false)
+                        for (selectableLabel in prevUiState.selectableLabels) {
+                            if (label.name == selectableLabel.label.name) {
+                                newSelectableLabel = newSelectableLabel.copy(isSelected = selectableLabel.isSelected)
+                                break
                             }
-                            newSelectableLabels.add(newSelectableLabel)
                         }
-                        prevUiState.copy(selectableLabels = newSelectableLabels)
+                        newSelectableLabels.add(newSelectableLabel)
                     }
+                    prevUiState.copy(selectableLabels = newSelectableLabels)
                 }
+            }
         }
     }
 }
