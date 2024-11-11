@@ -1,4 +1,4 @@
-package com.boostcamp.dreamteam.dreamdiary.feature.diary.home
+package com.boostcamp.dreamteam.dreamdiary.feature.auth
 
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder

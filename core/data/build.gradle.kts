@@ -2,7 +2,7 @@ plugins {
     alias(libs.plugins.dreamdiary.android.library)
     alias(libs.plugins.ksp)
     alias(libs.plugins.room)
-    id("com.google.gms.google-services")
+    alias(libs.plugins.googleServices)
 }
 
 android {

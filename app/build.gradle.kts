@@ -67,5 +67,6 @@ dependencies {
     coreLibraryDesugaring(libs.desugar.jdk.libs)
 
     implementation(projects.feature.diary)
+    implementation(projects.feature.auth)
     implementation(projects.core.designsystem)
 }

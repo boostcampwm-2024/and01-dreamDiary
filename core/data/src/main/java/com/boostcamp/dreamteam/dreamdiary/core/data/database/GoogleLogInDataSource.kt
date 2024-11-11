@@ -5,6 +5,7 @@ import android.content.Intent
 import android.util.Log
 import com.boostcamp.dreamteam.dreamdiary.core.data.R
 import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -29,7 +30,7 @@ class GoogleLogInDataSource @Inject constructor(
         return try {
             val account = task.await()
             account.idToken
-        } catch (e: ApiException) {
+        } catch (e: Exception) {
             Log.e("GoogleLogin", "Google sign-in failed", e)
             null
         }

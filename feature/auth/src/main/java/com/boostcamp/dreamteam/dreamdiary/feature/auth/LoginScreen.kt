@@ -1,4 +1,4 @@
-package com.boostcamp.dreamteam.dreamdiary.feature.diary.home
+package com.boostcamp.dreamteam.dreamdiary.feature.auth
 
 import android.app.Activity
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -39,7 +39,6 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.boostcamp.dreamteam.dreamdiary.designsystem.theme.DreamdiaryTheme
-import com.boostcamp.dreamteam.dreamdiary.feature.diary.R
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.model.LoginState
 
 @Composable
@@ -78,10 +77,10 @@ fun LoginScreen(
 
 @Composable
 private fun LoginScreenContent(
+    modifier: Modifier = Modifier,
     onGitHubLogInClick: () -> Unit = {},
     onGoogleLogInClick: () -> Unit = {},
     onNotLogInClick: () -> Unit = {},
-    modifier: Modifier = Modifier,
 ) {
     Scaffold(
         modifier = modifier,
