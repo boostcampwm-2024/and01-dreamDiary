@@ -17,10 +17,12 @@ import com.boostcamp.dreamteam.dreamdiary.feature.diary.models.DiaryUi
 
 @Composable
 internal fun DiaryListTab(
-    diaries: List<DiaryUi>,
+    onDiaryClick: (DiaryUi) -> Unit,
     modifier: Modifier = Modifier,
-    onDiaryClick: (DiaryUi) -> Unit = {},
+    uiState: DiaryHomeTabListUIState = DiaryHomeTabListUIState(),
 ) {
+    val (diaries) = uiState
+
     LazyColumn(
         modifier = modifier,
         contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
@@ -40,7 +42,12 @@ internal fun DiaryListTab(
 @Composable
 private fun DiaryListTabPreview() {
     DreamdiaryTheme {
-        DiaryListTab(diaries = diariesPreview)
+        DiaryListTab(
+            onDiaryClick = { },
+            uiState = DiaryHomeTabListUIState(
+                diaries = diariesPreview,
+            ),
+        )
     }
 }
 

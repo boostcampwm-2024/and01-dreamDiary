@@ -29,6 +29,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.boostcamp.dreamteam.dreamdiary.designsystem.theme.DreamdiaryTheme
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.tabcalendar.DiaryCalendarTab
+import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.tablist.DiaryHomeTabListUIState
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.tablist.DiaryListTab
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.tablist.diariesPreview
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.models.DiaryUi
@@ -39,10 +40,9 @@ fun DiaryHomeScreen(
     onFabClick: () -> Unit,
     viewModel: DiaryHomeViewModel = hiltViewModel(),
 ) {
-    val tabListUIState by viewModel.tabListUIState.collectAsStateWithLifecycle()
-    val diaries = tabListUIState.diaries
+    val listUIState by viewModel.tabListUIState.collectAsStateWithLifecycle()
     DiaryHomeScreenContent(
-        diaries = diaries,
+        listUIState = listUIState,
         onMenuClick = { /*TODO*/ },
         onSearchClick = { /*TODO*/ },
         onNotificationClick = { /*TODO*/ },
@@ -54,7 +54,7 @@ fun DiaryHomeScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun DiaryHomeScreenContent(
-    diaries: List<DiaryUi>,
+    listUIState: DiaryHomeTabListUIState,
     modifier: Modifier = Modifier,
     onMenuClick: () -> Unit = {},
     onSearchClick: () -> Unit = {},
@@ -111,7 +111,7 @@ private fun DiaryHomeScreenContent(
 
             when (selectedTabIndex) {
                 0 -> DiaryListTab(
-                    diaries = diaries,
+                    uiState = listUIState,
                     modifier = Modifier.fillMaxSize(),
                     onDiaryClick = onDiaryClick,
                 )
@@ -169,7 +169,9 @@ private fun DiaryHomeScreenTopAppBar(
 private fun DiaryHomeScreenContentPreview() {
     DreamdiaryTheme {
         DiaryHomeScreenContent(
-            diaries = diariesPreview,
+            listUIState = DiaryHomeTabListUIState(
+                diaries = diariesPreview,
+            ),
         )
     }
 }
