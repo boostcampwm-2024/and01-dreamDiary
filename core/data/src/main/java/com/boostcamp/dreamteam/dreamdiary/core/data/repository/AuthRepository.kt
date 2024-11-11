@@ -11,7 +11,7 @@ import javax.inject.Singleton
 
 @Singleton
 class AuthRepository @Inject constructor(
-    private val googleSignInDataSource: GoogleSignInDataSource
+    private val googleSignInDataSource: GoogleSignInDataSource,
 ) {
     private val auth: FirebaseAuth = FirebaseAuth.getInstance()
 
