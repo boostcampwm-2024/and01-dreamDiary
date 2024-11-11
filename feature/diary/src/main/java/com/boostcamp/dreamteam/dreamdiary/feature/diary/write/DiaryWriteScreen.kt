@@ -1,5 +1,6 @@
 package com.boostcamp.dreamteam.dreamdiary.feature.diary.write
 
+import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -8,6 +9,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.verticalScroll
@@ -27,31 +29,61 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.boostcamp.dreamteam.dreamdiary.designsystem.theme.DreamdiaryTheme
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.R
+import com.boostcamp.dreamteam.dreamdiary.feature.diary.models.LabelUi
+import com.boostcamp.dreamteam.dreamdiary.feature.diary.write.components.LabelSelectionDialog
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.write.model.DiaryWriteEvent
+import com.boostcamp.dreamteam.dreamdiary.feature.diary.write.model.LabelAddFailureReason
+import com.boostcamp.dreamteam.dreamdiary.feature.diary.write.model.SelectableLabel
 import kotlinx.coroutines.flow.collectLatest
 
 @Composable
-fun DiaryWriteScreen(
+internal fun DiaryWriteScreen(
     viewModel: DiaryWriteViewModel = hiltViewModel(),
     onBackClick: () -> Unit,
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    val (title, content) = uiState
+    val (title, content, searchValue, selectableLabels) = uiState
+
+    val context = LocalContext.current
 
     LaunchedEffect(Unit) {
         viewModel.event.collectLatest {
             when (it) {
-                DiaryWriteEvent.AddSuccess -> onBackClick()
+                is DiaryWriteEvent.DiaryAddSuccess -> onBackClick()
+                is DiaryWriteEvent.LabelAddSuccess -> {
+                    Toast.makeText(context, "라벨 추가 성공", Toast.LENGTH_SHORT).show()
+                }
+
+                is DiaryWriteEvent.LabelAddFailure -> {
+                    when (it.labelAddFailureReason) {
+                        LabelAddFailureReason.DUPLICATE_LABEL -> {
+                            Toast.makeText(context, context.getString(R.string.write_duplicate_error), Toast.LENGTH_SHORT).show()
+                        }
+
+                        LabelAddFailureReason.INSUFFICIENT_STORAGE -> {
+                            Toast.makeText(context, context.getString(R.string.write_insufficient_storage_error), Toast.LENGTH_SHORT).show()
+                        }
+
+                        LabelAddFailureReason.UNKNOWN_ERROR -> {
+                            Toast.makeText(context, context.getString(R.string.write_unknown_error), Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                }
             }
         }
     }
@@ -59,8 +91,13 @@ fun DiaryWriteScreen(
     DiaryWriteScreen(
         title = title,
         content = content,
+        searchValue = searchValue,
+        selectableLabels = selectableLabels,
         onTitleChange = viewModel::setTitle,
         onContentChange = viewModel::setContent,
+        onCheckChange = viewModel::toggleLabel,
+        onSearchValueChange = viewModel::setSearchValue,
+        onClickLabelSave = viewModel::addLabel,
         onClickSave = viewModel::addDreamDiary,
         onBackClick = onBackClick,
     )
@@ -68,15 +105,21 @@ fun DiaryWriteScreen(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DiaryWriteScreen(
+private fun DiaryWriteScreen(
     title: String,
     content: String,
+    searchValue: String,
+    selectableLabels: List<SelectableLabel>,
     onTitleChange: (String) -> Unit,
     onContentChange: (String) -> Unit,
+    onCheckChange: (labelUi: LabelUi) -> Unit,
+    onSearchValueChange: (String) -> Unit,
+    onClickLabelSave: () -> Unit,
     onClickSave: () -> Unit,
     onBackClick: () -> Unit,
 ) {
     val scrollState = rememberScrollState()
+    var isLabelSelectionDialogOpen by remember { mutableStateOf(false) }
 
     Scaffold(
         topBar = {
@@ -137,7 +180,7 @@ fun DiaryWriteScreen(
                 modifier = Modifier
                     .padding(horizontal = 16.dp)
                     .clickable {
-                        // TODO
+                        isLabelSelectionDialogOpen = true
                     },
                 verticalAlignment = Alignment.CenterVertically,
             ) {
@@ -184,18 +227,40 @@ fun DiaryWriteScreen(
                 },
             )
         }
+        if (isLabelSelectionDialogOpen) {
+            LabelSelectionDialog(
+                onDismissRequest = { isLabelSelectionDialogOpen = false },
+                searchValue = searchValue,
+                onSearchValueChange = onSearchValueChange,
+                selectableLabels = selectableLabels,
+                onCheckChange = onCheckChange,
+                onClickLabelSave = onClickLabelSave,
+                modifier = Modifier.width(400.dp),
+            )
+        }
     }
 }
 
 @Composable
 @Preview(showBackground = true)
-fun PreviewDiaryListScreen() {
-    DiaryWriteScreen(
-        title = "",
-        content = "",
-        onTitleChange = {},
-        onContentChange = {},
-        onClickSave = {},
-        onBackClick = {},
-    )
+private fun PreviewDiaryListScreen() {
+    DreamdiaryTheme {
+        DiaryWriteScreen(
+            title = "",
+            content = "",
+            searchValue = "",
+            selectableLabels = listOf(
+                SelectableLabel(LabelUi("악몽"), isSelected = true),
+                SelectableLabel(LabelUi("개꿈"), isSelected = false),
+                SelectableLabel(LabelUi("귀신"), isSelected = false),
+            ),
+            onTitleChange = {},
+            onContentChange = {},
+            onCheckChange = {},
+            onClickLabelSave = {},
+            onClickSave = {},
+            onBackClick = {},
+            onSearchValueChange = {},
+        )
+    }
 }

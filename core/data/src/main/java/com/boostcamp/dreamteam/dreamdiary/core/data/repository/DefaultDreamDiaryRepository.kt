@@ -3,6 +3,9 @@ package com.boostcamp.dreamteam.dreamdiary.core.data.repository
 import com.boostcamp.dreamteam.dreamdiary.core.data.database.dao.DreamDiaryDao
 import com.boostcamp.dreamteam.dreamdiary.core.data.database.model.DreamDiaryEntity
 import com.boostcamp.dreamteam.dreamdiary.core.data.database.model.LabelEntity
+import com.boostcamp.dreamteam.dreamdiary.core.model.Label
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import java.time.Instant
 import java.util.UUID
 import javax.inject.Inject
@@ -31,5 +34,14 @@ internal class DefaultDreamDiaryRepository @Inject constructor(
                 label = label,
             ),
         )
+    }
+
+    override fun getLabels(search: String): Flow<List<Label>> {
+        val formattedSearch: String? = if (search.isBlank()) {
+            null
+        } else {
+            "%$search%"
+        }
+        return dreamDiaryDao.getLabels(formattedSearch).map { list -> list.map { it.toDomain() } }
     }
 }

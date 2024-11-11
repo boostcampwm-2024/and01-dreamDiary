@@ -27,4 +27,6 @@ dependencies {
     // Hilt
     ksp(libs.hilt.compiler)
     implementation(libs.hilt.core)
+
+    implementation(libs.kotlinx.coroutines.core)
 }

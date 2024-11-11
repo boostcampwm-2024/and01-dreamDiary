@@ -10,7 +10,6 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.dsl.KotlinAndroidProjectExtension
 
 class AndroidLibraryConventionPlugin : Plugin<Project> {
-
     override fun apply(target: Project) {
         with(target) {
             with(pluginManager) {
@@ -39,10 +38,12 @@ class AndroidLibraryConventionPlugin : Plugin<Project> {
             }
 
             dependencies {
-
                 add("testImplementation", libs.findLibrary("junit").get())
                 add("androidTestImplementation", libs.findLibrary("androidx.junit").get())
                 add("coreLibraryDesugaring", libs.findLibrary("desugar.jdk.libs").get())
+
+                // Timber
+                add("implementation", libs.findLibrary("timber").get())
             }
         }
     }

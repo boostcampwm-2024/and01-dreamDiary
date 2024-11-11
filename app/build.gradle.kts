@@ -39,6 +39,7 @@ android {
         jvmTarget = "11"
     }
     buildFeatures {
+        buildConfig = true
         compose = true
     }
 }
@@ -69,4 +70,7 @@ dependencies {
     implementation(projects.feature.diary)
     implementation(projects.feature.auth)
     implementation(projects.core.designsystem)
+
+    // Timber
+    implementation(libs.timber)
 }
