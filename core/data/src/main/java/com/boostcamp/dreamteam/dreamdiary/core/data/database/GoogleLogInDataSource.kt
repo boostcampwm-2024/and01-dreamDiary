@@ -5,9 +5,7 @@ import android.content.Intent
 import android.util.Log
 import com.boostcamp.dreamteam.dreamdiary.core.data.R
 import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
-import com.google.android.gms.common.api.ApiException
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
