@@ -1,4 +1,4 @@
-package com.boostcamp.dreamteam.dreamdiary.feature.diary.home.components
+package com.boostcamp.dreamteam.dreamdiary.feature.diary.home.tabcalendar
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Surface
@@ -7,6 +7,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.boostcamp.dreamteam.dreamdiary.designsystem.theme.DreamdiaryTheme
+import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.components.DiaryCalendar
 
 @Composable
 internal fun DiaryCalendarTab(modifier: Modifier = Modifier) {

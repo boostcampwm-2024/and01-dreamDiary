@@ -1,6 +1,7 @@
 package com.boostcamp.dreamteam.dreamdiary.feature.diary.models
 
 import com.boostcamp.dreamteam.dreamdiary.core.model.Diary
+import com.boostcamp.dreamteam.dreamdiary.core.model.Label
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.models.vos.DisplayableDateTime
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.models.vos.toDisplayableDateTime
 import java.time.Instant
@@ -26,3 +27,35 @@ internal fun Diary.toDiaryUi(): DiaryUi =
         images = images,
         labels = labels.map { it.toLabelUi() },
     )
+
+internal val diaryPreview1 = Diary(
+    id = 1,
+    title = "오늘의 일기",
+    content = "오늘은 날씨가 좋았다.",
+    createdAt = "2021-09-01",
+    updatedAt = "2021-09-01",
+    images = emptyList(),
+    labels = listOf(
+        Label("기쁨"),
+        Label("행복"),
+        Label("환희"),
+    ),
+).toDiaryUi()
+
+internal val diaryPreview2 = Diary(
+    id = 2,
+    title = "어제의 일기",
+    content = "어제는 날씨가 좋지 않았다.",
+    createdAt = "2021-08-31",
+    updatedAt = "2021-08-31",
+    images = emptyList(),
+    labels = listOf(
+        Label("슬픔"),
+        Label("우울"),
+    ),
+).toDiaryUi()
+
+internal val diariesPreview = listOf(
+    diaryPreview1,
+    diaryPreview2,
+)
