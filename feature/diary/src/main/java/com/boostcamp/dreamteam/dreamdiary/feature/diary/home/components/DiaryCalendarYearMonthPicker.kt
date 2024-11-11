@@ -37,7 +37,8 @@ import com.boostcamp.dreamteam.dreamdiary.feature.diary.R
 import java.time.Month
 import java.time.YearMonth
 import java.time.format.TextStyle
-import java.util.Locale
+import androidx.compose.ui.text.intl.Locale as ComposeLocale
+import java.util.Locale as JavaLocale
 
 @Composable
 internal fun YearMonthPicker(
@@ -145,7 +146,7 @@ private fun YearMonthPickerBody(
     selectedYearMonth: YearMonth,
     onYearMonthClick: (YearMonth) -> Unit,
     modifier: Modifier = Modifier,
-    locale: Locale = Locale.getDefault(),
+    locale: JavaLocale = ComposeLocale.current.platformLocale,
     currentYearMonth: YearMonth = YearMonth.now(),
 ) {
     val yearMonths = Month.entries.map { YearMonth.of(showingYear, it) }

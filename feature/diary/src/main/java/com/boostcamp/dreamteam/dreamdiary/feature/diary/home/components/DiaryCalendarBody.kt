@@ -26,13 +26,14 @@ import java.time.format.TextStyle
 import java.time.temporal.ChronoUnit
 import java.time.temporal.TemporalAdjusters
 import java.time.temporal.WeekFields
-import java.util.Locale
+import androidx.compose.ui.text.intl.Locale as ComposeLocale
+import java.util.Locale as JavaLocale
 
 @Composable
 internal fun DiaryCalendarBody(
     yearMonth: YearMonth,
     modifier: Modifier = Modifier,
-    locale: Locale = Locale.getDefault(),
+    locale: JavaLocale = ComposeLocale.current.platformLocale,
 ) {
     val firstDayOfMonth = yearMonth.atDay(1)
     val lastDayOfMonth = yearMonth.atEndOfMonth()
@@ -63,7 +64,7 @@ internal fun DiaryCalendarBody(
 @Composable
 private fun WeekHeader(
     modifier: Modifier = Modifier,
-    locale: Locale = Locale.getDefault(),
+    locale: JavaLocale = ComposeLocale.current.platformLocale,
 ) {
     val reorderedDays = (0 until 7).map { (it + 6) % 7 + 1 }
 

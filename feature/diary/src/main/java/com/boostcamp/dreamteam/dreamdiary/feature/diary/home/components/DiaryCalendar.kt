@@ -27,7 +27,8 @@ import com.boostcamp.dreamteam.dreamdiary.designsystem.theme.DreamdiaryTheme
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.R
 import java.time.YearMonth
 import java.time.format.TextStyle
-import java.util.Locale
+import androidx.compose.ui.text.intl.Locale.Companion as ComposeLocale
+import java.util.Locale as JavaLocale
 
 /*
 * TODO
@@ -76,6 +77,7 @@ private fun DiaryCalendarHeader(
     modifier: Modifier = Modifier,
     onMonthTextClick: () -> Unit = { },
     today: YearMonth = YearMonth.now(),
+    locale: JavaLocale = ComposeLocale.current.platformLocale,
 ) {
     Row(
         modifier = modifier,
@@ -94,7 +96,7 @@ private fun DiaryCalendarHeader(
                 verticalAlignment = Alignment.Bottom,
             ) {
                 Text(
-                    text = yearMonth.month.getDisplayName(TextStyle.SHORT, Locale.getDefault()),
+                    text = yearMonth.month.getDisplayName(TextStyle.SHORT, locale),
                     color = MaterialTheme.colorScheme.onSurface,
                     style = MaterialTheme.typography.titleLarge,
                 )
