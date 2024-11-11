@@ -1,7 +1,6 @@
 package com.boostcamp.dreamteam.dreamdiary.feature.diary.write
 
 import android.database.sqlite.SQLiteConstraintException
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.boostcamp.dreamteam.dreamdiary.core.domain.usecase.AddDreamDiaryUseCase
@@ -24,6 +23,7 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import java.io.IOException
 import javax.inject.Inject
 
@@ -83,13 +83,13 @@ class DiaryWriteViewModel @Inject constructor(
                 addLabelUseCase(addLabel)
                 _event.trySend(DiaryWriteEvent.LabelAddSuccess)
             } catch (e: SQLiteConstraintException) {
-                Log.d("DiaryWriteViewModel", "addLabel: Duplicate label error - ${e.message}")
+                Timber.d("addLabel: Duplicate label error - ${e.message}")
                 _event.trySend(DiaryWriteEvent.LabelAddFailure(LabelAddFailureReason.DUPLICATE_LABEL))
             } catch (e: IOException) {
-                Log.d("DiaryWriteViewModel", "addLabel: Duplicate label error - ${e.message}")
+                Timber.d("addLabel: Duplicate label error - ${e.message}")
                 _event.trySend(DiaryWriteEvent.LabelAddFailure(LabelAddFailureReason.INSUFFICIENT_STORAGE))
             } catch (e: Exception) {
-                Log.d("DiaryWriteViewModel", "addLabel: ${e.message} ${e.cause}")
+                Timber.d("addLabel: ${e.message} ${e.cause}")
                 _event.trySend(DiaryWriteEvent.LabelAddFailure(LabelAddFailureReason.UNKNOWN_ERROR))
             }
         }
@@ -97,27 +97,28 @@ class DiaryWriteViewModel @Inject constructor(
 
     private fun collectLabels() {
         viewModelScope.launch {
-            _uiState.flatMapLatest {
-                getLabelsUseCase(it.searchValue)
-            }.flowWithStarted(
-                _uiState.subscriptionCount,
-                SharingStarted.WhileSubscribed(5000L),
-            ).collect { labels ->
-                _uiState.update { prevUiState ->
-                    val newSelectableLabels = mutableListOf<SelectableLabel>()
-                    for (label in labels) {
-                        var newSelectableLabel = SelectableLabel(label.toLabelUi(), false)
-                        for (selectableLabel in prevUiState.selectableLabels) {
-                            if (label.name == selectableLabel.label.name) {
-                                newSelectableLabel = newSelectableLabel.copy(isSelected = selectableLabel.isSelected)
-                                break
+            _uiState
+                .flatMapLatest {
+                    getLabelsUseCase(it.searchValue)
+                }.flowWithStarted(
+                    _uiState.subscriptionCount,
+                    SharingStarted.WhileSubscribed(5000L),
+                ).collect { labels ->
+                    _uiState.update { prevUiState ->
+                        val newSelectableLabels = mutableListOf<SelectableLabel>()
+                        for (label in labels) {
+                            var newSelectableLabel = SelectableLabel(label.toLabelUi(), false)
+                            for (selectableLabel in prevUiState.selectableLabels) {
+                                if (label.name == selectableLabel.label.name) {
+                                    newSelectableLabel = newSelectableLabel.copy(isSelected = selectableLabel.isSelected)
+                                    break
+                                }
                             }
+                            newSelectableLabels.add(newSelectableLabel)
                         }
-                        newSelectableLabels.add(newSelectableLabel)
+                        prevUiState.copy(selectableLabels = newSelectableLabels)
                     }
-                    prevUiState.copy(selectableLabels = newSelectableLabels)
                 }
-            }
         }
     }
 }
