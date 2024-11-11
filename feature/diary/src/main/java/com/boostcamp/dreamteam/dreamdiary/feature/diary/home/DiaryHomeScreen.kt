@@ -125,10 +125,10 @@ private fun DiaryHomeScreenContent(
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
 private fun DiaryHomeScreenTopAppBar(
-    modifier: Modifier = Modifier,
     onMenuClick: () -> Unit,
     onNotificationClick: () -> Unit,
     onSearchClick: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     TopAppBar(
         title = { Text("나의 일기") },
