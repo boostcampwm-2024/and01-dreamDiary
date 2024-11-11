@@ -96,10 +96,10 @@ private fun YearMonthPickerActions(
         horizontalArrangement = Arrangement.End,
     ) {
         TextButton(onClick = onCancelClick) {
-            Text(text = "취소")
+            Text(text = stringResource(R.string.calendar_cancel))
         }
         TextButton(onClick = onConfirmClick) {
-            Text(text = "확인")
+            Text(text = stringResource(R.string.calendar_ok))
         }
     }
 }
