@@ -1,4 +1,4 @@
-package com.boostcamp.dreamteam.dreamdiary.feature.diary.home.components
+package com.boostcamp.dreamteam.dreamdiary.feature.diary.home.tablist
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
@@ -10,6 +10,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.boostcamp.dreamteam.dreamdiary.designsystem.theme.DreamdiaryTheme
+import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.components.DiaryCard
+import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.components.diaryPreview1
+import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.components.diaryPreview2
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.models.DiaryUi
 
 @Composable

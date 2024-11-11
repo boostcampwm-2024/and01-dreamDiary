@@ -1,4 +1,4 @@
-package com.boostcamp.dreamteam.dreamdiary.feature.diary.home
+package com.boostcamp.dreamteam.dreamdiary.feature.diary.home.tablist
 
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.models.DiaryUi
 

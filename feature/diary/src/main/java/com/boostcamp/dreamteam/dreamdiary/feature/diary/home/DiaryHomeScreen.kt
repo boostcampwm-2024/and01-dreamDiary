@@ -28,9 +28,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.boostcamp.dreamteam.dreamdiary.designsystem.theme.DreamdiaryTheme
-import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.components.DiaryCalendarTab
-import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.components.DiaryListTab
-import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.components.diariesPreview
+import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.tabcalendar.DiaryCalendarTab
+import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.tablist.DiaryListTab
+import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.tablist.diariesPreview
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.models.DiaryUi
 
 @Composable

@@ -3,6 +3,7 @@ package com.boostcamp.dreamteam.dreamdiary.feature.diary.home
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.boostcamp.dreamteam.dreamdiary.core.domain.usecase.GetDiariesUseCase
+import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.tablist.DiaryHomeUIState
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.models.toDiaryUi
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
