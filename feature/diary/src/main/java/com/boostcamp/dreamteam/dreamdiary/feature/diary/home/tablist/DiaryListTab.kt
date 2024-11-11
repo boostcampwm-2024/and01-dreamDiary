@@ -11,9 +11,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.boostcamp.dreamteam.dreamdiary.designsystem.theme.DreamdiaryTheme
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.components.DiaryCard
-import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.components.diaryPreview1
-import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.components.diaryPreview2
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.models.DiaryUi
+import com.boostcamp.dreamteam.dreamdiary.feature.diary.models.diariesPreview
 
 @Composable
 internal fun DiaryListTab(
@@ -44,14 +43,11 @@ private fun DiaryListTabPreview() {
     DreamdiaryTheme {
         DiaryListTab(
             onDiaryClick = { },
-            uiState = DiaryHomeTabListUIState(
-                diaries = diariesPreview,
-            ),
+            uiState = diaryHomeTabListUIStatePreview,
         )
     }
 }
 
-internal val diariesPreview = listOf(
-    diaryPreview1,
-    diaryPreview2,
+internal val diaryHomeTabListUIStatePreview = DiaryHomeTabListUIState(
+    diaries = diariesPreview,
 )

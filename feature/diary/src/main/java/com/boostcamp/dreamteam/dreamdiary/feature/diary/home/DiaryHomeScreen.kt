@@ -31,7 +31,7 @@ import com.boostcamp.dreamteam.dreamdiary.designsystem.theme.DreamdiaryTheme
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.tabcalendar.DiaryCalendarTab
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.tablist.DiaryHomeTabListUIState
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.tablist.DiaryListTab
-import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.tablist.diariesPreview
+import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.tablist.diaryHomeTabListUIStatePreview
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.models.DiaryUi
 
 @Composable
@@ -169,9 +169,7 @@ private fun DiaryHomeScreenTopAppBar(
 private fun DiaryHomeScreenContentPreview() {
     DreamdiaryTheme {
         DiaryHomeScreenContent(
-            listUIState = DiaryHomeTabListUIState(
-                diaries = diariesPreview,
-            ),
+            listUIState = diaryHomeTabListUIStatePreview,
         )
     }
 }
