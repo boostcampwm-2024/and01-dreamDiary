@@ -39,8 +39,8 @@ fun DiaryHomeScreen(
     onFabClick: () -> Unit,
     viewModel: DiaryHomeViewModel = hiltViewModel(),
 ) {
-    val state by viewModel.diaryHomeUIState.collectAsStateWithLifecycle()
-    val diaries = state.diaries
+    val tabListUIState by viewModel.tabListUIState.collectAsStateWithLifecycle()
+    val diaries = tabListUIState.diaries
     DiaryHomeScreenContent(
         diaries = diaries,
         onMenuClick = { /*TODO*/ },
