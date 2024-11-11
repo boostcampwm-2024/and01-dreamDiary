@@ -24,6 +24,8 @@ hilt = "2.52"
 coil = "3.0.0-rc02"
 googleGmsGoogleServices = "4.4.2"
 firebaseFirestore = "25.1.1"
+firebaseAuthKtx = "22.1.1"
+playServicesAuth = "21.2.0"
 timber = "5.0.1"
 googleid = "1.1.1"
 
@@ -88,5 +90,5 @@ googleServices = { id = "com.google.gms.google-services" }
 
 # 이 프로젝트에서 정의한 컨벤션 플러그인
 dreamdiary-android-library = { id = "dreamdiary.android.library" }
-dreamdiary-android-feature = { id = "dreandiary.android.feature" }
+dreamdiary-android-feature = { id = "dreamdiary.android.feature" }
 google-gms-google-services = { id = "com.google.gms.google-services", version.ref = "googleGmsGoogleServices" }

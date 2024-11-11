@@ -1,6 +1,6 @@
 plugins {
-    alias(libs.plugins.android.library)
-    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.dreamdiary.android.library)
+    alias(libs.plugins.dreamdiary.android.feature)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.ksp)
     alias(libs.plugins.kotlin.serialization)
@@ -22,7 +22,7 @@ android {
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
+                "proguard-rules.pro",
             )
         }
     }
@@ -43,12 +43,12 @@ dependencies {
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
+//    testImplementation(libs.junit)
+//    androidTestImplementation(libs.androidx.junit)
+//    androidTestImplementation(libs.androidx.espresso.core)
 
     // Desugaring
-    coreLibraryDesugaring(libs.desugar.jdk.libs)
+//    coreLibraryDesugaring(libs.desugar.jdk.libs)
 
     // Core
     implementation(libs.androidx.activity.compose)
@@ -78,7 +78,7 @@ dependencies {
     implementation(libs.hilt.android)
 
     // Hilt Navigation
-    implementation(libs.androidx.hilt.navigation.compose)
+    // implementation(libs.androidx.hilt.navigation.compose)
 
     // Serialization
     implementation(libs.kotlinx.serialization.json.jvm)
