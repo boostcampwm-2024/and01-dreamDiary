@@ -4,8 +4,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.navOptions
-import com.boostcamp.dreamteam.dreamdiary.feature.auth.LoginRoute
-import com.boostcamp.dreamteam.dreamdiary.feature.auth.loginScreen
+import com.boostcamp.dreamteam.dreamdiary.feature.auth.SignInRoute
+import com.boostcamp.dreamteam.dreamdiary.feature.auth.signInScreen
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.diaryHomeScreen
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.navigateToDiaryHomeScreen
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.write.diaryWriteScreen
@@ -20,10 +20,10 @@ fun DreamDiaryNavHost(
     val navController = appState.navController
     NavHost(
         navController = navController,
-        startDestination = LoginRoute,
+        startDestination = SignInRoute,
         modifier = modifier,
     ) {
-        loginScreen(
+        signInScreen(
             navigateToDiaryHomeScreen = {
                 navController.navigateToDiaryHomeScreen(
                     navOptions = navOptions {

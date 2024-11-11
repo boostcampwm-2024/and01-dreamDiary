@@ -7,12 +7,12 @@ import androidx.navigation.compose.composable
 import kotlinx.serialization.Serializable
 
 @Serializable
-data object LoginRoute
+data object SignInRoute
 
-fun NavController.navigateToLoginScreen(navOptions: NavOptions) = navigate(route = LoginRoute, navOptions)
+fun NavController.navigateToLoginScreen(navOptions: NavOptions) = navigate(route = SignInRoute, navOptions)
 
-fun NavGraphBuilder.loginScreen(navigateToDiaryHomeScreen: () -> Unit) {
-    composable<LoginRoute> {
-        LoginScreen(navigateToDiaryHomeScreen)
+fun NavGraphBuilder.signInScreen(navigateToDiaryHomeScreen: () -> Unit) {
+    composable<SignInRoute> {
+        SignInScreen(navigateToDiaryHomeScreen)
     }
 }

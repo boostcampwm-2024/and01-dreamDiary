@@ -39,48 +39,48 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.boostcamp.dreamteam.dreamdiary.designsystem.theme.DreamdiaryTheme
-import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.model.LoginState
+import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.model.SignInState
 
 @Composable
-fun LoginScreen(
+fun SignInScreen(
     navigateToDiaryHomeScreen: () -> Unit,
-    viewModel: LoginViewModel = hiltViewModel(),
+    viewModel: SignInViewModel = hiltViewModel(),
 ) {
-    val loginState by viewModel.loginState.collectAsStateWithLifecycle()
+    val signInState by viewModel.signInState.collectAsStateWithLifecycle()
     val launcher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.StartActivityForResult(),
     ) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
-            viewModel.loginWithGoogle(result.data)
+            viewModel.signInWithGoogle(result.data)
         }
     }
 
-    when (loginState) {
-        is LoginState.Success -> {
+    when (signInState) {
+        is SignInState.Success -> {
             navigateToDiaryHomeScreen()
         }
-        is LoginState.Error -> {
+        is SignInState.Error -> {
             // TODO: 에러 처리
         }
-        is LoginState.NotLogin -> {
-            LoginScreenContent(
-                onGitHubLogInClick = { /*TODO*/ },
-                onGoogleLogInClick = {
+        is SignInState.NotSignIn -> {
+            SignInScreenContent(
+                onGitHubSignInClick = { /*TODO*/ },
+                onGoogleSignInClick = {
                     val signInIntent = viewModel.getGoogleSignInIntent()
                     launcher.launch(signInIntent)
                 },
-                onNotLogInClick = navigateToDiaryHomeScreen,
+                onNotSignInClick = navigateToDiaryHomeScreen,
             )
         }
     }
 }
 
 @Composable
-private fun LoginScreenContent(
+private fun SignInScreenContent(
     modifier: Modifier = Modifier,
-    onGitHubLogInClick: () -> Unit = {},
-    onGoogleLogInClick: () -> Unit = {},
-    onNotLogInClick: () -> Unit = {},
+    onGitHubSignInClick: () -> Unit = {},
+    onGoogleSignInClick: () -> Unit = {},
+    onNotSignInClick: () -> Unit = {},
 ) {
     Scaffold(
         modifier = modifier,
@@ -108,7 +108,7 @@ private fun LoginScreenContent(
                         .background(Color(130, 211, 224)),
                 )
                 Text(
-                    stringResource(R.string.login_dream_diary),
+                    stringResource(R.string.signIn_dream_diary),
                     fontSize = 40.sp,
                 )
             }
@@ -118,29 +118,29 @@ private fun LoginScreenContent(
                     .padding(innerPadding),
                 verticalArrangement = Arrangement.spacedBy(8.dp),
             ) {
-                OutlineLoginButton(
-                    onGitHubLogInClick,
+                OutlineSignInButton(
+                    onGitHubSignInClick,
                     R.drawable.github_icon,
-                    R.string.login_github_icon,
-                    R.string.login_github_login,
+                    R.string.signIn_github_icon,
+                    R.string.signIn_github_login,
                     Modifier.fillMaxWidth(),
                 )
-                OutlineLoginButton(
-                    onGoogleLogInClick,
+                OutlineSignInButton(
+                    onGoogleSignInClick,
                     R.drawable.google_icon,
-                    R.string.login_google_icon,
-                    R.string.login_google_login,
+                    R.string.signIn_google_icon,
+                    R.string.signIn_google_login,
                     Modifier.fillMaxWidth(),
                 )
                 Spacer(modifier = Modifier.height(5.dp))
                 Text(
-                    text = stringResource(R.string.login_now_pass),
+                    text = stringResource(R.string.signIn_now_pass),
                     style = MaterialTheme.typography.labelSmall.copy(
                         color = Color.Gray,
                         textDecoration = TextDecoration.Underline,
                     ),
                     modifier = Modifier.clickable {
-                        onNotLogInClick()
+                        onNotSignInClick()
                     },
                 )
             }
@@ -149,16 +149,16 @@ private fun LoginScreenContent(
 }
 
 @Composable
-private fun OutlineLoginButton(
-    onLogInClick: () -> Unit,
+private fun OutlineSignInButton(
+    onSignInClick: () -> Unit,
     @DrawableRes icon: Int,
     @StringRes iconDescription: Int,
-    @StringRes loginText: Int,
+    @StringRes signInText: Int,
     modifier: Modifier = Modifier,
 ) {
     OutlinedButton(
         modifier = modifier,
-        onClick = onLogInClick,
+        onClick = onSignInClick,
         shape = MaterialTheme.shapes.small,
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
@@ -169,15 +169,15 @@ private fun OutlineLoginButton(
                 tint = Color.Unspecified,
             )
             Spacer(modifier = Modifier.width(8.dp))
-            Text(stringResource(loginText))
+            Text(stringResource(signInText))
         }
     }
 }
 
 @Preview
 @Composable
-private fun LoginScreenContentPreview() {
+private fun SignInScreenContentPreview() {
     DreamdiaryTheme {
-        LoginScreenContent()
+        SignInScreenContent()
     }
 }
