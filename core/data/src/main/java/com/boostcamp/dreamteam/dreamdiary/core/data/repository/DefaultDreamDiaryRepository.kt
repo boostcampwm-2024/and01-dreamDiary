@@ -1,13 +1,10 @@
 package com.boostcamp.dreamteam.dreamdiary.core.data.repository
 
 import com.boostcamp.dreamteam.dreamdiary.core.data.database.dao.DreamDiaryDao
-import com.boostcamp.dreamteam.dreamdiary.core.data.database.model.DreamDiaryEntity
 import com.boostcamp.dreamteam.dreamdiary.core.data.database.model.LabelEntity
 import com.boostcamp.dreamteam.dreamdiary.core.model.Label
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import java.time.Instant
-import java.util.UUID
 import javax.inject.Inject
 
 internal class DefaultDreamDiaryRepository @Inject constructor(
@@ -16,16 +13,9 @@ internal class DefaultDreamDiaryRepository @Inject constructor(
     override suspend fun addDreamDiary(
         title: String,
         body: String,
+        labels: List<String>,
     ) {
-        dreamDiaryDao.insertDreamDiary(
-            DreamDiaryEntity(
-                id = UUID.randomUUID().toString(),
-                title = title,
-                body = body,
-                createdAt = Instant.now(),
-                updatedAt = Instant.now(),
-            ),
-        )
+        dreamDiaryDao.insertDreamDiary(title, body, labels)
     }
 
     override suspend fun addLabel(label: String) {
@@ -43,5 +33,12 @@ internal class DefaultDreamDiaryRepository @Inject constructor(
             "%$search%"
         }
         return dreamDiaryDao.getLabels(formattedSearch).map { list -> list.map { it.toDomain() } }
+    }
+
+    override suspend fun addDreamDiaryLabel(
+        diaryId: String,
+        labels: List<String>,
+    ) {
+        dreamDiaryDao.setLabelsToDreamDiary(diaryId, labels)
     }
 }
