@@ -37,7 +37,8 @@ dependencies {
 
     // firebase
     implementation(libs.firebase.firestore)
+    implementation(libs.googleid)
+    implementation(libs.firebase.auth.ktx)
     implementation(libs.androidx.credentials)
     implementation(libs.androidx.credentials.play.services.auth)
-    implementation(libs.googleid)
 }
