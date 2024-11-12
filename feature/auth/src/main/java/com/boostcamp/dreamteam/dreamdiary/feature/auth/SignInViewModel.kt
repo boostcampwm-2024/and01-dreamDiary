@@ -4,7 +4,7 @@ import android.content.Intent
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.boostcamp.dreamteam.dreamdiary.core.domain.usecase.SignInUseCase
-import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.model.SignInState
+import com.boostcamp.dreamteam.dreamdiary.feature.auth.model.SignInState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
