@@ -1,5 +1,4 @@
 plugins {
-    alias(libs.plugins.dreamdiary.android.library)
     alias(libs.plugins.dreamdiary.android.feature)
     alias(libs.plugins.dreamdiary.android.library.compose)
     alias(libs.plugins.ksp)
