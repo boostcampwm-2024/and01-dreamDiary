@@ -11,8 +11,11 @@ data object SignInRoute
 
 fun NavController.navigateToLoginScreen(navOptions: NavOptions) = navigate(route = SignInRoute, navOptions)
 
-fun NavGraphBuilder.signInScreen(navigateToDiaryHomeScreen: () -> Unit) {
+fun NavGraphBuilder.signInScreen(
+    signInSuccess: () -> Unit,
+    onNotSignInClick: () -> Unit,
+) {
     composable<SignInRoute> {
-        SignInScreen(navigateToDiaryHomeScreen)
+        SignInScreen(signInSuccess, onNotSignInClick)
     }
 }

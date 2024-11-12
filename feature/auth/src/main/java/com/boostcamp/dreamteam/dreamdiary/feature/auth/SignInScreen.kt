@@ -40,14 +40,15 @@ import com.boostcamp.dreamteam.dreamdiary.feature.auth.model.SignInState
 
 @Composable
 fun SignInScreen(
-    navigateToDiaryHomeScreen: () -> Unit,
+    signInSuccess: () -> Unit,
+    onNotSignInClick: () -> Unit,
     viewModel: SignInViewModel = hiltViewModel(),
 ) {
     val signInState by viewModel.signInState.collectAsStateWithLifecycle()
 
     when (signInState) {
         is SignInState.Success -> {
-            navigateToDiaryHomeScreen()
+            signInSuccess()
         }
         is SignInState.Error -> {
             // TODO: 에러 처리
@@ -58,7 +59,7 @@ fun SignInScreen(
                 onGoogleSignInClick = {
                     viewModel.signInWithGoogle()
                 },
-                onNotSignInClick = navigateToDiaryHomeScreen,
+                onNotSignInClick = onNotSignInClick,
             )
         }
     }

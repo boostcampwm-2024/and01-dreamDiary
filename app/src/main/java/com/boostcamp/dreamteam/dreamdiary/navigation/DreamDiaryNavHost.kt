@@ -24,7 +24,14 @@ fun DreamDiaryNavHost(
         modifier = modifier,
     ) {
         signInScreen(
-            navigateToDiaryHomeScreen = {
+            signInSuccess = {
+                navController.navigateToDiaryHomeScreen(
+                    navOptions = navOptions {
+                        launchSingleTop = true
+                    },
+                )
+            },
+            onNotSignInClick = {
                 navController.navigateToDiaryHomeScreen(
                     navOptions = navOptions {
                         launchSingleTop = true
