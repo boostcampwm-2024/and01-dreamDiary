@@ -43,9 +43,6 @@ dependencies {
     implementation(libs.androidx.appcompat)
     androidTestImplementation(libs.androidx.espresso.core)
 
-    // Core
-    implementation(libs.androidx.activity.compose)
-
     // Coil
     implementation(libs.bundles.coil)
 
