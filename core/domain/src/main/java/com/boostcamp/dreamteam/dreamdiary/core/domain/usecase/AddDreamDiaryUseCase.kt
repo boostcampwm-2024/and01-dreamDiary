@@ -9,7 +9,8 @@ class AddDreamDiaryUseCase @Inject constructor(
     suspend operator fun invoke(
         title: String,
         body: String,
+        labels: List<String> = listOf(),
     ) {
-        dreamDiaryRepository.addDreamDiary(title, body)
+        dreamDiaryRepository.addDreamDiary(title, body, labels)
     }
 }

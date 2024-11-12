@@ -70,8 +70,9 @@ class DiaryWriteViewModel @Inject constructor(
     fun addDreamDiary() {
         val title = _uiState.value.title
         val content = _uiState.value.content
+        val labels = _uiState.value.selectableLabels.map { it.label.name }
         viewModelScope.launch {
-            addDreamDiaryUseCase(title, content)
+            addDreamDiaryUseCase(title, content, labels)
             _event.trySend(DiaryWriteEvent.DiaryAddSuccess)
         }
     }
