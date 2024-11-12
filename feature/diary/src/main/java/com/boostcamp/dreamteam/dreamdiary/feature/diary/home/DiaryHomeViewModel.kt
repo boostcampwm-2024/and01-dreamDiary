@@ -3,6 +3,7 @@ package com.boostcamp.dreamteam.dreamdiary.feature.diary.home
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.boostcamp.dreamteam.dreamdiary.core.domain.usecase.GetDiariesUseCase
+import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.tabcalendar.DiaryHomeTabCalendarUIState
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.tablist.DiaryHomeTabListUIState
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.models.toDiaryUi
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -18,6 +19,10 @@ class DiaryHomeViewModel @Inject constructor(
     private val _tabListUIState: MutableStateFlow<DiaryHomeTabListUIState> =
         MutableStateFlow(DiaryHomeTabListUIState())
     val tabListUIState = _tabListUIState.asStateFlow()
+
+    private val _tabCalendarUiState =
+        MutableStateFlow(DiaryHomeTabCalendarUIState())
+    val tabCalendarUiState = _tabCalendarUiState.asStateFlow()
 
     init {
         viewModelScope.launch {
