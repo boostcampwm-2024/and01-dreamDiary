@@ -23,20 +23,27 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.credentials.CredentialManager
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.boostcamp.dreamteam.dreamdiary.designsystem.theme.DreamdiaryTheme
 import com.boostcamp.dreamteam.dreamdiary.feature.auth.model.SignInState
+import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import timber.log.Timber
 
 @Composable
 fun SignInScreen(
@@ -45,19 +52,34 @@ fun SignInScreen(
     viewModel: SignInViewModel = hiltViewModel(),
 ) {
     val signInState by viewModel.signInState.collectAsStateWithLifecycle()
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
 
     when (signInState) {
         is SignInState.Success -> {
             signInSuccess()
         }
+
         is SignInState.Error -> {
             // TODO: 에러 처리
         }
+
         is SignInState.NotSignIn -> {
             SignInScreenContent(
                 onGitHubSignInClick = { /*TODO*/ },
                 onGoogleSignInClick = {
-                    viewModel.signInWithGoogle()
+                    scope.launch(Dispatchers.IO) {
+                        try {
+                            val response = CredentialManager.create(context).getCredential(
+                                request = viewModel.getSignInWithGoogleRequest(),
+                                context = context,
+                            )
+                            val account = GoogleIdTokenCredential.createFrom(response.credential.data)
+                            viewModel.signInWithGoogle(account)
+                        } catch (e: Exception) {
+                            Timber.e("Error")
+                        }
+                    }
                 },
                 onNotSignInClick = onNotSignInClick,
             )

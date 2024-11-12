@@ -16,13 +16,17 @@ class GoogleSignInDataSource @Inject constructor(
     @ApplicationContext private val context: Context,
 ) {
     private val googleIdOption: GetGoogleIdOption = GetGoogleIdOption.Builder()
-        .setFilterByAuthorizedAccounts(true)
+        .setFilterByAuthorizedAccounts(false)
         .setServerClientId(context.getString(R.string.google_client_id))
         .setAutoSelectEnabled(true)
         .build()
     private val request: GetCredentialRequest = GetCredentialRequest.Builder()
         .addCredentialOption(googleIdOption)
         .build()
+
+    fun getSignInRequest(): GetCredentialRequest {
+        return request
+    }
 
     suspend fun requestGoogleLogin(): GoogleIdTokenCredential? {
         return try {

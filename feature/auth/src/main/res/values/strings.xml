@@ -6,4 +6,5 @@
     <string name="signIn_google_icon">구글 아이콘</string>
     <string name="signIn_google_login">구글 로그인</string>
     <string name="signIn_now_pass">지금은 건너뛰기</string>
+    <string name="google_client_id">105289032792-nfs3tv76a867aajjt5q4n95rogtp1dje.apps.googleusercontent.com</string>
 </resources>
