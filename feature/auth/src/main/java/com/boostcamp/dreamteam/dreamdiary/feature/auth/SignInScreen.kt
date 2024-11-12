@@ -77,7 +77,7 @@ fun SignInScreen(
                             val account = GoogleIdTokenCredential.createFrom(response.credential.data)
                             viewModel.signInWithGoogle(account)
                         } catch (e: Exception) {
-                            Timber.e("Error")
+                            Timber.e(e)
                         }
                     }
                 },
