@@ -18,7 +18,7 @@ class SignInViewModel @Inject constructor(
     val signInState = _signInState.asStateFlow()
 
     fun getSignInWithGoogleRequest(): GetCredentialRequest {
-        return authRepository.getSignWithGoogleRequest()
+        return authRepository.getSignInWithGoogleRequest()
     }
 
     suspend fun signInWithGoogle(account: GoogleIdTokenCredential) {

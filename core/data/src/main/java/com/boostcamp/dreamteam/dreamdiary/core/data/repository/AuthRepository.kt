@@ -18,7 +18,7 @@ class AuthRepository @Inject constructor(
 
     private var user: FirebaseUser? = null
 
-    fun getSignWithGoogleRequest(): GetCredentialRequest {
+    fun getSignInWithGoogleRequest(): GetCredentialRequest {
         return googleSignInDataSource.getSignInRequest()
     }
 
@@ -34,7 +34,6 @@ class AuthRepository @Inject constructor(
     }
 
     suspend fun signOutWithGoogle() {
-        googleSignInDataSource.signOut()
         auth.signOut()
     }
 }

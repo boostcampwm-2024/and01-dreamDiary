@@ -4,12 +4,9 @@ import android.content.Context
 import androidx.credentials.ClearCredentialStateRequest
 import androidx.credentials.CredentialManager
 import androidx.credentials.GetCredentialRequest
-import androidx.credentials.exceptions.GetCredentialException
 import com.boostcamp.dreamteam.dreamdiary.core.data.R
 import com.google.android.libraries.identity.googleid.GetGoogleIdOption
-import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import dagger.hilt.android.qualifiers.ApplicationContext
-import timber.log.Timber
 import javax.inject.Inject
 
 class GoogleSignInDataSource @Inject constructor(
@@ -26,19 +23,6 @@ class GoogleSignInDataSource @Inject constructor(
 
     fun getSignInRequest(): GetCredentialRequest {
         return request
-    }
-
-    suspend fun requestGoogleLogin(): GoogleIdTokenCredential? {
-        return try {
-            val response = CredentialManager.create(context).getCredential(
-                request = request,
-                context = context,
-            )
-            GoogleIdTokenCredential.createFrom(response.credential.data)
-        } catch (e: GetCredentialException) {
-            Timber.e("Unexpected type of credential")
-            null
-        }
     }
 
     suspend fun signOut() {
