@@ -6,11 +6,8 @@ plugins {
 
 android {
     namespace = "com.boostcamp.dreamteam.dreamdiary.feature.auth"
-    compileSdk = 34
 
     defaultConfig {
-        minSdk = 24
-
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
     }
@@ -23,13 +20,6 @@ android {
                 "proguard-rules.pro",
             )
         }
-    }
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
-    }
-    kotlinOptions {
-        jvmTarget = "11"
     }
 }
 
