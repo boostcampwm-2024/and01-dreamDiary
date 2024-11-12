@@ -1,6 +1,6 @@
 package com.boostcamp.dreamteam.dreamdiary.feature.diary.home.tabcalendar
 
-import com.boostcamp.dreamteam.dreamdiary.feature.diary.models.DiaryUi
+import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.DiaryUi
 import java.time.YearMonth
 
 data class DiaryHomeTabCalendarUIState(
