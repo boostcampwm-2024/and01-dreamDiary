@@ -79,9 +79,11 @@ internal fun LabelSelectionDialog(
 
                 Spacer(modifier = Modifier.height(8.dp))
 
-                Column(modifier = Modifier
-                    .fillMaxWidth()
-                    .verticalScroll(rememberScrollState())) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .verticalScroll(rememberScrollState()),
+                ) {
                     selectableLabels.forEachIndexed { index, selectableLabel ->
                         LabelItem(
                             modifier = Modifier
