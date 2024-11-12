@@ -1,6 +1,7 @@
 package com.boostcamp.dreamteam.dreamdiary.buildlogic.convention
 
 import com.android.build.gradle.LibraryExtension
+import com.boostcamp.dreamteam.dreamdiary.buildlogic.convention.extension.libs
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.configure
@@ -23,6 +24,8 @@ class AndroidFeatureConventionPlugin : Plugin<Project> {
                 add("implementation", libs.findLibrary("androidx.hilt.navigation.compose").get())
                 add("implementation", libs.findLibrary("androidx.navigation.compose").get())
                 add("implementation", libs.findLibrary("kotlinx.serialization.json.jvm").get())
+
+                add("implementation", libs.findLibrary("androidx.activity.compose").get())
             }
         }
     }

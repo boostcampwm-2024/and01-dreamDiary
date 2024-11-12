@@ -2,8 +2,6 @@ plugins {
     `kotlin-dsl`
 }
 
-//group = "com.boostcamp.dreamteam.dreamdiary.buildlogic.convention"
-
 java {
     sourceCompatibility = JavaVersion.VERSION_11
     targetCompatibility = JavaVersion.VERSION_11
@@ -37,6 +35,15 @@ gradlePlugin {
         register("androidFeature") {
             id = "dreamdiary.android.feature"
             implementationClass = "com.boostcamp.dreamteam.dreamdiary.buildlogic.convention.AndroidFeatureConventionPlugin"
+        }
+        register("androidApplicationCompose") {
+            id = "dreamdiary.android.application.compose"
+            implementationClass = "com.boostcamp.dreamteam.dreamdiary.buildlogic.convention.AndroidApplicationComposeConventionPlugin"
+        }
+
+        register("androidLibraryCompose") {
+            id = "dreamdiary.android.library.compose"
+            implementationClass = "com.boostcamp.dreamteam.dreamdiary.buildlogic.convention.AndroidLibraryComposeConventionPlugin"
         }
     }
 }
