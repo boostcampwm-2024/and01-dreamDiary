@@ -1,6 +1,7 @@
 package com.boostcamp.dreamteam.dreamdiary.buildlogic.convention
 
 import com.android.build.gradle.LibraryExtension
+import com.boostcamp.dreamteam.dreamdiary.buildlogic.convention.extension.libs
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.configure

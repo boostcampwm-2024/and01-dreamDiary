@@ -1,7 +1,7 @@
 plugins {
     alias(libs.plugins.dreamdiary.android.library)
     alias(libs.plugins.dreamdiary.android.feature)
-    alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.dreamdiary.android.library.compose)
     alias(libs.plugins.ksp)
 }
 
@@ -33,11 +33,8 @@ dependencies {
     implementation(libs.androidx.appcompat)
     androidTestImplementation(libs.androidx.espresso.core)
 
-    implementation(libs.androidx.ui)
-    implementation(libs.androidx.ui.graphics)
-    implementation(libs.androidx.ui.tooling.preview)
-    debugImplementation(libs.androidx.ui.tooling)
-    debugImplementation(libs.androidx.ui.test.manifest)
+    // Core
+    implementation(libs.androidx.activity.compose)
 
     // Coil
     implementation(libs.bundles.coil)
@@ -45,6 +42,4 @@ dependencies {
     // Hilt
     ksp(libs.hilt.compiler)
     implementation(libs.hilt.android)
-
-
 }
