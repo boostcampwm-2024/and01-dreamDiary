@@ -15,4 +15,6 @@ class SignInUseCase @Inject constructor(
             Result.failure(e)
         }
     }
+
+    fun getGoogleSignIntent(): Intent = authRepository.getGoogleSignInIntent()
 }

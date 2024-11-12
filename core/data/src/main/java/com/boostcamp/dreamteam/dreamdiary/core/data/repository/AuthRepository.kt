@@ -17,6 +17,8 @@ class AuthRepository @Inject constructor(
 
     private var user: FirebaseUser? = null
 
+    fun getGoogleSignInIntent(): Intent = googleSignInDataSource.getSignInIntent()
+
     suspend fun signInWithGoogle(data: Intent?): Result<Unit> {
         val account = googleSignInDataSource.handleSignInResult(data)
         if (account != null) {
