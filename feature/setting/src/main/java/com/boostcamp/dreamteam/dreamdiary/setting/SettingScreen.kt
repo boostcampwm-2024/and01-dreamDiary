@@ -35,12 +35,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.boostcamp.dreamteam.dreamdiary.designsystem.theme.DreamdiaryTheme
 
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-internal fun SettingScreen(
-    modifier: Modifier = Modifier,
-) {
+internal fun SettingScreen(modifier: Modifier = Modifier) {
     val rememberScrollState = rememberScrollState()
     Scaffold(
         modifier = modifier,
@@ -48,9 +45,9 @@ internal fun SettingScreen(
             CenterAlignedTopAppBar(
                 title = {
                     Text(text = "설정")
-                }
+                },
             )
-        }
+        },
     ) { innerPadding ->
         Column(
             modifier = Modifier
@@ -58,7 +55,7 @@ internal fun SettingScreen(
                 .fillMaxWidth()
                 .padding(8.dp)
                 .verticalScroll(rememberScrollState),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+            verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             SettingCategory(text = "알림 설정")
             SettingOption(icon = Icons.Outlined.Alarm, text = "일정 알림")
@@ -79,40 +76,47 @@ internal fun SettingScreen(
             SettingOption(icon = Icons.Outlined.AccountBox, text = "로그인된 SNS 계정 확인")
             SettingOption(icon = Icons.AutoMirrored.Outlined.Logout, text = "로그아웃")
             SettingOption(icon = Icons.Outlined.Window, text = "탈퇴")
-
         }
     }
 }
 
 @Composable
-private fun SettingCategory(text: String, modifier: Modifier = Modifier) {
+private fun SettingCategory(
+    text: String,
+    modifier: Modifier = Modifier,
+) {
     Row(
         modifier = Modifier.padding(8.dp),
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         Text(
             text = text,
             style = MaterialTheme.typography.bodyLarge,
-            color = MaterialTheme.colorScheme.primary
+            color = MaterialTheme.colorScheme.primary,
         )
     }
 }
 
 @Composable
-private fun SettingOption(icon: ImageVector, text: String, modifier: Modifier = Modifier) {
+private fun SettingOption(
+    icon: ImageVector,
+    text: String,
+    modifier: Modifier = Modifier,
+) {
     Row(
         modifier = Modifier.padding(8.dp),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(4.dp)
+        horizontalArrangement = Arrangement.spacedBy(4.dp),
     ) {
         Icon(
             imageVector = icon,
             contentDescription = text,
-            modifier = Modifier.size(24.dp)
+            modifier = Modifier.size(24.dp),
         )
 
         Text(
-            text = text, style = MaterialTheme.typography.bodyLarge,
+            text = text,
+            style = MaterialTheme.typography.bodyLarge,
         )
     }
 }
