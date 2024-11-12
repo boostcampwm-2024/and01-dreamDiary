@@ -2,15 +2,16 @@ package com.boostcamp.dreamteam.dreamdiary.core.data.database
 
 import android.content.Context
 import android.content.Intent
-import android.util.Log
 import com.boostcamp.dreamteam.dreamdiary.core.data.R
 import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.tasks.await
+import timber.log.Timber
 import javax.inject.Inject
 
-class GoogleLogInDataSource @Inject constructor(
+class GoogleSignInDataSource @Inject constructor(
     @ApplicationContext private val context: Context,
 ) {
     private val googleSignInClient = GoogleSignIn.getClient(
@@ -23,13 +24,13 @@ class GoogleLogInDataSource @Inject constructor(
 
     fun getSignInIntent(): Intent = googleSignInClient.signInIntent
 
-    suspend fun handleSignInResult(data: Intent?): String? {
+    suspend fun handleSignInResult(data: Intent?): GoogleSignInAccount? {
         val task = GoogleSignIn.getSignedInAccountFromIntent(data)
         return try {
             val account = task.await()
-            account.idToken
+            account
         } catch (e: Exception) {
-            Log.e("GoogleLogin", "Google sign-in failed", e)
+            Timber.e(e, "Google Sign-in failed")
             null
         }
     }
@@ -37,9 +38,9 @@ class GoogleLogInDataSource @Inject constructor(
     fun signOut() {
         googleSignInClient.signOut().addOnCompleteListener { task ->
             if (task.isSuccessful) {
-                Log.d("GoogleLogInDataSource", "User signed out successfully.")
+                Timber.d("User log out successfully.")
             } else {
-                Log.e("GoogleLogInDataSource", "Sign out failed.")
+                Timber.e("log out failed.")
             }
         }
     }
