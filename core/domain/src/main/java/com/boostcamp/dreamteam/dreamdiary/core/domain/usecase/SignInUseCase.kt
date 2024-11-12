@@ -7,11 +7,6 @@ class SignInUseCase @Inject constructor(
     private val authRepository: AuthRepository,
 ) {
     suspend operator fun invoke(): Result<Unit> {
-        return try {
-            authRepository.signInWithGoogle()
-            Result.success(Unit)
-        } catch (e: Exception) {
-            Result.failure(e)
-        }
+        return authRepository.signInWithGoogle()
     }
 }
