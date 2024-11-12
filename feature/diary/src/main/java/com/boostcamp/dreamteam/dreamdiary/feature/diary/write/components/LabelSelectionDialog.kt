@@ -27,7 +27,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.boostcamp.dreamteam.dreamdiary.designsystem.theme.DreamdiaryTheme
-import com.boostcamp.dreamteam.dreamdiary.feature.diary.models.LabelUi
+import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.LabelUi
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.write.model.SelectableLabel
 
 @Composable
@@ -79,7 +79,9 @@ internal fun LabelSelectionDialog(
 
                 Spacer(modifier = Modifier.height(8.dp))
 
-                Column(modifier = Modifier.fillMaxWidth().verticalScroll(rememberScrollState())) {
+                Column(modifier = Modifier
+                    .fillMaxWidth()
+                    .verticalScroll(rememberScrollState())) {
                     selectableLabels.forEachIndexed { index, selectableLabel ->
                         LabelItem(
                             modifier = Modifier

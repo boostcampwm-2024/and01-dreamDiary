@@ -6,8 +6,8 @@ import androidx.lifecycle.viewModelScope
 import com.boostcamp.dreamteam.dreamdiary.core.domain.usecase.AddDreamDiaryUseCase
 import com.boostcamp.dreamteam.dreamdiary.core.domain.usecase.AddLabelUseCase
 import com.boostcamp.dreamteam.dreamdiary.core.domain.usecase.GetLabelsUseCase
-import com.boostcamp.dreamteam.dreamdiary.feature.diary.models.LabelUi
-import com.boostcamp.dreamteam.dreamdiary.feature.diary.models.toLabelUi
+import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.LabelUi
+import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.toLabelUi
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.write.model.DiaryWriteEvent
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.write.model.DiaryWriteUiState
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.write.model.LabelAddFailureReason

@@ -1,9 +1,9 @@
-package com.boostcamp.dreamteam.dreamdiary.feature.diary.models
+package com.boostcamp.dreamteam.dreamdiary.feature.diary.model
 
 import com.boostcamp.dreamteam.dreamdiary.core.model.Diary
 import com.boostcamp.dreamteam.dreamdiary.core.model.Label
-import com.boostcamp.dreamteam.dreamdiary.feature.diary.models.vos.DisplayableDateTime
-import com.boostcamp.dreamteam.dreamdiary.feature.diary.models.vos.toDisplayableDateTime
+import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.vo.DisplayableDateTime
+import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.vo.toDisplayableDateTime
 import java.time.Instant
 
 data class DiaryUi(

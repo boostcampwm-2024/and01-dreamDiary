@@ -32,7 +32,7 @@ import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.tabcalendar.DiaryCa
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.tablist.DiaryHomeTabListUIState
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.tablist.DiaryListTab
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.tablist.diaryHomeTabListUIStatePreview
-import com.boostcamp.dreamteam.dreamdiary.feature.diary.models.DiaryUi
+import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.DiaryUi
 
 @Composable
 fun DiaryHomeScreen(

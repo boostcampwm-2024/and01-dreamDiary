@@ -27,8 +27,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import com.boostcamp.dreamteam.dreamdiary.designsystem.theme.DreamdiaryTheme
-import com.boostcamp.dreamteam.dreamdiary.feature.diary.models.DiaryUi
-import com.boostcamp.dreamteam.dreamdiary.feature.diary.models.diaryPreview1
+import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.DiaryUi
+import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.diaryPreview1
 
 @Composable
 internal fun DiaryCard(
