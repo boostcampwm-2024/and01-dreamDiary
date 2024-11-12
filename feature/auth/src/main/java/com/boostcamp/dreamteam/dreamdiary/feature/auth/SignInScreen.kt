@@ -1,8 +1,5 @@
 package com.boostcamp.dreamteam.dreamdiary.feature.auth
 
-import android.app.Activity
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.background
@@ -47,13 +44,6 @@ fun SignInScreen(
     viewModel: SignInViewModel = hiltViewModel(),
 ) {
     val signInState by viewModel.signInState.collectAsStateWithLifecycle()
-    val launcher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.StartActivityForResult(),
-    ) { result ->
-        if (result.resultCode == Activity.RESULT_OK) {
-            viewModel.signInWithGoogle(result.data)
-        }
-    }
 
     when (signInState) {
         is SignInState.Success -> {
@@ -66,8 +56,7 @@ fun SignInScreen(
             SignInScreenContent(
                 onGitHubSignInClick = { /*TODO*/ },
                 onGoogleSignInClick = {
-                    val signInIntent = viewModel.getGoogleSignInIntent()
-                    launcher.launch(signInIntent)
+                    viewModel.signInWithGoogle()
                 },
                 onNotSignInClick = navigateToDiaryHomeScreen,
             )

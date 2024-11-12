@@ -1,6 +1,5 @@
 package com.boostcamp.dreamteam.dreamdiary.core.data.repository
 
-import android.content.Intent
 import com.boostcamp.dreamteam.dreamdiary.core.data.database.GoogleSignInDataSource
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -17,10 +16,8 @@ class AuthRepository @Inject constructor(
 
     private var user: FirebaseUser? = null
 
-    fun getGoogleSignInIntent(): Intent = googleSignInDataSource.getSignInIntent()
-
-    suspend fun signInWithGoogle(data: Intent?): Result<Unit> {
-        val account = googleSignInDataSource.handleSignInResult(data)
+    suspend fun signInWithGoogle(): Result<Unit> {
+        val account = googleSignInDataSource.requestGoogleLogin()
         if (account != null) {
             val credential = GoogleAuthProvider.getCredential(account.idToken, null)
             auth.signInWithCredential(credential).await()
@@ -29,5 +26,10 @@ class AuthRepository @Inject constructor(
         } else {
             return Result.failure(Exception("Google sign-in failed"))
         }
+    }
+
+    suspend fun signOutWithGoogle() {
+        googleSignInDataSource.signOut()
+        auth.signOut()
     }
 }

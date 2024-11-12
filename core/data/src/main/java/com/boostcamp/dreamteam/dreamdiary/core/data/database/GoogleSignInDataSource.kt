@@ -1,47 +1,43 @@
 package com.boostcamp.dreamteam.dreamdiary.core.data.database
 
 import android.content.Context
-import android.content.Intent
+import androidx.credentials.ClearCredentialStateRequest
+import androidx.credentials.CredentialManager
+import androidx.credentials.GetCredentialRequest
+import androidx.credentials.exceptions.GetCredentialException
 import com.boostcamp.dreamteam.dreamdiary.core.data.R
-import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.libraries.identity.googleid.GetGoogleIdOption
+import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.tasks.await
 import timber.log.Timber
 import javax.inject.Inject
 
 class GoogleSignInDataSource @Inject constructor(
     @ApplicationContext private val context: Context,
 ) {
-    private val googleSignInClient = GoogleSignIn.getClient(
-        context,
-        GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestIdToken(context.getString(R.string.google_client_id))
-            .requestEmail()
-            .build(),
-    )
+    private val googleIdOption: GetGoogleIdOption = GetGoogleIdOption.Builder()
+        .setFilterByAuthorizedAccounts(true)
+        .setServerClientId(context.getString(R.string.google_client_id))
+        .setAutoSelectEnabled(true)
+        .build()
+    private val request: GetCredentialRequest = GetCredentialRequest.Builder()
+        .addCredentialOption(googleIdOption)
+        .build()
 
-    fun getSignInIntent(): Intent = googleSignInClient.signInIntent
-
-    suspend fun handleSignInResult(data: Intent?): GoogleSignInAccount? {
-        val task = GoogleSignIn.getSignedInAccountFromIntent(data)
+    suspend fun requestGoogleLogin(): GoogleIdTokenCredential? {
         return try {
-            val account = task.await()
-            account
-        } catch (e: Exception) {
-            Timber.e(e, "Google Sign-in failed")
+            val response = CredentialManager.create(context).getCredential(
+                request = request,
+                context = context,
+            )
+            GoogleIdTokenCredential.createFrom(response.credential.data)
+        } catch (e: GetCredentialException) {
+            Timber.e("Unexpected type of credential")
             null
         }
     }
 
-    fun signOut() {
-        googleSignInClient.signOut().addOnCompleteListener { task ->
-            if (task.isSuccessful) {
-                Timber.d("User log out successfully.")
-            } else {
-                Timber.e("log out failed.")
-            }
-        }
+    suspend fun signOut() {
+        CredentialManager.create(context).clearCredentialState(ClearCredentialStateRequest())
     }
 }
