@@ -1,10 +1,14 @@
 package com.boostcamp.dreamteam.dreamdiary.feature.diary.home.components
 
+
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBackIos
 import androidx.compose.material.icons.automirrored.outlined.ArrowForwardIos
@@ -41,6 +45,9 @@ internal fun DiaryCalendar(
 ) {
     var currentYearMonth by remember { mutableStateOf(yearMonth) }
     var isYearMonthPickerOpen by remember { mutableStateOf(false) }
+    Modifier.fillMaxWidth().padding(16.dp).defaultMinSize()
+        .wrapContentHeight()
+        .defaultMinSize()
 
     Column(modifier = modifier) {
         if (isYearMonthPickerOpen) {
