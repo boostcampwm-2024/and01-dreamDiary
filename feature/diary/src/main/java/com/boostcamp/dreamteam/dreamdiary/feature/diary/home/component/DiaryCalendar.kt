@@ -66,7 +66,11 @@ internal fun DiaryCalendar(
             onMonthTextClick = { isYearMonthPickerOpen = true },
         )
 
-        DiaryCalendarBody(yearMonth = yearMonth, modifier = Modifier.fillMaxWidth())
+        DiaryCalendarBody(
+            diariesOfMonth = diariesOfMonth,
+            yearMonth = yearMonth,
+            modifier = Modifier.fillMaxWidth(),
+        )
     }
 }
 
@@ -125,6 +129,16 @@ private fun DiaryCalendarHeader(
     }
 }
 
+@Preview(showBackground = true)
+@Composable
+private fun DiaryCalendarPreview() {
+    DreamdiaryTheme {
+        DiaryCalendar(
+            diariesOfMonth = diariesPreview,
+            yearMonth = YearMonth.now(),
+        )
+    }
+}
 @Preview(showBackground = true)
 @Composable
 private fun DiaryCalendarPreview1() {

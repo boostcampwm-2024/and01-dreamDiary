@@ -5,6 +5,8 @@ import com.boostcamp.dreamteam.dreamdiary.core.model.Label
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.vo.DisplayableDateTime
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.vo.toDisplayableDateTime
 import java.time.Instant
+import java.time.YearMonth
+import java.time.ZonedDateTime
 
 data class DiaryUi(
     val id: Long,
@@ -59,7 +61,28 @@ internal val diaryPreview2 = Diary(
     ),
 ).toDiaryUi()
 
-internal val diariesPreview = listOf(
-    diaryPreview1,
-    diaryPreview2,
-)
+internal val diariesPreview = run {
+    val firstDayOfMonth = YearMonth
+        .now()
+        .atDay(1)
+        .atStartOfDay()
+        .atZone(ZonedDateTime.now().zone)
+    val daysToDisplay = listOf(1, 2, 3, 5, 7, 11, 13, 17, 19, 23, 29)
+    daysToDisplay.map {
+        val displayableDateTime = DisplayableDateTime(
+            value = firstDayOfMonth.plusDays(it.toLong() - 1),
+            formatted = "",
+        )
+        DiaryUi(
+            id = it.toLong(),
+            title = "오늘의 일기",
+            content = "오늘은 날씨가 좋았다.",
+            createdAt = displayableDateTime,
+            updatedAt = displayableDateTime,
+            images = emptyList(),
+            labels = emptyList(),
+            sleepStartAt = displayableDateTime,
+            sleepEndAt = displayableDateTime,
+        )
+    }
+}
