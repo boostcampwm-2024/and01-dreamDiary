@@ -1,4 +1,4 @@
-package com.boostcamp.dreamteam.dreamdiary.feature.diary.home.components
+package com.boostcamp.dreamteam.dreamdiary.feature.diary.home.component
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -26,11 +26,9 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
-import com.boostcamp.dreamteam.dreamdiary.core.model.Diary
-import com.boostcamp.dreamteam.dreamdiary.core.model.Label
 import com.boostcamp.dreamteam.dreamdiary.designsystem.theme.DreamdiaryTheme
-import com.boostcamp.dreamteam.dreamdiary.feature.diary.models.DiaryUi
-import com.boostcamp.dreamteam.dreamdiary.feature.diary.models.toDiaryUi
+import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.DiaryUi
+import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.diaryPreview1
 
 @Composable
 internal fun DiaryCard(
@@ -111,30 +109,3 @@ private fun DiaryCardPreview() {
         )
     }
 }
-
-internal val diaryPreview1 = Diary(
-    id = 1,
-    title = "오늘의 일기",
-    content = "오늘은 날씨가 좋았다.",
-    createdAt = "2021-09-01",
-    updatedAt = "2021-09-01",
-    images = emptyList(),
-    labels = listOf(
-        Label("기쁨"),
-        Label("행복"),
-        Label("환희"),
-    ),
-).toDiaryUi()
-
-internal val diaryPreview2 = Diary(
-    id = 2,
-    title = "어제의 일기",
-    content = "어제는 날씨가 좋지 않았다.",
-    createdAt = "2021-08-31",
-    updatedAt = "2021-08-31",
-    images = emptyList(),
-    labels = listOf(
-        Label("슬픔"),
-        Label("우울"),
-    ),
-).toDiaryUi()

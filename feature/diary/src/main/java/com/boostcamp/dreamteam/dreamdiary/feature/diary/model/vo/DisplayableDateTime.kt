@@ -1,4 +1,4 @@
-package com.boostcamp.dreamteam.dreamdiary.feature.diary.models.vos
+package com.boostcamp.dreamteam.dreamdiary.feature.diary.model.vo
 
 import java.time.Instant
 import java.time.ZoneId

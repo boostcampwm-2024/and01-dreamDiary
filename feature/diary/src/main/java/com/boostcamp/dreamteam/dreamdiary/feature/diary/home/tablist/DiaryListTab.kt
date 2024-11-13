@@ -1,4 +1,4 @@
-package com.boostcamp.dreamteam.dreamdiary.feature.diary.home.components
+package com.boostcamp.dreamteam.dreamdiary.feature.diary.home.tablist
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
@@ -10,14 +10,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.boostcamp.dreamteam.dreamdiary.designsystem.theme.DreamdiaryTheme
-import com.boostcamp.dreamteam.dreamdiary.feature.diary.models.DiaryUi
+import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.component.DiaryCard
+import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.DiaryUi
+import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.diariesPreview
 
 @Composable
 internal fun DiaryListTab(
-    diaries: List<DiaryUi>,
+    onDiaryClick: (DiaryUi) -> Unit,
     modifier: Modifier = Modifier,
-    onDiaryClick: (DiaryUi) -> Unit = {},
+    uiState: DiaryHomeTabListUIState = DiaryHomeTabListUIState(),
 ) {
+    val (diaries) = uiState
+
     LazyColumn(
         modifier = modifier,
         contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
@@ -37,11 +41,13 @@ internal fun DiaryListTab(
 @Composable
 private fun DiaryListTabPreview() {
     DreamdiaryTheme {
-        DiaryListTab(diaries = diariesPreview)
+        DiaryListTab(
+            onDiaryClick = { },
+            uiState = diaryHomeTabListUIStatePreview,
+        )
     }
 }
 
-internal val diariesPreview = listOf(
-    diaryPreview1,
-    diaryPreview2,
+internal val diaryHomeTabListUIStatePreview = DiaryHomeTabListUIState(
+    diaries = diariesPreview,
 )
