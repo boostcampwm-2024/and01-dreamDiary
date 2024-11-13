@@ -25,6 +25,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.boostcamp.dreamteam.dreamdiary.designsystem.theme.DreamdiaryTheme
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.R
+import com.boostcamp.dreamteam.dreamdiary.feature.diary.models.DiaryUi
+import com.boostcamp.dreamteam.dreamdiary.feature.diary.models.diariesPreview
 import java.time.YearMonth
 import java.time.format.TextStyle
 import java.util.Locale
@@ -36,18 +38,19 @@ import java.util.Locale
 * */
 @Composable
 internal fun DiaryCalendar(
+    diariesOfMonth: List<DiaryUi>,
     modifier: Modifier = Modifier,
     yearMonth: YearMonth = YearMonth.now(),
+    onYearMothChange: (YearMonth) -> Unit = { },
 ) {
-    var currentYearMonth by remember { mutableStateOf(yearMonth) }
     var isYearMonthPickerOpen by remember { mutableStateOf(false) }
 
     Column(modifier = modifier) {
         if (isYearMonthPickerOpen) {
             YearMonthPicker(
-                currentYearMonth = currentYearMonth,
-                onConfirmClick = {
-                    currentYearMonth = it
+                currentYearMonth = yearMonth,
+                onConfirmClick = { newYearMonth ->
+                    onYearMothChange(newYearMonth)
                     isYearMonthPickerOpen = false
                 },
                 onCancelClick = { isYearMonthPickerOpen = false },
@@ -55,15 +58,15 @@ internal fun DiaryCalendar(
         }
 
         DiaryCalendarHeader(
-            yearMonth = currentYearMonth,
-            onPreviousMonthClick = { currentYearMonth = currentYearMonth.minusMonths(1) },
-            onNextMonthClick = { currentYearMonth = currentYearMonth.plusMonths(1) },
-            onTodayClick = { currentYearMonth = YearMonth.now() },
+            yearMonth = yearMonth,
+            onPreviousMonthClick = { onYearMothChange(yearMonth.minusMonths(1)) },
+            onNextMonthClick = { onYearMothChange(yearMonth.plusMonths(1)) },
+            onTodayClick = { onYearMothChange(YearMonth.now()) },
             modifier = Modifier.fillMaxWidth(),
             onMonthTextClick = { isYearMonthPickerOpen = true },
         )
 
-        DiaryCalendarBody(yearMonth = currentYearMonth, modifier = Modifier.fillMaxWidth())
+        DiaryCalendarBody(yearMonth = yearMonth, modifier = Modifier.fillMaxWidth())
     }
 }
 
@@ -126,7 +129,10 @@ private fun DiaryCalendarHeader(
 @Composable
 private fun DiaryCalendarPreview1() {
     DreamdiaryTheme {
-        DiaryCalendar(yearMonth = YearMonth.of(2024, 1))
+        DiaryCalendar(
+            diariesOfMonth = diariesPreview,
+            yearMonth = YearMonth.of(2024, 1),
+        )
     }
 }
 
@@ -134,7 +140,10 @@ private fun DiaryCalendarPreview1() {
 @Composable
 private fun DiaryCalendarPreview2() {
     DreamdiaryTheme {
-        DiaryCalendar(yearMonth = YearMonth.of(2024, 2))
+        DiaryCalendar(
+            diariesOfMonth = diariesPreview,
+            yearMonth = YearMonth.of(2024, 2),
+        )
     }
 }
 
@@ -142,6 +151,9 @@ private fun DiaryCalendarPreview2() {
 @Composable
 private fun DiaryCalendarPreview3() {
     DreamdiaryTheme {
-        DiaryCalendar(yearMonth = YearMonth.of(2024, 3))
+        DiaryCalendar(
+            diariesOfMonth = diariesPreview,
+            yearMonth = YearMonth.of(2024, 3),
+        )
     }
 }

@@ -35,6 +35,7 @@ import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.tablist.DiaryHomeTa
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.tablist.DiaryListTab
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.tablist.diaryHomeTabListUIStatePreview
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.DiaryUi
+import java.time.YearMonth
 
 @Composable
 fun DiaryHomeScreen(
@@ -48,6 +49,7 @@ fun DiaryHomeScreen(
     DiaryHomeScreenContent(
         listUIState = listUIState,
         calendarUIState = calendarUIState,
+        onCalendarYearMothChange = viewModel::updateCalendarYearMonth,
         onMenuClick = { /*TODO*/ },
         onSearchClick = { /*TODO*/ },
         onNotificationClick = { /*TODO*/ },
@@ -61,6 +63,7 @@ fun DiaryHomeScreen(
 private fun DiaryHomeScreenContent(
     listUIState: DiaryHomeTabListUIState,
     calendarUIState: DiaryHomeTabCalendarUIState,
+    onCalendarYearMothChange: (YearMonth) -> Unit,
     modifier: Modifier = Modifier,
     onMenuClick: () -> Unit = {},
     onSearchClick: () -> Unit = {},
@@ -124,6 +127,7 @@ private fun DiaryHomeScreenContent(
                 )
 
                 1 -> DiaryCalendarTab(
+                    onYearMothChange = onCalendarYearMothChange,
                     modifier = tabModifier,
                     state = calendarUIState,
                 )
@@ -181,6 +185,7 @@ private fun DiaryHomeScreenContentPreview() {
         DiaryHomeScreenContent(
             listUIState = diaryHomeTabListUIStatePreview,
             calendarUIState = diaryHomeTabCalendarUIStatePreview,
+            onCalendarYearMothChange = { },
         )
     }
 }

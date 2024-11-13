@@ -5,5 +5,5 @@ import java.time.YearMonth
 
 data class DiaryHomeTabCalendarUIState(
     val yearMonth: YearMonth = YearMonth.now(),
-    val diariesOfAMonth: List<DiaryUi> = listOf(),
+    val diariesOfMonth: List<DiaryUi> = listOf(),
 )

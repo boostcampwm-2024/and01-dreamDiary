@@ -9,7 +9,9 @@ import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.toDiaryUi
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.time.YearMonth
 import javax.inject.Inject
 
 @HiltViewModel
@@ -32,4 +34,6 @@ class DiaryHomeViewModel @Inject constructor(
             )
         }
     }
+
+    fun updateCalendarYearMonth(yearMonth: YearMonth) = _tabCalendarUiState.update { it.copy(yearMonth = yearMonth) }
 }
