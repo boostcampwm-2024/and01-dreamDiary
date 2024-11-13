@@ -71,8 +71,10 @@ class DiaryWriteViewModel @Inject constructor(
         val title = _uiState.value.title
         val content = _uiState.value.content
         val labels = _uiState.value.selectableLabels.map { it.label.name }
+        val sleepStartAt = _uiState.value.sleepStartAt
+        val sleepEndAt = _uiState.value.sleepEndAt
         viewModelScope.launch {
-            addDreamDiaryUseCase(title, content, labels)
+            addDreamDiaryUseCase(title, content, labels, sleepStartAt, sleepEndAt)
             _event.trySend(DiaryWriteEvent.DiaryAddSuccess)
         }
     }

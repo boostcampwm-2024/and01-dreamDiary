@@ -22,6 +22,8 @@ interface DreamDiaryDao {
         title: String,
         body: String,
         labels: List<String>,
+        sleepStartAt: Instant,
+        sleepEndAt: Instant,
     ) {
         val dreamDiaryId = UUID.randomUUID().toString()
         insertDreamDiary(
@@ -31,6 +33,8 @@ interface DreamDiaryDao {
                 body = body,
                 createdAt = Instant.now(),
                 updatedAt = Instant.now(),
+                sleepStartAt = sleepStartAt,
+                sleepEndAt = sleepEndAt,
             ),
         )
         setLabelsToDreamDiary(dreamDiaryId, labels)
