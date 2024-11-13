@@ -1,4 +1,4 @@
-package com.boostcamp.dreamteam.dreamdiary.feature.diary.models
+package com.boostcamp.dreamteam.dreamdiary.feature.diary.model
 
 import com.boostcamp.dreamteam.dreamdiary.core.model.Label
 

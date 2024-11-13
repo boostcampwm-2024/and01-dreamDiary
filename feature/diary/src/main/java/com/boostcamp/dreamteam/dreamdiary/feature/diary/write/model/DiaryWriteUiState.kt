@@ -1,6 +1,6 @@
 package com.boostcamp.dreamteam.dreamdiary.feature.diary.write.model
 
-import com.boostcamp.dreamteam.dreamdiary.feature.diary.models.LabelUi
+import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.LabelUi
 
 data class DiaryWriteUiState(
     val title: String = "",

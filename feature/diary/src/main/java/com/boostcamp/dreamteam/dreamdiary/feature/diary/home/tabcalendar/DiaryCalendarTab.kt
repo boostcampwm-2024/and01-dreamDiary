@@ -7,8 +7,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.boostcamp.dreamteam.dreamdiary.designsystem.theme.DreamdiaryTheme
-import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.components.DiaryCalendar
-import com.boostcamp.dreamteam.dreamdiary.feature.diary.models.diariesPreview
+import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.component.DiaryCalendar
+import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.diariesPreview
 import java.time.YearMonth
 
 @Composable
