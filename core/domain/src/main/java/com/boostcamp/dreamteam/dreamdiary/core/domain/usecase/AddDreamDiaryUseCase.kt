@@ -14,6 +14,12 @@ class AddDreamDiaryUseCase @Inject constructor(
         sleepStartAt: ZonedDateTime,
         sleepEndAt: ZonedDateTime,
     ) {
-        dreamDiaryRepository.addDreamDiary(title, body, labels, sleepStartAt.toInstant(), sleepEndAt.toInstant())
+        dreamDiaryRepository.addDreamDiary(
+            title = title,
+            body = body,
+            labels = labels,
+            sleepStartAt = sleepStartAt.toInstant(),
+            sleepEndAt = sleepEndAt.toInstant(),
+        )
     }
 }
