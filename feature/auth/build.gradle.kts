@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace = "com.boostcamp.dreamteam.dreamdiary.feature.diary"
+    namespace = "com.boostcamp.dreamteam.dreamdiary.feature.auth"
 
     defaultConfig {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -24,8 +24,10 @@ android {
 }
 
 dependencies {
+    implementation(projects.core.designsystem)
     implementation(projects.core.domain)
     implementation(projects.core.model)
+    implementation(projects.core.data)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
@@ -37,4 +39,8 @@ dependencies {
     // Hilt
     ksp(libs.hilt.compiler)
     implementation(libs.hilt.android)
+
+    implementation(libs.androidx.credentials)
+    implementation(libs.androidx.credentials.play.services.auth)
+    implementation(libs.googleid)
 }

@@ -1,6 +1,6 @@
 plugins {
     alias(libs.plugins.dreamdiary.android.library)
-    alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.dreamdiary.android.library.compose)
 }
 
 android {
@@ -18,15 +18,14 @@ android {
             )
         }
     }
-    buildFeatures {
-        compose = true
-    }
 }
 
 dependencies {
-    implementation(platform(libs.androidx.compose.bom))
-    implementation(libs.androidx.ui.text.google.fonts)
-    androidTestImplementation(platform(libs.androidx.compose.bom))
-    implementation(libs.androidx.material3)
+
+    api(libs.material)
+    api(libs.androidx.material3)
+    api(libs.androidx.material.icons)
+    api(libs.androidx.material.icons.android)
+
     implementation(libs.androidx.ui.text.google.fonts)
 }

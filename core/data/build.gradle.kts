@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.dreamdiary.android.library)
     alias(libs.plugins.ksp)
     alias(libs.plugins.room)
+    alias(libs.plugins.googleServices)
 }
 
 android {
@@ -36,4 +37,8 @@ dependencies {
 
     // firebase
     implementation(libs.firebase.firestore)
+    implementation(libs.googleid)
+    implementation(libs.firebase.auth.ktx)
+    implementation(libs.androidx.credentials)
+    implementation(libs.androidx.credentials.play.services.auth)
 }

@@ -68,6 +68,7 @@ internal fun DiaryWriteScreen(
                 is DiaryWriteEvent.LabelAddSuccess -> {
                     Toast.makeText(context, "라벨 추가 성공", Toast.LENGTH_SHORT).show()
                 }
+
                 is DiaryWriteEvent.LabelAddFailure -> {
                     when (it.labelAddFailureReason) {
                         LabelAddFailureReason.DUPLICATE_LABEL -> {
