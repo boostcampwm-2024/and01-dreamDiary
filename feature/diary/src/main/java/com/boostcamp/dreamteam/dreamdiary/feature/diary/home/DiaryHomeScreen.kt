@@ -29,6 +29,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.boostcamp.dreamteam.dreamdiary.designsystem.theme.DreamdiaryTheme
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.tabcalendar.DiaryCalendarTab
+import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.tabcalendar.DiaryHomeTabCalendarUIState
+import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.tabcalendar.diaryHomeTabCalendarUIStatePreview
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.tablist.DiaryHomeTabListUIState
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.tablist.DiaryListTab
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.tablist.diaryHomeTabListUIStatePreview
@@ -41,8 +43,11 @@ fun DiaryHomeScreen(
     viewModel: DiaryHomeViewModel = hiltViewModel(),
 ) {
     val listUIState by viewModel.tabListUIState.collectAsStateWithLifecycle()
+    val calendarUIState by viewModel.tabCalendarUiState.collectAsStateWithLifecycle()
+
     DiaryHomeScreenContent(
         listUIState = listUIState,
+        calendarUIState = calendarUIState,
         onMenuClick = { /*TODO*/ },
         onSearchClick = { /*TODO*/ },
         onNotificationClick = { /*TODO*/ },
@@ -55,6 +60,7 @@ fun DiaryHomeScreen(
 @Composable
 private fun DiaryHomeScreenContent(
     listUIState: DiaryHomeTabListUIState,
+    calendarUIState: DiaryHomeTabCalendarUIState,
     modifier: Modifier = Modifier,
     onMenuClick: () -> Unit = {},
     onSearchClick: () -> Unit = {},
@@ -109,14 +115,18 @@ private fun DiaryHomeScreenContent(
                 }
             }
 
+            val tabModifier = Modifier.fillMaxSize()
             when (selectedTabIndex) {
                 0 -> DiaryListTab(
                     uiState = listUIState,
-                    modifier = Modifier.fillMaxSize(),
+                    modifier = tabModifier,
                     onDiaryClick = onDiaryClick,
                 )
 
-                1 -> DiaryCalendarTab()
+                1 -> DiaryCalendarTab(
+                    modifier = tabModifier,
+                    state = calendarUIState,
+                )
             }
         }
     }
@@ -170,6 +180,7 @@ private fun DiaryHomeScreenContentPreview() {
     DreamdiaryTheme {
         DiaryHomeScreenContent(
             listUIState = diaryHomeTabListUIStatePreview,
+            calendarUIState = diaryHomeTabCalendarUIStatePreview,
         )
     }
 }
