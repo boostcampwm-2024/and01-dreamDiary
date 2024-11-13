@@ -18,7 +18,13 @@ internal class DefaultDreamDiaryRepository @Inject constructor(
         sleepStartAt: Instant,
         sleepEndAt: Instant,
     ) {
-        dreamDiaryDao.insertDreamDiary(title, body, labels, sleepStartAt, sleepEndAt)
+        dreamDiaryDao.insertDreamDiary(
+            title = title,
+            body = body,
+            labels = labels,
+            sleepStartAt = sleepStartAt,
+            sleepEndAt = sleepEndAt,
+        )
     }
 
     override suspend fun addLabel(label: String) {
