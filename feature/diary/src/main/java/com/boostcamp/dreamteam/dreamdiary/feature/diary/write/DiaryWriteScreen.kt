@@ -162,7 +162,7 @@ private fun DiaryWriteScreen(
                 title = title,
                 onTitleChange = onTitleChange,
                 content = content,
-                onContentChange = onContentChange
+                onContentChange = onContentChange,
             )
         }
     }
