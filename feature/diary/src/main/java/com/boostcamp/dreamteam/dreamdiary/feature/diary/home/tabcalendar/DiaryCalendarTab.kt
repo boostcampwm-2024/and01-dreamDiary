@@ -8,11 +8,21 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.boostcamp.dreamteam.dreamdiary.designsystem.theme.DreamdiaryTheme
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.components.DiaryCalendar
+import com.boostcamp.dreamteam.dreamdiary.feature.diary.models.diariesPreview
+import java.time.YearMonth
 
 @Composable
-internal fun DiaryCalendarTab(modifier: Modifier = Modifier) {
+internal fun DiaryCalendarTab(
+    modifier: Modifier = Modifier,
+    state: DiaryHomeTabCalendarUIState = DiaryHomeTabCalendarUIState(),
+) {
+    val (yearMonth) = state
+
     Surface(modifier = modifier) {
-        DiaryCalendar(modifier = Modifier.padding(horizontal = 16.dp))
+        DiaryCalendar(
+            modifier = Modifier.padding(horizontal = 16.dp),
+            yearMonth = yearMonth,
+        )
     }
 }
 
@@ -23,3 +33,8 @@ private fun DiaryCalendarTabPreview() {
         DiaryCalendarTab()
     }
 }
+
+internal val diaryHomeTabCalendarUIStatePreview = DiaryHomeTabCalendarUIState(
+    yearMonth = YearMonth.now(),
+    diariesOfAMonth = diariesPreview,
+)
