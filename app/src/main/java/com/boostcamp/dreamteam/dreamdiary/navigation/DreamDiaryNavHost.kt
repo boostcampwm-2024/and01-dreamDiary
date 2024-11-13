@@ -7,6 +7,7 @@ import androidx.navigation.navOptions
 import com.boostcamp.dreamteam.dreamdiary.feature.auth.SignInRoute
 import com.boostcamp.dreamteam.dreamdiary.feature.auth.signInScreen
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.navigateToDiaryHomeScreen
+import com.boostcamp.dreamteam.dreamdiary.feature.diary.write.diaryWriteScreen
 import com.boostcamp.dreamteam.dreamdiary.ui.DreamDiaryAppState
 import com.boostcamp.dreamteam.dreamdiary.ui.homeNavGraph
 import com.boostcamp.dreamteam.dreamdiary.ui.navigateToHomeScreen
@@ -40,6 +41,12 @@ fun DreamDiaryNavHost(
         )
 
         homeNavGraph()
+
+        diaryWriteScreen(
+            onBackClick = {
+                navController.popBackStack()
+            },
+        )
 
     }
 }

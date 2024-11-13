@@ -80,7 +80,6 @@ private fun DiaryHomeScreenContent(
                 onSearchClick = onSearchClick,
             )
         },
-        bottomBar = { /*TODO*/ },
         floatingActionButton = {
             FloatingActionButton(
                 onClick = onFabClick,

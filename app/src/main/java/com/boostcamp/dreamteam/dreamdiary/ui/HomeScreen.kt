@@ -23,6 +23,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navOptions
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.DiaryHomeScreen
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.write.navigateToDiaryWriteScreen
 
@@ -71,9 +72,13 @@ fun HomeScreen() {
             modifier = Modifier.padding(innerPadding)
         ) {
             composable(BottomNavItem.MY_DREAM.route) {
-                DiaryHomeScreen(onDiaryClick = {}, onFabClick = {
+                DiaryHomeScreen(
+                    onDiaryClick = {},
+                    onFabClick = {
                     navController.navigateToDiaryWriteScreen(
-                        navOptions = TODO()
+                        navOptions = navOptions {
+                            launchSingleTop = true
+                        },
                     )
                 })
             }
@@ -86,6 +91,7 @@ fun HomeScreen() {
         }
     }
 }
+
 @Composable
 private fun HomeBottomNavigation(
     navController: NavHostController,
