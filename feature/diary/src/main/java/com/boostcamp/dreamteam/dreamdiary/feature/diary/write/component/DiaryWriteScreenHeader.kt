@@ -2,8 +2,14 @@ package com.boostcamp.dreamteam.dreamdiary.feature.diary.write.component
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.Label
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.outlined.Timer
 import androidx.compose.material3.AlertDialog
@@ -31,6 +37,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.boostcamp.dreamteam.dreamdiary.designsystem.theme.DreamdiaryTheme
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.R
+import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.LabelUi
+import com.boostcamp.dreamteam.dreamdiary.feature.diary.write.model.SelectableLabel
 import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalTime
@@ -41,6 +49,69 @@ import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeFormatterBuilder
 import java.time.format.FormatStyle
 import java.time.temporal.ChronoUnit
+
+@Composable
+internal fun DiaryWriteScreenHeader(
+    searchValue: String,
+    onSearchValueChange: (String) -> Unit,
+    selectableLabels: List<SelectableLabel>,
+    sleepStartAt: ZonedDateTime,
+    sleepEndAt: ZonedDateTime,
+    onSleepStartAtChange: (ZonedDateTime) -> Unit,
+    onSleepEndAtChange: (ZonedDateTime) -> Unit,
+    onCheckChange: (labelUi: LabelUi) -> Unit,
+    onClickLabelSave: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    var isLabelSelectionDialogOpen by remember { mutableStateOf(false) }
+
+    Column(modifier = modifier) {
+        WriteDateInfo(
+            sleepStart = sleepStartAt,
+            sleepEnd = sleepEndAt,
+            onTimeChange = { sleepStartAt, sleepEndAt ->
+                onSleepStartAtChange(sleepStartAt)
+                onSleepEndAtChange(sleepEndAt)
+            },
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        Row(
+            modifier = Modifier
+                .clickable {
+                    isLabelSelectionDialogOpen = true
+                },
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Icon(
+                Icons.AutoMirrored.Outlined.Label,
+                contentDescription = stringResource(R.string.write_category),
+            )
+            Text(
+                text = if (selectableLabels.isEmpty()) {
+                    stringResource(R.string.write_no_label)
+                } else {
+                    selectableLabels.joinToString { it.label.name }
+                },
+                modifier = Modifier.fillMaxWidth(),
+                maxLines = 1,
+            )
+        }
+
+        if (isLabelSelectionDialogOpen) {
+            LabelSelectionDialog(
+                onDismissRequest = { isLabelSelectionDialogOpen = false },
+                searchValue = searchValue,
+                onSearchValueChange = onSearchValueChange,
+                selectableLabels = selectableLabels,
+                onCheckChange = onCheckChange,
+                onClickLabelSave = onClickLabelSave,
+                modifier = Modifier.width(400.dp),
+            )
+        }
+    }
+}
 
 @Composable
 internal fun WriteDateInfo(
@@ -213,12 +284,18 @@ private fun DateHeader(
 
 @Preview(showBackground = true)
 @Composable
-private fun WriteDateInfoPreview() {
+private fun DiaryWriteScreenHeaderPreview() {
     DreamdiaryTheme {
-        WriteDateInfo(
-            sleepStart = ZonedDateTime.now(),
-            sleepEnd = ZonedDateTime.now(),
-            onTimeChange = { _, _ -> },
+        DiaryWriteScreenHeader(
+            searchValue = "",
+            onSearchValueChange = { },
+            selectableLabels = emptyList(),
+            sleepStartAt = ZonedDateTime.now(),
+            sleepEndAt = ZonedDateTime.now(),
+            onSleepStartAtChange = { },
+            onSleepEndAtChange = { },
+            onCheckChange = { },
+            onClickLabelSave = { },
         )
     }
 }
