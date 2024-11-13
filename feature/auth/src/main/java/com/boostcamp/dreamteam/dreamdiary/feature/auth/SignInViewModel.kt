@@ -1,13 +1,13 @@
 package com.boostcamp.dreamteam.dreamdiary.feature.auth
 
-import androidx.credentials.GetCredentialRequest
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.boostcamp.dreamteam.dreamdiary.core.data.repository.AuthRepository
 import com.boostcamp.dreamteam.dreamdiary.feature.auth.model.SignInState
-import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -17,16 +17,14 @@ class SignInViewModel @Inject constructor(
     private val _signInState = MutableStateFlow<SignInState>(SignInState.NotSignIn)
     val signInState = _signInState.asStateFlow()
 
-    fun getSignInWithGoogleRequest(): GetCredentialRequest {
-        return authRepository.getSignInWithGoogleRequest()
-    }
-
-    suspend fun signInWithGoogle(account: GoogleIdTokenCredential) {
-        val result = authRepository.signInWithGoogle(account)
-        result.onSuccess {
-            _signInState.value = SignInState.Success
-        }.onFailure {
-            _signInState.value = SignInState.Error("Google sign-in failed")
+    fun signInWithGoogle(idToken: String) {
+        viewModelScope.launch {
+            try {
+                authRepository.signInWithGoogle(idToken)
+                _signInState.value = SignInState.Success
+            } catch (e: Exception) {
+                _signInState.value = SignInState.Error("Google sign-in failed")
+            }
         }
     }
 }

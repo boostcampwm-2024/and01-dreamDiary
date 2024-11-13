@@ -35,29 +35,28 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.credentials.CredentialManager
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.boostcamp.dreamteam.dreamdiary.designsystem.theme.DreamdiaryTheme
 import com.boostcamp.dreamteam.dreamdiary.feature.auth.model.SignInState
-import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
-import kotlinx.coroutines.Dispatchers
+import com.boostcamp.dreamteam.dreamdiary.feature.auth.sns.Google
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
 @Composable
 fun SignInScreen(
-    signInSuccess: () -> Unit,
+    onSignInSuccess: () -> Unit,
     onNotSignInClick: () -> Unit,
     viewModel: SignInViewModel = hiltViewModel(),
 ) {
     val signInState by viewModel.signInState.collectAsStateWithLifecycle()
     val context = LocalContext.current
+    val google = Google(context.applicationContext)
     val scope = rememberCoroutineScope()
 
     when (signInState) {
         is SignInState.Success -> {
-            signInSuccess()
+            onSignInSuccess()
         }
 
         is SignInState.Error -> {
@@ -68,14 +67,10 @@ fun SignInScreen(
             SignInScreenContent(
                 onGitHubSignInClick = { /*TODO*/ },
                 onGoogleSignInClick = {
-                    scope.launch(Dispatchers.IO) {
+                    scope.launch {
                         try {
-                            val response = CredentialManager.create(context).getCredential(
-                                request = viewModel.getSignInWithGoogleRequest(),
-                                context = context,
-                            )
-                            val account = GoogleIdTokenCredential.createFrom(response.credential.data)
-                            viewModel.signInWithGoogle(account)
+                            val googleIdToken = google.signIn(context)
+                            viewModel.signInWithGoogle(googleIdToken)
                         } catch (e: Exception) {
                             Timber.e(e)
                         }

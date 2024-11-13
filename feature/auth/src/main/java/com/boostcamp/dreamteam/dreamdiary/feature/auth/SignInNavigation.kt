@@ -12,10 +12,10 @@ data object SignInRoute
 fun NavController.navigateToLoginScreen(navOptions: NavOptions) = navigate(route = SignInRoute, navOptions)
 
 fun NavGraphBuilder.signInScreen(
-    signInSuccess: () -> Unit,
+    onSignInSuccess: () -> Unit,
     onNotSignInClick: () -> Unit,
 ) {
     composable<SignInRoute> {
-        SignInScreen(signInSuccess, onNotSignInClick)
+        SignInScreen(onSignInSuccess, onNotSignInClick)
     }
 }
