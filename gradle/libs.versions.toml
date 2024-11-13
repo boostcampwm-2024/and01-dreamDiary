@@ -90,8 +90,8 @@ room = { id = "androidx.room", version.ref = "room" }
 google-gms-google-services = { id = "com.google.gms.google-services", version.ref = "googleGmsGoogleServices" }
 
 # 이 프로젝트에서 정의한 컨벤션 플러그인
-dreamdiary-android-library = { id = "dreamdiary.android.library" }
-dreamdiary-android-feature = { id = "dreamdiary.android.feature" }
+dreamdiary-android-application = { id = "dreamdiary.android.application" }
 dreamdiary-android-application-compose = { id = "dreamdiary.android.application.compose" }
+dreamdiary-android-library = { id = "dreamdiary.android.library" }
 dreamdiary-android-library-compose = { id = "dreamdiary.android.library.compose" }
-
+dreamdiary-android-feature = { id = "dreamdiary.android.feature" }
