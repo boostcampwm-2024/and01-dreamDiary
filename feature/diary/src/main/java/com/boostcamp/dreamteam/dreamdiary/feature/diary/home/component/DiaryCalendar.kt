@@ -31,11 +31,6 @@ import java.time.YearMonth
 import java.time.format.TextStyle
 import java.util.Locale
 
-/*
-* TODO
-* https://github.com/boostcampwm-2024/and01-dreamDiary/pull/70#discussion_r1835900191
-* YearMonth를 어디에서 관리해야 할 지 고민해보기
-* */
 @Composable
 internal fun DiaryCalendar(
     diariesOfMonth: List<DiaryUi>,
@@ -139,6 +134,7 @@ private fun DiaryCalendarPreview() {
         )
     }
 }
+
 @Preview(showBackground = true)
 @Composable
 private fun DiaryCalendarPreview1() {
