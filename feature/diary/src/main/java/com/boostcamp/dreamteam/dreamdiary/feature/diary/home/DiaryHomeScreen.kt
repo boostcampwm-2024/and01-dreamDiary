@@ -49,7 +49,7 @@ fun DiaryHomeScreen(
     DiaryHomeScreenContent(
         listUIState = listUIState,
         calendarUIState = calendarUIState,
-        onCalendarYearMothChange = viewModel::updateCalendarYearMonth,
+        onCalendarYearMothChange = viewModel::setCalendarYearMonth,
         onMenuClick = { /*TODO*/ },
         onSearchClick = { /*TODO*/ },
         onNotificationClick = { /*TODO*/ },

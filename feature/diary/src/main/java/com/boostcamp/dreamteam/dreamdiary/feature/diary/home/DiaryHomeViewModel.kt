@@ -35,5 +35,5 @@ class DiaryHomeViewModel @Inject constructor(
         }
     }
 
-    fun updateCalendarYearMonth(yearMonth: YearMonth) = _tabCalendarUiState.update { it.copy(yearMonth = yearMonth) }
+    fun setCalendarYearMonth(yearMonth: YearMonth) = _tabCalendarUiState.update { it.copy(yearMonth = yearMonth) }
 }
