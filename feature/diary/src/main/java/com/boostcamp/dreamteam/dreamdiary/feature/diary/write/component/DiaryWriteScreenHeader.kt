@@ -67,8 +67,8 @@ internal fun DiaryWriteScreenHeader(
 
     Column(modifier = modifier) {
         WriteDateInfo(
-            sleepStart = sleepStartAt,
-            sleepEnd = sleepEndAt,
+            sleepStartAt = sleepStartAt,
+            sleepEndAt = sleepEndAt,
             onTimeChange = { sleepStartAt, sleepEndAt ->
                 onSleepStartAtChange(sleepStartAt)
                 onSleepEndAtChange(sleepEndAt)
@@ -115,13 +115,13 @@ internal fun DiaryWriteScreenHeader(
 
 @Composable
 internal fun WriteDateInfo(
-    sleepStart: ZonedDateTime,
-    sleepEnd: ZonedDateTime,
+    sleepStartAt: ZonedDateTime,
+    sleepEndAt: ZonedDateTime,
     onTimeChange: (ZonedDateTime, ZonedDateTime) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val truncatedSleepStart = sleepStart.truncatedTo(ChronoUnit.MINUTES)
-    val truncatedSleepEnd = sleepEnd.truncatedTo(ChronoUnit.MINUTES)
+    val truncatedSleepStart = sleepStartAt.truncatedTo(ChronoUnit.MINUTES)
+    val truncatedSleepEnd = sleepEndAt.truncatedTo(ChronoUnit.MINUTES)
 
     Row(
         modifier = modifier,
@@ -141,9 +141,9 @@ internal fun WriteDateInfo(
         TimeHeader(
             truncatedSleepStart.toLocalTime(),
             truncatedSleepEnd.toLocalTime(),
-            onConfirmStartTime = { a, b ->
-                val newSleepStart = truncatedSleepStart.with(a)
-                var newSleepEnd = truncatedSleepStart.with(b)
+            onConfirmStartTime = { startTime, endTime ->
+                val newSleepStart = truncatedSleepStart.with(startTime)
+                var newSleepEnd = truncatedSleepStart.with(endTime)
                 if (newSleepEnd <= newSleepStart) {
                     newSleepEnd = newSleepEnd.plusDays(1)
                 }
@@ -170,14 +170,14 @@ private fun TimeHeader(
         verticalAlignment = Alignment.CenterVertically,
     ) {
         if (isTimePickerOpen) {
-            val (inithour, initminute) = if (tabIndex == 0) {
+            val (initialHour, initialMinute) = if (tabIndex == 0) {
                 startTime.hour to startTime.minute
             } else {
                 endTime.hour to endTime.minute
             }
             val timePickerState = rememberTimePickerState(
-                initialHour = inithour,
-                initialMinute = initminute,
+                initialHour = initialHour,
+                initialMinute = initialMinute,
                 is24Hour = true,
             )
             AlertDialog(
@@ -197,7 +197,7 @@ private fun TimeHeader(
                             isTimePickerOpen = false
                         },
                     ) {
-                        Text("확인")
+                        Text(stringResource(R.string.write_time_ok))
                     }
                 },
                 text = { TimePicker(state = timePickerState) },
@@ -267,7 +267,7 @@ private fun DateHeader(
                             onConfirm(millis)
                             isDatePickerOpen = false
                         },
-                    ) { Text("확인") }
+                    ) { Text(stringResource(R.string.write_date_ok)) }
                 },
             ) {
                 DatePicker(datePickerState)

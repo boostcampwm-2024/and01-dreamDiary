@@ -4,6 +4,8 @@
     <string name="write_save">Save</string>
     <string name="write_save_calendar">날짜 선택</string>
     <string name="write_select_time">시간 선택</string>
+    <string name="write_date_ok">확인</string>
+    <string name="write_time_ok">확인</string>
     <string name="write_category">카테고리</string>
     <string name="write_text_title">제목을 입력하세요</string>
     <string name="write_text_content">내용을 입력하세요</string>
