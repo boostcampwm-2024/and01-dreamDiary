@@ -25,8 +25,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.boostcamp.dreamteam.dreamdiary.designsystem.theme.DreamdiaryTheme
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.R
-import com.boostcamp.dreamteam.dreamdiary.feature.diary.models.DiaryUi
-import com.boostcamp.dreamteam.dreamdiary.feature.diary.models.diariesPreview
+import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.DiaryUi
+import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.diariesPreview
 import java.time.YearMonth
 import java.time.format.TextStyle
 import java.util.Locale
