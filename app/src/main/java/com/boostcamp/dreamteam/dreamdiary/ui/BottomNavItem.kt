@@ -11,9 +11,8 @@ import com.boostcamp.dreamteam.dreamdiary.R
 enum class BottomNavItem(
     val route: String,
     val icon: ImageVector,
-    @StringRes val label: Int
+    @StringRes val label: Int,
 ) {
-
     MY_DREAM(
         route = "my_dream",
         icon = Icons.Outlined.Hotel,
@@ -28,6 +27,5 @@ enum class BottomNavItem(
         route = "settings",
         icon = Icons.Outlined.Settings,
         label = R.string.icon_text_settings,
-    )
-
+    ),
 }
