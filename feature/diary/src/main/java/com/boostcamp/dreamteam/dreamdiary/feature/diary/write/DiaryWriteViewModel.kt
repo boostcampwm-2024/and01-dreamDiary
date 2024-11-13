@@ -25,6 +25,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.io.IOException
+import java.time.ZonedDateTime
 import javax.inject.Inject
 
 @HiltViewModel
@@ -96,6 +97,18 @@ class DiaryWriteViewModel @Inject constructor(
                 _event.trySend(DiaryWriteEvent.LabelAddFailure(LabelAddFailureReason.UNKNOWN_ERROR))
             }
         }
+    }
+
+    fun setSleepStartAt(sleepStartAt: ZonedDateTime) {
+        _uiState.value = _uiState.value.copy(
+            sleepStartAt = sleepStartAt
+        )
+    }
+
+    fun setSleepEndAt(sleepEndAt: ZonedDateTime) {
+        _uiState.value = _uiState.value.copy(
+            sleepEndAt = sleepEndAt
+        )
     }
 
     private fun collectLabels() {
