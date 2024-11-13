@@ -8,4 +8,6 @@ data class Diary(
     val updatedAt: String = "",
     val images: List<String> = listOf(),
     val labels: List<Label> = listOf(),
+    val sleepStartAt: String = "",
+    val sleepEndAt: String = "",
 )

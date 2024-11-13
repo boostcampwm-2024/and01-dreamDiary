@@ -14,6 +14,8 @@ data class DiaryUi(
     val updatedAt: DisplayableDateTime,
     val images: List<String>,
     val labels: List<LabelUi>,
+    val sleepStartAt: DisplayableDateTime,
+    val sleepEndAt: DisplayableDateTime,
 )
 
 // FIXME: 시간과 관련된 데이터를 처리하는 로직은 수정 해주세요
@@ -26,6 +28,8 @@ internal fun Diary.toDiaryUi(): DiaryUi =
         updatedAt = Instant.now().toDisplayableDateTime(),
         images = images,
         labels = labels.map { it.toLabelUi() },
+        sleepStartAt = Instant.now().toDisplayableDateTime(),
+        sleepEndAt = Instant.now().toDisplayableDateTime(),
     )
 
 internal val diaryPreview1 = Diary(
