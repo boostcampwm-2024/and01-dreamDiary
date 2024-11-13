@@ -92,7 +92,7 @@ internal fun DiaryWriteScreenHeader(
                 text = if (selectableLabels.isEmpty()) {
                     stringResource(R.string.write_no_label)
                 } else {
-                    selectableLabels.joinToString { it.label.name }
+                    selectableLabels.filter { it.isSelected }.joinToString { it.label.name }
                 },
                 modifier = Modifier.fillMaxWidth(),
                 maxLines = 1,
