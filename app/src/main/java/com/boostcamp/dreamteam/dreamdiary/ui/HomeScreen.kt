@@ -2,8 +2,10 @@ package com.boostcamp.dreamteam.dreamdiary.ui
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.outlined.Create
+import androidx.compose.material.icons.outlined.Notifications
+import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -29,7 +31,7 @@ import com.boostcamp.dreamteam.dreamdiary.feature.diary.write.navigateToDiaryWri
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen() {
+fun HomeScreen(rootNavController: NavHostController) {
     val navController = rememberNavController()
     val currentBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = currentBackStackEntry?.destination?.route
@@ -39,48 +41,53 @@ fun HomeScreen() {
         topBar = {
             when (currentRoute) {
                 BottomNavItem.MY_DREAM.route -> {
-                    TopAppBar(
-                        title = { Text("내 꿈") },
-                        actions = {
-                            IconButton(onClick = { /* TODO */ }) {
-                                Icon(Icons.Default.Search, contentDescription = null)
-                            }
-                        }
+                    DiaryHomeScreenTopAppBar(
+                        onMenuClick = { /* TODO */ },
+                        onNotificationClick = { /* TODO */ },
+                        onSearchClick = { /* TODO */ },
                     )
                 }
 
                 BottomNavItem.COMMUNITY.route -> {
+                    // Todo
                     TopAppBar(title = { Text("커뮤니티") })
                 }
 
                 BottomNavItem.SETTINGS.route -> {
+                    // Todo
                     TopAppBar(title = { Text("설정") })
                 }
             }
         },
         floatingActionButton = {
             if (currentRoute == BottomNavItem.MY_DREAM.route) {
-                FloatingActionButton(onClick = { /* TODO */ }) {
-                    Icon(Icons.Default.Add, contentDescription = null)
+                FloatingActionButton(
+                    onClick = {
+                        rootNavController.navigateToDiaryWriteScreen(
+                            navOptions = navOptions {
+                                launchSingleTop = true
+                            },
+                        )
+                    },
+                ) {
+                    Icon(
+                        imageVector = Icons.Outlined.Create,
+                        contentDescription = "일기 작성",
+                    )
                 }
             }
-        }
+        },
     ) { innerPadding ->
         NavHost(
             navController = navController,
             startDestination = BottomNavItem.MY_DREAM.route,
-            modifier = Modifier.padding(innerPadding)
+            modifier = Modifier.padding(innerPadding),
         ) {
             composable(BottomNavItem.MY_DREAM.route) {
                 DiaryHomeScreen(
-                    onDiaryClick = {},
-                    onFabClick = {
-                    navController.navigateToDiaryWriteScreen(
-                        navOptions = navOptions {
-                            launchSingleTop = true
-                        },
-                    )
-                })
+                    onDiaryClick = { diaryUi ->
+                    },
+                )
             }
             composable(BottomNavItem.COMMUNITY.route) {
 //                CommunityScreen()
@@ -90,6 +97,48 @@ fun HomeScreen() {
             }
         }
     }
+}
+
+@Composable
+@OptIn(ExperimentalMaterial3Api::class)
+fun DiaryHomeScreenTopAppBar(
+    onMenuClick: () -> Unit,
+    onNotificationClick: () -> Unit,
+    onSearchClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    TopAppBar(
+        title = { Text("나의 일기") },
+        modifier = modifier,
+        navigationIcon = {
+            IconButton(
+                onClick = onMenuClick,
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Menu,
+                    contentDescription = "메뉴 열기",
+                )
+            }
+        },
+        actions = {
+            IconButton(
+                onClick = onNotificationClick,
+            ) {
+                Icon(
+                    imageVector = Icons.Outlined.Notifications,
+                    contentDescription = "알림",
+                )
+            }
+            IconButton(
+                onClick = onSearchClick,
+            ) {
+                Icon(
+                    imageVector = Icons.Outlined.Search,
+                    contentDescription = "검색",
+                )
+            }
+        },
+    )
 }
 
 @Composable
@@ -113,7 +162,7 @@ private fun HomeBottomNavigation(
                             saveState = true
                         }
                     }
-                }
+                },
             )
         }
     }

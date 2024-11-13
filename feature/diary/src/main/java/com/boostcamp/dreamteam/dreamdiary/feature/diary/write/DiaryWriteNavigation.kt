@@ -9,7 +9,9 @@ import kotlinx.serialization.Serializable
 @Serializable
 data object DiaryWriteRoute
 
-fun NavController.navigateToDiaryWriteScreen(navOptions: NavOptions) = navigate(route = DiaryWriteRoute, navOptions)
+fun NavController.navigateToDiaryWriteScreen(navOptions: NavOptions? = null) {
+    this.navigate(DiaryWriteRoute, navOptions)
+}
 
 fun NavGraphBuilder.diaryWriteScreen(onBackClick: () -> Unit) {
     composable<DiaryWriteRoute> {

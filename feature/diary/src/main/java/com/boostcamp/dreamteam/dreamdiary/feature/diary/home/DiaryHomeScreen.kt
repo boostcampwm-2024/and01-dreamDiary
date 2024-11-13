@@ -2,18 +2,14 @@ package com.boostcamp.dreamteam.dreamdiary.feature.diary.home
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.outlined.Create
 import androidx.compose.material.icons.outlined.Notifications
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.PrimaryTabRow
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRowDefaults
 import androidx.compose.material3.Text
@@ -39,7 +35,6 @@ import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.DiaryUi
 @Composable
 fun DiaryHomeScreen(
     onDiaryClick: (DiaryUi) -> Unit,
-    onFabClick: () -> Unit,
     viewModel: DiaryHomeViewModel = hiltViewModel(),
 ) {
     val listUIState by viewModel.tabListUIState.collectAsStateWithLifecycle()
@@ -48,11 +43,7 @@ fun DiaryHomeScreen(
     DiaryHomeScreenContent(
         listUIState = listUIState,
         calendarUIState = calendarUIState,
-        onMenuClick = { /*TODO*/ },
-        onSearchClick = { /*TODO*/ },
-        onNotificationClick = { /*TODO*/ },
         onDiaryClick = onDiaryClick,
-        onFabClick = onFabClick,
     )
 }
 
@@ -62,72 +53,45 @@ private fun DiaryHomeScreenContent(
     listUIState: DiaryHomeTabListUIState,
     calendarUIState: DiaryHomeTabCalendarUIState,
     modifier: Modifier = Modifier,
-    onMenuClick: () -> Unit = {},
-    onSearchClick: () -> Unit = {},
-    onNotificationClick: () -> Unit = {},
     onDiaryClick: (DiaryUi) -> Unit = {},
-    onFabClick: () -> Unit = {},
 ) {
     var selectedTabIndex by remember { mutableIntStateOf(0) }
     val tabs = listOf("일기", "달력")
 
-    Scaffold(
-        modifier = modifier,
-        topBar = {
-            DiaryHomeScreenTopAppBar(
-                onMenuClick = onMenuClick,
-                onNotificationClick = onNotificationClick,
-                onSearchClick = onSearchClick,
-            )
-        },
-        floatingActionButton = {
-            FloatingActionButton(
-                onClick = onFabClick,
-            ) {
-                Icon(
-                    imageVector = Icons.Outlined.Create,
-                    contentDescription = "일기 작성",
+    Column(
+        modifier = modifier.fillMaxSize(),
+    ) {
+        PrimaryTabRow(
+            selectedTabIndex = selectedTabIndex,
+            indicator = {
+                TabRowDefaults.SecondaryIndicator(
+                    modifier = Modifier.tabIndicatorOffset(
+                        selectedTabIndex = selectedTabIndex,
+                    ),
                 )
-            }
-        },
-    ) { innerPadding ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding),
+            },
         ) {
-            PrimaryTabRow(
-                selectedTabIndex = selectedTabIndex,
-                indicator = {
-                    TabRowDefaults.SecondaryIndicator(
-                        modifier = Modifier.tabIndicatorOffset(
-                            selectedTabIndex = selectedTabIndex,
-                        ),
-                    )
-                },
-            ) {
-                tabs.forEachIndexed { index, title ->
-                    Tab(
-                        selected = selectedTabIndex == index,
-                        onClick = { selectedTabIndex = index },
-                        text = { Text(title) },
-                    )
-                }
-            }
-
-            val tabModifier = Modifier.fillMaxSize()
-            when (selectedTabIndex) {
-                0 -> DiaryListTab(
-                    uiState = listUIState,
-                    modifier = tabModifier,
-                    onDiaryClick = onDiaryClick,
-                )
-
-                1 -> DiaryCalendarTab(
-                    modifier = tabModifier,
-                    state = calendarUIState,
+            tabs.forEachIndexed { index, title ->
+                Tab(
+                    selected = selectedTabIndex == index,
+                    onClick = { selectedTabIndex = index },
+                    text = { Text(title) },
                 )
             }
+        }
+
+        val tabModifier = Modifier.fillMaxSize()
+        when (selectedTabIndex) {
+            0 -> DiaryListTab(
+                uiState = listUIState,
+                modifier = tabModifier,
+                onDiaryClick = onDiaryClick,
+            )
+
+            1 -> DiaryCalendarTab(
+                modifier = tabModifier,
+                state = calendarUIState,
+            )
         }
     }
 }

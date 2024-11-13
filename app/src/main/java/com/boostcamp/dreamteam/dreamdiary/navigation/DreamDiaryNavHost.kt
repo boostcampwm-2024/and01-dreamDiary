@@ -40,13 +40,12 @@ fun DreamDiaryNavHost(
             },
         )
 
-        homeNavGraph()
+        homeNavGraph(rootNavController = navController)
 
         diaryWriteScreen(
             onBackClick = {
                 navController.popBackStack()
             },
         )
-
     }
 }
