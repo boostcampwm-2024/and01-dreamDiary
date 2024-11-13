@@ -5,6 +5,7 @@ import com.boostcamp.dreamteam.dreamdiary.core.data.database.model.LabelEntity
 import com.boostcamp.dreamteam.dreamdiary.core.model.Label
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import java.time.Instant
 import javax.inject.Inject
 
 internal class DefaultDreamDiaryRepository @Inject constructor(
@@ -14,8 +15,16 @@ internal class DefaultDreamDiaryRepository @Inject constructor(
         title: String,
         body: String,
         labels: List<String>,
+        sleepStartAt: Instant,
+        sleepEndAt: Instant,
     ) {
-        dreamDiaryDao.insertDreamDiary(title, body, labels)
+        dreamDiaryDao.insertDreamDiary(
+            title = title,
+            body = body,
+            labels = labels,
+            sleepStartAt = sleepStartAt,
+            sleepEndAt = sleepEndAt,
+        )
     }
 
     override suspend fun addLabel(label: String) {
