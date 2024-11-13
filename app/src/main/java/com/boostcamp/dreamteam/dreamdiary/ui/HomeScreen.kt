@@ -1,11 +1,18 @@
 package com.boostcamp.dreamteam.dreamdiary.ui
 
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -17,13 +24,46 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.DiaryHomeScreen
+import com.boostcamp.dreamteam.dreamdiary.feature.diary.write.navigateToDiaryWriteScreen
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-internal fun HomeScreen() {
-    val navController: NavHostController = rememberNavController()
+fun HomeScreen() {
+    val navController = rememberNavController()
+    val currentBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentRoute = currentBackStackEntry?.destination?.route
 
     Scaffold(
-        bottomBar = { HomeBottomNavigation(navController) }
+        bottomBar = { HomeBottomNavigation(navController) },
+        topBar = {
+            when (currentRoute) {
+                BottomNavItem.MY_DREAM.route -> {
+                    TopAppBar(
+                        title = { Text("내 꿈") },
+                        actions = {
+                            IconButton(onClick = { /* TODO */ }) {
+                                Icon(Icons.Default.Search, contentDescription = null)
+                            }
+                        }
+                    )
+                }
+
+                BottomNavItem.COMMUNITY.route -> {
+                    TopAppBar(title = { Text("커뮤니티") })
+                }
+
+                BottomNavItem.SETTINGS.route -> {
+                    TopAppBar(title = { Text("설정") })
+                }
+            }
+        },
+        floatingActionButton = {
+            if (currentRoute == BottomNavItem.MY_DREAM.route) {
+                FloatingActionButton(onClick = { /* TODO */ }) {
+                    Icon(Icons.Default.Add, contentDescription = null)
+                }
+            }
+        }
     ) { innerPadding ->
         NavHost(
             navController = navController,
@@ -31,10 +71,11 @@ internal fun HomeScreen() {
             modifier = Modifier.padding(innerPadding)
         ) {
             composable(BottomNavItem.MY_DREAM.route) {
-                DiaryHomeScreen(
-                    onDiaryClick = {},
-                    onFabClick = {},
-                )
+                DiaryHomeScreen(onDiaryClick = {}, onFabClick = {
+                    navController.navigateToDiaryWriteScreen(
+                        navOptions = TODO()
+                    )
+                })
             }
             composable(BottomNavItem.COMMUNITY.route) {
 //                CommunityScreen()
@@ -45,7 +86,6 @@ internal fun HomeScreen() {
         }
     }
 }
-
 @Composable
 private fun HomeBottomNavigation(
     navController: NavHostController,
