@@ -101,13 +101,13 @@ class DiaryWriteViewModel @Inject constructor(
 
     fun setSleepStartAt(sleepStartAt: ZonedDateTime) {
         _uiState.value = _uiState.value.copy(
-            sleepStartAt = sleepStartAt
+            sleepStartAt = sleepStartAt,
         )
     }
 
     fun setSleepEndAt(sleepEndAt: ZonedDateTime) {
         _uiState.value = _uiState.value.copy(
-            sleepEndAt = sleepEndAt
+            sleepEndAt = sleepEndAt,
         )
     }
 
