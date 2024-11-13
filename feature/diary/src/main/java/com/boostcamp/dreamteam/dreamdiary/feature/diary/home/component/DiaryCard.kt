@@ -1,4 +1,4 @@
-package com.boostcamp.dreamteam.dreamdiary.feature.diary.home.components
+package com.boostcamp.dreamteam.dreamdiary.feature.diary.home.component
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
