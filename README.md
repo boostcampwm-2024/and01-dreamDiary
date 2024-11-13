@@ -5,7 +5,7 @@
 <img src="https://img.shields.io/badge/Kotlin-7F52FF?style=for-the-badge&Kotlin=Swift&logoColor=white"/><img src="https://img.shields.io/badge/Material-757575?style=for-the-badge&logo=materialdesign&logoColor=white"/><img src="https://img.shields.io/badge/Android-34A853?style=for-the-badge&logo=android&logoColor=white"/><img src="https://img.shields.io/badge/Firebase-FFCA28?style=for-the-badge&logo=Firebase&logoColor=white"/>
 
 
-> 개발 기간: 2022.11.04 ~ 
+> 개발 기간: 2024.11.04 ~ 
 
 
 
