@@ -47,7 +47,6 @@ fun DiaryHomeScreen(
     onNavigateToWriteScreen: () -> Unit,
     onNavigateToCommunity: () -> Unit,
     onNavigateToSetting: () -> Unit,
-    currentRoute: String,
     viewModel: DiaryHomeViewModel = hiltViewModel(),
 ) {
     val diaries = viewModel.dreamDiaries.collectAsLazyPagingItems()
@@ -64,24 +63,21 @@ fun DiaryHomeScreen(
 
     val navigationItems = listOf(
         NavigationItem(
-            route = HomeBottomNavItem.MyDream.route,
             icon = HomeBottomNavItem.MyDream.icon,
             labelRes = HomeBottomNavItem.MyDream.label,
-            isSelected = currentRoute == HomeBottomNavItem.MyDream.route,
+            isSelected = true,
             onClick = { /* Nothing */ },
         ),
         NavigationItem(
-            route = HomeBottomNavItem.Community.route,
             icon = HomeBottomNavItem.Community.icon,
             labelRes = HomeBottomNavItem.Community.label,
-            isSelected = currentRoute == HomeBottomNavItem.Community.route,
+            isSelected = false,
             onClick = onNavigateToCommunity,
         ),
         NavigationItem(
-            route = HomeBottomNavItem.Setting.route,
             icon = HomeBottomNavItem.Setting.icon,
             labelRes = HomeBottomNavItem.Setting.label,
-            isSelected = currentRoute == HomeBottomNavItem.Setting.route,
+            isSelected = false,
             onClick = onNavigateToSetting,
         ),
     )
