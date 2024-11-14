@@ -27,9 +27,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavGraph.Companion.findStartDestination
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.currentBackStackEntryAsState
 import com.boostcamp.dreamteam.dreamdiary.designsystem.theme.DreamdiaryTheme
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.tabcalendar.DiaryCalendarTab
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.tabcalendar.DiaryHomeTabCalendarUIState
@@ -45,14 +42,15 @@ import com.boostcamp.dreamteam.dreamdiary.ui.NavigationItem
 @Composable
 fun DiaryHomeScreen(
     onDiaryClick: (DiaryUi) -> Unit,
-    navController: NavHostController,
+    onNavigateToWriteScreen: () -> Unit,
+    onNavigateToCommunity: () -> Unit,
+    onNavigateToSetting: () -> Unit,
+    currentRoute: String,
     viewModel: DiaryHomeViewModel = hiltViewModel(),
 ) {
     val listUIState by viewModel.tabListUIState.collectAsStateWithLifecycle()
     val calendarUIState by viewModel.tabCalendarUiState.collectAsStateWithLifecycle()
 
-    val currentBackStackEntry by navController.currentBackStackEntryAsState()
-    val currentRoute = currentBackStackEntry?.destination?.route
 
     val navigationItems = listOf(
         NavigationItem(
@@ -60,36 +58,21 @@ fun DiaryHomeScreen(
             icon = HomeBottomNavItem.MyDream.icon,
             labelRes = HomeBottomNavItem.MyDream.label,
             isSelected = currentRoute == HomeBottomNavItem.MyDream.route,
-            onClick = {
-                navController.navigate(HomeBottomNavItem.MyDream.route) {
-                    popUpTo(navController.graph.findStartDestination().id)
-                    launchSingleTop = true
-                }
-            },
+            onClick = { /* Nothing */ },
         ),
         NavigationItem(
             route = HomeBottomNavItem.Community.route,
             icon = HomeBottomNavItem.Community.icon,
             labelRes = HomeBottomNavItem.Community.label,
             isSelected = currentRoute == HomeBottomNavItem.Community.route,
-            onClick = {
-                navController.navigate(HomeBottomNavItem.Community.route) {
-                    popUpTo(navController.graph.findStartDestination().id)
-                    launchSingleTop = true
-                }
-            },
+            onClick = onNavigateToCommunity,
         ),
         NavigationItem(
             route = HomeBottomNavItem.Setting.route,
             icon = HomeBottomNavItem.Setting.icon,
             labelRes = HomeBottomNavItem.Setting.label,
             isSelected = currentRoute == HomeBottomNavItem.Setting.route,
-            onClick = {
-                navController.navigate(HomeBottomNavItem.Setting.route) {
-                    popUpTo(navController.graph.findStartDestination().id)
-                    launchSingleTop = true
-                }
-            },
+            onClick = onNavigateToSetting,
         ),
     )
 
@@ -102,14 +85,11 @@ fun DiaryHomeScreen(
             )
         },
         bottomBar = {
-            // TODO: BottomBar
             HomeBottomNavigation(items = navigationItems)
         },
         floatingActionButton = {
             FloatingActionButton(
-                onClick = {
-//                    navController.navigate(DiaryWriteRoute.ROUTE)
-                },
+                onClick = onNavigateToWriteScreen,
             ) {
                 Icon(
                     imageVector = Icons.Outlined.Create,
