@@ -104,7 +104,7 @@ private fun WeekRow(
     modifier: Modifier = Modifier,
 ) {
     val daysOfWeek = (0 until 7).map { firstDateOfWeek.plusDays(it.toLong()) }
-    val groupedDiaries = diariesOfWeek.groupBy { it.sleepEndAt.value.toLocalDate() }
+    val groupedDiaries = diariesOfWeek.groupBy { it.sortKey.value.toLocalDate() }
     val dayToDiaryMap = daysOfWeek.associateWith { groupedDiaries[it] ?: emptyList() }
 
     Row(modifier = modifier) {
@@ -167,7 +167,7 @@ private fun DayCell(
 
 private fun List<DiaryUi>.diariesOfWeek(startDayOfWeek: LocalDate): List<DiaryUi> {
     val endDayOfWeek = startDayOfWeek.plusDays(6)
-    return filter { it.sleepEndAt.value.toLocalDate() in startDayOfWeek..endDayOfWeek }
+    return filter { it.sortKey.value.toLocalDate() in startDayOfWeek..endDayOfWeek }
 }
 
 @Preview(showBackground = true)
