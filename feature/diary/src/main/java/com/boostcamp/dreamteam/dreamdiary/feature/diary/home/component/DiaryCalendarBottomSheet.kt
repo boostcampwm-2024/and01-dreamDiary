@@ -1,18 +1,24 @@
 package com.boostcamp.dreamteam.dreamdiary.feature.diary.home.component
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.ArrowBackIos
+import androidx.compose.material.icons.automirrored.outlined.ArrowForwardIos
 import androidx.compose.material.icons.outlined.NightsStay
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
@@ -25,7 +31,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import com.boostcamp.dreamteam.dreamdiary.designsystem.theme.DreamdiaryTheme
@@ -39,6 +44,8 @@ import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.diaryPreview2
 internal fun DiaryCalendarBottomSheet(
     diariesOfDay: List<DiaryUi>,
     onDismissRequest: () -> Unit,
+    onBackClick: () -> Unit,
+    onForwardClick: () -> Unit,
     modifier: Modifier = Modifier,
     initialSheetValue: SheetValue = SheetValue.Hidden,
 ) {
@@ -52,6 +59,11 @@ internal fun DiaryCalendarBottomSheet(
         modifier = modifier,
         sheetState = bottomSheetState
     ) {
+        BottomSheetHeader(
+            onBackClick = onBackClick,
+            onForwardClick = onForwardClick,
+            modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
+        )
         when {
             diariesOfDay.isEmpty() -> {
                 EmptyBottomSheet(modifier = Modifier.fillMaxSize())
@@ -60,6 +72,35 @@ internal fun DiaryCalendarBottomSheet(
             else -> {
                 ListBottomSheet(diariesOfDay = diariesOfDay, modifier = Modifier.fillMaxSize())
             }
+        }
+    }
+}
+
+@Composable
+private fun BottomSheetHeader(
+    onBackClick: () -> Unit,
+    onForwardClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Row(
+        modifier = modifier,
+        horizontalArrangement = Arrangement.SpaceBetween,
+    ) {
+        IconButton(
+            onClick = onBackClick
+        ) {
+            Icon(
+                imageVector = Icons.AutoMirrored.Outlined.ArrowBackIos,
+                contentDescription = stringResource(R.string.calendar_yesterday),
+            )
+        }
+        IconButton(
+            onClick = onForwardClick
+        ) {
+            Icon(
+                imageVector = Icons.AutoMirrored.Outlined.ArrowForwardIos,
+                contentDescription = stringResource(R.string.calendar_tomorrow),
+            )
         }
     }
 }
@@ -127,6 +168,8 @@ private fun DiaryCalendarBottomSheetPreviewList() {
         DiaryCalendarBottomSheet(
             diariesOfDay = listOf(diaryPreview1, diaryPreview2),
             onDismissRequest = { /* no-op */ },
+            onBackClick = { /* no-op */ },
+            onForwardClick = { /* no-op */ },
             initialSheetValue = SheetValue.Expanded,
         )
     }
@@ -140,6 +183,8 @@ private fun DiaryCalendarBottomSheetPreviewEmpty() {
         DiaryCalendarBottomSheet(
             diariesOfDay = emptyList(),
             onDismissRequest = { /* no-op */ },
+            onBackClick = { /* no-op */ },
+            onForwardClick = { /* no-op */ },
             initialSheetValue = SheetValue.Expanded,
         )
     }

@@ -44,6 +44,8 @@ internal fun DiaryCalendarTab(
             DiaryCalendarBottomSheet(
                 diariesOfDay = state.diariesOfMonth.filter { it.sortKey.value.toLocalDate().isEqual(lastSelectedDay) },
                 onDismissRequest = { isBottomSheetOpen = false },
+                onBackClick = { lastSelectedDay = lastSelectedDay.minusDays(1) },
+                onForwardClick = { lastSelectedDay = lastSelectedDay.plusDays(1) },
                 modifier = Modifier.fillMaxSize(),
             )
         }
