@@ -30,7 +30,7 @@ fun DreamDiaryNavHost(
                     },
                 )
             },
-            onNotSignInClick = {
+            onPassClick = {
                 navController.navigateToDiaryHomeScreen(
                     navOptions = navOptions {
                         launchSingleTop = true

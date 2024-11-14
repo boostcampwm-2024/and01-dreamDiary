@@ -28,5 +28,7 @@ dependencies {
     ksp(libs.hilt.compiler)
     implementation(libs.hilt.core)
 
+    implementation(libs.androidx.paging.runtime)
+
     implementation(libs.kotlinx.coroutines.core)
 }

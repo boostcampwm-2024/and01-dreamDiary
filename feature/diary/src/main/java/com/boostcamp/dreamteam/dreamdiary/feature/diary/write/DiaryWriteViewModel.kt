@@ -25,6 +25,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.io.IOException
+import java.time.ZonedDateTime
 import javax.inject.Inject
 
 @HiltViewModel
@@ -71,8 +72,16 @@ class DiaryWriteViewModel @Inject constructor(
         val title = _uiState.value.title
         val content = _uiState.value.content
         val labels = _uiState.value.selectableLabels.map { it.label.name }
+        val sleepStartAt = _uiState.value.sleepStartAt
+        val sleepEndAt = _uiState.value.sleepEndAt
         viewModelScope.launch {
-            addDreamDiaryUseCase(title, content, labels)
+            addDreamDiaryUseCase(
+                title = title,
+                body = content,
+                labels = labels,
+                sleepStartAt = sleepStartAt,
+                sleepEndAt = sleepEndAt,
+            )
             _event.trySend(DiaryWriteEvent.DiaryAddSuccess)
         }
     }
@@ -94,6 +103,18 @@ class DiaryWriteViewModel @Inject constructor(
                 _event.trySend(DiaryWriteEvent.LabelAddFailure(LabelAddFailureReason.UNKNOWN_ERROR))
             }
         }
+    }
+
+    fun setSleepStartAt(sleepStartAt: ZonedDateTime) {
+        _uiState.value = _uiState.value.copy(
+            sleepStartAt = sleepStartAt,
+        )
+    }
+
+    fun setSleepEndAt(sleepEndAt: ZonedDateTime) {
+        _uiState.value = _uiState.value.copy(
+            sleepEndAt = sleepEndAt,
+        )
     }
 
     private fun collectLabels() {

@@ -25,4 +25,8 @@ class AuthRepository @Inject constructor(
         CredentialManager.create(context).clearCredentialState(ClearCredentialStateRequest())
         auth.signOut()
     }
+
+    fun getUserEmail(): String? {
+        return auth.currentUser?.email
+    }
 }

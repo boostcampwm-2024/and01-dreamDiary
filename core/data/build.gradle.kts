@@ -2,7 +2,7 @@ plugins {
     alias(libs.plugins.dreamdiary.android.library)
     alias(libs.plugins.ksp)
     alias(libs.plugins.room)
-    alias(libs.plugins.googleServices)
+    alias(libs.plugins.google.gms.google.services)
 }
 
 android {
@@ -34,6 +34,10 @@ dependencies {
     implementation(libs.androidx.room.runtime)
     ksp(libs.androidx.room.compiler)
     implementation(libs.androidx.room.ktx)
+
+    // paging
+    implementation(libs.androidx.room.paging)
+    implementation(libs.androidx.paging.runtime)
 
     // firebase
     implementation(libs.firebase.firestore)

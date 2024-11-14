@@ -1,5 +1,6 @@
 package com.boostcamp.dreamteam.dreamdiary.core.data.database.dao
 
+import androidx.paging.PagingSource
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
@@ -22,6 +23,8 @@ interface DreamDiaryDao {
         title: String,
         body: String,
         labels: List<String>,
+        sleepStartAt: Instant,
+        sleepEndAt: Instant,
     ) {
         val dreamDiaryId = UUID.randomUUID().toString()
         insertDreamDiary(
@@ -31,6 +34,8 @@ interface DreamDiaryDao {
                 body = body,
                 createdAt = Instant.now(),
                 updatedAt = Instant.now(),
+                sleepStartAt = sleepStartAt,
+                sleepEndAt = sleepEndAt,
             ),
         )
         setLabelsToDreamDiary(dreamDiaryId, labels)
@@ -56,4 +61,7 @@ interface DreamDiaryDao {
 
     @Query("select * from label where :search is null or label like :search")
     fun getLabels(search: String?): Flow<List<LabelEntity>>
+
+    @Query("select * from diary order by updatedAt desc")
+    fun getDreamDiaries(): PagingSource<Int, DreamDiaryEntity>
 }

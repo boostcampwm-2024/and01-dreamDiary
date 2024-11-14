@@ -14,4 +14,6 @@ data class DreamDiaryEntity(
     val body: String,
     val createdAt: Instant,
     val updatedAt: Instant,
+    val sleepStartAt: Instant,
+    val sleepEndAt: Instant,
 )

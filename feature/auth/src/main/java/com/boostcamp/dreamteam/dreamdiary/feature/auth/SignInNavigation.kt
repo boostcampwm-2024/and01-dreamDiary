@@ -13,9 +13,9 @@ fun NavController.navigateToLoginScreen(navOptions: NavOptions) = navigate(route
 
 fun NavGraphBuilder.signInScreen(
     onSignInSuccess: () -> Unit,
-    onNotSignInClick: () -> Unit,
+    onPassClick: () -> Unit,
 ) {
     composable<SignInRoute> {
-        SignInScreen(onSignInSuccess, onNotSignInClick)
+        SignInScreen(onSignInSuccess, onPassClick)
     }
 }

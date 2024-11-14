@@ -1,5 +1,6 @@
 package com.boostcamp.dreamteam.dreamdiary.feature.auth
 
+import android.content.SharedPreferences
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.boostcamp.dreamteam.dreamdiary.core.data.repository.AuthRepository
@@ -13,9 +14,18 @@ import javax.inject.Inject
 @HiltViewModel
 class SignInViewModel @Inject constructor(
     private val authRepository: AuthRepository,
+    private val sharedPreferences: SharedPreferences,
 ) : ViewModel() {
     private val _signInState = MutableStateFlow<SignInState>(SignInState.NotSignIn)
     val signInState = _signInState.asStateFlow()
+
+    init {
+        if (authRepository.getUserEmail() != null) {
+            _signInState.value = SignInState.Success
+        } else if (sharedPreferences.getBoolean("onPass", false)) {
+            _signInState.value = SignInState.OnPass
+        }
+    }
 
     fun signInWithGoogle(idToken: String) {
         viewModelScope.launch {
@@ -26,5 +36,10 @@ class SignInViewModel @Inject constructor(
                 _signInState.value = SignInState.Error("Google sign-in failed")
             }
         }
+    }
+
+    fun onPass() {
+        sharedPreferences.edit().putBoolean("onPass", true).apply()
+        _signInState.value = SignInState.OnPass
     }
 }
