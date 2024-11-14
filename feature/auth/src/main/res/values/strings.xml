@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="signIn_dream_diary">Dream Diary</string>
+    <string name="signIn_github_icon">깃허브 아이콘</string>
+    <string name="signIn_github_login">깃허브 로그인</string>
+    <string name="signIn_google_icon">구글 아이콘</string>
+    <string name="signIn_google_login">구글 로그인</string>
+    <string name="signIn_now_pass">지금은 건너뛰기</string>
+</resources>

@@ -4,16 +4,24 @@
     <string name="write_save">Save</string>
     <string name="write_save_calendar">날짜 선택</string>
     <string name="write_select_time">시간 선택</string>
+    <string name="write_date_ok">확인</string>
+    <string name="write_time_ok">확인</string>
     <string name="write_category">카테고리</string>
     <string name="write_text_title">제목을 입력하세요</string>
     <string name="write_text_content">내용을 입력하세요</string>
     <string name="write_duplicate_error">중복된 라벨입니다.</string>
     <string name="write_insufficient_storage_error">저장공간이 부족합니다.</string>
     <string name="write_unknown_error">알수 없는 에러</string>
+    <string name="write_no_label">없음</string>
     <string name="login_dream_diary">Dream Diary</string>
     <string name="login_github_icon">깃허브 아이콘</string>
     <string name="login_github_login">깃허브 로그인</string>
     <string name="login_google_icon">구글 아이콘</string>
     <string name="login_google_login">구글 로그인</string>
     <string name="login_now_pass">지금은 건너뛰기</string>
+    <string name="calendar_previous_month">이전 달로 이동</string>
+    <string name="calendar_move_next_month">다음 달로 이동</string>
+    <string name="calendar_today">오늘</string>
+    <string name="calendar_cancel">취소</string>
+    <string name="calendar_ok">확인</string>
 </resources>

@@ -1,6 +1,7 @@
 package com.boostcamp.dreamteam.dreamdiary.buildlogic.convention
 
 import com.android.build.gradle.LibraryExtension
+import com.boostcamp.dreamteam.dreamdiary.buildlogic.convention.extension.libs
 import org.gradle.api.JavaVersion
 import org.gradle.api.Plugin
 import org.gradle.api.Project
@@ -10,7 +11,6 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.dsl.KotlinAndroidProjectExtension
 
 class AndroidLibraryConventionPlugin : Plugin<Project> {
-
     override fun apply(target: Project) {
         with(target) {
             with(pluginManager) {
@@ -39,10 +39,12 @@ class AndroidLibraryConventionPlugin : Plugin<Project> {
             }
 
             dependencies {
-
                 add("testImplementation", libs.findLibrary("junit").get())
                 add("androidTestImplementation", libs.findLibrary("androidx.junit").get())
                 add("coreLibraryDesugaring", libs.findLibrary("desugar.jdk.libs").get())
+
+                // Timber
+                add("implementation", libs.findLibrary("timber").get())
             }
         }
     }
