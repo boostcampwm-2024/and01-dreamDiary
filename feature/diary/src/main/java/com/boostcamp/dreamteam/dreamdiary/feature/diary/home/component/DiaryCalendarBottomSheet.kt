@@ -28,6 +28,7 @@ import androidx.compose.material3.SheetValue
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberStandardBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -39,6 +40,11 @@ import com.boostcamp.dreamteam.dreamdiary.feature.diary.R
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.DiaryUi
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.diaryPreview1
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.diaryPreview2
+import java.time.chrono.Chronology
+import java.time.format.DateTimeFormatter
+import java.time.format.DateTimeFormatterBuilder
+import java.time.format.FormatStyle
+import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -150,7 +156,19 @@ private fun ListBottomSheet(
     diariesOfDay: List<DiaryUi>,
     onDiaryClick: (DiaryUi) -> Unit,
     modifier: Modifier = Modifier,
+    locale: Locale = Locale.getDefault(),
 ) {
+    val dateTimeFormatter = remember(locale) {
+        val pattern = DateTimeFormatterBuilder
+            .getLocalizedDateTimePattern(
+                FormatStyle.FULL,
+                FormatStyle.SHORT,
+                Chronology.ofLocale(locale),
+                locale,
+            )
+        DateTimeFormatter.ofPattern(pattern)
+    }
+
     LazyColumn(modifier = modifier) {
         items(diariesOfDay) { diary: DiaryUi ->
             ListItem(
@@ -159,7 +177,7 @@ private fun ListBottomSheet(
                 },
                 modifier = Modifier.clickable { onDiaryClick(diary) },
                 overlineContent = {
-                    Text(text = diary.sortKey.formatted)
+                    Text(text = diary.sortKey.value.format(dateTimeFormatter))
                 },
                 supportingContent = {
                     Text(text = diary.content, maxLines = 2, overflow = TextOverflow.Ellipsis)

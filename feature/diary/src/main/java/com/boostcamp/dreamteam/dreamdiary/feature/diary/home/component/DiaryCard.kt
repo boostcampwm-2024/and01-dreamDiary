@@ -170,6 +170,7 @@ internal val diaryPreview1 = DiaryUi(
         LabelUi("행복"),
         LabelUi("환희"),
     ),
+    sortKey = Instant.now().toDisplayableDateTime(),
 )
 
 internal val diaryPreview2 = DiaryUi(
@@ -185,4 +186,5 @@ internal val diaryPreview2 = DiaryUi(
         LabelUi("슬픔"),
         LabelUi("우울"),
     ),
+    sortKey = Instant.now().toDisplayableDateTime(),
 )
