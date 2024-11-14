@@ -20,7 +20,7 @@ class SignInViewModel @Inject constructor(
     val signInState = _signInState.asStateFlow()
 
     init {
-        if (authRepository.getUser() != null) {
+        if (authRepository.getUserEmail() != null) {
             _signInState.value = SignInState.Success
         } else if (sharedPreferences.getBoolean("onPass", false)) {
             _signInState.value = SignInState.OnPass

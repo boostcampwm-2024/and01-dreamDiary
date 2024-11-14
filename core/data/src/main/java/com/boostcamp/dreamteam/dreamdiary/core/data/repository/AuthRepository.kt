@@ -19,12 +19,9 @@ class AuthRepository @Inject constructor(
 ) {
     private val auth: FirebaseAuth = FirebaseAuth.getInstance()
 
-    private var user: FirebaseUser? = Firebase.auth.currentUser
-
     suspend fun signInWithGoogle(idToken: String) {
         val credential = GoogleAuthProvider.getCredential(idToken, null)
         auth.signInWithCredential(credential).await()
-        user = auth.currentUser
     }
 
     suspend fun signOut() {
@@ -32,7 +29,7 @@ class AuthRepository @Inject constructor(
         auth.signOut()
     }
 
-    fun getUser(): String? {
-        return user?.email
+    fun getUserEmail(): String? {
+        return auth.currentUser?.email
     }
 }
