@@ -87,7 +87,7 @@ private fun SettingCategory(
     modifier: Modifier = Modifier,
 ) {
     Row(
-        modifier = Modifier.padding(8.dp),
+        modifier = modifier.padding(8.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Text(
@@ -105,7 +105,7 @@ private fun SettingOption(
     modifier: Modifier = Modifier,
 ) {
     Row(
-        modifier = Modifier.padding(8.dp),
+        modifier = modifier.padding(8.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(4.dp),
     ) {
