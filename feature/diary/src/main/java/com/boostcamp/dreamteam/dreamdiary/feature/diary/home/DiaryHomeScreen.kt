@@ -128,6 +128,7 @@ private fun DiaryHomeScreenContent(
                 )
 
                 1 -> DiaryCalendarTab(
+                    onDiaryClick = onDiaryClick,
                     onYearMothChange = onCalendarYearMothChange,
                     modifier = tabModifier,
                     state = calendarUIState,

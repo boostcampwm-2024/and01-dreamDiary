@@ -27,6 +27,7 @@ import com.boostcamp.dreamteam.dreamdiary.designsystem.theme.DreamdiaryTheme
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.R
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.DiaryUi
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.diariesPreview
+import java.time.LocalDate
 import java.time.YearMonth
 import java.time.format.TextStyle
 import java.util.Locale
@@ -34,6 +35,7 @@ import java.util.Locale
 @Composable
 internal fun DiaryCalendar(
     diariesOfMonth: List<DiaryUi>,
+    onDayClick: (LocalDate) -> Unit,
     modifier: Modifier = Modifier,
     yearMonth: YearMonth = YearMonth.now(),
     onYearMothChange: (YearMonth) -> Unit = { },
@@ -63,6 +65,7 @@ internal fun DiaryCalendar(
 
         DiaryCalendarBody(
             diariesOfMonth = diariesOfMonth,
+            onDayClick = onDayClick,
             yearMonth = yearMonth,
             modifier = Modifier.fillMaxWidth(),
         )
@@ -131,6 +134,7 @@ private fun DiaryCalendarPreview() {
         DiaryCalendar(
             diariesOfMonth = diariesPreview,
             yearMonth = YearMonth.now(),
+            onDayClick = { },
         )
     }
 }
@@ -142,6 +146,7 @@ private fun DiaryCalendarPreview1() {
         DiaryCalendar(
             diariesOfMonth = diariesPreview,
             yearMonth = YearMonth.of(2024, 1),
+            onDayClick = { },
         )
     }
 }
@@ -153,6 +158,7 @@ private fun DiaryCalendarPreview2() {
         DiaryCalendar(
             diariesOfMonth = diariesPreview,
             yearMonth = YearMonth.of(2024, 2),
+            onDayClick = { },
         )
     }
 }
@@ -164,6 +170,7 @@ private fun DiaryCalendarPreview3() {
         DiaryCalendar(
             diariesOfMonth = diariesPreview,
             yearMonth = YearMonth.of(2024, 3),
+            onDayClick = { },
         )
     }
 }
