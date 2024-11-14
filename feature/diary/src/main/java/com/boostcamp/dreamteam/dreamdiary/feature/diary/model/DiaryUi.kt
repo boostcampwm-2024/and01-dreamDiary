@@ -34,7 +34,8 @@ internal fun Diary.toDiaryUi(): DiaryUi =
             labels = labels.map { it.toLabelUi() },
             sleepStartAt = sleepStartAt.toDisplayableDateTime(),
             sleepEndAt = sleepEndAt.toDisplayableDateTime(),
-            sortKey = sleepEndAt.toDisplayableDateTime(), // TODO 어떤 값으로 정렬할 것인지 선택이 가능
+            // TODO 어떤 값으로 정렬할 것인지 선택이 가능
+            sortKey = sleepEndAt.toDisplayableDateTime(),
         )
     }
 
