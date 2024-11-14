@@ -29,7 +29,6 @@ import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.DiaryUi
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.diariesPreview
 import java.time.LocalDate
 import java.time.YearMonth
-import java.time.ZonedDateTime
 import java.time.format.TextStyle
 import java.util.Locale
 
