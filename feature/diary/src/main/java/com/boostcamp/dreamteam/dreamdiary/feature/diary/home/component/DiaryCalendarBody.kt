@@ -1,6 +1,7 @@
 package com.boostcamp.dreamteam.dreamdiary.feature.diary.home.component
 
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
@@ -37,8 +38,9 @@ import java.util.Locale
 @Composable
 internal fun DiaryCalendarBody(
     diariesOfMonth: List<DiaryUi>,
-    yearMonth: YearMonth,
+    onDayClick: (LocalDate) -> Unit,
     modifier: Modifier = Modifier,
+    yearMonth: YearMonth = YearMonth.now(),
     locale: Locale = Locale.getDefault(),
 ) {
     val firstDayOfMonth = yearMonth.atDay(1)
@@ -62,6 +64,7 @@ internal fun DiaryCalendarBody(
                 diariesOfWeek = diariesOfMonth.diariesOfWeek(firstDateOfWeek),
                 currentYearMonth = yearMonth,
                 firstDateOfWeek = firstDateOfWeek,
+                onDayClick = onDayClick,
                 modifier = Modifier.fillMaxWidth(),
             )
         }
@@ -101,6 +104,7 @@ private fun WeekRow(
     diariesOfWeek: List<DiaryUi>,
     currentYearMonth: YearMonth,
     firstDateOfWeek: LocalDate,
+    onDayClick: (LocalDate) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val daysOfWeek = (0 until 7).map { firstDateOfWeek.plusDays(it.toLong()) }
@@ -110,7 +114,9 @@ private fun WeekRow(
     Row(modifier = modifier) {
         dayToDiaryMap.forEach { (date, diaries) ->
             DayCell(
-                modifier = Modifier.weight(1f),
+                modifier = Modifier
+                    .weight(1f)
+                    .clickable { onDayClick(date) },
                 isToday = date == LocalDate.now(),
             ) {
                 BadgedBox(
@@ -176,6 +182,7 @@ private fun CalendarBodyPreview() {
     DreamdiaryTheme {
         DiaryCalendarBody(
             diariesOfMonth = diariesPreview,
+            onDayClick = { },
             yearMonth = YearMonth.now(),
         )
     }
