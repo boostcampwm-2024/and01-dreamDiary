@@ -101,7 +101,7 @@ fun DiaryHomeScreen(
             ) {
                 Icon(
                     imageVector = Icons.Outlined.Create,
-                    contentDescription = "일기 작성",
+                    contentDescription = stringResource(R.string.home_diary_write),
                 )
             }
         },
@@ -128,7 +128,7 @@ private fun DiaryHomeScreenContent(
     onNotificationClick: () -> Unit = {},
 ) {
     var selectedTabIndex by remember { mutableIntStateOf(0) }
-    val tabs = listOf("꿈", "달력")
+    val tabs = listOf(stringResource(R.string.home_tab_dream), stringResource(R.string.home_tab_calendar))
 
     Column(
         modifier = modifier.fillMaxSize(),
