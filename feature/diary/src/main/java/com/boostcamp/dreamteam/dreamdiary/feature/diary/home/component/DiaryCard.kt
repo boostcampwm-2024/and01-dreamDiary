@@ -24,22 +24,18 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import com.boostcamp.dreamteam.dreamdiary.designsystem.theme.DreamdiaryTheme
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.DiaryUi
-import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.LabelUi
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.diaryPreview1
-import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.vo.toDisplayableDateTime
-import java.time.Duration
-import java.time.Instant
 import java.time.chrono.Chronology
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeFormatterBuilder
 import java.time.format.FormatStyle
+import java.util.Locale
 
 @Composable
 internal fun DiaryCard(
@@ -47,8 +43,8 @@ internal fun DiaryCard(
     modifier: Modifier = Modifier,
     onDiaryClick: (DiaryUi) -> Unit = {},
     containerColor: Color = MaterialTheme.colorScheme.surfaceContainerLowest,
+    locale: Locale = Locale.getDefault(),
 ) {
-    val locale = Locale.current.platformLocale
     val dateFormatter = remember(locale) {
         val pattern = DateTimeFormatterBuilder
             .getLocalizedDateTimePattern(
@@ -155,36 +151,3 @@ private fun DiaryCardPreview() {
         )
     }
 }
-
-internal val diaryPreview1 = DiaryUi(
-    id = "1",
-    title = "오늘의 일기",
-    content = "오늘은 날씨가 좋았다",
-    createdAt = Instant.now().toDisplayableDateTime(),
-    updatedAt = Instant.now().toDisplayableDateTime(),
-    sleepStartAt = Instant.now().toDisplayableDateTime(),
-    sleepEndAt = Instant.now().toDisplayableDateTime(),
-    images = listOf(),
-    labels = listOf(
-        LabelUi("기쁨"),
-        LabelUi("행복"),
-        LabelUi("환희"),
-    ),
-    sortKey = Instant.now().toDisplayableDateTime(),
-)
-
-internal val diaryPreview2 = DiaryUi(
-    id = "2",
-    title = "어제의 일기",
-    content = "어제는 날씨가 좋지 않았다.",
-    createdAt = Instant.now().minus(Duration.ofDays(1)).toDisplayableDateTime(),
-    updatedAt = Instant.now().minus(Duration.ofDays(1)).toDisplayableDateTime(),
-    sleepStartAt = Instant.now().toDisplayableDateTime(),
-    sleepEndAt = Instant.now().toDisplayableDateTime(),
-    images = listOf(),
-    labels = listOf(
-        LabelUi("슬픔"),
-        LabelUi("우울"),
-    ),
-    sortKey = Instant.now().toDisplayableDateTime(),
-)

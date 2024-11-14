@@ -13,10 +13,10 @@ import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.boostcamp.dreamteam.dreamdiary.designsystem.theme.DreamdiaryTheme
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.component.DiaryCard
-import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.component.diaryPreview1
-import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.component.diaryPreview2
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.DiaryUi
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.PagingIndexKey
+import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.diaryPreview1
+import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.diaryPreview2
 import kotlinx.coroutines.flow.flowOf
 
 @Composable

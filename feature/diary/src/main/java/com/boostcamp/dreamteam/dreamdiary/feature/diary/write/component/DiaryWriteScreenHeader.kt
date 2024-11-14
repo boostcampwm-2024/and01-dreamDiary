@@ -32,7 +32,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.boostcamp.dreamteam.dreamdiary.designsystem.theme.DreamdiaryTheme
@@ -49,6 +48,7 @@ import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeFormatterBuilder
 import java.time.format.FormatStyle
 import java.time.temporal.ChronoUnit
+import java.util.Locale
 
 @Composable
 internal fun DiaryWriteScreenHeader(
@@ -230,7 +230,7 @@ private fun DateHeader(
     date: LocalDate,
     onConfirm: (Long) -> Unit,
     modifier: Modifier = Modifier,
-    locale: java.util.Locale = Locale.current.platformLocale,
+    locale: Locale = Locale.getDefault(),
 ) {
     var isDatePickerOpen by rememberSaveable { mutableStateOf(false) }
 
