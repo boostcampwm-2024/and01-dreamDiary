@@ -32,8 +32,8 @@ internal class DefaultDreamDiaryRepository @Inject constructor(
         )
     }
 
-    override fun getDreamDiaries(): Flow<PagingData<Diary>> {
-        return Pager(
+    override fun getDreamDiaries(): Flow<PagingData<Diary>> =
+        Pager(
             config = PagingConfig(pageSize = 100),
             pagingSourceFactory = { dreamDiaryDao.getDreamDiaries() },
         ).flow.map { pagingData ->
@@ -41,7 +41,6 @@ internal class DefaultDreamDiaryRepository @Inject constructor(
                 it.toDomain()
             }
         }
-    }
 
     override suspend fun addLabel(label: String) {
         dreamDiaryDao.insertLabel(
@@ -66,4 +65,12 @@ internal class DefaultDreamDiaryRepository @Inject constructor(
     ) {
         dreamDiaryDao.setLabelsToDreamDiary(diaryId, labels)
     }
+
+    override fun getDreamDiariesBySleepEndInRange(
+        start: Instant,
+        end: Instant,
+    ): Flow<List<Diary>> =
+        dreamDiaryDao
+            .getDreamDiariesBySleepEndInRange(start, end)
+            .map { list -> list.map { it.toDomain() } }
 }
