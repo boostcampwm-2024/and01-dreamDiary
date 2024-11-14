@@ -46,17 +46,20 @@ import timber.log.Timber
 @Composable
 fun SignInScreen(
     onSignInSuccess: () -> Unit,
-    onNotSignInClick: () -> Unit,
+    onPassClick: () -> Unit,
     viewModel: SignInViewModel = hiltViewModel(),
 ) {
     val signInState by viewModel.signInState.collectAsStateWithLifecycle()
     val context = LocalContext.current
     val google = Google(context.applicationContext)
     val scope = rememberCoroutineScope()
-
     when (signInState) {
         is SignInState.Success -> {
             onSignInSuccess()
+        }
+
+        is SignInState.OnPass -> {
+            onPassClick()
         }
 
         is SignInState.Error -> {
@@ -76,7 +79,9 @@ fun SignInScreen(
                         }
                     }
                 },
-                onNotSignInClick = onNotSignInClick,
+                onNotSignInClick = {
+                    viewModel.onPass()
+                },
             )
         }
     }

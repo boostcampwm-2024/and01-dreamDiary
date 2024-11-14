@@ -5,6 +5,7 @@ import androidx.credentials.ClearCredentialStateRequest
 import androidx.credentials.CredentialManager
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
+import com.google.firebase.auth.ktx.auth
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
@@ -24,5 +25,9 @@ class AuthRepository @Inject constructor(
     suspend fun signOut() {
         CredentialManager.create(context).clearCredentialState(ClearCredentialStateRequest())
         auth.signOut()
+    }
+
+    fun getUserEmail(): String? {
+        return auth.currentUser?.email
     }
 }

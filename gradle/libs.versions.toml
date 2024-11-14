@@ -87,11 +87,11 @@ ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 room = { id = "androidx.room", version.ref = "room" }
-googleServices = { id = "com.google.gms.google-services" }
+google-gms-google-services = { id = "com.google.gms.google-services", version.ref = "googleGmsGoogleServices" }
 
 # 이 프로젝트에서 정의한 컨벤션 플러그인
 dreamdiary-android-library = { id = "dreamdiary.android.library" }
 dreamdiary-android-feature = { id = "dreamdiary.android.feature" }
 dreamdiary-android-application-compose = { id = "dreamdiary.android.application.compose" }
 dreamdiary-android-library-compose = { id = "dreamdiary.android.library.compose" }
-google-gms-google-services = { id = "com.google.gms.google-services", version.ref = "googleGmsGoogleServices" }
+
