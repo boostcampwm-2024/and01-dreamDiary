@@ -83,6 +83,7 @@ fun SignInScreen(
                 },
             )
             if (signInState is SignInState.Error) {
+                Timber.e((signInState as SignInState.Error).message)
                 Toast.makeText(context, stringResource(R.string.signIn_fail), Toast.LENGTH_SHORT).show()
             }
         }
