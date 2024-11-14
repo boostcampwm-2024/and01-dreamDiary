@@ -31,6 +31,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.boostcamp.dreamteam.dreamdiary.designsystem.theme.DreamdiaryTheme
@@ -44,7 +45,7 @@ internal fun SettingScreen(modifier: Modifier = Modifier) {
         topBar = {
             CenterAlignedTopAppBar(
                 title = {
-                    Text(text = "설정")
+                    Text(text = stringResource(R.string.setting_title))
                 },
             )
         },
@@ -57,25 +58,25 @@ internal fun SettingScreen(modifier: Modifier = Modifier) {
                 .verticalScroll(rememberScrollState),
             verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
-            SettingCategory(text = "알림 설정")
-            SettingOption(icon = Icons.Outlined.Alarm, text = "일정 알림")
-            SettingOption(icon = Icons.AutoMirrored.Outlined.Comment, text = "댓글 알림")
+            SettingCategory(text = stringResource(R.string.setting_alarm_setting))
+            SettingOption(icon = Icons.Outlined.Alarm, text = stringResource(R.string.setting_schedule_alarm))
+            SettingOption(icon = Icons.AutoMirrored.Outlined.Comment, text = stringResource(R.string.setting_comment_alarm))
 
-            SettingCategory(text = "데이터 백업 및 복원")
-            SettingOption(icon = Icons.Outlined.CloudUpload, text = "데이터 백업 및 복원")
-            SettingOption(icon = Icons.Outlined.ResetTv, text = "초기화")
+            SettingCategory(text = stringResource(R.string.setting_data_restore))
+            SettingOption(icon = Icons.Outlined.CloudUpload, text = stringResource(R.string.setting_data_restore))
+            SettingOption(icon = Icons.Outlined.ResetTv, text = stringResource(R.string.setting_reset))
 
-            SettingCategory(text = "커뮤니케이션")
-            SettingOption(icon = Icons.Outlined.NoAccounts, text = "차단한 사용자")
-            SettingOption(icon = Icons.Outlined.PeopleOutline, text = "구독중")
-            SettingOption(icon = Icons.Outlined.Image, text = "꿈 사진으로 보기")
+            SettingCategory(text = stringResource(R.string.setting_communication))
+            SettingOption(icon = Icons.Outlined.NoAccounts, text = stringResource(R.string.setting_block))
+            SettingOption(icon = Icons.Outlined.PeopleOutline, text = stringResource(R.string.setting_subscribe))
+            SettingOption(icon = Icons.Outlined.Image, text = stringResource(R.string.setting_picture))
 
-            SettingCategory(text = "정보")
-            SettingOption(icon = Icons.Outlined.DarkMode, text = "다크모드 설정")
-            SettingOption(icon = Icons.Outlined.Lock, text = "잠금설정")
-            SettingOption(icon = Icons.Outlined.AccountBox, text = "로그인된 SNS 계정 확인")
-            SettingOption(icon = Icons.AutoMirrored.Outlined.Logout, text = "로그아웃")
-            SettingOption(icon = Icons.Outlined.Window, text = "탈퇴")
+            SettingCategory(text = stringResource(R.string.setting_information))
+            SettingOption(icon = Icons.Outlined.DarkMode, text = stringResource(R.string.setting_darkmode))
+            SettingOption(icon = Icons.Outlined.Lock, text = stringResource(R.string.setting_lock_setting))
+            SettingOption(icon = Icons.Outlined.AccountBox, text = stringResource(R.string.setting_check_account))
+            SettingOption(icon = Icons.AutoMirrored.Outlined.Logout, text = stringResource(R.string.setting_logout))
+            SettingOption(icon = Icons.Outlined.Window, text = stringResource(R.string.setting_withdraw))
         }
     }
 }
