@@ -64,4 +64,10 @@ interface DreamDiaryDao {
 
     @Query("select * from diary order by updatedAt desc")
     fun getDreamDiaries(): PagingSource<Int, DreamDiaryEntity>
+
+    @Query("SELECT * FROM diary WHERE sleepEndAt BETWEEN :start AND :end")
+    fun getDreamDiariesBySleepEndInRange(
+        start: Instant,
+        end: Instant,
+    ): Flow<List<DreamDiaryEntity>>
 }
