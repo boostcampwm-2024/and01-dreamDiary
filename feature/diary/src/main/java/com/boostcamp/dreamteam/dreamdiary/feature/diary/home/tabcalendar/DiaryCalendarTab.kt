@@ -3,6 +3,7 @@ package com.boostcamp.dreamteam.dreamdiary.feature.diary.home.tabcalendar
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -20,6 +21,7 @@ import java.time.LocalDate
 import java.time.YearMonth
 import java.time.ZonedDateTime
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun DiaryCalendarTab(
     onYearMothChange: (YearMonth) -> Unit,
