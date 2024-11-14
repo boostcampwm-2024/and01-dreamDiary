@@ -19,7 +19,6 @@ fun NavGraphBuilder.diaryHomeScreen(
     onDiaryItemClick: (DiaryUi) -> Unit,
 ) {
     composable<DiaryHomeRoute> {
-
         DiaryHomeScreen(
             onDiaryClick = onDiaryItemClick,
             onNavigateToWriteScreen = {
@@ -30,7 +29,7 @@ fun NavGraphBuilder.diaryHomeScreen(
             },
             onNavigateToSetting = {
                 onSettingClick()
-            }
+            },
         )
     }
 }

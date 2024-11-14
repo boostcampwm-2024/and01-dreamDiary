@@ -118,7 +118,6 @@ private fun DiaryWriteScreen(
     sleepEndAt: ZonedDateTime,
     onSleepEndAtChange: (ZonedDateTime) -> Unit,
     modifier: Modifier,
-
 ) {
     val scrollState = rememberScrollState()
 

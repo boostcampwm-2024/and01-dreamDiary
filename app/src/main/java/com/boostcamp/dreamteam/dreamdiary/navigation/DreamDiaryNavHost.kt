@@ -51,12 +51,11 @@ fun DreamDiaryNavHost(
 //                navController.navigateToSettingScreen()
             },
             onDiaryItemClick = { diaryUI ->
-
-            }
+            },
         )
 
         diaryWriteScreen(
-            onBackClick = navController::navigateUp
+            onBackClick = navController::navigateUp,
         )
     }
 }

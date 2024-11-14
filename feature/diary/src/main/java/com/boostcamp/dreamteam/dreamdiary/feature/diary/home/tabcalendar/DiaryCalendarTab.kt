@@ -32,7 +32,7 @@ internal fun DiaryCalendarTab(
 ) {
     var lastSelectedDay: LocalDate by rememberSaveable {
         mutableStateOf(
-            ZonedDateTime.now().toLocalDate()
+            ZonedDateTime.now().toLocalDate(),
         )
     }
     var isBottomSheetOpen by rememberSaveable { mutableStateOf(false) }

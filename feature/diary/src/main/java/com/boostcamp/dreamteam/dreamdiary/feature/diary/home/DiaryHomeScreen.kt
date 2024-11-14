@@ -165,9 +165,8 @@ private fun DiaryHomeScreenContent(
                 state = calendarUIState,
             )
         }
-        }
     }
-
+}
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
