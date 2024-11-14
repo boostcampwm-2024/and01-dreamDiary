@@ -5,6 +5,7 @@ import android.content.SharedPreferences
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.boostcamp.dreamteam.dreamdiary.core.data.repository.AuthRepository
+import com.boostcamp.dreamteam.dreamdiary.feature.auth.model.SignInErrorMessage
 import com.boostcamp.dreamteam.dreamdiary.feature.auth.model.SignInEvent
 import com.boostcamp.dreamteam.dreamdiary.feature.auth.model.SignInState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -44,7 +45,7 @@ class SignInViewModel @Inject constructor(
             } catch (e: Exception) {
                 Timber.e(e)
                 _event.trySend(
-                    SignInEvent.SignInFailure(com.boostcamp.dreamteam.dreamdiary.feature.auth.model.SignInErrorMessage.GOOGLE_SIGN_IN_FAIL),
+                    SignInEvent.SignInFailure(SignInErrorMessage.GOOGLE_SIGN_IN_FAIL),
                 )
             }
         }
@@ -59,7 +60,7 @@ class SignInViewModel @Inject constructor(
             } catch (e: Exception) {
                 Timber.e(e)
                 _event.trySend(
-                    SignInEvent.SignInFailure(com.boostcamp.dreamteam.dreamdiary.feature.auth.model.SignInErrorMessage.GITHUB_SIGN_IN_FAIL),
+                    SignInEvent.SignInFailure(SignInErrorMessage.GITHUB_SIGN_IN_FAIL),
                 )
             }
         }
