@@ -5,11 +5,13 @@ import com.boostcamp.dreamteam.dreamdiary.core.model.Label
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.vo.DisplayableDateTime
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.vo.toDisplayableDateTime
 import java.time.Instant
+import java.time.LocalDate
 import java.time.YearMonth
+import java.time.ZoneId
 import java.time.ZonedDateTime
 
 data class DiaryUi(
-    val id: Long,
+    val id: String,
     val title: String,
     val content: String,
     val createdAt: DisplayableDateTime,
@@ -35,11 +37,11 @@ internal fun Diary.toDiaryUi(): DiaryUi =
     )
 
 internal val diaryPreview1 = Diary(
-    id = 1,
+    id = "1",
     title = "오늘의 일기",
     content = "오늘은 날씨가 좋았다.",
-    createdAt = "2021-09-01",
-    updatedAt = "2021-09-01",
+    createdAt = LocalDate.of(2021, 9, 1).atStartOfDay(ZoneId.systemDefault()).toInstant(),
+    updatedAt = LocalDate.of(2021, 9, 2).atStartOfDay(ZoneId.systemDefault()).toInstant(),
     images = emptyList(),
     labels = listOf(
         Label("기쁨"),
@@ -49,11 +51,11 @@ internal val diaryPreview1 = Diary(
 ).toDiaryUi()
 
 internal val diaryPreview2 = Diary(
-    id = 2,
+    id = "2",
     title = "어제의 일기",
     content = "어제는 날씨가 좋지 않았다.",
-    createdAt = "2021-08-31",
-    updatedAt = "2021-08-31",
+    createdAt = LocalDate.of(2021, 8, 30).atStartOfDay(ZoneId.systemDefault()).toInstant(),
+    updatedAt = LocalDate.of(2021, 8, 31).atStartOfDay(ZoneId.systemDefault()).toInstant(),
     images = emptyList(),
     labels = listOf(
         Label("슬픔"),
@@ -74,7 +76,7 @@ internal val diariesPreview = run {
             formatted = "",
         )
         DiaryUi(
-            id = it.toLong(),
+            id = it.toString(),
             title = "오늘의 일기",
             content = "오늘은 날씨가 좋았다.",
             createdAt = displayableDateTime,
