@@ -1,5 +1,6 @@
 package com.boostcamp.dreamteam.dreamdiary.feature.auth
 
+import android.widget.Toast
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.background
@@ -62,11 +63,7 @@ fun SignInScreen(
             onPassClick()
         }
 
-        is SignInState.Error -> {
-            // TODO: 에러 처리
-        }
-
-        is SignInState.NotSignIn -> {
+        else -> {
             SignInScreenContent(
                 onGitHubSignInClick = {
                     viewModel.signInWithGitHub(context)
@@ -85,6 +82,9 @@ fun SignInScreen(
                     viewModel.onPass()
                 },
             )
+            if (signInState is SignInState.Error) {
+                Toast.makeText(context, stringResource(R.string.signIn_fail), Toast.LENGTH_SHORT).show()
+            }
         }
     }
 }
