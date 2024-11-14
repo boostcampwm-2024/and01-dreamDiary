@@ -6,6 +6,4 @@ sealed class SignInState {
     data object Success : SignInState()
 
     data object OnPass : SignInState()
-
-    data class Error(val message: String) : SignInState()
 }

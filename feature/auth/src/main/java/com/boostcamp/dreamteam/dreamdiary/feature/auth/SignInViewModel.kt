@@ -1,14 +1,20 @@
 package com.boostcamp.dreamteam.dreamdiary.feature.auth
 
+import android.content.Context
 import android.content.SharedPreferences
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.boostcamp.dreamteam.dreamdiary.core.data.repository.AuthRepository
+import com.boostcamp.dreamteam.dreamdiary.feature.auth.model.SignInErrorMessage
+import com.boostcamp.dreamteam.dreamdiary.feature.auth.model.SignInEvent
 import com.boostcamp.dreamteam.dreamdiary.feature.auth.model.SignInState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -18,6 +24,9 @@ class SignInViewModel @Inject constructor(
 ) : ViewModel() {
     private val _signInState = MutableStateFlow<SignInState>(SignInState.NotSignIn)
     val signInState = _signInState.asStateFlow()
+
+    private val _event = Channel<SignInEvent>(64)
+    val event = _event.receiveAsFlow()
 
     init {
         if (authRepository.getUserEmail() != null) {
@@ -32,8 +41,27 @@ class SignInViewModel @Inject constructor(
             try {
                 authRepository.signInWithGoogle(idToken)
                 _signInState.value = SignInState.Success
+                _event.trySend(SignInEvent.GoogleSignInSuccess)
             } catch (e: Exception) {
-                _signInState.value = SignInState.Error("Google sign-in failed")
+                Timber.e(e)
+                _event.trySend(
+                    SignInEvent.SignInFailure(SignInErrorMessage.GOOGLE_SIGN_IN_FAIL),
+                )
+            }
+        }
+    }
+
+    fun signInWithGitHub(context: Context) {
+        viewModelScope.launch {
+            try {
+                authRepository.signInWithGitHub(context)
+                _signInState.value = SignInState.Success
+                _event.trySend(SignInEvent.GitHubSignInSuccess)
+            } catch (e: Exception) {
+                Timber.e(e)
+                _event.trySend(
+                    SignInEvent.SignInFailure(SignInErrorMessage.GITHUB_SIGN_IN_FAIL),
+                )
             }
         }
     }
@@ -41,5 +69,6 @@ class SignInViewModel @Inject constructor(
     fun onPass() {
         sharedPreferences.edit().putBoolean("onPass", true).apply()
         _signInState.value = SignInState.OnPass
+        _event.trySend(SignInEvent.OnPass)
     }
 }
