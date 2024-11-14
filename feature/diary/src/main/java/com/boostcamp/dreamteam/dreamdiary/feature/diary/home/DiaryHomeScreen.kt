@@ -24,12 +24,14 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.boostcamp.dreamteam.dreamdiary.designsystem.theme.DreamdiaryTheme
+import com.boostcamp.dreamteam.dreamdiary.feature.diary.R
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.tabcalendar.DiaryCalendarTab
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.tabcalendar.DiaryHomeTabCalendarUIState
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.tabcalendar.diaryHomeTabCalendarUIStatePreview
@@ -126,7 +128,7 @@ private fun DiaryHomeScreenContent(
     onNotificationClick: () -> Unit = {},
 ) {
     var selectedTabIndex by remember { mutableIntStateOf(0) }
-    val tabs = listOf("일기", "달력")
+    val tabs = listOf("꿈", "달력")
 
     Column(
         modifier = modifier.fillMaxSize(),
@@ -177,7 +179,7 @@ private fun DiaryHomeScreenTopAppBar(
     modifier: Modifier = Modifier,
 ) {
     TopAppBar(
-        title = { Text("나의 일기") },
+        title = { Text(stringResource(R.string.home_my_dream)) },
         modifier = modifier,
         navigationIcon = {
             IconButton(
