@@ -28,8 +28,10 @@ firebaseFirestore = "25.1.1"
 firebaseAuthKtx = "22.1.1"
 timber = "5.0.1"
 googleid = "1.1.1"
+browser = "1.8.0"
 
 [libraries]
+androidx-browser = { group = "androidx.browser", name = "browser", version.ref = "browser" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-credentials = { module = "androidx.credentials:credentials", version.ref = "credentials" }
 androidx-credentials-play-services-auth = { module = "androidx.credentials:credentials-play-services-auth", version.ref = "credentials" }
@@ -72,6 +74,7 @@ timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "tim
 # build-logic의 dependencies
 android-gradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "agp" }
 kotlin-gradlePlugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
+
 
 [bundles]
 coil = ["coil-compose", "coil-network-okhttp"]

@@ -31,6 +31,7 @@ dependencies {
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
+    implementation(libs.androidx.browser)
     androidTestImplementation(libs.androidx.espresso.core)
 
     // Coil
