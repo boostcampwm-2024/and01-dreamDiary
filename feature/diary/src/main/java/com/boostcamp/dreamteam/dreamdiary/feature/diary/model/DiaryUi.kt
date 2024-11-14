@@ -51,6 +51,8 @@ internal val diaryPreview1 = Diary(
         Label("행복"),
         Label("환희"),
     ),
+    sleepStartAt = LocalDate.of(2021, 9, 1).atStartOfDay(ZoneId.systemDefault()).toInstant(),
+    sleepEndAt = LocalDate.of(2021, 9, 1).atStartOfDay(ZoneId.systemDefault()).toInstant(),
 ).toDiaryUi()
 
 internal val diaryPreview2 = Diary(
@@ -64,6 +66,8 @@ internal val diaryPreview2 = Diary(
         Label("슬픔"),
         Label("우울"),
     ),
+    sleepStartAt = LocalDate.of(2021, 8, 30).atStartOfDay(ZoneId.systemDefault()).toInstant(),
+    sleepEndAt = LocalDate.of(2021, 8, 31).atStartOfDay(ZoneId.systemDefault()).toInstant(),
 ).toDiaryUi()
 
 internal val diariesPreview = run {
