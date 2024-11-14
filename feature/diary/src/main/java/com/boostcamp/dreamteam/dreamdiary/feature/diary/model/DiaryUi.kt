@@ -4,12 +4,13 @@ import com.boostcamp.dreamteam.dreamdiary.core.model.Diary
 import com.boostcamp.dreamteam.dreamdiary.core.model.Label
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.vo.DisplayableDateTime
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.vo.toDisplayableDateTime
-import java.time.Instant
+import java.time.LocalDate
 import java.time.YearMonth
+import java.time.ZoneId
 import java.time.ZonedDateTime
 
 data class DiaryUi(
-    val id: Long,
+    val id: String,
     val title: String,
     val content: String,
     val createdAt: DisplayableDateTime,
@@ -18,28 +19,32 @@ data class DiaryUi(
     val labels: List<LabelUi>,
     val sleepStartAt: DisplayableDateTime,
     val sleepEndAt: DisplayableDateTime,
+    val sortKey: DisplayableDateTime,
 )
 
-// FIXME: 시간과 관련된 데이터를 처리하는 로직은 수정 해주세요
 internal fun Diary.toDiaryUi(): DiaryUi =
-    DiaryUi(
-        id = id,
-        title = title,
-        content = content,
-        createdAt = Instant.now().toDisplayableDateTime(),
-        updatedAt = Instant.now().toDisplayableDateTime(),
-        images = images,
-        labels = labels.map { it.toLabelUi() },
-        sleepStartAt = Instant.now().toDisplayableDateTime(),
-        sleepEndAt = Instant.now().toDisplayableDateTime(),
-    )
+    run {
+        DiaryUi(
+            id = id,
+            title = title,
+            content = content,
+            createdAt = createdAt.toDisplayableDateTime(),
+            updatedAt = updatedAt.toDisplayableDateTime(),
+            images = images,
+            labels = labels.map { it.toLabelUi() },
+            sleepStartAt = sleepStartAt.toDisplayableDateTime(),
+            sleepEndAt = sleepEndAt.toDisplayableDateTime(),
+            // TODO 어떤 값으로 정렬할 것인지 선택이 가능
+            sortKey = sleepEndAt.toDisplayableDateTime(),
+        )
+    }
 
 internal val diaryPreview1 = Diary(
-    id = 1,
+    id = "1",
     title = "오늘의 일기",
     content = "오늘은 날씨가 좋았다.",
-    createdAt = "2021-09-01",
-    updatedAt = "2021-09-01",
+    createdAt = LocalDate.of(2021, 9, 1).atStartOfDay(ZoneId.systemDefault()).toInstant(),
+    updatedAt = LocalDate.of(2021, 9, 2).atStartOfDay(ZoneId.systemDefault()).toInstant(),
     images = emptyList(),
     labels = listOf(
         Label("기쁨"),
@@ -49,11 +54,11 @@ internal val diaryPreview1 = Diary(
 ).toDiaryUi()
 
 internal val diaryPreview2 = Diary(
-    id = 2,
+    id = "2",
     title = "어제의 일기",
     content = "어제는 날씨가 좋지 않았다.",
-    createdAt = "2021-08-31",
-    updatedAt = "2021-08-31",
+    createdAt = LocalDate.of(2021, 8, 30).atStartOfDay(ZoneId.systemDefault()).toInstant(),
+    updatedAt = LocalDate.of(2021, 8, 31).atStartOfDay(ZoneId.systemDefault()).toInstant(),
     images = emptyList(),
     labels = listOf(
         Label("슬픔"),
@@ -71,10 +76,9 @@ internal val diariesPreview = run {
     daysToDisplay.map {
         val displayableDateTime = DisplayableDateTime(
             value = firstDayOfMonth.plusDays(it.toLong() - 1),
-            formatted = "",
         )
         DiaryUi(
-            id = it.toLong(),
+            id = it.toString(),
             title = "오늘의 일기",
             content = "오늘은 날씨가 좋았다.",
             createdAt = displayableDateTime,
@@ -83,6 +87,7 @@ internal val diariesPreview = run {
             labels = emptyList(),
             sleepStartAt = displayableDateTime,
             sleepEndAt = displayableDateTime,
+            sortKey = displayableDateTime,
         )
     }
 }
