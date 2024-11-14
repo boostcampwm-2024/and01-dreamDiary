@@ -10,6 +10,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -34,6 +35,7 @@ class SignInViewModel @Inject constructor(
                 authRepository.signInWithGoogle(idToken)
                 _signInState.value = SignInState.Success
             } catch (e: Exception) {
+                Timber.e(e)
                 _signInState.value = SignInState.Error("Google sign-in failed")
             }
         }
@@ -45,11 +47,12 @@ class SignInViewModel @Inject constructor(
                 authRepository.signInWithGitHub(context)
                 _signInState.value = SignInState.Success
             } catch (e: Exception) {
+                Timber.e(e)
                 _signInState.value = SignInState.Error("GitHub sign-in failed")
             }
         }
     }
-    
+
     fun onPass() {
         sharedPreferences.edit().putBoolean("onPass", true).apply()
         _signInState.value = SignInState.OnPass
