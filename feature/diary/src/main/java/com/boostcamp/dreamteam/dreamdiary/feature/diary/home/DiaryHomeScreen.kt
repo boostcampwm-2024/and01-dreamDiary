@@ -28,10 +28,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.boostcamp.dreamteam.dreamdiary.designsystem.theme.DreamdiaryTheme
-import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.components.DiaryCalendarTab
-import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.components.DiaryListTab
-import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.components.diariesPreview
-import com.boostcamp.dreamteam.dreamdiary.feature.diary.models.DiaryUi
+import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.tabcalendar.DiaryCalendarTab
+import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.tabcalendar.DiaryHomeTabCalendarUIState
+import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.tabcalendar.diaryHomeTabCalendarUIStatePreview
+import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.tablist.DiaryHomeTabListUIState
+import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.tablist.DiaryListTab
+import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.tablist.diaryHomeTabListUIStatePreview
+import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.DiaryUi
+import java.time.YearMonth
 
 @Composable
 fun DiaryHomeScreen(
@@ -39,10 +43,13 @@ fun DiaryHomeScreen(
     onFabClick: () -> Unit,
     viewModel: DiaryHomeViewModel = hiltViewModel(),
 ) {
-    val state by viewModel.diaryHomeUIState.collectAsStateWithLifecycle()
-    val diaries = state.diaries
+    val listUIState by viewModel.tabListUIState.collectAsStateWithLifecycle()
+    val calendarUIState by viewModel.tabCalendarUiState.collectAsStateWithLifecycle()
+
     DiaryHomeScreenContent(
-        diaries = diaries,
+        listUIState = listUIState,
+        calendarUIState = calendarUIState,
+        onCalendarYearMothChange = viewModel::setCalendarYearMonth,
         onMenuClick = { /*TODO*/ },
         onSearchClick = { /*TODO*/ },
         onNotificationClick = { /*TODO*/ },
@@ -54,7 +61,9 @@ fun DiaryHomeScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun DiaryHomeScreenContent(
-    diaries: List<DiaryUi>,
+    listUIState: DiaryHomeTabListUIState,
+    calendarUIState: DiaryHomeTabCalendarUIState,
+    onCalendarYearMothChange: (YearMonth) -> Unit,
     modifier: Modifier = Modifier,
     onMenuClick: () -> Unit = {},
     onSearchClick: () -> Unit = {},
@@ -109,14 +118,20 @@ private fun DiaryHomeScreenContent(
                 }
             }
 
+            val tabModifier = Modifier.fillMaxSize()
             when (selectedTabIndex) {
                 0 -> DiaryListTab(
-                    diaries = diaries,
-                    modifier = Modifier.fillMaxSize(),
+                    uiState = listUIState,
+                    modifier = tabModifier,
                     onDiaryClick = onDiaryClick,
                 )
 
-                1 -> DiaryCalendarTab()
+                1 -> DiaryCalendarTab(
+                    onDiaryClick = onDiaryClick,
+                    onYearMothChange = onCalendarYearMothChange,
+                    modifier = tabModifier,
+                    state = calendarUIState,
+                )
             }
         }
     }
@@ -125,10 +140,10 @@ private fun DiaryHomeScreenContent(
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
 private fun DiaryHomeScreenTopAppBar(
-    modifier: Modifier = Modifier,
     onMenuClick: () -> Unit,
     onNotificationClick: () -> Unit,
     onSearchClick: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     TopAppBar(
         title = { Text("나의 일기") },
@@ -169,7 +184,9 @@ private fun DiaryHomeScreenTopAppBar(
 private fun DiaryHomeScreenContentPreview() {
     DreamdiaryTheme {
         DiaryHomeScreenContent(
-            diaries = diariesPreview,
+            listUIState = diaryHomeTabListUIStatePreview,
+            calendarUIState = diaryHomeTabCalendarUIStatePreview,
+            onCalendarYearMothChange = { },
         )
     }
 }

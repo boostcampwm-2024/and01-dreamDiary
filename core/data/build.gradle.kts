@@ -2,7 +2,7 @@ plugins {
     alias(libs.plugins.dreamdiary.android.library)
     alias(libs.plugins.ksp)
     alias(libs.plugins.room)
-    alias(libs.plugins.googleServices)
+    alias(libs.plugins.google.gms.google.services)
 }
 
 android {
@@ -21,7 +21,7 @@ android {
         }
     }
     room {
-        schemaDirectory("$projectDir/schemas")
+        schemaDirectory("$projectDir/schema")
     }
 }
 
@@ -38,6 +38,7 @@ dependencies {
     // firebase
     implementation(libs.firebase.firestore)
     implementation(libs.googleid)
-    implementation(libs.play.services.auth)
     implementation(libs.firebase.auth.ktx)
+    implementation(libs.androidx.credentials)
+    implementation(libs.androidx.credentials.play.services.auth)
 }
