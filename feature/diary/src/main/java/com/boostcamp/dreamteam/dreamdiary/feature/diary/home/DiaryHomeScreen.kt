@@ -38,7 +38,6 @@ import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.tablist.DiaryHomeTa
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.tablist.DiaryListTab
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.tablist.diaryHomeTabListUIStatePreview
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.DiaryUi
-import com.boostcamp.dreamteam.dreamdiary.feature.diary.write.DiaryWriteRoute
 import com.boostcamp.dreamteam.dreamdiary.ui.HomeBottomNavItem
 import com.boostcamp.dreamteam.dreamdiary.ui.HomeBottomNavigation
 import com.boostcamp.dreamteam.dreamdiary.ui.NavigationItem
@@ -109,7 +108,7 @@ fun DiaryHomeScreen(
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
-                    navController.navigate(DiaryWriteRoute.ROUTE)
+//                    navController.navigate(DiaryWriteRoute.ROUTE)
                 },
             ) {
                 Icon(
