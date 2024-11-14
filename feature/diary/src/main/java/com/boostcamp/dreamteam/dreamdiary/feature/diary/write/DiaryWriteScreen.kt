@@ -52,8 +52,8 @@ import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun DiaryWriteScreen(
-    viewModel: DiaryWriteViewModel = hiltViewModel(),
     onBackClick: () -> Unit,
+    viewModel: DiaryWriteViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -88,22 +88,29 @@ fun DiaryWriteScreen(
         }
     }
 
-    DiaryWriteScreen(
-        title = title,
-        content = content,
-        searchValue = searchValue,
-        selectableLabels = selectableLabels,
-        onTitleChange = viewModel::setTitle,
-        onContentChange = viewModel::setContent,
-        onCheckChange = viewModel::toggleLabel,
-        onSearchValueChange = viewModel::setSearchValue,
-        onClickLabelSave = viewModel::addLabel,
-        onClickSave = viewModel::addDreamDiary,
-        onBackClick = onBackClick,
-    )
+    Scaffold(
+        topBar = {
+            DiaryWriteTopBar(
+                onBackClick = onBackClick,
+                onClickSave = viewModel::addDreamDiary,
+            )
+        },
+    ) { innerPadding ->
+        DiaryWriteScreen(
+            title = title,
+            content = content,
+            searchValue = searchValue,
+            selectableLabels = selectableLabels,
+            onTitleChange = viewModel::setTitle,
+            onContentChange = viewModel::setContent,
+            onCheckChange = viewModel::toggleLabel,
+            onSearchValueChange = viewModel::setSearchValue,
+            onClickLabelSave = viewModel::addLabel,
+            modifier = Modifier.padding(innerPadding),
+        )
+    }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun DiaryWriteScreen(
     title: String,
@@ -115,130 +122,131 @@ private fun DiaryWriteScreen(
     onCheckChange: (labelUi: LabelUi) -> Unit,
     onSearchValueChange: (String) -> Unit,
     onClickLabelSave: () -> Unit,
-    onClickSave: () -> Unit,
-    onBackClick: () -> Unit,
+    modifier: Modifier,
 ) {
     val scrollState = rememberScrollState()
     var isLabelSelectionDialogOpen by remember { mutableStateOf(false) }
 
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { },
-                navigationIcon = {
-                    IconButton(onClick = { onBackClick() }) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = stringResource(R.string.write_back),
-                        )
-                    }
-                },
-                actions = {
-                    IconButton(onClick = { onClickSave() }) {
-                        Icon(
-                            imageVector = Icons.Filled.Check,
-                            contentDescription = stringResource(R.string.write_save),
-                        )
-                    }
-                },
-            )
-        },
-    ) { innerPadding ->
-        Column(
-            modifier = Modifier
-                .padding(innerPadding)
-                .verticalScroll(scrollState),
+    Column(
+        modifier = modifier
+            .verticalScroll(scrollState),
+    ) {
+        Row(
+            modifier = Modifier.padding(horizontal = 16.dp),
+            horizontalArrangement = Arrangement.spacedBy(10.dp),
         ) {
             Row(
-                modifier = Modifier.padding(horizontal = 16.dp),
-                horizontalArrangement = Arrangement.spacedBy(10.dp),
-            ) {
-                Row(
-                    modifier = Modifier.clickable {
-                        // TODO
-                    },
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    Icon(Icons.Filled.DateRange, contentDescription = stringResource(R.string.write_save_calendar))
-                    Text(text = "2024년 10월 28일 월요일")
-                }
-
-                Row(
-                    modifier = Modifier.clickable {
-                        // TODO
-                    },
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    Icon(Icons.Outlined.Timer, contentDescription = stringResource(R.string.write_select_time))
-                    Text(text = "23:00 ~ 9:00")
-                }
-            }
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            Row(
-                modifier = Modifier
-                    .padding(horizontal = 16.dp)
-                    .clickable {
-                        isLabelSelectionDialogOpen = true
-                    },
+                modifier = Modifier.clickable {
+                    // TODO
+                },
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                Icon(Icons.AutoMirrored.Outlined.Label, contentDescription = stringResource(R.string.write_category))
-                Text(text = "악몽, 개꿈, 귀신")
+                Icon(Icons.Filled.DateRange, contentDescription = stringResource(R.string.write_save_calendar))
+                Text(text = "2024년 10월 28일 월요일")
             }
 
-            Spacer(modifier = Modifier.height(24.dp))
-
-            BasicTextField(
-                value = title,
-                onValueChange = onTitleChange,
-                modifier = Modifier
-                    .padding(horizontal = 16.dp)
-                    .fillMaxWidth(),
-                decorationBox = { innerTextField ->
-                    if (title.isEmpty()) {
-                        Text(
-                            text = stringResource(R.string.write_text_title),
-                            style = TextStyle(color = MaterialTheme.colorScheme.secondary),
-                        )
-                    }
-                    innerTextField()
+            Row(
+                modifier = Modifier.clickable {
+                    // TODO
                 },
-            )
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Icon(Icons.Outlined.Timer, contentDescription = stringResource(R.string.write_select_time))
+                Text(text = "23:00 ~ 9:00")
+            }
+        }
 
-            Spacer(modifier = Modifier.height(24.dp))
+        Spacer(modifier = Modifier.height(8.dp))
 
-            BasicTextField(
-                value = content,
-                onValueChange = onContentChange,
-                modifier = Modifier
-                    .padding(horizontal = 16.dp)
-                    .fillMaxWidth()
-                    .height(300.dp),
-                decorationBox = { innerTextField ->
-                    if (content.isEmpty()) {
-                        Text(
-                            text = stringResource(R.string.write_text_content),
-                            style = TextStyle(color = MaterialTheme.colorScheme.secondary),
-                        )
-                    }
-                    innerTextField()
+        Row(
+            modifier = Modifier
+                .padding(horizontal = 16.dp)
+                .clickable {
+                    isLabelSelectionDialogOpen = true
                 },
-            )
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Icon(Icons.AutoMirrored.Outlined.Label, contentDescription = stringResource(R.string.write_category))
+            Text(text = "악몽, 개꿈, 귀신")
         }
-        if (isLabelSelectionDialogOpen) {
-            LabelSelectionDialog(
-                onDismissRequest = { isLabelSelectionDialogOpen = false },
-                searchValue = searchValue,
-                onSearchValueChange = onSearchValueChange,
-                selectableLabels = selectableLabels,
-                onCheckChange = onCheckChange,
-                onClickLabelSave = onClickLabelSave,
-                modifier = Modifier.width(400.dp),
-            )
-        }
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        BasicTextField(
+            value = title,
+            onValueChange = onTitleChange,
+            modifier = Modifier
+                .padding(horizontal = 16.dp)
+                .fillMaxWidth(),
+            decorationBox = { innerTextField ->
+                if (title.isEmpty()) {
+                    Text(
+                        text = stringResource(R.string.write_text_title),
+                        style = TextStyle(color = MaterialTheme.colorScheme.secondary),
+                    )
+                }
+                innerTextField()
+            },
+        )
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        BasicTextField(
+            value = content,
+            onValueChange = onContentChange,
+            modifier = Modifier
+                .padding(horizontal = 16.dp)
+                .fillMaxWidth()
+                .height(300.dp),
+            decorationBox = { innerTextField ->
+                if (content.isEmpty()) {
+                    Text(
+                        text = stringResource(R.string.write_text_content),
+                        style = TextStyle(color = MaterialTheme.colorScheme.secondary),
+                    )
+                }
+                innerTextField()
+            },
+        )
     }
+    if (isLabelSelectionDialogOpen) {
+        LabelSelectionDialog(
+            onDismissRequest = { isLabelSelectionDialogOpen = false },
+            searchValue = searchValue,
+            onSearchValueChange = onSearchValueChange,
+            selectableLabels = selectableLabels,
+            onCheckChange = onCheckChange,
+            onClickLabelSave = onClickLabelSave,
+            modifier = Modifier.width(400.dp),
+        )
+    }
+}
+
+@Composable
+@OptIn(ExperimentalMaterial3Api::class)
+fun DiaryWriteTopBar(
+    onBackClick: () -> Unit,
+    onClickSave: () -> Unit,
+) {
+    TopAppBar(
+        title = { },
+        navigationIcon = {
+            IconButton(onClick = { onBackClick() }) {
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                    contentDescription = stringResource(R.string.write_back),
+                )
+            }
+        },
+        actions = {
+            IconButton(onClick = { onClickSave() }) {
+                Icon(
+                    imageVector = Icons.Filled.Check,
+                    contentDescription = stringResource(R.string.write_save),
+                )
+            }
+        },
+    )
 }
 
 @Composable
@@ -258,9 +266,8 @@ private fun PreviewDiaryListScreen() {
             onContentChange = {},
             onCheckChange = {},
             onClickLabelSave = {},
-            onClickSave = {},
-            onBackClick = {},
             onSearchValueChange = {},
+            modifier = Modifier,
         )
     }
 }

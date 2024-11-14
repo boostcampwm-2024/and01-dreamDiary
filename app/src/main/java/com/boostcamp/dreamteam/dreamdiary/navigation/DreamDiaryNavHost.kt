@@ -7,10 +7,10 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navOptions
 import com.boostcamp.dreamteam.dreamdiary.feature.auth.SignInRoute
 import com.boostcamp.dreamteam.dreamdiary.feature.auth.signInScreen
+import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.DiaryHomeRoute
+import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.DiaryHomeScreen
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.navigateToDiaryHomeScreen
 import com.boostcamp.dreamteam.dreamdiary.ui.DreamDiaryAppState
-import com.boostcamp.dreamteam.dreamdiary.ui.HOME_ROUTE
-import com.boostcamp.dreamteam.dreamdiary.ui.HomeScreen
 
 @Composable
 fun DreamDiaryNavHost(
@@ -25,11 +25,11 @@ fun DreamDiaryNavHost(
     ) {
         signInScreen(
             onSignInSuccess = {
-                navController.navigateToDiaryHomeScreen(
-                    navOptions = navOptions {
-                        launchSingleTop = true
-                    },
-                )
+//                navController.navigateToDiaryHomeScreen(
+//                    navOptions = navOptions {
+//                        launchSingleTop = true
+//                    },
+//                )
             },
             onNotSignInClick = {
 //                navController.navigateToHomeScreen(
@@ -37,8 +37,7 @@ fun DreamDiaryNavHost(
 //                        launchSingleTop = true
 //                    },
 //                )
-                navController.navigate(
-                    route = HOME_ROUTE,
+                navController.navigateToDiaryHomeScreen(
                     navOptions = navOptions {
                         popUpTo(SignInRoute) { inclusive = true }
                     },
@@ -46,14 +45,11 @@ fun DreamDiaryNavHost(
             },
         )
 
-//        homeNavGraph(navController)
-        composable(route = HOME_ROUTE) {
-            HomeScreen()
+        composable<DiaryHomeRoute> {
+            DiaryHomeScreen(
+                onDiaryClick = {},
+                navController = navController,
+            )
         }
-//        diaryWriteScreen(
-//            onBackClick = {
-//                navController.popBackStack()
-//            },
-//        )
     }
 }

@@ -7,7 +7,9 @@ import androidx.navigation.compose.composable
 import kotlinx.serialization.Serializable
 
 @Serializable
-data object DiaryWriteRoute
+data object DiaryWriteRoute {
+    const val ROUTE = "diary_write"
+}
 
 fun NavController.navigateToDiaryWriteScreen(navOptions: NavOptions? = null) {
     this.navigate(DiaryWriteRoute, navOptions)

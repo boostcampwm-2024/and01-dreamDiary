@@ -16,6 +16,7 @@ fun NavGraphBuilder.diaryHomeScreen(onDiaryClick: (DiaryUi) -> Unit) {
     composable<DiaryHomeRoute> {
         DiaryHomeScreen(
             onDiaryClick = onDiaryClick,
+            navController = TODO(),
         )
     }
 }
