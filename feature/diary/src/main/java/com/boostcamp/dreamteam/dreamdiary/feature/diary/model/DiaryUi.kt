@@ -18,10 +18,12 @@ data class DiaryUi(
     val labels: List<LabelUi>,
     val sleepStartAt: DisplayableDateTime,
     val sleepEndAt: DisplayableDateTime,
+    val sortKey: DisplayableDateTime,
 )
 
 // FIXME: 시간과 관련된 데이터를 처리하는 로직은 수정 해주세요
-internal fun Diary.toDiaryUi(): DiaryUi =
+internal fun Diary.toDiaryUi(): DiaryUi = run {
+    val sleepEndAt = Instant.now().toDisplayableDateTime()
     DiaryUi(
         id = id,
         title = title,
@@ -31,8 +33,10 @@ internal fun Diary.toDiaryUi(): DiaryUi =
         images = images,
         labels = labels.map { it.toLabelUi() },
         sleepStartAt = Instant.now().toDisplayableDateTime(),
-        sleepEndAt = Instant.now().toDisplayableDateTime(),
+        sleepEndAt = sleepEndAt,
+        sortKey = sleepEndAt,
     )
+}
 
 internal val diaryPreview1 = Diary(
     id = 1,
@@ -83,6 +87,7 @@ internal val diariesPreview = run {
             labels = emptyList(),
             sleepStartAt = displayableDateTime,
             sleepEndAt = displayableDateTime,
+            sortKey = displayableDateTime,
         )
     }
 }
