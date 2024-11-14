@@ -8,24 +8,26 @@ import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.boostcamp.dreamteam.dreamdiary.R
 
-enum class BottomNavItem(
+sealed class BottomNavItem(
     val route: String,
     val icon: ImageVector,
     @StringRes val label: Int,
 ) {
-    MY_DREAM(
+    data object MyDream : BottomNavItem(
         route = "my_dream",
         icon = Icons.Outlined.Hotel,
         label = R.string.icon_text_my_dream,
-    ),
-    COMMUNITY(
+    )
+
+    data object Community : BottomNavItem(
         route = "community",
         icon = Icons.AutoMirrored.Outlined.Comment,
         label = R.string.icon_text_community,
-    ),
-    SETTINGS(
+    )
+
+    data object Setting : BottomNavItem(
         route = "settings",
         icon = Icons.Outlined.Settings,
         label = R.string.icon_text_settings,
-    ),
+    )
 }

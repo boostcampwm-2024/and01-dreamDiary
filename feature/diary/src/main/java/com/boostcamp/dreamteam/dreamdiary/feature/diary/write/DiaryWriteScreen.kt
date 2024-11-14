@@ -51,7 +51,7 @@ import com.boostcamp.dreamteam.dreamdiary.feature.diary.write.model.SelectableLa
 import kotlinx.coroutines.flow.collectLatest
 
 @Composable
-internal fun DiaryWriteScreen(
+fun DiaryWriteScreen(
     viewModel: DiaryWriteViewModel = hiltViewModel(),
     onBackClick: () -> Unit,
 ) {

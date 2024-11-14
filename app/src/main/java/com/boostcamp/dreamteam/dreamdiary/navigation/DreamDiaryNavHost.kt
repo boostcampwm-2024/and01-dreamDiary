@@ -3,14 +3,14 @@ package com.boostcamp.dreamteam.dreamdiary.navigation
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
 import androidx.navigation.navOptions
 import com.boostcamp.dreamteam.dreamdiary.feature.auth.SignInRoute
 import com.boostcamp.dreamteam.dreamdiary.feature.auth.signInScreen
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.navigateToDiaryHomeScreen
-import com.boostcamp.dreamteam.dreamdiary.feature.diary.write.diaryWriteScreen
 import com.boostcamp.dreamteam.dreamdiary.ui.DreamDiaryAppState
-import com.boostcamp.dreamteam.dreamdiary.ui.homeNavGraph
-import com.boostcamp.dreamteam.dreamdiary.ui.navigateToHomeScreen
+import com.boostcamp.dreamteam.dreamdiary.ui.HOME_ROUTE
+import com.boostcamp.dreamteam.dreamdiary.ui.HomeScreen
 
 @Composable
 fun DreamDiaryNavHost(
@@ -32,20 +32,28 @@ fun DreamDiaryNavHost(
                 )
             },
             onNotSignInClick = {
-                navController.navigateToHomeScreen(
+//                navController.navigateToHomeScreen(
+//                    navOptions = navOptions {
+//                        launchSingleTop = true
+//                    },
+//                )
+                navController.navigate(
+                    route = HOME_ROUTE,
                     navOptions = navOptions {
-                        launchSingleTop = true
+                        popUpTo(SignInRoute) { inclusive = true }
                     },
                 )
             },
         )
 
-        homeNavGraph(rootNavController = navController)
-
-        diaryWriteScreen(
-            onBackClick = {
-                navController.popBackStack()
-            },
-        )
+//        homeNavGraph(navController)
+        composable(route = HOME_ROUTE) {
+            HomeScreen()
+        }
+//        diaryWriteScreen(
+//            onBackClick = {
+//                navController.popBackStack()
+//            },
+//        )
     }
 }
