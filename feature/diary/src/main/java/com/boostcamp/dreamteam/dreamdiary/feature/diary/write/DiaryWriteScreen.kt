@@ -38,9 +38,9 @@ import kotlinx.coroutines.flow.collectLatest
 import java.time.ZonedDateTime
 
 @Composable
-internal fun DiaryWriteScreen(
-    viewModel: DiaryWriteViewModel = hiltViewModel(),
+fun DiaryWriteScreen(
     onBackClick: () -> Unit,
+    viewModel: DiaryWriteViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -75,26 +75,33 @@ internal fun DiaryWriteScreen(
         }
     }
 
-    DiaryWriteScreen(
-        title = title,
-        content = content,
-        searchValue = searchValue,
-        selectableLabels = selectableLabels,
-        onTitleChange = viewModel::setTitle,
-        onContentChange = viewModel::setContent,
-        onCheckChange = viewModel::toggleLabel,
-        onSearchValueChange = viewModel::setSearchValue,
-        onClickLabelSave = viewModel::addLabel,
-        onClickSave = viewModel::addDreamDiary,
-        onBackClick = onBackClick,
-        sleepStartAt = sleepStartAt,
-        onSleepStartAtChange = viewModel::setSleepStartAt,
-        sleepEndAt = sleepEndAt,
-        onSleepEndAtChange = viewModel::setSleepEndAt,
-    )
+    Scaffold(
+        topBar = {
+            DiaryWriteTopBar(
+                onBackClick = onBackClick,
+                onClickSave = viewModel::addDreamDiary,
+            )
+        },
+    ) { innerPadding ->
+        DiaryWriteScreen(
+            title = title,
+            content = content,
+            searchValue = searchValue,
+            selectableLabels = selectableLabels,
+            onTitleChange = viewModel::setTitle,
+            onContentChange = viewModel::setContent,
+            onCheckChange = viewModel::toggleLabel,
+            onSearchValueChange = viewModel::setSearchValue,
+            onClickLabelSave = viewModel::addLabel,
+            sleepStartAt = sleepStartAt,
+            onSleepStartAtChange = viewModel::setSleepStartAt,
+            sleepEndAt = sleepEndAt,
+            onSleepEndAtChange = viewModel::setSleepEndAt,
+            modifier = Modifier.padding(innerPadding),
+        )
+    }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun DiaryWriteScreen(
     title: String,
@@ -106,67 +113,68 @@ private fun DiaryWriteScreen(
     onCheckChange: (labelUi: LabelUi) -> Unit,
     onSearchValueChange: (String) -> Unit,
     onClickLabelSave: () -> Unit,
-    onClickSave: () -> Unit,
-    onBackClick: () -> Unit,
     sleepStartAt: ZonedDateTime,
     onSleepStartAtChange: (ZonedDateTime) -> Unit,
     sleepEndAt: ZonedDateTime,
     onSleepEndAtChange: (ZonedDateTime) -> Unit,
+    modifier: Modifier,
 ) {
     val scrollState = rememberScrollState()
 
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { },
-                navigationIcon = {
-                    IconButton(onClick = { onBackClick() }) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = stringResource(R.string.write_back),
-                        )
-                    }
-                },
-                actions = {
-                    IconButton(onClick = { onClickSave() }) {
-                        Icon(
-                            imageVector = Icons.Filled.Check,
-                            contentDescription = stringResource(R.string.write_save),
-                        )
-                    }
-                },
-            )
-        },
-    ) { innerPadding ->
-        Column(
-            modifier = Modifier
-                .padding(innerPadding)
-                .padding(horizontal = 16.dp)
-                .verticalScroll(scrollState),
-        ) {
-            DiaryWriteScreenHeader(
-                searchValue = searchValue,
-                onSearchValueChange = onSearchValueChange,
-                selectableLabels = selectableLabels,
-                sleepStartAt = sleepStartAt,
-                sleepEndAt = sleepEndAt,
-                onSleepStartAtChange = onSleepStartAtChange,
-                onSleepEndAtChange = onSleepEndAtChange,
-                onCheckChange = onCheckChange,
-                onClickLabelSave = onClickLabelSave,
-                modifier = Modifier.fillMaxWidth(),
-            )
+    Column(
+        modifier = modifier
+            .padding(horizontal = 16.dp)
+            .verticalScroll(scrollState),
+    ) {
+        DiaryWriteScreenHeader(
+            searchValue = searchValue,
+            onSearchValueChange = onSearchValueChange,
+            selectableLabels = selectableLabels,
+            sleepStartAt = sleepStartAt,
+            sleepEndAt = sleepEndAt,
+            onSleepStartAtChange = onSleepStartAtChange,
+            onSleepEndAtChange = onSleepEndAtChange,
+            onCheckChange = onCheckChange,
+            onClickLabelSave = onClickLabelSave,
+            modifier = Modifier.fillMaxWidth(),
+        )
 
-            Spacer(modifier = Modifier.height(24.dp))
+        Spacer(modifier = Modifier.height(24.dp))
 
-            DiaryWriteScreenBody(
-                title = title,
-                onTitleChange = onTitleChange,
-                content = content,
-                onContentChange = onContentChange,
-            )
-        }
+        DiaryWriteScreenBody(
+            title = title,
+            onTitleChange = onTitleChange,
+            content = content,
+            onContentChange = onContentChange,
+        )
     }
+}
+
+@Composable
+@OptIn(ExperimentalMaterial3Api::class)
+private fun DiaryWriteTopBar(
+    onBackClick: () -> Unit,
+    onClickSave: () -> Unit,
+) {
+    TopAppBar(
+        title = { },
+        navigationIcon = {
+            IconButton(onClick = { onBackClick() }) {
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                    contentDescription = stringResource(R.string.write_back),
+                )
+            }
+        },
+        actions = {
+            IconButton(onClick = { onClickSave() }) {
+                Icon(
+                    imageVector = Icons.Filled.Check,
+                    contentDescription = stringResource(R.string.write_save),
+                )
+            }
+        },
+    )
 }
 
 @Composable
@@ -186,13 +194,12 @@ private fun PreviewDiaryListScreen() {
             onContentChange = {},
             onCheckChange = {},
             onClickLabelSave = {},
-            onClickSave = {},
-            onBackClick = {},
             onSearchValueChange = {},
             sleepStartAt = ZonedDateTime.now(),
             onSleepStartAtChange = {},
             sleepEndAt = ZonedDateTime.now(),
             onSleepEndAtChange = {},
+            modifier = Modifier,
         )
     }
 }

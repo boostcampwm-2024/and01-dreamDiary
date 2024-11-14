@@ -59,24 +59,60 @@ internal fun SettingScreen(modifier: Modifier = Modifier) {
             verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             SettingCategory(text = stringResource(R.string.setting_alarm_setting))
-            SettingOption(icon = Icons.Outlined.Alarm, text = stringResource(R.string.setting_schedule_alarm))
-            SettingOption(icon = Icons.AutoMirrored.Outlined.Comment, text = stringResource(R.string.setting_comment_alarm))
+            SettingOption(
+                icon = Icons.Outlined.Alarm,
+                text = stringResource(R.string.setting_schedule_alarm),
+            )
+            SettingOption(
+                icon = Icons.AutoMirrored.Outlined.Comment,
+                text = stringResource(R.string.setting_comment_alarm),
+            )
 
             SettingCategory(text = stringResource(R.string.setting_data_restore))
-            SettingOption(icon = Icons.Outlined.CloudUpload, text = stringResource(R.string.setting_data_restore))
-            SettingOption(icon = Icons.Outlined.ResetTv, text = stringResource(R.string.setting_reset))
+            SettingOption(
+                icon = Icons.Outlined.CloudUpload,
+                text = stringResource(R.string.setting_data_restore),
+            )
+            SettingOption(
+                icon = Icons.Outlined.ResetTv,
+                text = stringResource(R.string.setting_reset),
+            )
 
             SettingCategory(text = stringResource(R.string.setting_communication))
-            SettingOption(icon = Icons.Outlined.NoAccounts, text = stringResource(R.string.setting_block))
-            SettingOption(icon = Icons.Outlined.PeopleOutline, text = stringResource(R.string.setting_subscribe))
-            SettingOption(icon = Icons.Outlined.Image, text = stringResource(R.string.setting_picture))
+            SettingOption(
+                icon = Icons.Outlined.NoAccounts,
+                text = stringResource(R.string.setting_block),
+            )
+            SettingOption(
+                icon = Icons.Outlined.PeopleOutline,
+                text = stringResource(R.string.setting_subscribe),
+            )
+            SettingOption(
+                icon = Icons.Outlined.Image,
+                text = stringResource(R.string.setting_picture),
+            )
 
             SettingCategory(text = stringResource(R.string.setting_information))
-            SettingOption(icon = Icons.Outlined.DarkMode, text = stringResource(R.string.setting_darkmode))
-            SettingOption(icon = Icons.Outlined.Lock, text = stringResource(R.string.setting_lock_setting))
-            SettingOption(icon = Icons.Outlined.AccountBox, text = stringResource(R.string.setting_check_account))
-            SettingOption(icon = Icons.AutoMirrored.Outlined.Logout, text = stringResource(R.string.setting_logout))
-            SettingOption(icon = Icons.Outlined.Window, text = stringResource(R.string.setting_withdraw))
+            SettingOption(
+                icon = Icons.Outlined.DarkMode,
+                text = stringResource(R.string.setting_darkmode),
+            )
+            SettingOption(
+                icon = Icons.Outlined.Lock,
+                text = stringResource(R.string.setting_lock_setting),
+            )
+            SettingOption(
+                icon = Icons.Outlined.AccountBox,
+                text = stringResource(R.string.setting_check_account),
+            )
+            SettingOption(
+                icon = Icons.AutoMirrored.Outlined.Logout,
+                text = stringResource(R.string.setting_logout),
+            )
+            SettingOption(
+                icon = Icons.Outlined.Window,
+                text = stringResource(R.string.setting_withdraw),
+            )
         }
     }
 }

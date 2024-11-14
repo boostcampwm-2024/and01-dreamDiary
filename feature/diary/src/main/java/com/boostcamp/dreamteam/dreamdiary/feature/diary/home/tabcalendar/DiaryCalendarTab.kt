@@ -30,7 +30,11 @@ internal fun DiaryCalendarTab(
     modifier: Modifier = Modifier,
     state: DiaryHomeTabCalendarUIState = DiaryHomeTabCalendarUIState(),
 ) {
-    var lastSelectedDay: LocalDate by rememberSaveable { mutableStateOf(ZonedDateTime.now().toLocalDate()) }
+    var lastSelectedDay: LocalDate by rememberSaveable {
+        mutableStateOf(
+            ZonedDateTime.now().toLocalDate(),
+        )
+    }
     var isBottomSheetOpen by rememberSaveable { mutableStateOf(false) }
 
     Surface(modifier = modifier) {

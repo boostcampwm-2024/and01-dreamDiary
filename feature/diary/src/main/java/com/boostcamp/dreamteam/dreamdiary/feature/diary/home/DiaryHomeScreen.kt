@@ -36,12 +36,17 @@ import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.tabcalendar.diaryHo
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.tablist.DiaryListTab
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.tablist.pagedDiariesPreview
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.DiaryUi
+import com.boostcamp.dreamteam.dreamdiary.ui.HomeBottomNavItem
+import com.boostcamp.dreamteam.dreamdiary.ui.HomeBottomNavigation
+import com.boostcamp.dreamteam.dreamdiary.ui.NavigationItem
 import java.time.YearMonth
 
 @Composable
 fun DiaryHomeScreen(
     onDiaryClick: (DiaryUi) -> Unit,
-    onFabClick: () -> Unit,
+    onNavigateToWriteScreen: () -> Unit,
+    onNavigateToCommunity: () -> Unit,
+    onNavigateToSetting: () -> Unit,
     viewModel: DiaryHomeViewModel = hiltViewModel(),
 ) {
     val diaries = viewModel.dreamDiaries.collectAsLazyPagingItems()
@@ -51,12 +56,62 @@ fun DiaryHomeScreen(
         diaries = diaries,
         calendarUIState = calendarUIState,
         onCalendarYearMothChange = viewModel::setCalendarYearMonth,
-        onMenuClick = { /*TODO*/ },
         onSearchClick = { /*TODO*/ },
         onNotificationClick = { /*TODO*/ },
         onDiaryClick = onDiaryClick,
-        onFabClick = onFabClick,
     )
+
+    val navigationItems = listOf(
+        NavigationItem(
+            icon = HomeBottomNavItem.MyDream.icon,
+            labelRes = HomeBottomNavItem.MyDream.label,
+            isSelected = true,
+            onClick = { /* Nothing */ },
+        ),
+        NavigationItem(
+            icon = HomeBottomNavItem.Community.icon,
+            labelRes = HomeBottomNavItem.Community.label,
+            isSelected = false,
+            onClick = onNavigateToCommunity,
+        ),
+        NavigationItem(
+            icon = HomeBottomNavItem.Setting.icon,
+            labelRes = HomeBottomNavItem.Setting.label,
+            isSelected = false,
+            onClick = onNavigateToSetting,
+        ),
+    )
+
+    Scaffold(
+        topBar = {
+            DiaryHomeScreenTopAppBar(
+                onMenuClick = { /* 메뉴 클릭 시 동작 */ },
+                onNotificationClick = { /* 알림 클릭 시 동작 */ },
+                onSearchClick = { /* 검색 클릭 시 동작 */ },
+            )
+        },
+        bottomBar = {
+            HomeBottomNavigation(items = navigationItems)
+        },
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = onNavigateToWriteScreen,
+            ) {
+                Icon(
+                    imageVector = Icons.Outlined.Create,
+                    contentDescription = "일기 작성",
+                )
+            }
+        },
+    ) { innerPadding ->
+        DiaryHomeScreenContent(
+            diaries = diaries,
+            calendarUIState = calendarUIState,
+            onDiaryClick = onDiaryClick,
+            onCalendarYearMothChange = viewModel::setCalendarYearMonth,
+            modifier = Modifier.padding(innerPadding),
+        )
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -66,74 +121,49 @@ private fun DiaryHomeScreenContent(
     calendarUIState: DiaryHomeTabCalendarUIState,
     onCalendarYearMothChange: (YearMonth) -> Unit,
     modifier: Modifier = Modifier,
-    onMenuClick: () -> Unit = {},
+    onDiaryClick: (DiaryUi) -> Unit = {},
     onSearchClick: () -> Unit = {},
     onNotificationClick: () -> Unit = {},
-    onDiaryClick: (DiaryUi) -> Unit = {},
-    onFabClick: () -> Unit = {},
 ) {
     var selectedTabIndex by remember { mutableIntStateOf(0) }
     val tabs = listOf("일기", "달력")
 
-    Scaffold(
-        modifier = modifier,
-        topBar = {
-            DiaryHomeScreenTopAppBar(
-                onMenuClick = onMenuClick,
-                onNotificationClick = onNotificationClick,
-                onSearchClick = onSearchClick,
-            )
-        },
-        floatingActionButton = {
-            FloatingActionButton(
-                onClick = onFabClick,
-            ) {
-                Icon(
-                    imageVector = Icons.Outlined.Create,
-                    contentDescription = "일기 작성",
+    Column(
+        modifier = modifier.fillMaxSize(),
+    ) {
+        PrimaryTabRow(
+            selectedTabIndex = selectedTabIndex,
+            indicator = {
+                TabRowDefaults.SecondaryIndicator(
+                    modifier = Modifier.tabIndicatorOffset(
+                        selectedTabIndex = selectedTabIndex,
+                    ),
                 )
-            }
-        },
-    ) { innerPadding ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding),
+            },
         ) {
-            PrimaryTabRow(
-                selectedTabIndex = selectedTabIndex,
-                indicator = {
-                    TabRowDefaults.SecondaryIndicator(
-                        modifier = Modifier.tabIndicatorOffset(
-                            selectedTabIndex = selectedTabIndex,
-                        ),
-                    )
-                },
-            ) {
-                tabs.forEachIndexed { index, title ->
-                    Tab(
-                        selected = selectedTabIndex == index,
-                        onClick = { selectedTabIndex = index },
-                        text = { Text(title) },
-                    )
-                }
-            }
-
-            val tabModifier = Modifier.fillMaxSize()
-            when (selectedTabIndex) {
-                0 -> DiaryListTab(
-                    diaries = diaries,
-                    onDiaryClick = onDiaryClick,
-                    modifier = tabModifier,
-                )
-
-                1 -> DiaryCalendarTab(
-                    onDiaryClick = onDiaryClick,
-                    onYearMothChange = onCalendarYearMothChange,
-                    modifier = tabModifier,
-                    state = calendarUIState,
+            tabs.forEachIndexed { index, title ->
+                Tab(
+                    selected = selectedTabIndex == index,
+                    onClick = { selectedTabIndex = index },
+                    text = { Text(title) },
                 )
             }
+        }
+
+        val tabModifier = Modifier.fillMaxSize()
+        when (selectedTabIndex) {
+            0 -> DiaryListTab(
+                diaries = diaries,
+                onDiaryClick = onDiaryClick,
+                modifier = tabModifier,
+            )
+
+            1 -> DiaryCalendarTab(
+                onDiaryClick = onDiaryClick,
+                onYearMothChange = onCalendarYearMothChange,
+                modifier = tabModifier,
+                state = calendarUIState,
+            )
         }
     }
 }

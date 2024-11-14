@@ -64,20 +64,25 @@ fun SignInScreen(
                 is SignInEvent.GoogleSignInSuccess -> {
                     Toast.makeText(context, context.getString(R.string.signIn_google_success), Toast.LENGTH_SHORT).show()
                 }
+
                 is SignInEvent.GitHubSignInSuccess -> {
                     Toast.makeText(context, context.getString(R.string.signIn_github_success), Toast.LENGTH_SHORT).show()
                 }
+
                 is SignInEvent.OnPass -> {
                     Toast.makeText(context, context.getString(R.string.signIn_onPass_success), Toast.LENGTH_SHORT).show()
                 }
+
                 is SignInEvent.SignInFailure -> {
                     when (it.signInErrorMessage) {
                         SignInErrorMessage.GOOGLE_SIGN_IN_FAIL -> {
                             Toast.makeText(context, context.getString(R.string.signIn_google_fail), Toast.LENGTH_SHORT).show()
                         }
+
                         SignInErrorMessage.GITHUB_SIGN_IN_FAIL -> {
                             Toast.makeText(context, context.getString(R.string.signIn_github_fail), Toast.LENGTH_SHORT).show()
                         }
+
                         SignInErrorMessage.UNKNOWN_ERROR -> {
                             Toast.makeText(context, context.getString(R.string.signIn_unkown_error), Toast.LENGTH_SHORT).show()
                         }

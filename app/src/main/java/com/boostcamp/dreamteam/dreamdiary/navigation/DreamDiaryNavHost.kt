@@ -41,14 +41,16 @@ fun DreamDiaryNavHost(
         )
 
         diaryHomeScreen(
-            onDiaryClick = {
-            },
             onFabClick = {
-                navController.navigateToDiaryWriteScreen(
-                    navOptions = navOptions {
-                        launchSingleTop = true
-                    },
-                )
+                navController.navigateToDiaryWriteScreen()
+            },
+            onCommunityClick = {
+//                navController.navigateToCommunityScreen()
+            },
+            onSettingClick = {
+//                navController.navigateToSettingScreen()
+            },
+            onDiaryItemClick = { diaryUI ->
             },
         )
 
