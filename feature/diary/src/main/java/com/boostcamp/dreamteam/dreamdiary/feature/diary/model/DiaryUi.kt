@@ -22,21 +22,22 @@ data class DiaryUi(
 )
 
 // FIXME: 시간과 관련된 데이터를 처리하는 로직은 수정 해주세요
-internal fun Diary.toDiaryUi(): DiaryUi = run {
-    val sleepEndAt = Instant.now().toDisplayableDateTime()
-    DiaryUi(
-        id = id,
-        title = title,
-        content = content,
-        createdAt = Instant.now().toDisplayableDateTime(),
-        updatedAt = Instant.now().toDisplayableDateTime(),
-        images = images,
-        labels = labels.map { it.toLabelUi() },
-        sleepStartAt = Instant.now().toDisplayableDateTime(),
-        sleepEndAt = sleepEndAt,
-        sortKey = sleepEndAt,
-    )
-}
+internal fun Diary.toDiaryUi(): DiaryUi =
+    run {
+        val sleepEndAt = Instant.now().toDisplayableDateTime()
+        DiaryUi(
+            id = id,
+            title = title,
+            content = content,
+            createdAt = Instant.now().toDisplayableDateTime(),
+            updatedAt = Instant.now().toDisplayableDateTime(),
+            images = images,
+            labels = labels.map { it.toLabelUi() },
+            sleepStartAt = Instant.now().toDisplayableDateTime(),
+            sleepEndAt = sleepEndAt,
+            sortKey = sleepEndAt,
+        )
+    }
 
 internal val diaryPreview1 = Diary(
     id = 1,
