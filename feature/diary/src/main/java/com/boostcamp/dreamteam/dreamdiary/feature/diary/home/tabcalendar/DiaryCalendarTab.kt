@@ -16,6 +16,7 @@ import androidx.compose.ui.unit.dp
 import com.boostcamp.dreamteam.dreamdiary.designsystem.theme.DreamdiaryTheme
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.component.DiaryCalendar
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.component.DiaryCalendarBottomSheet
+import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.DiaryUi
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.diariesPreview
 import java.time.LocalDate
 import java.time.YearMonth
@@ -24,6 +25,7 @@ import java.time.ZonedDateTime
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun DiaryCalendarTab(
+    onDiaryClick: (DiaryUi) -> Unit,
     onYearMothChange: (YearMonth) -> Unit,
     modifier: Modifier = Modifier,
     state: DiaryHomeTabCalendarUIState = DiaryHomeTabCalendarUIState(),
@@ -37,12 +39,20 @@ internal fun DiaryCalendarTab(
             modifier = Modifier.padding(horizontal = 16.dp),
             yearMonth = state.yearMonth,
             onYearMothChange = onYearMothChange,
-            onDayClick = { lastSelectedDay = it; isBottomSheetOpen = true },
+            onDayClick = {
+                lastSelectedDay = it
+                isBottomSheetOpen = true
+            },
         )
 
         if (isBottomSheetOpen) {
             DiaryCalendarBottomSheet(
-                diariesOfDay = state.diariesOfMonth.filter { it.sortKey.value.toLocalDate().isEqual(lastSelectedDay) },
+                diariesOfDay = state.diariesOfMonth.filter {
+                    it.sortKey.value
+                        .toLocalDate()
+                        .isEqual(lastSelectedDay)
+                },
+                onDiaryClick = onDiaryClick,
                 onDismissRequest = { isBottomSheetOpen = false },
                 onBackClick = { lastSelectedDay = lastSelectedDay.minusDays(1) },
                 onForwardClick = { lastSelectedDay = lastSelectedDay.plusDays(1) },
@@ -57,6 +67,7 @@ internal fun DiaryCalendarTab(
 private fun DiaryCalendarTabPreview() {
     DreamdiaryTheme {
         DiaryCalendarTab(
+            onDiaryClick = { /* no-op */ },
             onYearMothChange = { },
             modifier = Modifier.fillMaxWidth(),
         )

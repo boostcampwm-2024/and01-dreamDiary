@@ -1,5 +1,6 @@
 package com.boostcamp.dreamteam.dreamdiary.feature.diary.home.component
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -43,6 +44,7 @@ import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.diaryPreview2
 @Composable
 internal fun DiaryCalendarBottomSheet(
     diariesOfDay: List<DiaryUi>,
+    onDiaryClick: (DiaryUi) -> Unit,
     onDismissRequest: () -> Unit,
     onBackClick: () -> Unit,
     onForwardClick: () -> Unit,
@@ -57,12 +59,14 @@ internal fun DiaryCalendarBottomSheet(
     ModalBottomSheet(
         onDismissRequest = onDismissRequest,
         modifier = modifier,
-        sheetState = bottomSheetState
+        sheetState = bottomSheetState,
     ) {
         BottomSheetHeader(
             onBackClick = onBackClick,
             onForwardClick = onForwardClick,
-            modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp),
         )
         when {
             diariesOfDay.isEmpty() -> {
@@ -70,7 +74,11 @@ internal fun DiaryCalendarBottomSheet(
             }
 
             else -> {
-                ListBottomSheet(diariesOfDay = diariesOfDay, modifier = Modifier.fillMaxSize())
+                ListBottomSheet(
+                    diariesOfDay = diariesOfDay,
+                    onDiaryClick = onDiaryClick,
+                    modifier = Modifier.fillMaxSize(),
+                )
             }
         }
     }
@@ -87,7 +95,7 @@ private fun BottomSheetHeader(
         horizontalArrangement = Arrangement.SpaceBetween,
     ) {
         IconButton(
-            onClick = onBackClick
+            onClick = onBackClick,
         ) {
             Icon(
                 imageVector = Icons.AutoMirrored.Outlined.ArrowBackIos,
@@ -95,7 +103,7 @@ private fun BottomSheetHeader(
             )
         }
         IconButton(
-            onClick = onForwardClick
+            onClick = onForwardClick,
         ) {
             Icon(
                 imageVector = Icons.AutoMirrored.Outlined.ArrowForwardIos,
@@ -132,19 +140,24 @@ private fun EmptyBottomSheet(modifier: Modifier = Modifier) {
         Spacer(
             modifier = Modifier
                 .fillMaxWidth()
-                .weight(1f)
+                .weight(1f),
         )
     }
 }
 
 @Composable
-private fun ListBottomSheet(diariesOfDay: List<DiaryUi>, modifier: Modifier = Modifier) {
+private fun ListBottomSheet(
+    diariesOfDay: List<DiaryUi>,
+    onDiaryClick: (DiaryUi) -> Unit,
+    modifier: Modifier = Modifier,
+) {
     LazyColumn(modifier = modifier) {
         items(diariesOfDay) { diary: DiaryUi ->
             ListItem(
                 headlineContent = {
                     Text(text = diary.title)
                 },
+                modifier = Modifier.clickable { onDiaryClick(diary) },
                 overlineContent = {
                     Text(text = diary.sortKey.formatted)
                 },
@@ -152,7 +165,7 @@ private fun ListBottomSheet(diariesOfDay: List<DiaryUi>, modifier: Modifier = Mo
                     Text(text = diary.content, maxLines = 2, overflow = TextOverflow.Ellipsis)
                 },
                 colors = ListItemDefaults.colors(
-                    containerColor = MaterialTheme.colorScheme.surfaceContainerLowest
+                    containerColor = MaterialTheme.colorScheme.surfaceContainerLowest,
                 ),
             )
             Spacer(modifier = Modifier.height(1.dp))
@@ -167,6 +180,7 @@ private fun DiaryCalendarBottomSheetPreviewList() {
     DreamdiaryTheme {
         DiaryCalendarBottomSheet(
             diariesOfDay = listOf(diaryPreview1, diaryPreview2),
+            onDiaryClick = { /* no-op */ },
             onDismissRequest = { /* no-op */ },
             onBackClick = { /* no-op */ },
             onForwardClick = { /* no-op */ },
@@ -182,6 +196,7 @@ private fun DiaryCalendarBottomSheetPreviewEmpty() {
     DreamdiaryTheme {
         DiaryCalendarBottomSheet(
             diariesOfDay = emptyList(),
+            onDiaryClick = { /* no-op */ },
             onDismissRequest = { /* no-op */ },
             onBackClick = { /* no-op */ },
             onForwardClick = { /* no-op */ },
