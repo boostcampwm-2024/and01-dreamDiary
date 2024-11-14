@@ -1,5 +1,6 @@
 package com.boostcamp.dreamteam.dreamdiary.feature.auth
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.boostcamp.dreamteam.dreamdiary.core.data.repository.AuthRepository
@@ -24,6 +25,17 @@ class SignInViewModel @Inject constructor(
                 _signInState.value = SignInState.Success
             } catch (e: Exception) {
                 _signInState.value = SignInState.Error("Google sign-in failed")
+            }
+        }
+    }
+
+    fun signInWithGitHub(context: Context) {
+        viewModelScope.launch {
+            try {
+                authRepository.signInWithGitHub(context)
+                _signInState.value = SignInState.Success
+            } catch (e: Exception) {
+                _signInState.value = SignInState.Error("GitHub sign-in failed")
             }
         }
     }

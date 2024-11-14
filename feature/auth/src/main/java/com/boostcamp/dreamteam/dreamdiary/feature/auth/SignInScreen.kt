@@ -39,7 +39,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.boostcamp.dreamteam.dreamdiary.designsystem.theme.DreamdiaryTheme
 import com.boostcamp.dreamteam.dreamdiary.feature.auth.model.SignInState
-import com.boostcamp.dreamteam.dreamdiary.feature.auth.sns.Github
 import com.boostcamp.dreamteam.dreamdiary.feature.auth.sns.Google
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -53,7 +52,6 @@ fun SignInScreen(
     val signInState by viewModel.signInState.collectAsStateWithLifecycle()
     val context = LocalContext.current
     val google = Google(context.applicationContext)
-    val github = Github()
     val scope = rememberCoroutineScope()
 
     when (signInState) {
@@ -68,8 +66,7 @@ fun SignInScreen(
         is SignInState.NotSignIn -> {
             SignInScreenContent(
                 onGitHubSignInClick = {
-                    Timber.tag("123").d("onGitHubSignInClick")
-                    github.signIn(context)
+                    viewModel.signInWithGitHub(context)
                 },
                 onGoogleSignInClick = {
                     scope.launch {
