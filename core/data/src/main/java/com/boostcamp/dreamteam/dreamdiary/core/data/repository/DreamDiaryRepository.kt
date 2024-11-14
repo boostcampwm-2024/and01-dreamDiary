@@ -25,4 +25,9 @@ interface DreamDiaryRepository {
         diaryId: String,
         labels: List<String>,
     )
+
+    fun getDreamDiariesBySleepEndInRange(
+        start: Instant,
+        end: Instant,
+    ): Flow<List<Diary>>
 }

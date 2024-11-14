@@ -6,4 +6,11 @@
     <string name="signIn_google_icon">구글 아이콘</string>
     <string name="signIn_google_login">구글 로그인</string>
     <string name="signIn_now_pass">지금은 건너뛰기</string>
+    <string name="signIn_fail">로그인을 실패하셨습니다.</string>
+    <string name="signIn_google_success">구글 로그인 성공</string>
+    <string name="signIn_github_success">깃허브 로그인 성공</string>
+    <string name="signIn_onPass_success">건너 뛰기 성공</string>
+    <string name="signIn_google_fail">구글 로그인 실패</string>
+    <string name="signIn_github_fail">깃허브 로그인 실패</string>
+    <string name="signIn_unkown_error">알수 없는 에러</string>
 </resources>

@@ -1,5 +1,6 @@
 package com.boostcamp.dreamteam.dreamdiary.feature.auth
 
+import android.widget.Toast
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.background
@@ -22,6 +23,7 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -38,8 +40,11 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.boostcamp.dreamteam.dreamdiary.designsystem.theme.DreamdiaryTheme
+import com.boostcamp.dreamteam.dreamdiary.feature.auth.model.SignInErrorMessage
+import com.boostcamp.dreamteam.dreamdiary.feature.auth.model.SignInEvent
 import com.boostcamp.dreamteam.dreamdiary.feature.auth.model.SignInState
 import com.boostcamp.dreamteam.dreamdiary.feature.auth.sns.Google
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
@@ -53,6 +58,39 @@ fun SignInScreen(
     val context = LocalContext.current
     val google = Google(context.applicationContext)
     val scope = rememberCoroutineScope()
+    LaunchedEffect(Unit) {
+        viewModel.event.collectLatest {
+            when (it) {
+                is SignInEvent.GoogleSignInSuccess -> {
+                    Toast.makeText(context, context.getString(R.string.signIn_google_success), Toast.LENGTH_SHORT).show()
+                }
+
+                is SignInEvent.GitHubSignInSuccess -> {
+                    Toast.makeText(context, context.getString(R.string.signIn_github_success), Toast.LENGTH_SHORT).show()
+                }
+
+                is SignInEvent.OnPass -> {
+                    Toast.makeText(context, context.getString(R.string.signIn_onPass_success), Toast.LENGTH_SHORT).show()
+                }
+
+                is SignInEvent.SignInFailure -> {
+                    when (it.signInErrorMessage) {
+                        SignInErrorMessage.GOOGLE_SIGN_IN_FAIL -> {
+                            Toast.makeText(context, context.getString(R.string.signIn_google_fail), Toast.LENGTH_SHORT).show()
+                        }
+
+                        SignInErrorMessage.GITHUB_SIGN_IN_FAIL -> {
+                            Toast.makeText(context, context.getString(R.string.signIn_github_fail), Toast.LENGTH_SHORT).show()
+                        }
+
+                        SignInErrorMessage.UNKNOWN_ERROR -> {
+                            Toast.makeText(context, context.getString(R.string.signIn_unkown_error), Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                }
+            }
+        }
+    }
     when (signInState) {
         is SignInState.Success -> {
             onSignInSuccess()
@@ -62,13 +100,11 @@ fun SignInScreen(
             onPassClick()
         }
 
-        is SignInState.Error -> {
-            // TODO: 에러 처리
-        }
-
         is SignInState.NotSignIn -> {
             SignInScreenContent(
-                onGitHubSignInClick = { /*TODO*/ },
+                onGitHubSignInClick = {
+                    viewModel.signInWithGitHub(context)
+                },
                 onGoogleSignInClick = {
                     scope.launch {
                         try {
