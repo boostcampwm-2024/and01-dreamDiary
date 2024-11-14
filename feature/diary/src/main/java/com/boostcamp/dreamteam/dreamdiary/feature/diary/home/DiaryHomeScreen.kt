@@ -27,13 +27,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.boostcamp.dreamteam.dreamdiary.designsystem.theme.DreamdiaryTheme
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.tabcalendar.DiaryCalendarTab
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.tabcalendar.DiaryHomeTabCalendarUIState
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.tabcalendar.diaryHomeTabCalendarUIStatePreview
-import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.tablist.DiaryHomeTabListUIState
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.tablist.DiaryListTab
-import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.tablist.diaryHomeTabListUIStatePreview
+import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.tablist.pagedDiariesPreview
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.DiaryUi
 import java.time.YearMonth
 
@@ -43,11 +44,11 @@ fun DiaryHomeScreen(
     onFabClick: () -> Unit,
     viewModel: DiaryHomeViewModel = hiltViewModel(),
 ) {
-    val listUIState by viewModel.tabListUIState.collectAsStateWithLifecycle()
+    val diaries = viewModel.dreamDiaries.collectAsLazyPagingItems()
     val calendarUIState by viewModel.tabCalendarUiState.collectAsStateWithLifecycle()
 
     DiaryHomeScreenContent(
-        listUIState = listUIState,
+        diaries = diaries,
         calendarUIState = calendarUIState,
         onCalendarYearMothChange = viewModel::setCalendarYearMonth,
         onMenuClick = { /*TODO*/ },
@@ -61,7 +62,7 @@ fun DiaryHomeScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun DiaryHomeScreenContent(
-    listUIState: DiaryHomeTabListUIState,
+    diaries: LazyPagingItems<DiaryUi>,
     calendarUIState: DiaryHomeTabCalendarUIState,
     onCalendarYearMothChange: (YearMonth) -> Unit,
     modifier: Modifier = Modifier,
@@ -121,9 +122,9 @@ private fun DiaryHomeScreenContent(
             val tabModifier = Modifier.fillMaxSize()
             when (selectedTabIndex) {
                 0 -> DiaryListTab(
-                    uiState = listUIState,
-                    modifier = tabModifier,
+                    diaries = diaries,
                     onDiaryClick = onDiaryClick,
+                    modifier = tabModifier,
                 )
 
                 1 -> DiaryCalendarTab(
@@ -184,7 +185,7 @@ private fun DiaryHomeScreenTopAppBar(
 private fun DiaryHomeScreenContentPreview() {
     DreamdiaryTheme {
         DiaryHomeScreenContent(
-            listUIState = diaryHomeTabListUIStatePreview,
+            diaries = pagedDiariesPreview.collectAsLazyPagingItems(),
             calendarUIState = diaryHomeTabCalendarUIStatePreview,
             onCalendarYearMothChange = { },
         )

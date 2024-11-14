@@ -35,6 +35,10 @@ dependencies {
     ksp(libs.androidx.room.compiler)
     implementation(libs.androidx.room.ktx)
 
+    // paging
+    implementation(libs.androidx.room.paging)
+    implementation(libs.androidx.paging.runtime)
+
     // firebase
     implementation(libs.firebase.firestore)
     implementation(libs.googleid)

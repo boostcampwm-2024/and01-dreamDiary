@@ -4,7 +4,6 @@ import com.boostcamp.dreamteam.dreamdiary.core.model.Diary
 import com.boostcamp.dreamteam.dreamdiary.core.model.Label
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.vo.DisplayableDateTime
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.vo.toDisplayableDateTime
-import java.time.Instant
 import java.time.LocalDate
 import java.time.YearMonth
 import java.time.ZoneId
@@ -23,21 +22,20 @@ data class DiaryUi(
     val sortKey: DisplayableDateTime,
 )
 
-// FIXME: 시간과 관련된 데이터를 처리하는 로직은 수정 해주세요
 internal fun Diary.toDiaryUi(): DiaryUi =
     run {
-        val sleepEndAt = Instant.now().toDisplayableDateTime()
         DiaryUi(
             id = id,
             title = title,
             content = content,
-            createdAt = Instant.now().toDisplayableDateTime(),
-            updatedAt = Instant.now().toDisplayableDateTime(),
+            createdAt = createdAt.toDisplayableDateTime(),
+            updatedAt = updatedAt.toDisplayableDateTime(),
             images = images,
             labels = labels.map { it.toLabelUi() },
-            sleepStartAt = Instant.now().toDisplayableDateTime(),
-            sleepEndAt = sleepEndAt,
-            sortKey = sleepEndAt,
+            sleepStartAt = sleepStartAt.toDisplayableDateTime(),
+            sleepEndAt = sleepEndAt.toDisplayableDateTime(),
+            // TODO 어떤 값으로 정렬할 것인지 선택이 가능
+            sortKey = sleepEndAt.toDisplayableDateTime(),
         )
     }
 
@@ -78,7 +76,6 @@ internal val diariesPreview = run {
     daysToDisplay.map {
         val displayableDateTime = DisplayableDateTime(
             value = firstDayOfMonth.plusDays(it.toLong() - 1),
-            formatted = "",
         )
         DiaryUi(
             id = it.toString(),
