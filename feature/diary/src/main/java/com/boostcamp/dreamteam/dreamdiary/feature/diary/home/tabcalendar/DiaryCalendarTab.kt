@@ -56,6 +56,7 @@ internal fun DiaryCalendarTab(
                         .toLocalDate()
                         .isEqual(lastSelectedDay)
                 },
+                selectedDay = lastSelectedDay,
                 onDiaryClick = onDiaryClick,
                 onDismissRequest = { isBottomSheetOpen = false },
                 onBackClick = { lastSelectedDay = lastSelectedDay.minusDays(1) },
