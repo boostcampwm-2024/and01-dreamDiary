@@ -10,6 +10,8 @@ import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.diaryHomeScreen
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.navigateToDiaryHomeScreen
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.write.diaryWriteScreen
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.write.navigateToDiaryWriteScreen
+import com.boostcamp.dreamteam.dreamdiary.setting.navigateToSettingScreen
+import com.boostcamp.dreamteam.dreamdiary.setting.settingScreen
 import com.boostcamp.dreamteam.dreamdiary.ui.DreamDiaryAppState
 
 @Composable
@@ -45,10 +47,10 @@ fun DreamDiaryNavHost(
                 navController.navigateToDiaryWriteScreen()
             },
             onCommunityClick = {
-//                navController.navigateToCommunityScreen()
+                // TODO: navigate to community screen
             },
             onSettingClick = {
-//                navController.navigateToSettingScreen()
+                navController.navigateToSettingScreen()
             },
             onDiaryItemClick = { diaryUI ->
             },
@@ -56,6 +58,19 @@ fun DreamDiaryNavHost(
 
         diaryWriteScreen(
             onBackClick = navController::navigateUp,
+        )
+
+        settingScreen(
+            onHomeClick = {
+                navController.navigateToDiaryHomeScreen(
+                    navOptions = navOptions {
+                        launchSingleTop = true
+                    },
+                )
+            },
+            onCommunityClick = {
+                // TODO: navigate to community screen
+            },
         )
     }
 }
