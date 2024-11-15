@@ -13,13 +13,23 @@ data object DiaryHomeRoute
 fun NavController.navigateToDiaryHomeScreen(navOptions: NavOptions) = navigate(route = DiaryHomeRoute, navOptions)
 
 fun NavGraphBuilder.diaryHomeScreen(
-    onDiaryClick: (DiaryUi) -> Unit,
     onFabClick: () -> Unit,
+    onCommunityClick: () -> Unit,
+    onSettingClick: () -> Unit,
+    onDiaryItemClick: (DiaryUi) -> Unit,
 ) {
     composable<DiaryHomeRoute> {
         DiaryHomeScreen(
-            onDiaryClick = onDiaryClick,
-            onFabClick = onFabClick,
+            onDiaryClick = onDiaryItemClick,
+            onNavigateToWriteScreen = {
+                onFabClick()
+            },
+            onNavigateToCommunity = {
+                onCommunityClick()
+            },
+            onNavigateToSetting = {
+                onSettingClick()
+            },
         )
     }
 }

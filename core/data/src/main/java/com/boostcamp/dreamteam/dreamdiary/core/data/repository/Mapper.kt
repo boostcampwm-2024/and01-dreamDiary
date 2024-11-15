@@ -14,6 +14,8 @@ fun DreamDiaryEntity.toDomain(): Diary {
         updatedAt = this.updatedAt,
         images = listOf(),
         labels = listOf(),
+        sleepStartAt = this.sleepStartAt,
+        sleepEndAt = this.sleepEndAt,
     )
 }
 
