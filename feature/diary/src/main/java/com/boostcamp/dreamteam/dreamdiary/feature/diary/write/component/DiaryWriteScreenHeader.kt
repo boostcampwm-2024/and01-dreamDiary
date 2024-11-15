@@ -37,7 +37,6 @@ import androidx.compose.ui.unit.dp
 import com.boostcamp.dreamteam.dreamdiary.designsystem.theme.DreamdiaryTheme
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.R
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.LabelUi
-import com.boostcamp.dreamteam.dreamdiary.feature.diary.write.model.SelectableLabel
 import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalTime
@@ -52,9 +51,10 @@ import java.util.Locale
 
 @Composable
 internal fun DiaryWriteScreenHeader(
-    searchValue: String,
-    onSearchValueChange: (String) -> Unit,
-    selectableLabels: List<SelectableLabel>,
+    labelFilter: String,
+    onLabelFilterChange: (String) -> Unit,
+    filteredLabels: List<LabelUi>,
+    selectedLabels: Set<LabelUi>,
     sleepStartAt: ZonedDateTime,
     sleepEndAt: ZonedDateTime,
     onSleepStartAtChange: (ZonedDateTime) -> Unit,
@@ -89,10 +89,10 @@ internal fun DiaryWriteScreenHeader(
                 contentDescription = stringResource(R.string.write_category),
             )
             Text(
-                text = if (selectableLabels.isEmpty()) {
+                text = if (selectedLabels.isEmpty()) {
                     stringResource(R.string.write_no_label)
                 } else {
-                    selectableLabels.filter { it.isSelected }.joinToString { it.label.name }
+                    selectedLabels.joinToString { it.name }
                 },
                 modifier = Modifier.fillMaxWidth(),
                 maxLines = 1,
@@ -102,9 +102,10 @@ internal fun DiaryWriteScreenHeader(
         if (isLabelSelectionDialogOpen) {
             LabelSelectionDialog(
                 onDismissRequest = { isLabelSelectionDialogOpen = false },
-                searchValue = searchValue,
-                onSearchValueChange = onSearchValueChange,
-                selectableLabels = selectableLabels,
+                labelFilter = labelFilter,
+                onLabelFilterChange = onLabelFilterChange,
+                filteredLabels = filteredLabels,
+                selectedLabels = selectedLabels,
                 onCheckChange = onCheckChange,
                 onClickLabelSave = onClickLabelSave,
                 modifier = Modifier.width(400.dp),
@@ -287,9 +288,17 @@ private fun DateHeader(
 private fun DiaryWriteScreenHeaderPreview() {
     DreamdiaryTheme {
         DiaryWriteScreenHeader(
-            searchValue = "",
-            onSearchValueChange = { },
-            selectableLabels = emptyList(),
+            labelFilter = "",
+            onLabelFilterChange = { },
+            filteredLabels = listOf(
+                LabelUi("악몽"),
+                LabelUi("개꿈"),
+                LabelUi("귀신"),
+            ),
+            selectedLabels = setOf(
+                LabelUi("악몽"),
+                LabelUi("공룡"),
+            ),
             sleepStartAt = ZonedDateTime.now(),
             sleepEndAt = ZonedDateTime.now(),
             onSleepStartAtChange = { },

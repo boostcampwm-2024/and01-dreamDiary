@@ -33,7 +33,6 @@ import com.boostcamp.dreamteam.dreamdiary.feature.diary.write.component.DiaryWri
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.write.component.DiaryWriteScreenHeader
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.write.model.DiaryWriteEvent
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.write.model.LabelAddFailureReason
-import com.boostcamp.dreamteam.dreamdiary.feature.diary.write.model.SelectableLabel
 import kotlinx.coroutines.flow.collectLatest
 import java.time.ZonedDateTime
 
@@ -44,7 +43,13 @@ fun DiaryWriteScreen(
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    val (title, content, searchValue, selectableLabels, sleepEndAt, sleepStartAt) = uiState
+    val title = uiState.title
+    val content = uiState.content
+    val labelFilter = uiState.labelFilter
+    val filteredLabels = uiState.filteredLabels
+    val selectedLabels = uiState.selectedLabels
+    val sleepStartAt = uiState.sleepStartAt
+    val sleepEndAt = uiState.sleepEndAt
 
     val context = LocalContext.current
 
@@ -86,12 +91,13 @@ fun DiaryWriteScreen(
         DiaryWriteScreen(
             title = title,
             content = content,
-            searchValue = searchValue,
-            selectableLabels = selectableLabels,
+            labelFilter = labelFilter,
+            filteredLabels = filteredLabels,
+            selectedLabels = selectedLabels,
             onTitleChange = viewModel::setTitle,
             onContentChange = viewModel::setContent,
             onCheckChange = viewModel::toggleLabel,
-            onSearchValueChange = viewModel::setSearchValue,
+            onLabelFilterChange = viewModel::setLabelFilter,
             onClickLabelSave = viewModel::addLabel,
             sleepStartAt = sleepStartAt,
             onSleepStartAtChange = viewModel::setSleepStartAt,
@@ -106,12 +112,13 @@ fun DiaryWriteScreen(
 private fun DiaryWriteScreen(
     title: String,
     content: String,
-    searchValue: String,
-    selectableLabels: List<SelectableLabel>,
+    labelFilter: String,
+    filteredLabels: List<LabelUi>,
+    selectedLabels: Set<LabelUi>,
     onTitleChange: (String) -> Unit,
     onContentChange: (String) -> Unit,
     onCheckChange: (labelUi: LabelUi) -> Unit,
-    onSearchValueChange: (String) -> Unit,
+    onLabelFilterChange: (String) -> Unit,
     onClickLabelSave: () -> Unit,
     sleepStartAt: ZonedDateTime,
     onSleepStartAtChange: (ZonedDateTime) -> Unit,
@@ -127,9 +134,10 @@ private fun DiaryWriteScreen(
             .verticalScroll(scrollState),
     ) {
         DiaryWriteScreenHeader(
-            searchValue = searchValue,
-            onSearchValueChange = onSearchValueChange,
-            selectableLabels = selectableLabels,
+            labelFilter = labelFilter,
+            onLabelFilterChange = onLabelFilterChange,
+            filteredLabels = filteredLabels,
+            selectedLabels = selectedLabels,
             sleepStartAt = sleepStartAt,
             sleepEndAt = sleepEndAt,
             onSleepStartAtChange = onSleepStartAtChange,
@@ -184,17 +192,21 @@ private fun PreviewDiaryListScreen() {
         DiaryWriteScreen(
             title = "",
             content = "",
-            searchValue = "",
-            selectableLabels = listOf(
-                SelectableLabel(LabelUi("악몽"), isSelected = true),
-                SelectableLabel(LabelUi("개꿈"), isSelected = false),
-                SelectableLabel(LabelUi("귀신"), isSelected = false),
+            labelFilter = "",
+            filteredLabels = listOf(
+                LabelUi("악몽"),
+                LabelUi("개꿈"),
+                LabelUi("귀신"),
+            ),
+            selectedLabels = setOf(
+                LabelUi("악몽"),
+                LabelUi("공룡"),
             ),
             onTitleChange = {},
             onContentChange = {},
             onCheckChange = {},
             onClickLabelSave = {},
-            onSearchValueChange = {},
+            onLabelFilterChange = {},
             sleepStartAt = ZonedDateTime.now(),
             onSleepStartAtChange = {},
             sleepEndAt = ZonedDateTime.now(),

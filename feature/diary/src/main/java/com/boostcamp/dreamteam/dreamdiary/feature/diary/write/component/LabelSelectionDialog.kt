@@ -28,14 +28,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.boostcamp.dreamteam.dreamdiary.designsystem.theme.DreamdiaryTheme
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.LabelUi
-import com.boostcamp.dreamteam.dreamdiary.feature.diary.write.model.SelectableLabel
 
 @Composable
 internal fun LabelSelectionDialog(
     onDismissRequest: () -> Unit,
-    searchValue: String,
-    selectableLabels: List<SelectableLabel>,
-    onSearchValueChange: (String) -> Unit,
+    labelFilter: String,
+    filteredLabels: List<LabelUi>,
+    selectedLabels: Set<LabelUi>,
+    onLabelFilterChange: (String) -> Unit,
     onCheckChange: (labelUi: LabelUi) -> Unit,
     onClickLabelSave: () -> Unit,
     modifier: Modifier = Modifier,
@@ -52,13 +52,13 @@ internal fun LabelSelectionDialog(
                     modifier = Modifier.fillMaxWidth(),
                 ) {
                     TextField(
-                        value = searchValue,
-                        onValueChange = { onSearchValueChange(it) },
+                        value = labelFilter,
+                        onValueChange = { onLabelFilterChange(it) },
                         modifier = Modifier.fillMaxWidth(),
                         label = { Text("검색") },
                         placeholder = { Text("검색 및 추가") },
                         trailingIcon = {
-                            if (searchValue.isNotEmpty()) {
+                            if (labelFilter.isNotEmpty()) {
                                 Icon(
                                     imageVector = Icons.Default.Add,
                                     contentDescription = "Add Label",
@@ -84,13 +84,13 @@ internal fun LabelSelectionDialog(
                         .fillMaxWidth()
                         .verticalScroll(rememberScrollState()),
                 ) {
-                    selectableLabels.forEachIndexed { index, selectableLabel ->
+                    filteredLabels.forEach { filteredLabel ->
                         LabelItem(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(start = 8.dp),
-                            label = selectableLabel.label.name,
-                            isChecked = selectableLabels[index].isSelected,
+                            label = filteredLabel.name,
+                            isChecked = filteredLabel in selectedLabels,
                             onLabelClick = onCheckChange,
                         )
                     }
@@ -104,7 +104,7 @@ internal fun LabelSelectionDialog(
                 ) {
                     TextButton(onClick = {
                         onDismissRequest()
-                        onSearchValueChange("")
+                        onLabelFilterChange("")
                     }) {
                         Text("취소")
                     }
@@ -123,13 +123,17 @@ private fun LabelSelectionDialogPreview() {
     DreamdiaryTheme {
         LabelSelectionDialog(
             onDismissRequest = {},
-            searchValue = "",
-            onSearchValueChange = {},
+            labelFilter = "",
+            onLabelFilterChange = {},
             onCheckChange = {},
-            selectableLabels = listOf(
-                SelectableLabel(LabelUi("악몽"), isSelected = true),
-                SelectableLabel(LabelUi("개꿈"), isSelected = false),
-                SelectableLabel(LabelUi("귀신"), isSelected = false),
+            filteredLabels = listOf(
+                LabelUi("악몽"),
+                LabelUi("개꿈"),
+                LabelUi("귀신"),
+            ),
+            selectedLabels = setOf(
+                LabelUi("악몽"),
+                LabelUi("공룡"),
             ),
             onClickLabelSave = {},
             modifier = Modifier.width(400.dp),
