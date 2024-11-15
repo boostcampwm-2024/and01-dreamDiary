@@ -70,7 +70,7 @@ fun DreamDiaryNavHost(
             },
             onCommunityClick = {
                 // TODO: navigate to community screen
-            }
+            },
         )
     }
 }
