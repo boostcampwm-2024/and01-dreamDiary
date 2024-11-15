@@ -73,4 +73,8 @@ internal class DefaultDreamDiaryRepository @Inject constructor(
         dreamDiaryDao
             .getDreamDiariesBySleepEndInRange(start, end)
             .map { list -> list.map { it.toDomain() } }
+
+    override suspend fun getDreamDiary(id: String): Diary {
+        return dreamDiaryDao.getDreamDiary(id).toDomain()
+    }
 }

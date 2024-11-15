@@ -64,8 +64,9 @@ internal fun DiaryWriteScreenHeader(
     onCheckChange: (labelUi: LabelUi) -> Unit,
     onClickLabelSave: () -> Unit,
     modifier: Modifier = Modifier,
+    readOnly: Boolean = false,
 ) {
-    var isLabelSelectionDialogOpen by remember { mutableStateOf(false) }
+    var isLabelSelectionDialogOpen by rememberSaveable { mutableStateOf(false) }
 
     Column(modifier = modifier) {
         WriteDateInfo(
@@ -75,13 +76,14 @@ internal fun DiaryWriteScreenHeader(
                 onSleepStartAtChange(sleepStartAt)
                 onSleepEndAtChange(sleepEndAt)
             },
+            readOnly = readOnly,
         )
 
         Spacer(modifier = Modifier.height(8.dp))
 
         Row(
             modifier = Modifier
-                .clickable {
+                .clickable(enabled = !readOnly) {
                     isLabelSelectionDialogOpen = true
                 },
             verticalAlignment = Alignment.CenterVertically,
@@ -121,6 +123,7 @@ internal fun WriteDateInfo(
     sleepStartAt: ZonedDateTime,
     sleepEndAt: ZonedDateTime,
     onTimeChange: (ZonedDateTime, ZonedDateTime) -> Unit,
+    readOnly: Boolean,
     modifier: Modifier = Modifier,
 ) {
     val truncatedSleepStart = sleepStartAt.truncatedTo(ChronoUnit.MINUTES)
@@ -139,6 +142,7 @@ internal fun WriteDateInfo(
                 val newSleepEnd = newSleepStart.plusHours(diffHour)
                 onTimeChange(newSleepStart, newSleepEnd)
             },
+            readOnly = readOnly,
         )
 
         TimeHeader(
@@ -152,6 +156,7 @@ internal fun WriteDateInfo(
                 }
                 onTimeChange(newSleepStart, newSleepEnd)
             },
+            readOnly = readOnly,
         )
     }
 }
@@ -162,6 +167,7 @@ private fun TimeHeader(
     startTime: LocalTime,
     endTime: LocalTime,
     onConfirmStartTime: (LocalTime, LocalTime) -> Unit,
+    readOnly: Boolean,
     modifier: Modifier = Modifier,
 ) {
     var isTimePickerOpen by rememberSaveable { mutableStateOf(false) }
@@ -210,7 +216,7 @@ private fun TimeHeader(
         Icon(Icons.Outlined.Timer, contentDescription = stringResource(R.string.write_select_time))
 
         Text(
-            modifier = Modifier.clickable {
+            modifier = Modifier.clickable(enabled = !readOnly) {
                 tabIndex = 0
                 isTimePickerOpen = true
             },
@@ -218,7 +224,7 @@ private fun TimeHeader(
         )
         Text(text = "~")
         Text(
-            modifier = Modifier.clickable {
+            modifier = Modifier.clickable(enabled = !readOnly) {
                 tabIndex = 1
                 isTimePickerOpen = true
             },
@@ -233,6 +239,7 @@ private fun DateHeader(
     date: LocalDate,
     onConfirm: (Long) -> Unit,
     modifier: Modifier = Modifier,
+    readOnly: Boolean,
     locale: Locale = Locale.getDefault(),
 ) {
     var isDatePickerOpen by rememberSaveable { mutableStateOf(false) }
@@ -248,7 +255,7 @@ private fun DateHeader(
     }
 
     Row(
-        modifier = modifier.clickable {
+        modifier = modifier.clickable(enabled = !readOnly) {
             isDatePickerOpen = true
         },
         verticalAlignment = Alignment.CenterVertically,

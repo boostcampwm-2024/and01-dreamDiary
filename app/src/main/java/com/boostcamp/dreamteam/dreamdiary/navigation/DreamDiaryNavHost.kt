@@ -6,10 +6,15 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.navOptions
 import com.boostcamp.dreamteam.dreamdiary.feature.auth.SignInRoute
 import com.boostcamp.dreamteam.dreamdiary.feature.auth.signInScreen
+import com.boostcamp.dreamteam.dreamdiary.feature.diary.detail.DiaryDetailRoute
+import com.boostcamp.dreamteam.dreamdiary.feature.diary.detail.diaryDetailScreen
+import com.boostcamp.dreamteam.dreamdiary.feature.diary.detail.navigateToDiaryDetailScreen
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.diaryHomeScreen
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.navigateToDiaryHomeScreen
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.write.diaryWriteScreen
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.write.navigateToDiaryWriteScreen
+import com.boostcamp.dreamteam.dreamdiary.setting.navigateToSettingScreen
+import com.boostcamp.dreamteam.dreamdiary.setting.settingScreen
 import com.boostcamp.dreamteam.dreamdiary.ui.DreamDiaryAppState
 
 @Composable
@@ -45,17 +50,40 @@ fun DreamDiaryNavHost(
                 navController.navigateToDiaryWriteScreen()
             },
             onCommunityClick = {
-//                navController.navigateToCommunityScreen()
+                // TODO: navigate to community screen
             },
             onSettingClick = {
-//                navController.navigateToSettingScreen()
+                navController.navigateToSettingScreen()
             },
             onDiaryItemClick = { diaryUI ->
+                navController.navigateToDiaryDetailScreen(
+                    route = DiaryDetailRoute(diaryUI.id),
+                    navOptions = navOptions {
+                        launchSingleTop = true
+                    },
+                )
             },
         )
 
         diaryWriteScreen(
             onBackClick = navController::navigateUp,
+        )
+
+        diaryDetailScreen(
+            onBackClick = navController::navigateUp,
+        )
+
+        settingScreen(
+            onHomeClick = {
+                navController.navigateToDiaryHomeScreen(
+                    navOptions = navOptions {
+                        launchSingleTop = true
+                    },
+                )
+            },
+            onCommunityClick = {
+                // TODO: navigate to community screen
+            },
         )
     }
 }
