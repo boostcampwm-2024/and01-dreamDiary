@@ -6,7 +6,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.navOptions
 import com.boostcamp.dreamteam.dreamdiary.feature.auth.SignInRoute
 import com.boostcamp.dreamteam.dreamdiary.feature.auth.signInScreen
-import com.boostcamp.dreamteam.dreamdiary.feature.diary.detail.DiaryDetailNavigation
+import com.boostcamp.dreamteam.dreamdiary.feature.diary.detail.DiaryDetailRoute
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.detail.diaryDetailScreen
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.detail.navigateToDiaryDetailScreen
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.diaryHomeScreen
@@ -55,7 +55,7 @@ fun DreamDiaryNavHost(
             },
             onDiaryItemClick = { diaryUI ->
                 navController.navigateToDiaryDetailScreen(
-                    route = DiaryDetailNavigation(diaryUI.id),
+                    route = DiaryDetailRoute(diaryUI.id),
                     navOptions = navOptions {
                         launchSingleTop = true
                     },

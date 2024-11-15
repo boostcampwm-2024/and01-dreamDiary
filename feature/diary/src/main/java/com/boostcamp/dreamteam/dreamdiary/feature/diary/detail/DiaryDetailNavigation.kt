@@ -7,19 +7,19 @@ import androidx.navigation.compose.composable
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class DiaryDetailNavigation(
+data class DiaryDetailRoute(
     val id: String,
 )
 
 fun NavHostController.navigateToDiaryDetailScreen(
-    route: DiaryDetailNavigation,
+    route: DiaryDetailRoute,
     navOptions: NavOptions,
 ) {
     navigate(route, navOptions)
 }
 
 fun NavGraphBuilder.diaryDetailScreen(onBackClick: () -> Unit) {
-    composable<DiaryDetailNavigation> {
+    composable<DiaryDetailRoute> {
         DiaryDetailScreen(
             onBackClick = onBackClick,
         )
