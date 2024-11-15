@@ -27,4 +27,8 @@
     <string name="calendar_no_diary">일기가 없습니다</string>
     <string name="calendar_yesterday">어제로 이동</string>
     <string name="calendar_tomorrow">내일로 이동</string>
+    <string name="home_my_dream">나의 꿈</string>
+    <string name="home_tab_dream">꿈</string>
+    <string name="home_tab_calendar">달력</string>
+    <string name="home_diary_write">일기 작성</string>
 </resources>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="icon_text_my_dream">내 꿈</string>
-    <string name="title_text_my_dream">내 꿈</string>
+    <string name="icon_text_my_dream">나의 꿈</string>
+    <string name="title_text_my_dream">나의 꿈</string>
     <string name="icon_text_community">커뮤니티</string>
     <string name="title_text_community">커뮤니티</string>
     <string name="icon_text_settings">설정</string>
