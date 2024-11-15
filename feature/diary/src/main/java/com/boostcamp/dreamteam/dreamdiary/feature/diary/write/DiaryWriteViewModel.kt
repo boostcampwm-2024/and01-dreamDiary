@@ -58,7 +58,13 @@ class DiaryWriteViewModel @Inject constructor(
     fun toggleLabel(labelUi: LabelUi) {
         _uiState.update {
             it.copy(
-                selectedLabels = it.selectedLabels.toMutableSet().apply { add(labelUi) },
+                selectedLabels = it.selectedLabels.toMutableSet().apply {
+                    if (contains(labelUi)) {
+                        remove(labelUi)
+                    } else {
+                        add(labelUi)
+                    }
+                }
             )
         }
     }
