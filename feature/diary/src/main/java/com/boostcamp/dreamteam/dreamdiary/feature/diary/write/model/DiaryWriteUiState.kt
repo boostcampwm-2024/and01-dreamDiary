@@ -8,7 +8,7 @@ data class DiaryWriteUiState(
     val content: String = "",
     val labelFilter: String = "",
     val filteredLabels: List<LabelUi> = emptyList(),
-    val selectedLabels: Set<LabelUi> = mutableSetOf(),
+    val selectedLabels: Set<LabelUi> = emptySet(),
     val sleepEndAt: ZonedDateTime = ZonedDateTime.now(),
     val sleepStartAt: ZonedDateTime = sleepEndAt.minusHours(6),
 )
