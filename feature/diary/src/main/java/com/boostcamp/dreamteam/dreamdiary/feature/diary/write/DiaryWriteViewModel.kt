@@ -11,7 +11,6 @@ import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.toLabelUi
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.write.model.DiaryWriteEvent
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.write.model.DiaryWriteUiState
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.write.model.LabelAddFailureReason
-import com.boostcamp.dreamteam.dreamdiary.feature.diary.write.model.SelectableLabel
 import com.boostcamp.dreamteam.dreamdiary.feature.flowWithStarted
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -52,26 +51,28 @@ class DiaryWriteViewModel @Inject constructor(
         _uiState.value = _uiState.value.copy(content = content)
     }
 
-    fun setSearchValue(searchValue: String) {
-        _uiState.value = _uiState.value.copy(searchValue = searchValue)
+    fun setLabelFilter(labelFilter: String) {
+        _uiState.value = _uiState.value.copy(labelFilter = labelFilter)
     }
 
     fun toggleLabel(labelUi: LabelUi) {
-        _uiState.value = _uiState.value.copy(
-            selectableLabels = _uiState.value.selectableLabels.map {
-                if (it.label.name == labelUi.name) {
-                    it.copy(isSelected = !it.isSelected)
-                } else {
-                    it
-                }
-            },
-        )
+        _uiState.update {
+            it.copy(
+                selectedLabels = it.selectedLabels.toMutableSet().apply {
+                    if (contains(labelUi)) {
+                        remove(labelUi)
+                    } else {
+                        add(labelUi)
+                    }
+                },
+            )
+        }
     }
 
     fun addDreamDiary() {
         val title = _uiState.value.title
         val content = _uiState.value.content
-        val labels = _uiState.value.selectableLabels.map { it.label.name }
+        val labels = _uiState.value.selectedLabels.map { it.name }
         val sleepStartAt = _uiState.value.sleepStartAt
         val sleepEndAt = _uiState.value.sleepEndAt
         viewModelScope.launch {
@@ -87,7 +88,7 @@ class DiaryWriteViewModel @Inject constructor(
     }
 
     fun addLabel() {
-        val addLabel = _uiState.value.searchValue
+        val addLabel = _uiState.value.labelFilter
         viewModelScope.launch {
             try {
                 addLabelUseCase(addLabel)
@@ -120,24 +121,15 @@ class DiaryWriteViewModel @Inject constructor(
     private fun collectLabels() {
         viewModelScope.launch {
             _uiState.flatMapLatest {
-                getLabelsUseCase(it.searchValue)
+                getLabelsUseCase(it.labelFilter)
             }.flowWithStarted(
                 _uiState.subscriptionCount,
                 SharingStarted.WhileSubscribed(5000L),
             ).collect { labels ->
-                _uiState.update { prevUiState ->
-                    val newSelectableLabels = mutableListOf<SelectableLabel>()
-                    for (label in labels) {
-                        var newSelectableLabel = SelectableLabel(label.toLabelUi(), false)
-                        for (selectableLabel in prevUiState.selectableLabels) {
-                            if (label.name == selectableLabel.label.name) {
-                                newSelectableLabel = newSelectableLabel.copy(isSelected = selectableLabel.isSelected)
-                                break
-                            }
-                        }
-                        newSelectableLabels.add(newSelectableLabel)
-                    }
-                    prevUiState.copy(selectableLabels = newSelectableLabels)
+                _uiState.update { uiState ->
+                    uiState.copy(
+                        filteredLabels = labels.map { it.toLabelUi() },
+                    )
                 }
             }
         }

@@ -10,3 +10,14 @@ internal fun Label.toLabelUi() =
     LabelUi(
         name = name,
     )
+
+internal val filteredLabelsPreview = listOf(
+    LabelUi("악몽"),
+    LabelUi("개꿈"),
+    LabelUi("귀신"),
+)
+
+internal val selectedLabelsPreview = setOf(
+    LabelUi("악몽"),
+    LabelUi("공룡"),
+)
