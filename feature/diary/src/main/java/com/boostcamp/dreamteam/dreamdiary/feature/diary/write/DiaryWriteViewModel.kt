@@ -64,7 +64,7 @@ class DiaryWriteViewModel @Inject constructor(
                     } else {
                         add(labelUi)
                     }
-                }
+                },
             )
         }
     }
