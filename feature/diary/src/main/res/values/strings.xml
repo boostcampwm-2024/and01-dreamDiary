@@ -33,4 +33,6 @@
     <string name="home_diary_write">일기 작성</string>
     <string name="label_search">검색</string>
     <string name="label_search_or_add">검색 및 추가</string>
+    <string name="home_alarm_description">알림</string>
+    <string name="home_search_description">검색</string>
 </resources>

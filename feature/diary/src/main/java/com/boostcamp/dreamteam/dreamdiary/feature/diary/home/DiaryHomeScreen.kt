@@ -101,7 +101,9 @@ private fun DiaryHomeScreenContent(
             onClick = onNavigateToSetting,
         ),
     )
+
     Scaffold(
+        modifier = modifier,
         topBar = {
             DiaryHomeScreenTopAppBar(
                 onNotificationClick = { /* 알림 클릭 시 동작 */ },
@@ -123,7 +125,7 @@ private fun DiaryHomeScreenContent(
         },
     ) { innerPadding ->
         Column(
-            modifier = modifier
+            modifier = Modifier
                 .padding(innerPadding)
                 .fillMaxSize(),
         ) {
@@ -181,7 +183,7 @@ private fun DiaryHomeScreenTopAppBar(
             ) {
                 Icon(
                     imageVector = Icons.Outlined.Notifications,
-                    contentDescription = "알림",
+                    contentDescription = stringResource(R.string.home_alarm_description),
                 )
             }
             IconButton(
@@ -189,7 +191,7 @@ private fun DiaryHomeScreenTopAppBar(
             ) {
                 Icon(
                     imageVector = Icons.Outlined.Search,
-                    contentDescription = "검색",
+                    contentDescription = stringResource(R.string.home_search_description),
                 )
             }
         },
