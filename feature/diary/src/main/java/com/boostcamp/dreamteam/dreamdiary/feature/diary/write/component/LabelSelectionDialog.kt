@@ -23,10 +23,12 @@ import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.boostcamp.dreamteam.dreamdiary.designsystem.theme.DreamdiaryTheme
+import com.boostcamp.dreamteam.dreamdiary.feature.diary.R
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.LabelUi
 
 @Composable
@@ -55,8 +57,8 @@ internal fun LabelSelectionDialog(
                         value = labelFilter,
                         onValueChange = { onLabelFilterChange(it) },
                         modifier = Modifier.fillMaxWidth(),
-                        label = { Text("검색") },
-                        placeholder = { Text("검색 및 추가") },
+                        label = { Text(stringResource(R.string.label_search)) },
+                        placeholder = { Text(stringResource(R.string.label_search_or_add)) },
                         trailingIcon = {
                             if (labelFilter.isNotEmpty()) {
                                 Icon(
