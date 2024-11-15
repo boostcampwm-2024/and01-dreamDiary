@@ -126,8 +126,8 @@ class DiaryWriteViewModel @Inject constructor(
                 _uiState.subscriptionCount,
                 SharingStarted.WhileSubscribed(5000L),
             ).collect { labels ->
-                _uiState.update {
-                    it.copy(
+                _uiState.update { uiState ->
+                    uiState.copy(
                         filteredLabels = labels.map { it.toLabelUi() },
                     )
                 }
