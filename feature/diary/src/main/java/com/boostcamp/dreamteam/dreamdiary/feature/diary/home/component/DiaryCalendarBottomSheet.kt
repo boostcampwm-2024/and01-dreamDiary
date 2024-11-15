@@ -40,6 +40,7 @@ import com.boostcamp.dreamteam.dreamdiary.feature.diary.R
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.DiaryUi
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.diaryPreview1
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.diaryPreview2
+import java.time.LocalDate
 import java.time.chrono.Chronology
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeFormatterBuilder
@@ -50,6 +51,7 @@ import java.util.Locale
 @Composable
 internal fun DiaryCalendarBottomSheet(
     diariesOfDay: List<DiaryUi>,
+    selectedDay: LocalDate,
     onDiaryClick: (DiaryUi) -> Unit,
     onDismissRequest: () -> Unit,
     onBackClick: () -> Unit,
@@ -68,6 +70,7 @@ internal fun DiaryCalendarBottomSheet(
         sheetState = bottomSheetState,
     ) {
         BottomSheetHeader(
+            selectedDay = selectedDay,
             onBackClick = onBackClick,
             onForwardClick = onForwardClick,
             modifier = Modifier
@@ -92,13 +95,27 @@ internal fun DiaryCalendarBottomSheet(
 
 @Composable
 private fun BottomSheetHeader(
+    selectedDay: LocalDate,
     onBackClick: () -> Unit,
     onForwardClick: () -> Unit,
     modifier: Modifier = Modifier,
+    locale: Locale = Locale.getDefault(),
 ) {
+    val dateFormatter = remember(locale) {
+        val pattern = DateTimeFormatterBuilder
+            .getLocalizedDateTimePattern(
+                FormatStyle.FULL,
+                null,
+                Chronology.ofLocale(locale),
+                locale,
+            )
+        DateTimeFormatter.ofPattern(pattern)
+    }
+
     Row(
         modifier = modifier,
         horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         IconButton(
             onClick = onBackClick,
@@ -108,6 +125,7 @@ private fun BottomSheetHeader(
                 contentDescription = stringResource(R.string.calendar_yesterday),
             )
         }
+        Text(text = selectedDay.format(dateFormatter))
         IconButton(
             onClick = onForwardClick,
         ) {
@@ -197,6 +215,7 @@ private fun ListBottomSheet(
 private fun DiaryCalendarBottomSheetPreviewList() {
     DreamdiaryTheme {
         DiaryCalendarBottomSheet(
+            selectedDay = LocalDate.now(),
             diariesOfDay = listOf(diaryPreview1, diaryPreview2),
             onDiaryClick = { /* no-op */ },
             onDismissRequest = { /* no-op */ },
@@ -213,6 +232,7 @@ private fun DiaryCalendarBottomSheetPreviewList() {
 private fun DiaryCalendarBottomSheetPreviewEmpty() {
     DreamdiaryTheme {
         DiaryCalendarBottomSheet(
+            selectedDay = LocalDate.now(),
             diariesOfDay = emptyList(),
             onDiaryClick = { /* no-op */ },
             onDismissRequest = { /* no-op */ },
