@@ -37,6 +37,8 @@ import androidx.compose.ui.unit.dp
 import com.boostcamp.dreamteam.dreamdiary.designsystem.theme.DreamdiaryTheme
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.R
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.LabelUi
+import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.filteredLabelsPreview
+import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.selectedLabelsPreview
 import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalTime
@@ -290,15 +292,8 @@ private fun DiaryWriteScreenHeaderPreview() {
         DiaryWriteScreenHeader(
             labelFilter = "",
             onLabelFilterChange = { },
-            filteredLabels = listOf(
-                LabelUi("악몽"),
-                LabelUi("개꿈"),
-                LabelUi("귀신"),
-            ),
-            selectedLabels = setOf(
-                LabelUi("악몽"),
-                LabelUi("공룡"),
-            ),
+            filteredLabels = filteredLabelsPreview,
+            selectedLabels = selectedLabelsPreview,
             sleepStartAt = ZonedDateTime.now(),
             sleepEndAt = ZonedDateTime.now(),
             onSleepStartAtChange = { },

@@ -29,6 +29,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.boostcamp.dreamteam.dreamdiary.designsystem.theme.DreamdiaryTheme
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.R
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.LabelUi
+import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.filteredLabelsPreview
+import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.selectedLabelsPreview
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.write.component.DiaryWriteScreenBody
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.write.component.DiaryWriteScreenHeader
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.write.model.DiaryWriteEvent
@@ -193,15 +195,8 @@ private fun PreviewDiaryListScreen() {
             title = "",
             content = "",
             labelFilter = "",
-            filteredLabels = listOf(
-                LabelUi("악몽"),
-                LabelUi("개꿈"),
-                LabelUi("귀신"),
-            ),
-            selectedLabels = setOf(
-                LabelUi("악몽"),
-                LabelUi("공룡"),
-            ),
+            filteredLabels = filteredLabelsPreview,
+            selectedLabels = selectedLabelsPreview,
             onTitleChange = {},
             onContentChange = {},
             onCheckChange = {},
