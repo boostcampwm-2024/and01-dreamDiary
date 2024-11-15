@@ -14,8 +14,6 @@ internal fun Project.configureKotlinAndroid(
     commonExtension.apply {
         compileSdk = 35
 
-        defaultConfig.minSdk = 24
-
         compileOptions {
             isCoreLibraryDesugaringEnabled = true
             sourceCompatibility = JavaVersion.VERSION_11
@@ -30,6 +28,12 @@ internal fun Project.configureKotlinAndroid(
     }
 }
 
+/*
+kotlinOptions {
+    jvmTarget = "11"
+}
+이걸 대신 함
+ */
 private fun Project.configureKotlin() {
     tasks.withType<KotlinCompile>().configureEach {
         compilerOptions {
