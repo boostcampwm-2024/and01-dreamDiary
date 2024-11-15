@@ -30,4 +30,6 @@ interface DreamDiaryRepository {
         start: Instant,
         end: Instant,
     ): Flow<List<Diary>>
+
+    suspend fun getDreamDiary(id: String): Diary
 }
