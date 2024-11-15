@@ -13,7 +13,7 @@ data class DreamDiaryWithLabels(
             value = DreamDiaryLabelEntity::class,
             parentColumn = "diaryId",
             entityColumn = "labelId",
-        )
+        ),
     )
-    val labels: List<LabelEntity>
+    val labels: List<LabelEntity>,
 )

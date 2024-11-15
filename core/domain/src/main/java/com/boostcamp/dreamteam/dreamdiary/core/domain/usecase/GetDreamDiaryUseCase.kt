@@ -5,7 +5,7 @@ import com.boostcamp.dreamteam.dreamdiary.core.model.Diary
 import javax.inject.Inject
 
 class GetDreamDiaryUseCase @Inject constructor(
-    private val dreamDiaryRepository: DreamDiaryRepository
+    private val dreamDiaryRepository: DreamDiaryRepository,
 ) {
     suspend operator fun invoke(id: String): Diary {
         return dreamDiaryRepository.getDreamDiary(id)
