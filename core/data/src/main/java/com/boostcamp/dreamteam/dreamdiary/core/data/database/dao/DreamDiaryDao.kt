@@ -8,6 +8,7 @@ import androidx.room.Query
 import androidx.room.Transaction
 import com.boostcamp.dreamteam.dreamdiary.core.data.database.model.DreamDiaryEntity
 import com.boostcamp.dreamteam.dreamdiary.core.data.database.model.DreamDiaryLabelEntity
+import com.boostcamp.dreamteam.dreamdiary.core.data.database.model.DreamDiaryWithLabels
 import com.boostcamp.dreamteam.dreamdiary.core.data.database.model.LabelEntity
 import kotlinx.coroutines.flow.Flow
 import java.time.Instant
@@ -70,4 +71,8 @@ interface DreamDiaryDao {
         start: Instant,
         end: Instant,
     ): Flow<List<DreamDiaryEntity>>
+
+    @Transaction
+    @Query("select * from diary where id = :id")
+    suspend fun getDreamDiary(id: String): DreamDiaryWithLabels
 }
