@@ -66,6 +66,7 @@ dependencies {
 
     implementation(projects.feature.diary)
     implementation(projects.feature.auth)
+    implementation(projects.feature.setting)
     implementation(projects.core.designsystem)
 
     // Timber

@@ -35,11 +35,40 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.boostcamp.dreamteam.dreamdiary.designsystem.theme.DreamdiaryTheme
+import com.boostcamp.dreamteam.dreamdiary.ui.HomeBottomNavItem
+import com.boostcamp.dreamteam.dreamdiary.ui.HomeBottomNavigation
+import com.boostcamp.dreamteam.dreamdiary.ui.NavigationItem
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-internal fun SettingScreen(modifier: Modifier = Modifier) {
+internal fun SettingScreen(
+    modifier: Modifier = Modifier,
+    onNavigateToWriteScreen: () -> Unit,
+    onNavigateToCommunity: () -> Unit,
+) {
     val rememberScrollState = rememberScrollState()
+
+    val navigationItems = listOf(
+        NavigationItem(
+            icon = HomeBottomNavItem.MyDream.icon,
+            labelRes = HomeBottomNavItem.MyDream.label,
+            isSelected = true,
+            onClick = onNavigateToWriteScreen,
+        ),
+        NavigationItem(
+            icon = HomeBottomNavItem.Community.icon,
+            labelRes = HomeBottomNavItem.Community.label,
+            isSelected = false,
+            onClick = onNavigateToCommunity,
+        ),
+        NavigationItem(
+            icon = HomeBottomNavItem.Setting.icon,
+            labelRes = HomeBottomNavItem.Setting.label,
+            isSelected = false,
+            onClick = {},
+        ),
+    )
+
     Scaffold(
         modifier = modifier,
         topBar = {
@@ -48,6 +77,9 @@ internal fun SettingScreen(modifier: Modifier = Modifier) {
                     Text(text = stringResource(R.string.setting_title))
                 },
             )
+        },
+        bottomBar = {
+            HomeBottomNavigation(items = navigationItems)
         },
     ) { innerPadding ->
         Column(
@@ -162,6 +194,9 @@ private fun SettingOption(
 @Composable
 private fun SettingScreenPreview() {
     DreamdiaryTheme {
-        SettingScreen()
+        SettingScreen(
+            onNavigateToWriteScreen = {},
+            onNavigateToCommunity = {},
+        )
     }
 }
