@@ -52,7 +52,7 @@ internal fun SettingScreen(
         NavigationItem(
             icon = HomeBottomNavItem.MyDream.icon,
             labelRes = HomeBottomNavItem.MyDream.label,
-            isSelected = true,
+            isSelected = false,
             onClick = onNavigateToWriteScreen,
         ),
         NavigationItem(
@@ -64,7 +64,7 @@ internal fun SettingScreen(
         NavigationItem(
             icon = HomeBottomNavItem.Setting.icon,
             labelRes = HomeBottomNavItem.Setting.label,
-            isSelected = false,
+            isSelected = true,
             onClick = {},
         ),
     )
