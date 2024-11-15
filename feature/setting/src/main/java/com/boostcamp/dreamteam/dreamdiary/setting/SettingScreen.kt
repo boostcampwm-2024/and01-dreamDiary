@@ -42,9 +42,9 @@ import com.boostcamp.dreamteam.dreamdiary.ui.NavigationItem
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun SettingScreen(
-    modifier: Modifier = Modifier,
     onNavigateToWriteScreen: () -> Unit,
     onNavigateToCommunity: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     val rememberScrollState = rememberScrollState()
 
