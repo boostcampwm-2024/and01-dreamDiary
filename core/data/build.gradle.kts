@@ -40,9 +40,12 @@ dependencies {
     implementation(libs.androidx.paging.runtime)
 
     // firebase
-    implementation(libs.firebase.firestore)
-    implementation(libs.googleid)
+    implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.auth.ktx)
+    implementation(libs.firebase.firestore)
+
+    // google
+    implementation(libs.googleid)
     implementation(libs.androidx.credentials)
     implementation(libs.androidx.credentials.play.services.auth)
 }
