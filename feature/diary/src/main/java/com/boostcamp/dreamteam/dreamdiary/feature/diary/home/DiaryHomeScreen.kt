@@ -62,7 +62,6 @@ fun DiaryHomeScreen(
         onNavigateToCommunity = onNavigateToCommunity,
         onNavigateToSetting = onNavigateToSetting,
     )
-
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
