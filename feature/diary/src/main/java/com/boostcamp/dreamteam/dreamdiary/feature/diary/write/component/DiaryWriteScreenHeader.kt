@@ -66,7 +66,7 @@ internal fun DiaryWriteScreenHeader(
     modifier: Modifier = Modifier,
     readOnly: Boolean = false,
 ) {
-    var isLabelSelectionDialogOpen by remember { mutableStateOf(false) }
+    var isLabelSelectionDialogOpen by rememberSaveable { mutableStateOf(false) }
 
     Column(modifier = modifier) {
         WriteDateInfo(
