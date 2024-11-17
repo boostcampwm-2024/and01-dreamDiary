@@ -19,7 +19,7 @@ fun NavGraphBuilder.settingScreen(
 ) {
     composable<SettingRoute> {
         SettingScreen(
-            onNavigateToWriteScreen = onHomeClick,
+            onNavigateToDiary = onHomeClick,
             onNavigateToCommunity = onCommunityClick,
         )
     }
