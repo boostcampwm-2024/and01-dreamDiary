@@ -30,9 +30,6 @@ dependencies {
     implementation(libs.androidx.appcompat)
     androidTestImplementation(libs.androidx.espresso.core)
 
-    // Coil
-    implementation(libs.bundles.coil)
-
     // Hilt
     ksp(libs.hilt.compiler)
     implementation(libs.hilt.android)
