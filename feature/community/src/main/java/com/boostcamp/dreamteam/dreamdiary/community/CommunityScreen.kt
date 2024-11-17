@@ -20,7 +20,6 @@ fun CommunityScreen(
     onNavigateToSetting: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-
     val navigationItems = listOf(
         NavigationItem(
             icon = HomeBottomNavItem.MyDream.icon,
@@ -54,7 +53,7 @@ fun CommunityScreen(
         },
     ) { innerPadding ->
         Column(
-            modifier = Modifier.padding(innerPadding)
+            modifier = Modifier.padding(innerPadding),
         ) {
             Text(text = "Community Screen")
         }

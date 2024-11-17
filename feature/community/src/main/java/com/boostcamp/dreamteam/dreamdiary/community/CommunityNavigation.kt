@@ -7,7 +7,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import kotlinx.serialization.Serializable
 
-
 @Serializable
 data object CommunityGraph {
     @Serializable
@@ -40,5 +39,4 @@ fun NavGraphBuilder.communityGraph(
 //            CommunityDetailScreen(id = id)
 //        }
     }
-
 }

@@ -104,7 +104,7 @@ fun DreamDiaryNavHost(
                         popUpTo(DiaryHomeRoute) {
                             saveState = true
                         }
-                    }
+                    },
                 )
             },
             onCommunityClick = {
