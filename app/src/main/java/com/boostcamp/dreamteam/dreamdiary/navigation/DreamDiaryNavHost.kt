@@ -8,13 +8,9 @@ import com.boostcamp.dreamteam.dreamdiary.community.communityGraph
 import com.boostcamp.dreamteam.dreamdiary.community.navigateToCommunityScreen
 import com.boostcamp.dreamteam.dreamdiary.feature.auth.SignInRoute
 import com.boostcamp.dreamteam.dreamdiary.feature.auth.signInScreen
-import com.boostcamp.dreamteam.dreamdiary.feature.diary.detail.DiaryDetailRoute
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.detail.diaryDetailScreen
-import com.boostcamp.dreamteam.dreamdiary.feature.diary.detail.navigateToDiaryDetailScreen
-import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.diaryHomeScreen
+import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.diaryHomeGraph
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.navigateToDiaryHomeScreen
-import com.boostcamp.dreamteam.dreamdiary.feature.diary.write.diaryWriteScreen
-import com.boostcamp.dreamteam.dreamdiary.feature.diary.write.navigateToDiaryWriteScreen
 import com.boostcamp.dreamteam.dreamdiary.setting.navigateToSettingScreen
 import com.boostcamp.dreamteam.dreamdiary.setting.settingGraph
 import com.boostcamp.dreamteam.dreamdiary.ui.DreamDiaryAppState
@@ -34,6 +30,9 @@ fun DreamDiaryNavHost(
             onSignInSuccess = {
                 navController.navigateToDiaryHomeScreen(
                     navOptions = navOptions {
+                        popUpTo(SignInRoute) {
+                            inclusive = true
+                        }
                         launchSingleTop = true
                     },
                 )
@@ -41,16 +40,16 @@ fun DreamDiaryNavHost(
             onPassClick = {
                 navController.navigateToDiaryHomeScreen(
                     navOptions = navOptions {
+                        popUpTo(SignInRoute) {
+                            inclusive = true
+                        }
                         launchSingleTop = true
                     },
                 )
             },
         )
 
-        diaryHomeScreen(
-            onFabClick = {
-                navController.navigateToDiaryWriteScreen()
-            },
+        diaryHomeGraph(
             onCommunityClick = {
                 navController.navigateToCommunityScreen(
                     navOptions = navOptions {
@@ -61,18 +60,7 @@ fun DreamDiaryNavHost(
             onSettingClick = {
                 navController.navigateToSettingScreen()
             },
-            onDiaryItemClick = { diaryUI ->
-                navController.navigateToDiaryDetailScreen(
-                    route = DiaryDetailRoute(diaryUI.id),
-                    navOptions = navOptions {
-                        launchSingleTop = true
-                    },
-                )
-            },
-        )
-
-        diaryWriteScreen(
-            onBackClick = navController::navigateUp,
+            navController = navController,
         )
 
         diaryDetailScreen(

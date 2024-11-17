@@ -4,32 +4,54 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
-import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.DiaryUi
+import androidx.navigation.navigation
+import com.boostcamp.dreamteam.dreamdiary.feature.diary.detail.DiaryDetailScreen
+import com.boostcamp.dreamteam.dreamdiary.feature.diary.write.DiaryWriteScreen
 import kotlinx.serialization.Serializable
 
 @Serializable
-data object DiaryHomeRoute
+data object DiaryHomeGraph {
+    @Serializable
+    data object DiaryHomeRoute
 
-fun NavController.navigateToDiaryHomeScreen(navOptions: NavOptions) = navigate(route = DiaryHomeRoute, navOptions)
+    @Serializable
+    data object DiaryWriteRoute
 
-fun NavGraphBuilder.diaryHomeScreen(
-    onFabClick: () -> Unit,
+    @Serializable
+    data class DiaryDetailRoute(val id: Long)
+}
+
+fun NavController.navigateToDiaryHomeScreen(navOptions: NavOptions) = navigate(route = DiaryHomeGraph, navOptions)
+
+fun NavGraphBuilder.diaryHomeGraph(
     onCommunityClick: () -> Unit,
     onSettingClick: () -> Unit,
-    onDiaryItemClick: (DiaryUi) -> Unit,
+    navController: NavController,
 ) {
-    composable<DiaryHomeRoute> {
-        DiaryHomeScreen(
-            onDiaryClick = onDiaryItemClick,
-            onNavigateToWriteScreen = {
-                onFabClick()
-            },
-            onNavigateToCommunity = {
-                onCommunityClick()
-            },
-            onNavigateToSetting = {
-                onSettingClick()
-            },
-        )
+    navigation<DiaryHomeGraph>(
+        startDestination = DiaryHomeGraph.DiaryHomeRoute,
+    ) {
+        composable<DiaryHomeGraph.DiaryHomeRoute> {
+            DiaryHomeScreen(
+                onDiaryClick = {},
+                onNavigateToWriteScreen = { navController.navigate(DiaryHomeGraph.DiaryWriteRoute) },
+                onNavigateToCommunity = onCommunityClick,
+                onNavigateToSetting = onSettingClick,
+            )
+        }
+
+        composable<DiaryHomeGraph.DiaryWriteRoute> {
+            DiaryWriteScreen(
+                onBackClick = navController::navigateUp,
+            )
+        }
+
+        composable<DiaryHomeGraph.DiaryDetailRoute> {
+            // todo : 무엇을 넘겨야하는 지 알기
+            DiaryDetailScreen(
+                navController::navigateUp,
+            )
+        }
+
     }
 }
