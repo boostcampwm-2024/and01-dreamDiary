@@ -11,7 +11,6 @@ import com.boostcamp.dreamteam.dreamdiary.feature.auth.signInScreen
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.detail.DiaryDetailRoute
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.detail.diaryDetailScreen
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.detail.navigateToDiaryDetailScreen
-import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.DiaryHomeRoute
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.diaryHomeScreen
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.navigateToDiaryHomeScreen
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.write.diaryWriteScreen
@@ -101,10 +100,13 @@ fun DreamDiaryNavHost(
             onDiaryClick = {
                 navController.navigateToDiaryHomeScreen(
                     navOptions = navOptions {
-                        popUpTo(DiaryHomeRoute) {
-                            saveState = true
-                        }
+                        launchSingleTop = true
                     },
+//                    navOptions = navOptions {
+//                        popUpTo(DiaryHomeRoute) {
+//                            saveState = true
+//                        }
+//                    },
                 )
             },
             onCommunityClick = {
