@@ -9,7 +9,9 @@ import androidx.room.Transaction
 import com.boostcamp.dreamteam.dreamdiary.core.data.database.model.DreamDiaryEntity
 import com.boostcamp.dreamteam.dreamdiary.core.data.database.model.DreamDiaryLabelEntity
 import com.boostcamp.dreamteam.dreamdiary.core.data.database.model.DreamDiaryWithLabels
+import com.boostcamp.dreamteam.dreamdiary.core.data.database.model.ImageEntity
 import com.boostcamp.dreamteam.dreamdiary.core.data.database.model.LabelEntity
+import com.boostcamp.dreamteam.dreamdiary.core.data.database.model.TextEntity
 import kotlinx.coroutines.flow.Flow
 import java.time.Instant
 import java.util.UUID
@@ -41,6 +43,18 @@ interface DreamDiaryDao {
         )
         setLabelsToDreamDiary(dreamDiaryId, labels)
     }
+
+    @Insert
+    suspend fun insertText(textEntity: TextEntity)
+
+    @Query("select * from text where :id = id")
+    suspend fun getText(id: String): TextEntity?
+
+    @Insert
+    suspend fun insertImage(imageEntity: ImageEntity)
+
+    @Query("select * from image where :id = id")
+    suspend fun getImage(id: String): ImageEntity?
 
     @Insert
     suspend fun insertLabel(labelEntity: LabelEntity)
