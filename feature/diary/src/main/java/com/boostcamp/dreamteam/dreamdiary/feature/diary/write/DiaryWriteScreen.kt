@@ -8,7 +8,6 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -70,21 +69,12 @@ fun DiaryWriteScreen(
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    val title = uiState.title
-    val content = uiState.content
-    val labelFilter = uiState.labelFilter
-    val filteredLabels = uiState.filteredLabels
-    val selectedLabels = uiState.selectedLabels
-    val sleepStartAt = uiState.sleepStartAt
-    val sleepEndAt = uiState.sleepEndAt
-    val diaryContents = uiState.diaryContents
-
     val context = LocalContext.current
-
     LaunchedEffect(Unit) {
         viewModel.event.collectLatest {
             when (it) {
                 is DiaryWriteEvent.DiaryAddSuccess -> onBackClick()
+
                 is DiaryWriteEvent.LabelAddSuccess -> {
                     Toast.makeText(context, "라벨 추가 성공", Toast.LENGTH_SHORT).show()
                 }
@@ -108,11 +98,81 @@ fun DiaryWriteScreen(
         }
     }
 
+    DiaryWriteScreenContent(
+        onBackClick = onBackClick,
+        viewModel = viewModel,
+        title = uiState.title,
+        content = uiState.content,
+        labelFilter = uiState.labelFilter,
+        filteredLabels = uiState.filteredLabels,
+        selectedLabels = uiState.selectedLabels,
+        sleepStartAt = uiState.sleepStartAt,
+        sleepEndAt = uiState.sleepEndAt,
+        diaryContents = uiState.diaryContents,
+        modifier = Modifier.imePadding(),
+    )
+}
+
+@Composable
+private fun DiaryWriteScreenContent(
+    onBackClick: () -> Unit,
+    viewModel: DiaryWriteViewModel,
+    title: String,
+    content: String,
+    labelFilter: String,
+    filteredLabels: List<LabelUi>,
+    selectedLabels: Set<LabelUi>,
+    sleepStartAt: ZonedDateTime,
+    sleepEndAt: ZonedDateTime,
+    diaryContents: List<DiaryContentUi>,
+    modifier: Modifier = Modifier,
+) {
+    // 현재는 사실상 Text만 포커스 됨
+    var currentFocusContent by remember { mutableIntStateOf(0) }
+    var currentTextCursorPosition by remember { mutableIntStateOf(0) }
+
+    val coroutineScope = rememberCoroutineScope()
+
+    val context = LocalContext.current
+    val singleImagePicker = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.PickVisualMedia(),
+        onResult = { uri ->
+            uri?.let {
+                context.contentResolver.takePersistableUriPermission(uri, Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                coroutineScope.launch(Dispatchers.IO) {
+                    val inputStream = context.contentResolver.openInputStream(uri)
+                    val outputFile = File(context.filesDir, UUID.randomUUID().toString())
+                    val outputStream = FileOutputStream(outputFile)
+
+                    inputStream?.use { input ->
+                        outputStream.use { output ->
+                            input.copyTo(output)
+                        }
+                    }
+                    yield()
+                    launch(Dispatchers.Main) {
+                        viewModel.addContentImage(
+                            contentIndex = currentFocusContent,
+                            textPosition = currentTextCursorPosition,
+                            imagePath = outputFile.path,
+                        )
+                    }
+                }
+            }
+        },
+    )
+
     Scaffold(
+        modifier = modifier,
         topBar = {
             DiaryWriteTopBar(
                 onBackClick = onBackClick,
                 onClickSave = viewModel::addDreamDiary,
+            )
+        },
+        bottomBar = {
+            DiaryWriteBottomBar(
+                singleImagePicker = singleImagePicker,
             )
         },
     ) { innerPadding ->
@@ -132,13 +192,13 @@ fun DiaryWriteScreen(
             sleepEndAt = sleepEndAt,
             onSleepEndAtChange = viewModel::setSleepEndAt,
             modifier = Modifier
+                .fillMaxSize()
                 .padding(innerPadding)
-                .consumeWindowInsets(innerPadding)
-                .imePadding(),
+                .consumeWindowInsets(innerPadding),
             diaryContents = diaryContents,
             onContentTextChange = viewModel::setContentText,
-            onContentImageAdd = viewModel::addContentImage,
-            onContentImageDelete = { },
+            onCurrentFocusContentChange = { currentFocusContent = it },
+            onContentTextPositionChange = { currentTextCursorPosition = it },
         )
     }
 }
@@ -161,87 +221,44 @@ private fun DiaryWriteScreen(
     onSleepEndAtChange: (ZonedDateTime) -> Unit,
     diaryContents: List<DiaryContentUi>,
     onContentTextChange: (contentIndex: Int, String) -> Unit,
-    onContentImageAdd: (contentIndex: Int, Int, String) -> Unit,
-    onContentImageDelete: (DiaryContentUi) -> Unit,
-    modifier: Modifier,
+    onCurrentFocusContentChange: (Int) -> Unit,
+    onContentTextPositionChange: (Int) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     val scrollState = rememberScrollState()
 
-    val context = LocalContext.current
-
-    // 현재는 사실상 Text만 포커스 됨
-    var currentFocusContent by remember { mutableIntStateOf(0) }
-    var currentTextCursorPosition by remember { mutableIntStateOf(0) }
-
-    val coroutineScope = rememberCoroutineScope()
-
-    val singleImagePicker = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.PickVisualMedia(),
-        onResult = { uri ->
-            if (uri == null) return@rememberLauncherForActivityResult
-            context.contentResolver.takePersistableUriPermission(uri, Intent.FLAG_GRANT_READ_URI_PERMISSION)
-            coroutineScope.launch(Dispatchers.IO) {
-                val inputStream = context.contentResolver.openInputStream(uri)
-                val outputFile = File(context.filesDir, UUID.randomUUID().toString())
-                val outputStream = FileOutputStream(outputFile)
-
-                inputStream?.use { input ->
-                    outputStream.use { output ->
-                        input.copyTo(output)
-                    }
-                }
-                yield()
-                launch(Dispatchers.Main) {
-                    onContentImageAdd(currentFocusContent, currentTextCursorPosition, outputFile.path)
-                }
-            }
-        }
-    )
-
-    Column(
-        modifier = modifier
-            .fillMaxSize(),
-        verticalArrangement = Arrangement.SpaceBetween,
-    ) {
-        Column(
+    Column(modifier = modifier.verticalScroll(scrollState)) {
+        DiaryWriteScreenHeader(
+            labelFilter = labelFilter,
+            onLabelFilterChange = onLabelFilterChange,
+            filteredLabels = filteredLabels,
+            selectedLabels = selectedLabels,
+            sleepStartAt = sleepStartAt,
+            sleepEndAt = sleepEndAt,
+            onSleepStartAtChange = onSleepStartAtChange,
+            onSleepEndAtChange = onSleepEndAtChange,
+            onCheckChange = onCheckChange,
+            onClickLabelSave = onClickLabelSave,
             modifier = Modifier
-                .verticalScroll(scrollState),
-        ) {
-            DiaryWriteScreenHeader(
-                labelFilter = labelFilter,
-                onLabelFilterChange = onLabelFilterChange,
-                filteredLabels = filteredLabels,
-                selectedLabels = selectedLabels,
-                sleepStartAt = sleepStartAt,
-                sleepEndAt = sleepEndAt,
-                onSleepStartAtChange = onSleepStartAtChange,
-                onSleepEndAtChange = onSleepEndAtChange,
-                onCheckChange = onCheckChange,
-                onClickLabelSave = onClickLabelSave,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
-            )
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp),
+        )
 
-            Spacer(modifier = Modifier.height(24.dp))
+        Spacer(modifier = Modifier.height(24.dp))
 
-            DiaryWriteScreenBody(
-                title = title,
-                onTitleChange = onTitleChange,
-                content = content,
-                onContentChange = onContentChange,
-                diaryContents = diaryContents,
-                onContentTextChange = onContentTextChange,
-                onContentFocusChange = { currentFocusContent = it },
-                onContentTextPositionChange = { currentTextCursorPosition = it },
-                onContentImageDelete = { },
-                modifier = Modifier
-                    .padding(horizontal = 16.dp),
-            )
-        }
-
-        DiaryWriteBottomBar(
-            singleImagePicker = singleImagePicker,
+        DiaryWriteScreenBody(
+            title = title,
+            onTitleChange = onTitleChange,
+            content = content,
+            onContentChange = onContentChange,
+            diaryContents = diaryContents,
+            onContentTextChange = onContentTextChange,
+            onContentFocusChange = { onCurrentFocusContentChange(it) },
+            onContentTextPositionChange = { onContentTextPositionChange(it) },
+            onContentImageDelete = { /* TODO */ },
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 16.dp),
         )
     }
 }
@@ -276,17 +293,17 @@ private fun DiaryWriteTopBar(
 @Composable
 private fun DiaryWriteBottomBar(
     singleImagePicker: ManagedActivityResultLauncher<PickVisualMediaRequest, Uri?>,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .background(MaterialTheme.colorScheme.surfaceVariant)
+            .background(MaterialTheme.colorScheme.surfaceVariant),
     ) {
         IconButton(
             onClick = {
                 singleImagePicker.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
-            }
+            },
         ) {
             Icon(
                 imageVector = Icons.Outlined.AddPhotoAlternate,
@@ -317,9 +334,9 @@ private fun PreviewDiaryListScreen() {
             onSleepEndAtChange = {},
             diaryContents = emptyList(),
             onContentTextChange = { _, _ -> },
-            onContentImageAdd = { _, _, _ -> },
-            onContentImageDelete = { },
-            modifier = Modifier,
+            onContentTextPositionChange = { },
+            onCurrentFocusContentChange = { },
+            modifier = Modifier.fillMaxSize(),
         )
     }
 }
