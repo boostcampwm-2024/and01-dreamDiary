@@ -3,10 +3,12 @@ package com.boostcamp.dreamteam.dreamdiary.feature.diary.write
 import android.database.sqlite.SQLiteConstraintException
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.boostcamp.dreamteam.dreamdiary.core.domain.usecase.AddDreamDiaryUseCase
+import com.boostcamp.dreamteam.dreamdiary.core.domain.usecase.AddDreamDiaryWithContentsUseCase
 import com.boostcamp.dreamteam.dreamdiary.core.domain.usecase.AddLabelUseCase
 import com.boostcamp.dreamteam.dreamdiary.core.domain.usecase.GetLabelsUseCase
+import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.DiaryContentUi
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.LabelUi
+import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.toDomain
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.toLabelUi
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.write.model.DiaryWriteEvent
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.write.model.DiaryWriteUiState
@@ -29,7 +31,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class DiaryWriteViewModel @Inject constructor(
-    private val addDreamDiaryUseCase: AddDreamDiaryUseCase,
+    private val addDreamDiaryUseCase: AddDreamDiaryWithContentsUseCase,
     private val addLabelUseCase: AddLabelUseCase,
     private val getLabelsUseCase: GetLabelsUseCase,
 ) : ViewModel() {
@@ -75,10 +77,11 @@ class DiaryWriteViewModel @Inject constructor(
         val labels = _uiState.value.selectedLabels.map { it.name }
         val sleepStartAt = _uiState.value.sleepStartAt
         val sleepEndAt = _uiState.value.sleepEndAt
+        val diaryContents = _uiState.value.diaryContents
         viewModelScope.launch {
             addDreamDiaryUseCase(
                 title = title,
-                body = content,
+                diaryContents = diaryContents.map { it.toDomain() },
                 labels = labels,
                 sleepStartAt = sleepStartAt,
                 sleepEndAt = sleepEndAt,
@@ -116,6 +119,40 @@ class DiaryWriteViewModel @Inject constructor(
         _uiState.value = _uiState.value.copy(
             sleepEndAt = sleepEndAt,
         )
+    }
+
+    fun setContentText(contentIndex: Int, text: String) {
+        _uiState.update {
+            it.copy(
+                diaryContents = it.diaryContents.toMutableList().apply { this[contentIndex] = DiaryContentUi.Text(text) }
+            )
+        }
+    }
+
+    fun addContentImage(contentIndex: Int, textPosition: Int, imagePath: String) {
+        _uiState.update {
+            val diaryContents = it.diaryContents.toMutableList()
+
+            val saveContentIndex = minOf(contentIndex, diaryContents.size - 1)
+            val currentContent = diaryContents[saveContentIndex]
+            val newContents = mutableListOf<DiaryContentUi>()
+            if (currentContent is DiaryContentUi.Text) {
+                val endIndex = minOf(textPosition, currentContent.text.length)
+                val prevText = currentContent.text.substring(0, endIndex)
+                if (prevText.isNotEmpty())
+                    newContents.add(DiaryContentUi.Text(prevText))
+                newContents.add(DiaryContentUi.Image(imagePath))
+                newContents.add(DiaryContentUi.Text(currentContent.text.substring(endIndex)))
+                diaryContents.removeAt(saveContentIndex)
+                diaryContents.addAll(saveContentIndex, newContents)
+            } else {
+                diaryContents.add(saveContentIndex + 1, DiaryContentUi.Image(imagePath))
+            }
+
+            it.copy(
+                diaryContents = diaryContents
+            )
+        }
     }
 
     private fun collectLabels() {
