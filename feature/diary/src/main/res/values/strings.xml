@@ -31,6 +31,13 @@
     <string name="home_tab_dream">꿈</string>
     <string name="home_tab_calendar">달력</string>
     <string name="home_diary_write">일기 작성</string>
+    <string name="home_list_card_create_date">작성 일</string>
+    <string name="home_list_card_create_time">작성 시간</string>
+    <string name="home_list_card_label">라벨</string>
+    <string name="home_list_card_label_empty">없음</string>
+    <string name="home_list_card_menu">메뉴</string>
+    <string name="home_list_card_menu_delete">삭제</string>
+    <string name="home_list_card_thumbnail">%1$s 이미지</string>
     <string name="label_search">검색</string>
     <string name="label_search_or_add">검색 및 추가</string>
     <string name="detail_back">뒤로가기</string>

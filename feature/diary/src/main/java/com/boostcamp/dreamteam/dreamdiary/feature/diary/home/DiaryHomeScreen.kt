@@ -56,11 +56,12 @@ fun DiaryHomeScreen(
     DiaryHomeScreenContent(
         diaries = diaries,
         calendarUIState = calendarUIState,
-        onDiaryClick = onDiaryClick,
         onCalendarYearMothChange = viewModel::setCalendarYearMonth,
         onNavigateToWriteScreen = onNavigateToWriteScreen,
         onNavigateToCommunity = onNavigateToCommunity,
         onNavigateToSetting = onNavigateToSetting,
+        onDeleteDiary = { /* TODO: diary 삭제 기능 구현 */ },
+        onDiaryClick = onDiaryClick,
     )
 }
 
@@ -73,8 +74,9 @@ private fun DiaryHomeScreenContent(
     onNavigateToWriteScreen: () -> Unit,
     onNavigateToCommunity: () -> Unit,
     onNavigateToSetting: () -> Unit,
+    onDiaryClick: (DiaryUi) -> Unit,
+    onDeleteDiary: (DiaryUi) -> Unit,
     modifier: Modifier = Modifier,
-    onDiaryClick: (DiaryUi) -> Unit = {},
     onSearchClick: () -> Unit = {},
     onNotificationClick: () -> Unit = {},
 ) {
@@ -103,6 +105,7 @@ private fun DiaryHomeScreenContent(
     )
 
     Scaffold(
+        modifier = modifier,
         topBar = {
             DiaryHomeScreenTopAppBar(
                 onNotificationClick = { /* 알림 클릭 시 동작 */ },
@@ -152,6 +155,7 @@ private fun DiaryHomeScreenContent(
                 0 -> DiaryListTab(
                     diaries = diaries,
                     onDiaryClick = onDiaryClick,
+                    onDeleteDiary = onDeleteDiary,
                     modifier = tabModifier,
                 )
 
@@ -209,6 +213,7 @@ private fun DiaryHomeScreenContentPreview() {
             onNavigateToCommunity = {},
             onNavigateToSetting = {},
             onDiaryClick = {},
+            onDeleteDiary = {},
             onSearchClick = {},
             onNotificationClick = {},
         )
