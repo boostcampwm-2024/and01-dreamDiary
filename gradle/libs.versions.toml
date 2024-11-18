@@ -29,6 +29,7 @@ timber = "5.0.1"
 googleid = "1.1.1"
 firebase = "33.5.1"
 browser = "1.8.0"
+glance = "1.1.1"
 
 [libraries]
 androidx-browser = { group = "androidx.browser", name = "browser", version.ref = "browser" }
@@ -74,6 +75,8 @@ googleid = { group = "com.google.android.libraries.identity.googleid", name = "g
 androidx-credentials = { module = "androidx.credentials:credentials", version.ref = "credentials" }
 androidx-credentials-play-services-auth = { module = "androidx.credentials:credentials-play-services-auth", version.ref = "credentials" }
 timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "timber" }
+androidx-glance-appwidget = { group = "androidx.glance", name = "glance-appwidget", version.ref = "glance" }
+androidx-glance-material3 = { group = "androidx.glance", name = "glance-material3", version.ref = "glance" }
 
 # build-logic의 dependencies
 android-gradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "agp" }
@@ -81,6 +84,7 @@ kotlin-gradlePlugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-pl
 
 [bundles]
 coil = ["coil-compose", "coil-network-okhttp"]
+glance = ["androidx-glance-appwidget", "androidx-glance-material3"]
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
