@@ -58,6 +58,8 @@ fun SignInScreen(
     val context = LocalContext.current
     val google = Google(context.applicationContext)
     val scope = rememberCoroutineScope()
+    Timber.d("SignInScreen!!!!")
+
     LaunchedEffect(Unit) {
         viewModel.event.collectLatest {
             when (it) {
