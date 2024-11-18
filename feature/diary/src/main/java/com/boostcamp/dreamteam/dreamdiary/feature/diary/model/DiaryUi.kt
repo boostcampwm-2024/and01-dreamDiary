@@ -22,6 +22,7 @@ data class DiaryUi(
     val sleepEndAt: DisplayableDateTime,
     val sortKey: DisplayableDateTime,
     val diaryContents: List<DiaryContentUi>,
+    val textContent: String,
 )
 
 internal fun Diary.toDiaryUi(): DiaryUi =
@@ -38,7 +39,8 @@ internal fun Diary.toDiaryUi(): DiaryUi =
             sleepEndAt = sleepEndAt.toDisplayableDateTime(),
             // TODO 어떤 값으로 정렬할 것인지 선택이 가능
             sortKey = sleepEndAt.toDisplayableDateTime(),
-            diaryContents = diaryContents.map { it.toUiState() }
+            diaryContents = diaryContents.map { it.toUiState() },
+            textContent = diaryContents.filterIsInstance<DiaryContent.Text>().joinToString("\n") { it.text },
         )
     }
 
@@ -98,6 +100,7 @@ internal val diariesPreview = run {
             sleepEndAt = displayableDateTime,
             sortKey = displayableDateTime,
             diaryContents = listOf(),
+            textContent = "오늘은 날씨가 좋았다.",
         )
     }
 }
