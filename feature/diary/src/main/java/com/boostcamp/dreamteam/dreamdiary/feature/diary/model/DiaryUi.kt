@@ -2,6 +2,7 @@ package com.boostcamp.dreamteam.dreamdiary.feature.diary.model
 
 import com.boostcamp.dreamteam.dreamdiary.core.model.Diary
 import com.boostcamp.dreamteam.dreamdiary.core.model.Label
+import com.boostcamp.dreamteam.dreamdiary.core.model.DiaryContent
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.vo.DisplayableDateTime
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.vo.toDisplayableDateTime
 import java.time.LocalDate
@@ -20,6 +21,7 @@ data class DiaryUi(
     val sleepStartAt: DisplayableDateTime,
     val sleepEndAt: DisplayableDateTime,
     val sortKey: DisplayableDateTime,
+    val diaryContents: List<DiaryContentUi>,
 )
 
 internal fun Diary.toDiaryUi(): DiaryUi =
@@ -36,6 +38,7 @@ internal fun Diary.toDiaryUi(): DiaryUi =
             sleepEndAt = sleepEndAt.toDisplayableDateTime(),
             // TODO 어떤 값으로 정렬할 것인지 선택이 가능
             sortKey = sleepEndAt.toDisplayableDateTime(),
+            diaryContents = diaryContents.map { it.toUiState() }
         )
     }
 
@@ -94,6 +97,22 @@ internal val diariesPreview = run {
             sleepStartAt = displayableDateTime,
             sleepEndAt = displayableDateTime,
             sortKey = displayableDateTime,
+            diaryContents = listOf(),
         )
+    }
+}
+
+fun DiaryContent.toUiState(): DiaryContentUi {
+    return when (this) {
+        is DiaryContent.Text -> {
+            DiaryContentUi.Text(
+                text = this.text
+            )
+        }
+        is DiaryContent.Image -> {
+            DiaryContentUi.Image(
+                path = this.path
+            )
+        }
     }
 }
