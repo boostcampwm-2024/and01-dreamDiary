@@ -18,11 +18,12 @@ data object SettingGraph {
 }
 
 fun NavController.navigateToSettingScreen(navOptions: NavOptions? = null) {
-    this.navigate(route = SettingGraph, navOptions)
+
+    this.navigate(route = SettingGraph, navOptions = navOptions)
 }
 
 fun NavGraphBuilder.settingGraph(
-    onDiaryHomeClick: () -> Unit,
+    onDiaryClick: () -> Unit,
     onCommunityClick: () -> Unit,
 ) {
     navigation<SettingGraph>(
@@ -30,7 +31,7 @@ fun NavGraphBuilder.settingGraph(
     ) {
         composable<SettingGraph.SettingRoute> {
             SettingScreen(
-                onNavigateToDiary = onDiaryHomeClick,
+                onNavigateToDiary = onDiaryClick,
                 onNavigateToCommunity = onCommunityClick,
             )
         }
