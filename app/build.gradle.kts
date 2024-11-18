@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.dreamdiary.android.application.compose)
     alias(libs.plugins.ksp)
@@ -6,6 +8,17 @@ plugins {
 }
 
 android {
+    signingConfigs {
+        getByName("debug") {
+            val keystoreProperties = Properties().apply {
+                val file = rootProject.file("local.properties")
+                if (file.exists()) {
+                    load(file.inputStream())
+                }
+            }
+            storeFile = file(keystoreProperties["KEYSTORE_PATH"] as String)
+        }
+    }
     namespace = "com.boostcamp.dreamteam.dreamdiary"
 
     defaultConfig {
