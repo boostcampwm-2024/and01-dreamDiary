@@ -12,8 +12,7 @@ import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.diaryGraph
 import com.boostcamp.dreamteam.dreamdiary.setting.SettingGraph
 import com.boostcamp.dreamteam.dreamdiary.setting.settingGraph
 
-// main route 값 정의
-const val MainRoute = "main_route"
+const val MAIN_ROUTE = "main_route"
 
 @Composable
 fun MainScreen() {
