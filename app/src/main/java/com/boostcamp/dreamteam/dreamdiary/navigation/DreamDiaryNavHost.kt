@@ -2,6 +2,7 @@ package com.boostcamp.dreamteam.dreamdiary.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavOptions
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.boostcamp.dreamteam.dreamdiary.MainScreen
@@ -22,20 +23,18 @@ fun DreamDiaryNavHost(
     ) {
         signInScreen(
             onSignInSuccess = {
-                navController.navigate("main_route") {
-                    popUpTo(SignInRoute) {
-                        inclusive = true
-                    }
-                    launchSingleTop = true
-                }
+                val options = NavOptions.Builder()
+                    .setPopUpTo(SignInRoute, inclusive = true)
+                    .setLaunchSingleTop(true)
+                    .build()
+                navController.navigate("main_route", options)
             },
             onPassClick = {
-                navController.navigate("main_route") {
-                    popUpTo(SignInRoute) {
-                        inclusive = true
-                    }
-                    launchSingleTop = true
-                }
+                val options = NavOptions.Builder()
+                    .setPopUpTo(SignInRoute, inclusive = true)
+                    .setLaunchSingleTop(true)
+                    .build()
+                navController.navigate("main_route", options)
             },
         )
 
