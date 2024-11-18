@@ -29,6 +29,7 @@ dependencies {
     implementation(projects.core.designsystem)
     implementation(projects.feature.auth)
     implementation(projects.feature.diary)
+    implementation(projects.feature.community)
     implementation(projects.feature.setting)
 
     implementation(libs.androidx.core.ktx)

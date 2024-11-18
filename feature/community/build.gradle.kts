@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace = "com.boostcamp.dreamteam.dreamdiary.setting"
+    namespace = "com.boostcamp.dreamteam.dreamdiary.community"
 
     defaultConfig {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -15,21 +15,25 @@ android {
     buildTypes {
         release {
             isMinifyEnabled = false
-            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro",
+            )
         }
     }
 }
 
 dependencies {
-
     implementation(projects.core.domain)
     implementation(projects.core.model)
     implementation(projects.core.ui)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
-    implementation(project(":core:data"))
     androidTestImplementation(libs.androidx.espresso.core)
+
+    // Coil
+    implementation(libs.bundles.coil)
 
     // Hilt
     ksp(libs.hilt.compiler)

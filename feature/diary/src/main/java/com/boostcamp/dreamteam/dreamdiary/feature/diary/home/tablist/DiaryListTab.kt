@@ -23,6 +23,7 @@ import kotlinx.coroutines.flow.flowOf
 internal fun DiaryListTab(
     diaries: LazyPagingItems<DiaryUi>,
     onDiaryClick: (DiaryUi) -> Unit,
+    onDeleteDiary: (DiaryUi) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     LazyColumn(
@@ -42,8 +43,9 @@ internal fun DiaryListTab(
             if (diary != null) {
                 DiaryCard(
                     diary = diary,
-                    modifier = Modifier.fillMaxWidth(),
                     onDiaryClick = { onDiaryClick(diary) },
+                    onDeleteDiary = onDeleteDiary,
+                    modifier = Modifier.fillMaxWidth(),
                 )
             }
         }
@@ -57,6 +59,7 @@ private fun DiaryListTabPreview() {
         DiaryListTab(
             diaries = pagedDiariesPreview.collectAsLazyPagingItems(),
             onDiaryClick = { },
+            onDeleteDiary = { },
         )
     }
 }
