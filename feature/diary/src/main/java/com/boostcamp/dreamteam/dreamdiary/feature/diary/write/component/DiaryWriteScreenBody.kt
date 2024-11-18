@@ -17,7 +17,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -31,8 +30,6 @@ import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.DiaryContentUi
 internal fun DiaryWriteScreenBody(
     title: String,
     onTitleChange: (String) -> Unit,
-    content: String,
-    onContentChange: (String) -> Unit,
     diaryContents: List<DiaryContentUi>,
     onContentFocusChange: (contentIndex: Int) -> Unit,
     onContentTextPositionChange: (textPosition: Int) -> Unit,
@@ -41,68 +38,94 @@ internal fun DiaryWriteScreenBody(
     modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier) {
-        BasicTextField(
-            value = title,
-            onValueChange = onTitleChange,
+        InputTitle(
+            title = title,
+            onTitleChange = onTitleChange,
             modifier = Modifier.fillMaxWidth(),
-            decorationBox = { innerTextField ->
-                if (title.isEmpty()) {
-                    Text(
-                        text = stringResource(R.string.write_text_title),
-                        style = TextStyle(color = MaterialTheme.colorScheme.secondary),
-                    )
-                }
-                innerTextField()
-            },
         )
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        Column {
-            for ((index, diaryContent) in diaryContents.withIndex()) {
-                when (diaryContent) {
-                    is DiaryContentUi.Image -> AsyncImage(
-                        model = ImageRequest.Builder(LocalContext.current)
-                            .data(diaryContent.path)
-                            .build(),
-                        contentDescription = stringResource(R.string.write_content_image),
-                        modifier = Modifier
-                            .fillMaxWidth(),
-                    )
+        InputBody(
+            diaryContents = diaryContents,
+            onContentTextPositionChange = onContentTextPositionChange,
+            onContentTextChange = onContentTextChange,
+            onContentFocusChange = onContentFocusChange,
+            onContentImageDelete = onContentImageDelete,
+        )
+    }
+}
 
-                    is DiaryContentUi.Text -> {
-                        var textFieldValueState by remember {
-                            mutableStateOf(TextFieldValue(diaryContent.text))
-                        }
+@Composable
+private fun InputTitle(
+    title: String,
+    onTitleChange: (String) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    BasicTextField(
+        value = title,
+        onValueChange = onTitleChange,
+        modifier = modifier,
+        textStyle = MaterialTheme.typography.titleLarge,
+        decorationBox = { innerTextField ->
+            if (title.isEmpty()) {
+                Text(
+                    text = stringResource(R.string.write_text_title),
+                    style = MaterialTheme.typography.titleLarge.copy(color = MaterialTheme.colorScheme.secondary),
+                )
+            }
+            innerTextField()
+        },
+    )
+}
 
-                        val textFieldValue = textFieldValueState.copy(text = diaryContent.text)
+@Composable
+private fun InputBody(
+    diaryContents: List<DiaryContentUi>,
+    onContentTextPositionChange: (textPosition: Int) -> Unit,
+    onContentTextChange: (contentIndex: Int, String) -> Unit,
+    onContentFocusChange: (contentIndex: Int) -> Unit,
+    onContentImageDelete: (DiaryContentUi) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Column(modifier = modifier) {
+        diaryContents.forEachIndexed { index, diaryContent ->
+            when (diaryContent) {
+                is DiaryContentUi.Image -> AsyncImage(
+                    model = ImageRequest.Builder(LocalContext.current).data(diaryContent.path).build(),
+                    contentDescription = stringResource(R.string.write_content_image),
+                    modifier = Modifier.fillMaxWidth(),
+                )
 
-                        BasicTextField(
-                            value = textFieldValue,
-                            onValueChange = {
-                                textFieldValueState = it
-
-                                onContentTextPositionChange(it.selection.end)
-                                onContentTextChange(index, it.text)
-                            },
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .onFocusChanged {
-                                    if (it.isFocused) {
-                                        onContentFocusChange(index)
-                                    }
-                                },
-                            decorationBox = { innerTextField ->
-                                if (textFieldValue.text.isEmpty()) {
-                                    Text(
-                                        text = stringResource(R.string.write_text_content),
-                                        style = TextStyle(color = MaterialTheme.colorScheme.secondary),
-                                    )
-                                }
-                                innerTextField()
-                            },
-                        )
+                is DiaryContentUi.Text -> {
+                    var textFieldValueState by remember {
+                        mutableStateOf(TextFieldValue(diaryContent.text))
                     }
+
+                    val textFieldValue = textFieldValueState.copy(text = diaryContent.text)
+
+                    BasicTextField(
+                        value = textFieldValue,
+                        onValueChange = {
+                            textFieldValueState = it
+
+                            onContentTextPositionChange(it.selection.end)
+                            onContentTextChange(index, it.text)
+                        },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .onFocusChanged { if (it.isFocused) onContentFocusChange(index) },
+                        textStyle = MaterialTheme.typography.bodyLarge,
+                        decorationBox = { innerTextField ->
+                            if (textFieldValue.text.isEmpty()) {
+                                Text(
+                                    text = stringResource(R.string.write_text_content),
+                                    style = MaterialTheme.typography.bodyLarge.copy(color = MaterialTheme.colorScheme.secondary),
+                                )
+                            }
+                            innerTextField()
+                        },
+                    )
                 }
             }
         }
@@ -111,18 +134,34 @@ internal fun DiaryWriteScreenBody(
 
 @Preview(showBackground = true)
 @Composable
-private fun DiaryWriteScreenBodyPreview() {
+private fun DiaryWriteScreenBodyPreviewEmpty() {
     DreamdiaryTheme {
         DiaryWriteScreenBody(
             title = "",
             onTitleChange = {},
-            content = "",
-            onContentChange = {},
+            diaryContents = listOf(DiaryContentUi.Text("")),
+            onContentTextChange = { _, _ -> },
+            onContentFocusChange = { },
+            onContentTextPositionChange = { },
+            onContentImageDelete = { },
+            modifier = Modifier.fillMaxSize()
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun DiaryWriteScreenBodyPreviewFilled() {
+    DreamdiaryTheme {
+        DiaryWriteScreenBody(
+            title = "안녕 뉴라인",
+            onTitleChange = {},
             diaryContents = listOf(DiaryContentUi.Text("안녕\n뉴라인")),
             onContentTextChange = { _, _ -> },
             onContentFocusChange = { },
             onContentTextPositionChange = { },
             onContentImageDelete = { },
+            modifier = Modifier.fillMaxSize()
         )
     }
 }

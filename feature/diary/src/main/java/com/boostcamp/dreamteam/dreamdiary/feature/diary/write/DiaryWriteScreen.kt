@@ -100,15 +100,22 @@ fun DiaryWriteScreen(
 
     DiaryWriteScreenContent(
         onBackClick = onBackClick,
-        viewModel = viewModel,
         title = uiState.title,
-        content = uiState.content,
+        onTitleChange = viewModel::setTitle,
         labelFilter = uiState.labelFilter,
         filteredLabels = uiState.filteredLabels,
         selectedLabels = uiState.selectedLabels,
         sleepStartAt = uiState.sleepStartAt,
+        onSleepStartAtChange = viewModel::setSleepStartAt,
         sleepEndAt = uiState.sleepEndAt,
+        onSleepEndAtChange = viewModel::setSleepEndAt,
         diaryContents = uiState.diaryContents,
+        onContentImageAdd = viewModel::addContentImage,
+        onClickSave = viewModel::addDreamDiary,
+        onCheckChange = viewModel::toggleLabel,
+        onLabelFilterChange = viewModel::setLabelFilter,
+        onClickLabelSave = viewModel::addLabel,
+        onContentTextChange = viewModel::setContentText,
         modifier = Modifier.imePadding(),
     )
 }
@@ -116,15 +123,22 @@ fun DiaryWriteScreen(
 @Composable
 private fun DiaryWriteScreenContent(
     onBackClick: () -> Unit,
-    viewModel: DiaryWriteViewModel,
     title: String,
-    content: String,
+    onTitleChange: (String) -> Unit,
     labelFilter: String,
     filteredLabels: List<LabelUi>,
     selectedLabels: Set<LabelUi>,
     sleepStartAt: ZonedDateTime,
+    onSleepStartAtChange: (ZonedDateTime) -> Unit,
     sleepEndAt: ZonedDateTime,
+    onSleepEndAtChange: (ZonedDateTime) -> Unit,
     diaryContents: List<DiaryContentUi>,
+    onContentImageAdd: (contentIndex: Int, Int, String) -> Unit,
+    onClickSave: () -> Unit,
+    onCheckChange: (LabelUi) -> Unit,
+    onLabelFilterChange: (String) -> Unit,
+    onClickLabelSave: () -> Unit,
+    onContentTextChange: (Int, String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     // 현재는 사실상 Text만 포커스 됨
@@ -151,10 +165,10 @@ private fun DiaryWriteScreenContent(
                     }
                     yield()
                     launch(Dispatchers.Main) {
-                        viewModel.addContentImage(
-                            contentIndex = currentFocusContent,
-                            textPosition = currentTextCursorPosition,
-                            imagePath = outputFile.path,
+                        onContentImageAdd(
+                            currentFocusContent,
+                            currentTextCursorPosition,
+                            outputFile.path,
                         )
                     }
                 }
@@ -167,7 +181,7 @@ private fun DiaryWriteScreenContent(
         topBar = {
             DiaryWriteTopBar(
                 onBackClick = onBackClick,
-                onClickSave = viewModel::addDreamDiary,
+                onClickSave = onClickSave,
             )
         },
         bottomBar = {
@@ -178,27 +192,25 @@ private fun DiaryWriteScreenContent(
     ) { innerPadding ->
         DiaryWriteScreen(
             title = title,
-            content = content,
+            onTitleChange = onTitleChange,
             labelFilter = labelFilter,
             filteredLabels = filteredLabels,
             selectedLabels = selectedLabels,
-            onTitleChange = viewModel::setTitle,
-            onContentChange = viewModel::setContent,
-            onCheckChange = viewModel::toggleLabel,
-            onLabelFilterChange = viewModel::setLabelFilter,
-            onClickLabelSave = viewModel::addLabel,
+            onCheckChange = onCheckChange,
+            onLabelFilterChange = onLabelFilterChange,
+            onClickLabelSave = onClickLabelSave,
             sleepStartAt = sleepStartAt,
-            onSleepStartAtChange = viewModel::setSleepStartAt,
+            onSleepStartAtChange = onSleepStartAtChange,
             sleepEndAt = sleepEndAt,
-            onSleepEndAtChange = viewModel::setSleepEndAt,
+            onSleepEndAtChange = onSleepEndAtChange,
+            diaryContents = diaryContents,
+            onContentTextChange = onContentTextChange,
+            onCurrentFocusContentChange = { currentFocusContent = it },
+            onContentTextPositionChange = { currentTextCursorPosition = it },
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
                 .consumeWindowInsets(innerPadding),
-            diaryContents = diaryContents,
-            onContentTextChange = viewModel::setContentText,
-            onCurrentFocusContentChange = { currentFocusContent = it },
-            onContentTextPositionChange = { currentTextCursorPosition = it },
         )
     }
 }
@@ -206,13 +218,11 @@ private fun DiaryWriteScreenContent(
 @Composable
 private fun DiaryWriteScreen(
     title: String,
-    content: String,
+    onTitleChange: (String) -> Unit,
     labelFilter: String,
     filteredLabels: List<LabelUi>,
     selectedLabels: Set<LabelUi>,
-    onTitleChange: (String) -> Unit,
-    onContentChange: (String) -> Unit,
-    onCheckChange: (labelUi: LabelUi) -> Unit,
+    onCheckChange: (LabelUi) -> Unit,
     onLabelFilterChange: (String) -> Unit,
     onClickLabelSave: () -> Unit,
     sleepStartAt: ZonedDateTime,
@@ -249,8 +259,6 @@ private fun DiaryWriteScreen(
         DiaryWriteScreenBody(
             title = title,
             onTitleChange = onTitleChange,
-            content = content,
-            onContentChange = onContentChange,
             diaryContents = diaryContents,
             onContentTextChange = onContentTextChange,
             onContentFocusChange = { onCurrentFocusContentChange(it) },
@@ -317,14 +325,13 @@ private fun DiaryWriteBottomBar(
 @Preview(showBackground = true)
 private fun PreviewDiaryListScreen() {
     DreamdiaryTheme {
-        DiaryWriteScreen(
+        DiaryWriteScreenContent(
+            onBackClick = {},
             title = "",
-            content = "",
             labelFilter = "",
             filteredLabels = filteredLabelsPreview,
             selectedLabels = selectedLabelsPreview,
             onTitleChange = {},
-            onContentChange = {},
             onCheckChange = {},
             onClickLabelSave = {},
             onLabelFilterChange = {},
@@ -333,10 +340,9 @@ private fun PreviewDiaryListScreen() {
             sleepEndAt = ZonedDateTime.now(),
             onSleepEndAtChange = {},
             diaryContents = emptyList(),
+            onContentImageAdd = { _, _, _ -> },
+            onClickSave = {},
             onContentTextChange = { _, _ -> },
-            onContentTextPositionChange = { },
-            onCurrentFocusContentChange = { },
-            modifier = Modifier.fillMaxSize(),
         )
     }
 }
