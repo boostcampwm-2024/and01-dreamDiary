@@ -2,20 +2,15 @@ package com.boostcamp.dreamteam.dreamdiary.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavOptions
 import androidx.navigation.compose.NavHost
-import androidx.navigation.navOptions
+import com.boostcamp.dreamteam.dreamdiary.community.CommunityGraph
 import com.boostcamp.dreamteam.dreamdiary.community.communityGraph
-import com.boostcamp.dreamteam.dreamdiary.community.navigateToCommunityScreen
 import com.boostcamp.dreamteam.dreamdiary.feature.auth.SignInRoute
 import com.boostcamp.dreamteam.dreamdiary.feature.auth.signInScreen
-import com.boostcamp.dreamteam.dreamdiary.feature.diary.detail.DiaryDetailRoute
-import com.boostcamp.dreamteam.dreamdiary.feature.diary.detail.diaryDetailScreen
-import com.boostcamp.dreamteam.dreamdiary.feature.diary.detail.navigateToDiaryDetailScreen
-import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.diaryHomeScreen
-import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.navigateToDiaryHomeScreen
-import com.boostcamp.dreamteam.dreamdiary.feature.diary.write.diaryWriteScreen
-import com.boostcamp.dreamteam.dreamdiary.feature.diary.write.navigateToDiaryWriteScreen
-import com.boostcamp.dreamteam.dreamdiary.setting.navigateToSettingScreen
+import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.DiaryGraph
+import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.diaryGraph
+import com.boostcamp.dreamteam.dreamdiary.setting.SettingGraph
 import com.boostcamp.dreamteam.dreamdiary.setting.settingGraph
 import com.boostcamp.dreamteam.dreamdiary.ui.DreamDiaryAppState
 
@@ -32,86 +27,86 @@ fun DreamDiaryNavHost(
     ) {
         signInScreen(
             onSignInSuccess = {
-                navController.navigateToDiaryHomeScreen(
-                    navOptions = navOptions {
-                        launchSingleTop = true
-                    },
-                )
+                val options = NavOptions.Builder()
+                    .setPopUpTo(SignInRoute, inclusive = true)
+                    .setLaunchSingleTop(true)
+                    .build()
+                navController.navigate(DiaryGraph, options)
             },
             onPassClick = {
-                navController.navigateToDiaryHomeScreen(
-                    navOptions = navOptions {
-                        launchSingleTop = true
-                    },
-                )
+                val options = NavOptions.Builder()
+                    .setPopUpTo(SignInRoute, inclusive = true)
+                    .setLaunchSingleTop(true)
+                    .build()
+                navController.navigate(DiaryGraph, options)
             },
         )
 
-        diaryHomeScreen(
-            onFabClick = {
-                navController.navigateToDiaryWriteScreen()
-            },
+        diaryGraph(
             onCommunityClick = {
-                navController.navigateToCommunityScreen(
-                    navOptions = navOptions {
-                        launchSingleTop = true
-                    },
-                )
+                val options = NavOptions.Builder()
+                    .setPopUpTo(DiaryGraph, inclusive = false, saveState = true)
+                    .setLaunchSingleTop(true)
+                    .setRestoreState(true)
+                    .build()
+                navController.navigate(CommunityGraph, options)
             },
             onSettingClick = {
-                navController.navigateToSettingScreen()
+                val options = NavOptions.Builder()
+                    .setPopUpTo(DiaryGraph, inclusive = false, saveState = true)
+                    .setLaunchSingleTop(true)
+                    .setRestoreState(true)
+                    .build()
+                navController.navigate(SettingGraph, options)
             },
-            onDiaryItemClick = { diaryUI ->
-                navController.navigateToDiaryDetailScreen(
-                    route = DiaryDetailRoute(diaryUI.id),
-                    navOptions = navOptions {
-                        launchSingleTop = true
-                    },
-                )
-            },
-        )
-
-        diaryWriteScreen(
-            onBackClick = navController::navigateUp,
-        )
-
-        diaryDetailScreen(
-            onBackClick = navController::navigateUp,
-        )
-
-        settingGraph(
-            onDiaryHomeClick = {
-                navController.navigateToDiaryHomeScreen(
-                    navOptions = navOptions {
-                        launchSingleTop = true
-                    },
-                )
-            },
-            onCommunityClick = {
-                navController.navigateToCommunityScreen(
-                    navOptions = navOptions {
-                        launchSingleTop = true
-                    },
-                )
-            },
+            navController = navController,
         )
 
         communityGraph(
             onDiaryClick = {
-                navController.navigateToDiaryHomeScreen(
-                    navOptions = navOptions {
-                        launchSingleTop = true
-                    },
-//                    navOptions = navOptions {
-//                        popUpTo(DiaryHomeRoute) {
-//                            saveState = true
-//                        }
-//                    },
-                )
+                val options = NavOptions.Builder()
+                    .setPopUpTo(CommunityGraph, inclusive = false, saveState = true)
+                    .setLaunchSingleTop(true)
+                    .setRestoreState(true)
+                    .build()
+                navController.navigate(DiaryGraph, options)
             },
-            onCommunityClick = {
-                navController.navigateToSettingScreen()
+            onSettingClick = {
+                val options = NavOptions.Builder()
+                    .setPopUpTo(CommunityGraph, inclusive = false, saveState = true)
+                    .setLaunchSingleTop(true)
+                    .setRestoreState(true)
+                    .build()
+                navController.navigate(SettingGraph, options)
             },
         )
+
+        settingGraph(
+            onDiaryClick = {
+                val options = NavOptions.Builder()
+                    .setPopUpTo(SettingGraph, inclusive = false, saveState = true)
+                    .setLaunchSingleTop(true)
+                    .setRestoreState(true)
+                    .build()
+                navController.navigate(DiaryGraph, options)
+            },
+            onCommunityClick = {
+                val options = NavOptions.Builder()
+                    .setPopUpTo(SettingGraph, inclusive = false, saveState = true)
+                    .setLaunchSingleTop(true)
+                    .setRestoreState(true)
+                    .build()
+                navController.navigate(CommunityGraph, options)
+            },
+            onLogoutClick = {
+                val options = NavOptions.Builder()
+                    .setPopUpTo(SettingGraph, inclusive = true)
+                    .build()
+                navController.navigate(SignInRoute, options)
+            },
+        )
+//        composable<MainRoute> {
+//            MainScreen()
+//        }
     }
 }
