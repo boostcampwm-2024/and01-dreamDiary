@@ -22,7 +22,7 @@ fun NavController.navigateToCommunityScreen(navOptions: NavOptions? = null) {
 
 fun NavGraphBuilder.communityGraph(
     onDiaryClick: () -> Unit,
-    onCommunityClick: () -> Unit,
+    onSettingClick: () -> Unit,
 ) {
     navigation<CommunityGraph>(
         startDestination = CommunityGraph.CommunityRoute,
@@ -30,7 +30,7 @@ fun NavGraphBuilder.communityGraph(
         composable<CommunityGraph.CommunityRoute> {
             CommunityScreen(
                 onNavigateToDiary = onDiaryClick,
-                onNavigateToSetting = onCommunityClick,
+                onNavigateToSetting = onSettingClick,
             )
         }
 
