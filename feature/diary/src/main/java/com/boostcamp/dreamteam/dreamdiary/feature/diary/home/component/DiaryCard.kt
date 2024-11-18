@@ -31,12 +31,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import coil3.compose.AsyncImage
+import coil3.compose.SubcomposeAsyncImage
 import com.boostcamp.dreamteam.dreamdiary.designsystem.theme.DreamdiaryTheme
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.R
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.DiaryUi
@@ -90,9 +91,10 @@ internal fun DiaryCard(
                 .padding(16.dp),
         ) {
             diary.images.firstOrNull()?.let {
-                AsyncImage(
+                SubcomposeAsyncImage(
                     model = it,
                     contentDescription = stringResource(R.string.home_list_card_thumbnail, diary.title),
+                    contentScale = ContentScale.Crop,
                     modifier = Modifier
                         .fillMaxWidth()
                         .aspectRatio(16 / 9f),
@@ -190,6 +192,7 @@ private fun CardInfos(
                 .padding(2.dp),
         )
         Spacer(modifier = Modifier.width(2.dp))
+
         Text(text = createdTime, style = MaterialTheme.typography.labelMedium)
     }
 }
