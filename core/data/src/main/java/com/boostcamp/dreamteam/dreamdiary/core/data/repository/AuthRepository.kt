@@ -36,7 +36,6 @@ class AuthRepository @Inject constructor(
     suspend fun snsSignOut() {
         val credentialManager = CredentialManager.create(context)
         credentialManager.clearCredentialState(ClearCredentialStateRequest())
-
     }
 
     fun getUserEmail(): String? {
