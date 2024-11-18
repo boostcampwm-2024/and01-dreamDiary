@@ -1,5 +1,6 @@
 package com.boostcamp.dreamteam.dreamdiary.setting
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -34,6 +35,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.boostcamp.dreamteam.dreamdiary.designsystem.theme.DreamdiaryTheme
 import com.boostcamp.dreamteam.dreamdiary.ui.HomeBottomNavItem
 import com.boostcamp.dreamteam.dreamdiary.ui.HomeBottomNavigation
@@ -44,7 +46,9 @@ import com.boostcamp.dreamteam.dreamdiary.ui.NavigationItem
 internal fun SettingScreen(
     onNavigateToDiary: () -> Unit,
     onNavigateToCommunity: () -> Unit,
+    onLogoutClick: () -> Unit,
     modifier: Modifier = Modifier,
+    settingViewModel: SettingViewModel = hiltViewModel(),
 ) {
     val rememberScrollState = rememberScrollState()
 
@@ -137,9 +141,15 @@ internal fun SettingScreen(
                 icon = Icons.Outlined.AccountBox,
                 text = stringResource(R.string.setting_check_account),
             )
+
+            // if 문으로 처리 로그아웃 또는 로그인 하러 가기
             SettingOption(
                 icon = Icons.AutoMirrored.Outlined.Logout,
                 text = stringResource(R.string.setting_logout),
+                modifier = Modifier.clickable(onClick = {
+                    settingViewModel.nonPasswordSignIn()
+                    onLogoutClick()
+                }),
             )
             SettingOption(
                 icon = Icons.Outlined.Window,
@@ -197,6 +207,7 @@ private fun SettingScreenPreview() {
         SettingScreen(
             onNavigateToDiary = {},
             onNavigateToCommunity = {},
+            onLogoutClick = {},
         )
     }
 }
