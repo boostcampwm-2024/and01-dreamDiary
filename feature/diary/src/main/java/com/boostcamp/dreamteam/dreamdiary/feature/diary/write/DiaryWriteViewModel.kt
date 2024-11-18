@@ -49,10 +49,6 @@ class DiaryWriteViewModel @Inject constructor(
         _uiState.value = _uiState.value.copy(title = title)
     }
 
-    fun setContent(content: String) {
-        _uiState.value = _uiState.value.copy(content = content)
-    }
-
     fun setLabelFilter(labelFilter: String) {
         _uiState.value = _uiState.value.copy(labelFilter = labelFilter)
     }
@@ -73,7 +69,6 @@ class DiaryWriteViewModel @Inject constructor(
 
     fun addDreamDiary() {
         val title = _uiState.value.title
-        val content = _uiState.value.content
         val labels = _uiState.value.selectedLabels.map { it.name }
         val sleepStartAt = _uiState.value.sleepStartAt
         val sleepEndAt = _uiState.value.sleepEndAt
