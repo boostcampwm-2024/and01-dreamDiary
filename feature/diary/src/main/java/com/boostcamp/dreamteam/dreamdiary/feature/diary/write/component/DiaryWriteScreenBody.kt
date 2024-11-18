@@ -113,9 +113,7 @@ private fun InputBody(
                 is DiaryContentUi.Text -> BodyText(
                     diaryContent = diaryContent,
                     onContentTextPositionChange = onContentTextPositionChange,
-                    onContentTextChange = onContentTextChange,
-                    index = index,
-                    onContentFocusChange = onContentFocusChange,
+                    onContentTextChange = { onContentTextChange(index, it) },
                     modifier = Modifier
                         .fillMaxWidth()
                         .onFocusChanged { if (it.isFocused) onContentFocusChange(index) },
@@ -174,9 +172,7 @@ private fun BodyImage(
 private fun BodyText(
     diaryContent: DiaryContentUi.Text,
     onContentTextPositionChange: (textPosition: Int) -> Unit,
-    onContentTextChange: (contentIndex: Int, String) -> Unit,
-    index: Int,
-    onContentFocusChange: (contentIndex: Int) -> Unit,
+    onContentTextChange: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     var textFieldValueState by remember {
@@ -191,7 +187,7 @@ private fun BodyText(
             textFieldValueState = it
 
             onContentTextPositionChange(it.selection.end)
-            onContentTextChange(index, it.text)
+            onContentTextChange(it.text)
         },
         modifier = modifier,
         textStyle = MaterialTheme.typography.bodyLarge,
