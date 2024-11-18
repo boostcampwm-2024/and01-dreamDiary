@@ -48,7 +48,6 @@ fun DreamDiaryNavHost(
         diaryGraph(
             onCommunityClick = {
                 navController.navigate(CommunityGraph) {
-                    Timber.d("${navController.graph.findStartDestination().route}")
                     popUpTo(DiaryGraph) {
                         saveState = true
                     }
@@ -58,7 +57,6 @@ fun DreamDiaryNavHost(
             },
             onSettingClick = {
                 navController.navigate(SettingGraph) {
-                    Timber.d("${navController.graph.findStartDestination().route}")
 
                     popUpTo(DiaryGraph) {
                         saveState = true
@@ -75,7 +73,6 @@ fun DreamDiaryNavHost(
                 navController.navigate(
                     DiaryGraph,
                     navOptions = navOptions {
-                        Timber.d("${navController.graph.findStartDestination().route}")
 
                         popUpTo(CommunityGraph) {
                             saveState = true
