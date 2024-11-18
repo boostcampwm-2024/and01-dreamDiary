@@ -132,7 +132,7 @@ internal fun DiaryCard(
             }
             Spacer(modifier = Modifier.height(16.dp))
             Text(
-                text = diary.content,
+                text = diary.textContent,
                 style = MaterialTheme.typography.bodyMedium,
                 maxLines = 3,
                 overflow = TextOverflow.Ellipsis,
