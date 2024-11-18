@@ -10,7 +10,7 @@ import com.boostcamp.dreamteam.dreamdiary.feature.diary.write.DiaryWriteScreen
 import kotlinx.serialization.Serializable
 
 @Serializable
-data object DiaryHomeGraph {
+data object DiaryGraph {
     @Serializable
     data object DiaryHomeRoute
 
@@ -21,32 +21,32 @@ data object DiaryHomeGraph {
     data class DiaryDetailRoute(val id: Long)
 }
 
-fun NavController.navigateToDiaryHomeScreen(navOptions: NavOptions) = navigate(route = DiaryHomeGraph, navOptions)
+fun NavController.navigateToDiaryHomeScreen(navOptions: NavOptions) = navigate(route = DiaryGraph, navOptions)
 
-fun NavGraphBuilder.diaryHomeGraph(
+fun NavGraphBuilder.diaryGraph(
     onCommunityClick: () -> Unit,
     onSettingClick: () -> Unit,
     navController: NavController,
 ) {
-    navigation<DiaryHomeGraph>(
-        startDestination = DiaryHomeGraph.DiaryHomeRoute,
+    navigation<DiaryGraph>(
+        startDestination = DiaryGraph.DiaryHomeRoute,
     ) {
-        composable<DiaryHomeGraph.DiaryHomeRoute> {
+        composable<DiaryGraph.DiaryHomeRoute> {
             DiaryHomeScreen(
                 onDiaryClick = {},
-                onNavigateToWriteScreen = { navController.navigate(DiaryHomeGraph.DiaryWriteRoute) },
+                onNavigateToWriteScreen = { navController.navigate(DiaryGraph.DiaryWriteRoute) },
                 onNavigateToCommunity = onCommunityClick,
                 onNavigateToSetting = onSettingClick,
             )
         }
 
-        composable<DiaryHomeGraph.DiaryWriteRoute> {
+        composable<DiaryGraph.DiaryWriteRoute> {
             DiaryWriteScreen(
                 onBackClick = navController::navigateUp,
             )
         }
 
-        composable<DiaryHomeGraph.DiaryDetailRoute> {
+        composable<DiaryGraph.DiaryDetailRoute> {
             // todo : 무엇을 넘겨야하는 지 알기
             DiaryDetailScreen(
                 navController::navigateUp,
