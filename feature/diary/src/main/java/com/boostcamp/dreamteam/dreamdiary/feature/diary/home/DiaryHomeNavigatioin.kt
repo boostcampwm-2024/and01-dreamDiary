@@ -2,7 +2,6 @@ package com.boostcamp.dreamteam.dreamdiary.feature.diary.home
 
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
-import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.detail.DiaryDetailScreen
@@ -20,8 +19,6 @@ data object DiaryGraph {
     @Serializable
     data class DiaryDetailRoute(val id: Long)
 }
-
-fun NavController.navigateToDiaryHomeScreen(navOptions: NavOptions) = navigate(route = DiaryGraph, navOptions)
 
 fun NavGraphBuilder.diaryGraph(
     onCommunityClick: () -> Unit,
@@ -52,6 +49,5 @@ fun NavGraphBuilder.diaryGraph(
                 navController::navigateUp,
             )
         }
-
     }
 }

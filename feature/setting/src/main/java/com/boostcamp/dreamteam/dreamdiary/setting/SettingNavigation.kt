@@ -18,7 +18,6 @@ data object SettingGraph {
 }
 
 fun NavController.navigateToSettingScreen(navOptions: NavOptions? = null) {
-
     this.navigate(route = SettingGraph, navOptions = navOptions)
 }
 
