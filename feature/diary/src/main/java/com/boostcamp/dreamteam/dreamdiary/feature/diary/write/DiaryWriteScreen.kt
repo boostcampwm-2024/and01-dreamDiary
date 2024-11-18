@@ -347,7 +347,7 @@ private fun PreviewDiaryListScreen() {
             onContentImageAdd = { _, _, _ -> },
             onClickSave = {},
             onContentTextChange = { _, _ -> },
-            onContentImageDelete = { }
+            onContentImageDelete = { },
         )
     }
 }

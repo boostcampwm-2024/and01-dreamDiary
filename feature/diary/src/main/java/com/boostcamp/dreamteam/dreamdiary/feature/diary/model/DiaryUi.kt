@@ -1,8 +1,8 @@
 package com.boostcamp.dreamteam.dreamdiary.feature.diary.model
 
 import com.boostcamp.dreamteam.dreamdiary.core.model.Diary
-import com.boostcamp.dreamteam.dreamdiary.core.model.Label
 import com.boostcamp.dreamteam.dreamdiary.core.model.DiaryContent
+import com.boostcamp.dreamteam.dreamdiary.core.model.Label
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.vo.DisplayableDateTime
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.vo.toDisplayableDateTime
 import java.time.LocalDate
@@ -109,12 +109,12 @@ fun DiaryContent.toUiState(): DiaryContentUi {
     return when (this) {
         is DiaryContent.Text -> {
             DiaryContentUi.Text(
-                text = this.text
+                text = this.text,
             )
         }
         is DiaryContent.Image -> {
             DiaryContentUi.Image(
-                path = this.path
+                path = this.path,
             )
         }
     }

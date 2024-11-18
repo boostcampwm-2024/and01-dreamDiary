@@ -121,15 +121,22 @@ class DiaryWriteViewModel @Inject constructor(
         )
     }
 
-    fun setContentText(contentIndex: Int, text: String) {
+    fun setContentText(
+        contentIndex: Int,
+        text: String,
+    ) {
         _uiState.update {
             it.copy(
-                diaryContents = it.diaryContents.toMutableList().apply { this[contentIndex] = DiaryContentUi.Text(text) }
+                diaryContents = it.diaryContents.toMutableList().apply { this[contentIndex] = DiaryContentUi.Text(text) },
             )
         }
     }
 
-    fun addContentImage(contentIndex: Int, textPosition: Int, imagePath: String) {
+    fun addContentImage(
+        contentIndex: Int,
+        textPosition: Int,
+        imagePath: String,
+    ) {
         _uiState.update {
             val diaryContents = it.diaryContents.toMutableList()
 
@@ -139,8 +146,9 @@ class DiaryWriteViewModel @Inject constructor(
             if (currentContent is DiaryContentUi.Text) {
                 val endIndex = minOf(textPosition, currentContent.text.length)
                 val prevText = currentContent.text.substring(0, endIndex)
-                if (prevText.isNotEmpty())
+                if (prevText.isNotEmpty()) {
                     newContents.add(DiaryContentUi.Text(prevText))
+                }
                 newContents.add(DiaryContentUi.Image(imagePath))
                 newContents.add(DiaryContentUi.Text(currentContent.text.substring(endIndex)))
                 diaryContents.removeAt(saveContentIndex)
@@ -150,7 +158,7 @@ class DiaryWriteViewModel @Inject constructor(
             }
 
             it.copy(
-                diaryContents = diaryContents
+                diaryContents = diaryContents,
             )
         }
     }
@@ -172,14 +180,14 @@ class DiaryWriteViewModel @Inject constructor(
                         diaryContents.removeAt(safeContentIndex - 1)
                         diaryContents.add(
                             safeContentIndex - 1,
-                            DiaryContentUi.Text(text = prev.text + "\n" + next.text)
+                            DiaryContentUi.Text(text = prev.text + "\n" + next.text),
                         )
                     }
                 }
             }
 
             it.copy(
-                diaryContents = diaryContents
+                diaryContents = diaryContents,
             )
         }
     }

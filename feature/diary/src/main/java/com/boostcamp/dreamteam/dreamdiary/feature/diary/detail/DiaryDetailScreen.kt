@@ -4,8 +4,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.MoreVert
@@ -29,10 +27,10 @@ import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import com.boostcamp.dreamteam.dreamdiary.designsystem.theme.DreamdiaryTheme
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.R
+import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.DiaryContentUi
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.LabelUi
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.filteredLabelsPreview
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.write.component.DiaryWriteScreenHeader
-import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.DiaryContentUi
 import java.time.ZonedDateTime
 
 @Composable
@@ -153,6 +151,7 @@ internal fun DiaryDetailContent(
                         style = MaterialTheme.typography.bodyMedium,
                     )
                 }
+
                 is DiaryContentUi.Image -> {
                     AsyncImage(
                         model = ImageRequest.Builder(LocalContext.current)

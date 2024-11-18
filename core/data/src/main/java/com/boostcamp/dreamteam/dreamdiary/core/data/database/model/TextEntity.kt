@@ -4,7 +4,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity(
-    tableName = "text"
+    tableName = "text",
 )
 data class TextEntity(
     @PrimaryKey

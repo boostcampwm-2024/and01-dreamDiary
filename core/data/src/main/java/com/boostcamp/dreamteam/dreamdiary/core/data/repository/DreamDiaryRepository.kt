@@ -2,8 +2,8 @@ package com.boostcamp.dreamteam.dreamdiary.core.data.repository
 
 import androidx.paging.PagingData
 import com.boostcamp.dreamteam.dreamdiary.core.model.Diary
-import com.boostcamp.dreamteam.dreamdiary.core.model.Label
 import com.boostcamp.dreamteam.dreamdiary.core.model.DiaryContent
+import com.boostcamp.dreamteam.dreamdiary.core.model.Label
 import kotlinx.coroutines.flow.Flow
 import java.time.Instant
 

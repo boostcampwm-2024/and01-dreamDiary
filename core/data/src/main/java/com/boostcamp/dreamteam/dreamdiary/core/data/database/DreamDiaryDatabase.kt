@@ -12,7 +12,7 @@ import com.boostcamp.dreamteam.dreamdiary.core.data.database.model.TextEntity
 
 @Database(
     entities = [DreamDiaryEntity::class, LabelEntity::class, DreamDiaryLabelEntity::class, TextEntity::class, ImageEntity::class],
-    version = 1
+    version = 1,
 )
 @TypeConverters(value = [InstantTypeConverter::class])
 internal abstract class DreamDiaryDatabase : RoomDatabase() {

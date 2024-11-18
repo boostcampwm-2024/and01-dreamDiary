@@ -1,7 +1,7 @@
 package com.boostcamp.dreamteam.dreamdiary.feature.diary.write.model
 
-import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.LabelUi
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.DiaryContentUi
+import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.LabelUi
 import java.time.ZonedDateTime
 
 data class DiaryWriteUiState(

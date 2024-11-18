@@ -41,7 +41,7 @@ internal class DefaultDreamDiaryRepository @Inject constructor(
         diaryContents: List<DiaryContent>,
         labels: List<String>,
         sleepStartAt: Instant,
-        sleepEndAt: Instant
+        sleepEndAt: Instant,
     ) {
         var body = ""
         for (diaryContent in diaryContents) {
@@ -51,20 +51,20 @@ internal class DefaultDreamDiaryRepository @Inject constructor(
                     dreamDiaryDao.insertText(
                         TextEntity(
                             newId,
-                            diaryContent.text
-                        )
+                            diaryContent.text,
+                        ),
                     )
-                    body += "text:${newId}:"
+                    body += "text:$newId:"
                 }
 
                 is DiaryContent.Image -> {
                     dreamDiaryDao.insertImage(
                         ImageEntity(
                             newId,
-                            diaryContent.path
-                        )
+                            diaryContent.path,
+                        ),
                     )
-                    body += "image:${newId}:"
+                    body += "image:$newId:"
                 }
             }
         }
@@ -137,8 +137,8 @@ internal class DefaultDreamDiaryRepository @Inject constructor(
                 val textEntity = dreamDiaryDao.getText(id) ?: continue
                 diaryContents.add(
                     DiaryContent.Text(
-                        text = textEntity.text
-                    )
+                        text = textEntity.text,
+                    ),
                 )
             } else if (parsingDiaryContent[index] == "image") {
                 index += 1
@@ -146,8 +146,8 @@ internal class DefaultDreamDiaryRepository @Inject constructor(
                 val imageEntity = dreamDiaryDao.getImage(id) ?: continue
                 diaryContents.add(
                     DiaryContent.Image(
-                        path = imageEntity.path
-                    )
+                        path = imageEntity.path,
+                    ),
                 )
             } else {
                 index += 1
