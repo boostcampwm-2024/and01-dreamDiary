@@ -3,7 +3,6 @@ plugins {
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt)
     alias(libs.plugins.google.gms.google.services)
-    alias(libs.plugins.kotlin.serialization)
 }
 
 android {
@@ -46,7 +45,4 @@ dependencies {
 
     // Timber
     implementation(libs.timber)
-
-    // serialization
-    implementation(libs.kotlinx.serialization.json.jvm)
 }
