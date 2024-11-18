@@ -16,7 +16,7 @@ android {
                     load(file.inputStream())
                 }
             }
-            val keyStorePath = keystoreProperties.getProperty("KEYSTORE_PATH")
+            val keyStorePath = keystoreProperties.getProperty("DEBUG_KEYSTORE_PATH")
             storeFile = if (keyStorePath != null) {
                 file(keyStorePath)
             } else {
