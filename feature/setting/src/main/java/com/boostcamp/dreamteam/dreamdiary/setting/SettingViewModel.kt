@@ -13,10 +13,10 @@ class SettingViewModel @Inject constructor(
     private val authRepository: AuthRepository,
     private val sharedPreferences: SharedPreferences,
 ) : ViewModel() {
-
     fun signOut() {
+        authRepository.firebaseSignOut()
         viewModelScope.launch {
-            authRepository.signOut()
+            authRepository.snsSignOut()
         }
     }
 

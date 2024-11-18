@@ -29,6 +29,8 @@ class SignInViewModel @Inject constructor(
     val event = _event.receiveAsFlow()
 
     init {
+        Timber.d("${authRepository.getUserEmail()}")
+
         if (authRepository.getUserEmail() != null) {
             _signInState.value = SignInState.Success
         } else if (sharedPreferences.getBoolean("onPass", false)) {

@@ -6,6 +6,11 @@ plugins {
 }
 
 android {
+    signingConfigs {
+        getByName("debug") {
+            storeFile = file("C:\\Projects\\DreamDiary\\debug.keystore")
+        }
+    }
     namespace = "com.boostcamp.dreamteam.dreamdiary"
 
     defaultConfig {

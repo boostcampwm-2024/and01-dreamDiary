@@ -20,6 +20,10 @@ class AuthRepository @Inject constructor(
 
     private val provider = OAuthProvider.newBuilder("github.com")
 
+    fun firebaseSignOut() {
+        auth.signOut()
+    }
+
     suspend fun signInWithGoogle(idToken: String) {
         val credential = GoogleAuthProvider.getCredential(idToken, null)
         auth.signInWithCredential(credential).await()
@@ -29,9 +33,10 @@ class AuthRepository @Inject constructor(
         auth.startActivityForSignInWithProvider(activityContext as Activity, provider.build()).await()
     }
 
-    suspend fun signOut() {
-        CredentialManager.create(context).clearCredentialState(ClearCredentialStateRequest())
-        auth.signOut()
+    suspend fun snsSignOut() {
+        val credentialManager = CredentialManager.create(context)
+        credentialManager.clearCredentialState(ClearCredentialStateRequest())
+
     }
 
     fun getUserEmail(): String? {
