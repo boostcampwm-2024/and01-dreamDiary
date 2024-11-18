@@ -4,23 +4,35 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
+import androidx.navigation.navigation
 import kotlinx.serialization.Serializable
 
 @Serializable
-data object SettingRoute
+data object SettingGraph {
+    @Serializable
+    data object SettingRoute
 
-fun NavController.navigateToSettingScreen(navOptions: NavOptions? = null) {
-    this.navigate(route = SettingRoute, navOptions)
+    // 추후 수정
+    @Serializable
+    data class SettingDetailRoute(val id: Long)
 }
 
-fun NavGraphBuilder.settingScreen(
-    onHomeClick: () -> Unit,
+fun NavController.navigateToSettingScreen(navOptions: NavOptions? = null) {
+    this.navigate(route = SettingGraph, navOptions)
+}
+
+fun NavGraphBuilder.settingGraph(
+    onDiaryHomeClick: () -> Unit,
     onCommunityClick: () -> Unit,
 ) {
-    composable<SettingRoute> {
-        SettingScreen(
-            onNavigateToWriteScreen = onHomeClick,
-            onNavigateToCommunity = onCommunityClick,
-        )
+    navigation<SettingGraph>(
+        startDestination = SettingGraph.SettingRoute,
+    ) {
+        composable<SettingGraph.SettingRoute> {
+            SettingScreen(
+                onNavigateToDiary = onDiaryHomeClick,
+                onNavigateToCommunity = onCommunityClick,
+            )
+        }
     }
 }

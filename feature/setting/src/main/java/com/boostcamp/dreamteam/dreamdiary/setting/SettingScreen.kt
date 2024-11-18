@@ -42,7 +42,7 @@ import com.boostcamp.dreamteam.dreamdiary.ui.NavigationItem
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun SettingScreen(
-    onNavigateToWriteScreen: () -> Unit,
+    onNavigateToDiary: () -> Unit,
     onNavigateToCommunity: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -53,7 +53,7 @@ internal fun SettingScreen(
             icon = HomeBottomNavItem.MyDream.icon,
             labelRes = HomeBottomNavItem.MyDream.label,
             isSelected = false,
-            onClick = onNavigateToWriteScreen,
+            onClick = onNavigateToDiary,
         ),
         NavigationItem(
             icon = HomeBottomNavItem.Community.icon,
@@ -195,7 +195,7 @@ private fun SettingOption(
 private fun SettingScreenPreview() {
     DreamdiaryTheme {
         SettingScreen(
-            onNavigateToWriteScreen = {},
+            onNavigateToDiary = {},
             onNavigateToCommunity = {},
         )
     }

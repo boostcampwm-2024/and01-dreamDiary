@@ -4,6 +4,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.navOptions
+import com.boostcamp.dreamteam.dreamdiary.community.communityGraph
+import com.boostcamp.dreamteam.dreamdiary.community.navigateToCommunityScreen
 import com.boostcamp.dreamteam.dreamdiary.feature.auth.SignInRoute
 import com.boostcamp.dreamteam.dreamdiary.feature.auth.signInScreen
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.detail.DiaryDetailRoute
@@ -14,7 +16,7 @@ import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.navigateToDiaryHome
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.write.diaryWriteScreen
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.write.navigateToDiaryWriteScreen
 import com.boostcamp.dreamteam.dreamdiary.setting.navigateToSettingScreen
-import com.boostcamp.dreamteam.dreamdiary.setting.settingScreen
+import com.boostcamp.dreamteam.dreamdiary.setting.settingGraph
 import com.boostcamp.dreamteam.dreamdiary.ui.DreamDiaryAppState
 
 @Composable
@@ -50,7 +52,11 @@ fun DreamDiaryNavHost(
                 navController.navigateToDiaryWriteScreen()
             },
             onCommunityClick = {
-                // TODO: navigate to community screen
+                navController.navigateToCommunityScreen(
+                    navOptions = navOptions {
+                        launchSingleTop = true
+                    },
+                )
             },
             onSettingClick = {
                 navController.navigateToSettingScreen()
@@ -73,8 +79,8 @@ fun DreamDiaryNavHost(
             onBackClick = navController::navigateUp,
         )
 
-        settingScreen(
-            onHomeClick = {
+        settingGraph(
+            onDiaryHomeClick = {
                 navController.navigateToDiaryHomeScreen(
                     navOptions = navOptions {
                         launchSingleTop = true
@@ -82,7 +88,29 @@ fun DreamDiaryNavHost(
                 )
             },
             onCommunityClick = {
-                // TODO: navigate to community screen
+                navController.navigateToCommunityScreen(
+                    navOptions = navOptions {
+                        launchSingleTop = true
+                    },
+                )
+            },
+        )
+
+        communityGraph(
+            onDiaryClick = {
+                navController.navigateToDiaryHomeScreen(
+                    navOptions = navOptions {
+                        launchSingleTop = true
+                    },
+//                    navOptions = navOptions {
+//                        popUpTo(DiaryHomeRoute) {
+//                            saveState = true
+//                        }
+//                    },
+                )
+            },
+            onCommunityClick = {
+                navController.navigateToSettingScreen()
             },
         )
     }
