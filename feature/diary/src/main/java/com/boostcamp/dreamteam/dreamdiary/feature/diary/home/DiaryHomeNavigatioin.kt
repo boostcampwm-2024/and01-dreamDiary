@@ -17,7 +17,7 @@ data object DiaryGraph {
     data object DiaryWriteRoute
 
     @Serializable
-    data class DiaryDetailRoute(val id: Long)
+    data class DiaryDetailRoute(val id: String)
 }
 
 fun NavGraphBuilder.diaryGraph(
@@ -30,7 +30,8 @@ fun NavGraphBuilder.diaryGraph(
     ) {
         composable<DiaryGraph.DiaryHomeRoute> {
             DiaryHomeScreen(
-                onDiaryClick = {},
+                onDiaryClick = {
+                },
                 onNavigateToWriteScreen = { navController.navigate(DiaryGraph.DiaryWriteRoute) },
                 onNavigateToCommunity = onCommunityClick,
                 onNavigateToSetting = onSettingClick,
@@ -44,7 +45,6 @@ fun NavGraphBuilder.diaryGraph(
         }
 
         composable<DiaryGraph.DiaryDetailRoute> {
-            // todo : 무엇을 넘겨야하는 지 알기
             DiaryDetailScreen(
                 navController::navigateUp,
             )
