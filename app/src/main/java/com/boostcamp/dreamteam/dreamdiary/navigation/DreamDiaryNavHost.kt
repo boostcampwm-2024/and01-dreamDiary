@@ -2,10 +2,8 @@ package com.boostcamp.dreamteam.dreamdiary.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.NavHost
-import androidx.navigation.navOptions
 import com.boostcamp.dreamteam.dreamdiary.community.CommunityGraph
 import com.boostcamp.dreamteam.dreamdiary.community.communityGraph
 import com.boostcamp.dreamteam.dreamdiary.feature.auth.SignInRoute
@@ -15,7 +13,6 @@ import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.diaryGraph
 import com.boostcamp.dreamteam.dreamdiary.setting.SettingGraph
 import com.boostcamp.dreamteam.dreamdiary.setting.settingGraph
 import com.boostcamp.dreamteam.dreamdiary.ui.DreamDiaryAppState
-import timber.log.Timber
 
 @Composable
 fun DreamDiaryNavHost(
@@ -47,84 +44,65 @@ fun DreamDiaryNavHost(
 
         diaryGraph(
             onCommunityClick = {
-                navController.navigate(CommunityGraph) {
-                    popUpTo(DiaryGraph) {
-                        saveState = true
-                    }
-                    launchSingleTop = true
-                    restoreState = true
-                }
+                val options = NavOptions.Builder()
+                    .setPopUpTo(DiaryGraph, inclusive = false, saveState = true)
+                    .setLaunchSingleTop(true)
+                    .setRestoreState(true)
+                    .build()
+                navController.navigate(CommunityGraph, options)
             },
             onSettingClick = {
-                navController.navigate(SettingGraph) {
-                    popUpTo(DiaryGraph) {
-                        saveState = true
-                    }
-                    launchSingleTop = true
-                    restoreState = true
-                }
+                val options = NavOptions.Builder()
+                    .setPopUpTo(DiaryGraph, inclusive = false, saveState = true)
+                    .setLaunchSingleTop(true)
+                    .setRestoreState(true)
+                    .build()
+                navController.navigate(SettingGraph, options)
             },
             navController = navController,
         )
 
         communityGraph(
             onDiaryClick = {
-                navController.navigate(
-                    DiaryGraph,
-                    navOptions = navOptions {
-                        popUpTo(CommunityGraph) {
-                            saveState = true
-                        }
-                        launchSingleTop = true
-                        restoreState = true
-                    },
-                )
+                val options = NavOptions.Builder()
+                    .setPopUpTo(CommunityGraph, inclusive = false, saveState = true)
+                    .setLaunchSingleTop(true)
+                    .setRestoreState(true)
+                    .build()
+                navController.navigate(DiaryGraph, options)
             },
             onSettingClick = {
-                navController.navigate(
-                    SettingGraph,
-                    navOptions = navOptions {
-                        Timber.d("${navController.graph.findStartDestination().route}")
-
-                        popUpTo(CommunityGraph) {
-                            saveState = true
-                        }
-                        launchSingleTop = true
-                        restoreState = true
-                    },
-                )
+                val options = NavOptions.Builder()
+                    .setPopUpTo(CommunityGraph, inclusive = false, saveState = true)
+                    .setLaunchSingleTop(true)
+                    .setRestoreState(true)
+                    .build()
+                navController.navigate(SettingGraph, options)
             },
         )
 
         settingGraph(
             onDiaryClick = {
-                navController.navigate(DiaryGraph) {
-                    Timber.d("${navController.graph.findStartDestination().route}")
-
-                    popUpTo(SettingGraph) {
-                        saveState = true
-                    }
-                    launchSingleTop = true
-                    restoreState = true
-                }
+                val options = NavOptions.Builder()
+                    .setPopUpTo(SettingGraph, inclusive = false, saveState = true)
+                    .setLaunchSingleTop(true)
+                    .setRestoreState(true)
+                    .build()
+                navController.navigate(DiaryGraph, options)
             },
             onCommunityClick = {
-                navController.navigate(CommunityGraph) {
-                    Timber.d("${navController.graph.findStartDestination().route}")
-
-                    popUpTo(SettingGraph) {
-                        saveState = true
-                    }
-                    launchSingleTop = true
-                    restoreState = true
-                }
+                val options = NavOptions.Builder()
+                    .setPopUpTo(SettingGraph, inclusive = false, saveState = true)
+                    .setLaunchSingleTop(true)
+                    .setRestoreState(true)
+                    .build()
+                navController.navigate(CommunityGraph, options)
             },
             onLogoutClick = {
-                navController.navigate(SignInRoute) {
-                    popUpTo(SettingGraph) {
-                        inclusive = true
-                    }
-                }
+                val options = NavOptions.Builder()
+                    .setPopUpTo(SettingGraph, inclusive = true)
+                    .build()
+                navController.navigate(SignInRoute, options)
             },
         )
 //        composable<MainRoute> {
