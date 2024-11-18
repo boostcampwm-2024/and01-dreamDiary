@@ -11,8 +11,10 @@ import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.DiaryGraph
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.diaryGraph
 import com.boostcamp.dreamteam.dreamdiary.setting.SettingGraph
 import com.boostcamp.dreamteam.dreamdiary.setting.settingGraph
+import kotlinx.serialization.Serializable
 
-const val MAIN_ROUTE = "main_route"
+@Serializable
+data object MainRoute
 
 @Composable
 fun MainScreen() {
