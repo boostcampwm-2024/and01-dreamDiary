@@ -44,7 +44,6 @@ fun DiaryDetailScreen(
     if (!loading) {
         DiaryDetailScreen(
             title = diaryUiState.title,
-            content = diaryUiState.content,
             sleepStartAt = diaryUiState.sleepStartAt,
             sleepEndAt = diaryUiState.sleepEndAt,
             labels = diaryUiState.labels,
@@ -57,7 +56,6 @@ fun DiaryDetailScreen(
 @Composable
 internal fun DiaryDetailScreen(
     title: String,
-    content: String,
     sleepStartAt: ZonedDateTime,
     sleepEndAt: ZonedDateTime,
     labels: List<LabelUi>,
@@ -98,7 +96,6 @@ internal fun DiaryDetailScreen(
             )
 
             DiaryDetailContent(
-                content = content,
                 diaryContents = diaryContents,
             )
         }
@@ -135,7 +132,6 @@ internal fun DiaryDetailScreenTopAppBar(onBackClick: () -> Unit) {
 
 @Composable
 internal fun DiaryDetailContent(
-    content: String,
     diaryContents: List<DiaryContentUi>,
     modifier: Modifier = Modifier,
 ) {
@@ -173,11 +169,12 @@ private fun DiaryHomeScreenContentPreview() {
     DreamdiaryTheme {
         DiaryDetailScreen(
             title = "투명 드래곤 크앙!",
-            content = "Body text for whatever you’d like to say. Add main takeaway points, quotes, anecdotes, or even a very very short story.",
             sleepStartAt = ZonedDateTime.now(),
             sleepEndAt = ZonedDateTime.now(),
             labels = filteredLabelsPreview,
-            diaryContents = listOf(),
+            diaryContents = listOf(
+                DiaryContentUi.Text("Body text for whatever you’d like to say. Add main takeaway points, quotes, anecdotes, or even a very very short story.")
+            ),
             onBackClick = {},
         )
     }
