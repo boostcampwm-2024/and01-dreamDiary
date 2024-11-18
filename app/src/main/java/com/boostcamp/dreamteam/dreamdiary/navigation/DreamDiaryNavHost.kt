@@ -57,7 +57,6 @@ fun DreamDiaryNavHost(
             },
             onSettingClick = {
                 navController.navigate(SettingGraph) {
-
                     popUpTo(DiaryGraph) {
                         saveState = true
                     }
@@ -73,7 +72,6 @@ fun DreamDiaryNavHost(
                 navController.navigate(
                     DiaryGraph,
                     navOptions = navOptions {
-
                         popUpTo(CommunityGraph) {
                             saveState = true
                         }
