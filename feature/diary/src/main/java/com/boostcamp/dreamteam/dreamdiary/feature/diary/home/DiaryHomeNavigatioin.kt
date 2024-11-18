@@ -3,6 +3,7 @@ package com.boostcamp.dreamteam.dreamdiary.feature.diary.home
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
+import androidx.navigation.navOptions
 import androidx.navigation.navigation
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.detail.DiaryDetailScreen
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.write.DiaryWriteScreen
@@ -30,7 +31,13 @@ fun NavGraphBuilder.diaryGraph(
     ) {
         composable<DiaryGraph.DiaryHomeRoute> {
             DiaryHomeScreen(
-                onDiaryClick = {
+                onDiaryClick = { diaryUI ->
+                    navController.navigate(
+                        route = DiaryGraph.DiaryDetailRoute(diaryUI.id),
+                        navOptions = navOptions {
+                            launchSingleTop = true
+                        },
+                    )
                 },
                 onNavigateToWriteScreen = { navController.navigate(DiaryGraph.DiaryWriteRoute) },
                 onNavigateToCommunity = onCommunityClick,
