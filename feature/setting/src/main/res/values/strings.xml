@@ -16,4 +16,5 @@
     <string name="setting_check_account">로그인된 SNS 계정 확인</string>
     <string name="setting_logout">로그아웃</string>
     <string name="setting_withdraw">탈퇴</string>
+    <string name="setting_login_go">로그인 하러가기</string>
 </resources>
