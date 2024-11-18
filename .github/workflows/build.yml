@@ -36,5 +36,12 @@ jobs:
           GOOGLE_SERVICES_JSON: ${{ secrets.GOOGLE_SERVICES_JSON }}
         run: echo "$GOOGLE_SERVICES_JSON" > ./app/google-services.json
 
+      - name: Decode Debug Keystore
+        env:
+          DEBUG_KEYSTORE_BASE64: ${{ secrets.DEBUG_KEYSTORE_BASE64 }}
+        run: |
+          mkdir -p $HOME/.android
+          echo "$DEBUG_KEYSTORE_BASE64" | base64 -d > $HOME/.android/debug.keystore
+
       - name: Run Build
         run: ./gradlew build --no-daemon
