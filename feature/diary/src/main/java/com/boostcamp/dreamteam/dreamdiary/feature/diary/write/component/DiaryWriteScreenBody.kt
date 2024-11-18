@@ -47,7 +47,7 @@ internal fun DiaryWriteScreenBody(
     onContentFocusChange: (contentIndex: Int) -> Unit,
     onContentTextPositionChange: (textPosition: Int) -> Unit,
     onContentTextChange: (contentIndex: Int, String) -> Unit,
-    onContentImageDelete: (DiaryContentUi) -> Unit,
+    onContentImageDelete: (contentIndex: Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier) {
@@ -98,7 +98,7 @@ private fun InputBody(
     onContentTextPositionChange: (textPosition: Int) -> Unit,
     onContentTextChange: (contentIndex: Int, String) -> Unit,
     onContentFocusChange: (contentIndex: Int) -> Unit,
-    onContentImageDelete: (DiaryContentUi) -> Unit,
+    onContentImageDelete: (contentIndex: Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier) {
@@ -106,7 +106,7 @@ private fun InputBody(
             when (diaryContent) {
                 is DiaryContentUi.Image -> BodyImage(
                     diaryContent = diaryContent,
-                    onContentImageDelete = onContentImageDelete,
+                    onContentImageDelete = { onContentImageDelete(index) },
                     modifier = Modifier.fillMaxWidth(),
                 )
 
@@ -128,7 +128,7 @@ private fun InputBody(
 @Composable
 private fun BodyImage(
     diaryContent: DiaryContentUi.Image,
-    onContentImageDelete: (DiaryContentUi) -> Unit,
+    onContentImageDelete: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Box(modifier = modifier) {
@@ -153,7 +153,7 @@ private fun BodyImage(
             },
         )
         FilledIconButton(
-            onClick = { },
+            onClick = { onContentImageDelete() },
             modifier = Modifier
                 .align(Alignment.TopEnd)
                 .padding(8.dp),

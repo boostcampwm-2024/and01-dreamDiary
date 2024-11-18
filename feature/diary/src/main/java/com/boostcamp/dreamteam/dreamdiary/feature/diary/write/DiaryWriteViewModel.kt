@@ -155,6 +155,35 @@ class DiaryWriteViewModel @Inject constructor(
         }
     }
 
+    fun deleteContentImage(contentIndex: Int) {
+        _uiState.update {
+            val diaryContents = it.diaryContents.toMutableList()
+
+            val safeContentIndex = minOf(contentIndex, diaryContents.size - 1)
+            val currentContent = diaryContents[safeContentIndex]
+            if (currentContent is DiaryContentUi.Image) {
+                diaryContents.removeAt(safeContentIndex)
+
+                if (0 < safeContentIndex && safeContentIndex < diaryContents.size) {
+                    val prev = diaryContents[safeContentIndex - 1]
+                    val next = diaryContents[safeContentIndex]
+                    if (prev is DiaryContentUi.Text && next is DiaryContentUi.Text) {
+                        diaryContents.removeAt(safeContentIndex)
+                        diaryContents.removeAt(safeContentIndex - 1)
+                        diaryContents.add(
+                            safeContentIndex - 1,
+                            DiaryContentUi.Text(text = prev.text + "\n" + next.text)
+                        )
+                    }
+                }
+            }
+
+            it.copy(
+                diaryContents = diaryContents
+            )
+        }
+    }
+
     private fun collectLabels() {
         viewModelScope.launch {
             _uiState.flatMapLatest {

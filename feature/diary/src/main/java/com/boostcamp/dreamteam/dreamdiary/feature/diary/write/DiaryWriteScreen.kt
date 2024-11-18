@@ -116,6 +116,7 @@ fun DiaryWriteScreen(
         onLabelFilterChange = viewModel::setLabelFilter,
         onClickLabelSave = viewModel::addLabel,
         onContentTextChange = viewModel::setContentText,
+        onContentImageDelete = viewModel::deleteContentImage,
         modifier = Modifier.imePadding(),
     )
 }
@@ -139,6 +140,7 @@ private fun DiaryWriteScreenContent(
     onLabelFilterChange: (String) -> Unit,
     onClickLabelSave: () -> Unit,
     onContentTextChange: (Int, String) -> Unit,
+    onContentImageDelete: (Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     // 현재는 사실상 Text만 포커스 됨
@@ -207,6 +209,7 @@ private fun DiaryWriteScreenContent(
             onContentTextChange = onContentTextChange,
             onCurrentFocusContentChange = { currentFocusContent = it },
             onContentTextPositionChange = { currentTextCursorPosition = it },
+            onContentImageDelete = onContentImageDelete,
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
@@ -233,6 +236,7 @@ private fun DiaryWriteScreen(
     onContentTextChange: (contentIndex: Int, String) -> Unit,
     onCurrentFocusContentChange: (Int) -> Unit,
     onContentTextPositionChange: (Int) -> Unit,
+    onContentImageDelete: (Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val scrollState = rememberScrollState()
@@ -263,7 +267,7 @@ private fun DiaryWriteScreen(
             onContentTextChange = onContentTextChange,
             onContentFocusChange = { onCurrentFocusContentChange(it) },
             onContentTextPositionChange = { onContentTextPositionChange(it) },
-            onContentImageDelete = { /* TODO */ },
+            onContentImageDelete = onContentImageDelete,
             modifier = Modifier
                 .fillMaxSize()
                 .padding(horizontal = 16.dp),
@@ -343,6 +347,7 @@ private fun PreviewDiaryListScreen() {
             onContentImageAdd = { _, _, _ -> },
             onClickSave = {},
             onContentTextChange = { _, _ -> },
+            onContentImageDelete = { }
         )
     }
 }
