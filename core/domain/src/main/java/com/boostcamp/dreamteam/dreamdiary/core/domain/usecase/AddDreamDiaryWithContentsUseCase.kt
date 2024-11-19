@@ -2,6 +2,7 @@ package com.boostcamp.dreamteam.dreamdiary.core.domain.usecase
 
 import com.boostcamp.dreamteam.dreamdiary.core.data.repository.DreamDiaryRepository
 import com.boostcamp.dreamteam.dreamdiary.core.model.DiaryContent
+import com.boostcamp.dreamteam.dreamdiary.core.model.NewDiaryContent
 import java.time.ZonedDateTime
 import javax.inject.Inject
 
@@ -10,7 +11,7 @@ class AddDreamDiaryWithContentsUseCase @Inject constructor(
 ) {
     suspend operator fun invoke(
         title: String,
-        diaryContents: List<DiaryContent>,
+        diaryContents: List<NewDiaryContent>,
         labels: List<String> = listOf(),
         sleepStartAt: ZonedDateTime,
         sleepEndAt: ZonedDateTime,
