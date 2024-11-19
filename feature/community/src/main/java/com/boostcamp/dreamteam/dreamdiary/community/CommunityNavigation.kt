@@ -32,7 +32,7 @@ fun NavGraphBuilder.communityGraph(
         startDestination = CommunityGraph.CommunityListRoute,
     ) {
         composable<CommunityGraph.CommunityListRoute> {
-            CommunityScreen(
+            CommunityListScreen(
                 onNavigateToDiary = onDiaryClick,
                 onNavigateToSetting = onSettingClick,
                 onDiaryClick = { diaryUi -> navController.navigateToCommunityDetail(diaryUi.id) },
