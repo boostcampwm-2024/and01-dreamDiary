@@ -13,4 +13,5 @@ data class Diary(
     val images: List<String>,
     val labels: List<Label>,
     val diaryContents: List<DiaryContent>,
+    val version: Long,
 )

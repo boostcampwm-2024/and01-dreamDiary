@@ -19,6 +19,7 @@ fun DreamDiaryEntity.toDomain(diaryContents: List<DiaryContent> = listOf()): Dia
         sleepStartAt = this.sleepStartAt,
         sleepEndAt = this.sleepEndAt,
         diaryContents = diaryContents,
+        version = this.version
     )
 }
 
@@ -40,5 +41,6 @@ fun DreamDiaryWithLabels.toDomain(diaryContents: List<DiaryContent> = listOf()):
         sleepStartAt = dreamDiary.sleepStartAt,
         sleepEndAt = dreamDiary.sleepEndAt,
         diaryContents = diaryContents,
+        version = dreamDiary.version
     )
 }
