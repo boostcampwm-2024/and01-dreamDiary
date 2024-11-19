@@ -30,6 +30,7 @@ dependencies {
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
+    implementation(project(":core:data"))
     androidTestImplementation(libs.androidx.espresso.core)
 
     // Coil
