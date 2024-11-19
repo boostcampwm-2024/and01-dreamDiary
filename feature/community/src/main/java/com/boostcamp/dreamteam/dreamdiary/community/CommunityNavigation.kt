@@ -10,6 +10,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
+import com.boostcamp.dreamteam.dreamdiary.community.list.CommunityListScreen
 import kotlinx.serialization.Serializable
 
 @Serializable
