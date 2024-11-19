@@ -1,5 +1,6 @@
 package com.boostcamp.dreamteam.dreamdiary.feature.diary.write.component
 
+import android.content.res.Configuration
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -26,6 +27,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.painterResource
@@ -79,7 +81,10 @@ private fun InputTitle(
         value = title,
         onValueChange = onTitleChange,
         modifier = modifier,
-        textStyle = MaterialTheme.typography.titleLarge,
+        textStyle = MaterialTheme.typography.titleLarge.copy(
+            color = MaterialTheme.colorScheme.onSurface,
+        ),
+        cursorBrush = SolidColor(MaterialTheme.colorScheme.tertiary),
         decorationBox = { innerTextField ->
             if (title.isEmpty()) {
                 Text(
@@ -190,7 +195,10 @@ private fun BodyText(
             onContentTextChange(it.text)
         },
         modifier = modifier,
-        textStyle = MaterialTheme.typography.bodyLarge,
+        textStyle = MaterialTheme.typography.bodyLarge.copy(
+            color = MaterialTheme.colorScheme.onSurface,
+        ),
+        cursorBrush = SolidColor(MaterialTheme.colorScheme.tertiary),
         decorationBox = { innerTextField ->
             if (textFieldValue.text.isEmpty()) {
                 Text(
@@ -206,6 +214,7 @@ private fun BodyText(
 }
 
 @Preview(showBackground = true)
+@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 private fun DiaryWriteScreenBodyPreviewEmpty() {
     DreamdiaryTheme {
@@ -223,6 +232,7 @@ private fun DiaryWriteScreenBodyPreviewEmpty() {
 }
 
 @Preview(showBackground = true)
+@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 private fun DiaryWriteScreenBodyPreviewFilled() {
     DreamdiaryTheme {
