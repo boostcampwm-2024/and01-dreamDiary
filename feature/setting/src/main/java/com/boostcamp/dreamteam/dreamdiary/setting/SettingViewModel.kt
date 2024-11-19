@@ -2,8 +2,10 @@ package com.boostcamp.dreamteam.dreamdiary.setting
 
 import android.content.SharedPreferences
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.boostcamp.dreamteam.dreamdiary.core.data.repository.AuthRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -12,10 +14,17 @@ class SettingViewModel @Inject constructor(
     private val sharedPreferences: SharedPreferences,
 ) : ViewModel() {
     fun signOut() {
-        authRepository.signOut()
+        authRepository.firebaseSignOut()
+        viewModelScope.launch {
+            authRepository.snsSignOut()
+        }
     }
 
     fun nonPasswordSignIn() {
         sharedPreferences.edit().putBoolean("onPass", false).apply()
+    }
+
+    fun getUserEmail(): String? {
+        return authRepository.getUserEmail()
     }
 }

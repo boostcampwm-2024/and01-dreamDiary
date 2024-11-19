@@ -143,14 +143,26 @@ internal fun SettingScreen(
             )
 
             // if 문으로 처리 로그아웃 또는 로그인 하러 가기
-            SettingOption(
-                icon = Icons.AutoMirrored.Outlined.Logout,
-                text = stringResource(R.string.setting_logout),
-                modifier = Modifier.clickable(onClick = {
-                    settingViewModel.nonPasswordSignIn()
-                    onLogoutClick()
-                }),
-            )
+            if (settingViewModel.getUserEmail() == null) {
+                SettingOption(
+                    icon = Icons.AutoMirrored.Outlined.Logout,
+                    text = stringResource(R.string.setting_login_go),
+                    modifier = Modifier.clickable(onClick = {
+                        settingViewModel.nonPasswordSignIn()
+                        onLogoutClick()
+                    }),
+                )
+            } else {
+                SettingOption(
+                    icon = Icons.AutoMirrored.Outlined.Logout,
+                    text = stringResource(R.string.setting_logout),
+                    modifier = Modifier.clickable(onClick = {
+                        settingViewModel.signOut()
+                        onLogoutClick()
+                    }),
+                )
+            }
+
             SettingOption(
                 icon = Icons.Outlined.Window,
                 text = stringResource(R.string.setting_withdraw),

@@ -95,6 +95,7 @@ fun SignInScreen(
     }
     when (signInState) {
         is SignInState.Success -> {
+            Timber.d("${SignInState.Success}")
             onSignInSuccess()
         }
 
