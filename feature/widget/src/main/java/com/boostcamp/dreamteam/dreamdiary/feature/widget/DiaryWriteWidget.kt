@@ -35,9 +35,7 @@ internal class DiaryWriteWidget : GlanceAppWidget() {
 
 @Composable
 @GlanceComposable
-private fun CreateDiaryWidgetContent(
-    modifier: GlanceModifier = GlanceModifier,
-) {
+private fun CreateDiaryWidgetContent(modifier: GlanceModifier = GlanceModifier) {
     Scaffold(
         modifier = modifier,
         backgroundColor = GlanceTheme.colors.widgetBackground,
