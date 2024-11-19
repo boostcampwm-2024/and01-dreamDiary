@@ -100,7 +100,7 @@ internal fun SettingScreen(
                 text = { Text("${settingViewModel.getUserEmail()}") },
                 confirmButton = {
                     TextButton(onClick = { showSNSDialog = false }) { Text("확인") }
-                }
+                },
             )
         }
         Column(
