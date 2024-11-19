@@ -137,6 +137,7 @@ internal class DefaultDreamDiaryRepository @Inject constructor(
                 val textEntity = dreamDiaryDao.getText(id) ?: continue
                 diaryContents.add(
                     DiaryContent.Text(
+                        id = textEntity.id,
                         text = textEntity.text,
                     ),
                 )
@@ -146,6 +147,7 @@ internal class DefaultDreamDiaryRepository @Inject constructor(
                 val imageEntity = dreamDiaryDao.getImage(id) ?: continue
                 diaryContents.add(
                     DiaryContent.Image(
+                        id = imageEntity.id,
                         path = imageEntity.path,
                     ),
                 )
