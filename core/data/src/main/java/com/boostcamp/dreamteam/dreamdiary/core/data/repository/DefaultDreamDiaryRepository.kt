@@ -117,7 +117,7 @@ internal class DefaultDreamDiaryRepository @Inject constructor(
     ): Flow<List<Diary>> =
         dreamDiaryDao
             .getDreamDiariesBySleepEndInRange(start, end)
-            .map { list -> list.map { it.toDomain() } }
+            .map { list -> list.map { it.toDomain(parseBody(it.body)) } }
 
     override suspend fun getDreamDiary(id: String): Diary {
         val dreamDiaryEntity = dreamDiaryDao.getDreamDiary(id)
