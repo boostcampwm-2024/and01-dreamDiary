@@ -2,7 +2,6 @@ package com.boostcamp.dreamteam.dreamdiary.feature.diary.home.component
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
@@ -15,8 +14,6 @@ import androidx.compose.material.icons.automirrored.outlined.Label
 import androidx.compose.material.icons.filled.AccessTime
 import androidx.compose.material.icons.filled.CalendarToday
 import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
@@ -30,7 +27,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -38,10 +34,10 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil3.compose.SubcomposeAsyncImage
+import com.boostcamp.dreamteam.dreamdiary.designsystem.component.DdCard
 import com.boostcamp.dreamteam.dreamdiary.designsystem.theme.DreamdiaryTheme
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.R
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.DiaryUi
-import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.LabelUi
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.diaryPreview1
 import java.time.chrono.Chronology
 import java.time.format.DateTimeFormatter
@@ -55,87 +51,80 @@ internal fun DiaryCard(
     onDiaryClick: (DiaryUi) -> Unit,
     onDeleteDiary: (DiaryUi) -> Unit,
     modifier: Modifier = Modifier,
-    containerColor: Color = MaterialTheme.colorScheme.surfaceContainerLowest,
-    locale: Locale = Locale.getDefault(),
 ) {
-    val dateFormatter = remember(locale) {
-        val pattern = DateTimeFormatterBuilder
-            .getLocalizedDateTimePattern(
-                FormatStyle.FULL,
-                null,
-                Chronology.ofLocale(locale),
-                locale,
-            )
-        DateTimeFormatter.ofPattern(pattern)
-    }
-
-    val timeFormatter = remember(locale) {
-        val pattern = DateTimeFormatterBuilder
-            .getLocalizedDateTimePattern(
-                null,
-                FormatStyle.SHORT,
-                Chronology.ofLocale(locale),
-                locale,
-            )
-        DateTimeFormatter.ofPattern(pattern)
-    }
-
-    Card(
-        modifier = modifier.clickable(onClick = { onDiaryClick(diary) }),
-        colors = CardDefaults.cardColors().copy(containerColor = containerColor),
-        elevation = CardDefaults.elevatedCardElevation(),
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-        ) {
-            diary.images.firstOrNull()?.let {
-                SubcomposeAsyncImage(
-                    model = it,
-                    contentDescription = stringResource(R.string.home_list_card_thumbnail, diary.title),
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .aspectRatio(16 / 9f),
-                )
-            }
-            CardTitle(
-                title = diary.title,
-                onDeleteDiary = { onDeleteDiary(diary) },
+    DdCard(
+        headline = {
+            CardHeadline(
+                diary = diary,
+                onDeleteDiary = onDeleteDiary,
                 modifier = Modifier.fillMaxWidth(),
             )
-
-            CardInfos(
-                createdDate = diary.createdAt.value.format(dateFormatter),
-                createdTime = diary.createdAt.value.format(timeFormatter),
+        },
+        modifier = modifier.clickable(onClick = { onDiaryClick(diary) }),
+        overline = {
+            CardOverline(
+                diary = diary,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .aspectRatio(16 / 9f),
             )
-            Spacer(modifier = Modifier.height(16.dp))
-
-            CardBody(diary.textContent)
-            Spacer(modifier = Modifier.height(16.dp))
-
-            CardFooter(labels = diary.labels)
-        }
+        },
+        underline = {
+            CardUnderline(
+                diary = diary,
+            )
+        },
+        tail = {
+            CardTail(diary)
+        },
+    ) {
+        CardBody(diary)
     }
 }
 
 @Composable
-private fun CardTitle(
-    title: String,
-    onDeleteDiary: () -> Unit,
+private fun CardBody(
+    diary: DiaryUi,
+    modifier: Modifier = Modifier,
+) {
+    Text(
+        text = diary.textContent,
+        modifier = modifier,
+        style = MaterialTheme.typography.bodyMedium,
+        maxLines = 3,
+        overflow = TextOverflow.Ellipsis,
+    )
+}
+
+@Composable
+private fun CardOverline(
+    diary: DiaryUi,
+    modifier: Modifier = Modifier,
+) {
+    diary.images.firstOrNull()?.let {
+        SubcomposeAsyncImage(
+            model = it,
+            contentDescription = stringResource(R.string.home_list_card_thumbnail, diary.title),
+            contentScale = ContentScale.Crop,
+            modifier = modifier,
+        )
+    }
+}
+
+@Composable
+private fun CardHeadline(
+    diary: DiaryUi,
+    onDeleteDiary: (DiaryUi) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     var isMenuVisible by remember { mutableStateOf(false) }
-
     Row(
         modifier = modifier,
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Text(
-            text = title,
-            style = MaterialTheme.typography.titleLarge,
+            text = diary.title,
             fontWeight = FontWeight.SemiBold,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
@@ -153,7 +142,7 @@ private fun CardTitle(
                 DropdownMenuItem(
                     text = { Text(text = stringResource(R.string.home_list_card_menu_delete)) },
                     onClick = {
-                        onDeleteDiary()
+                        onDeleteDiary(diary)
                         isMenuVisible = false
                     },
                 )
@@ -163,11 +152,31 @@ private fun CardTitle(
 }
 
 @Composable
-private fun CardInfos(
-    createdDate: String,
-    createdTime: String,
+private fun CardUnderline(
+    diary: DiaryUi,
     modifier: Modifier = Modifier,
+    locale: Locale = Locale.getDefault(),
 ) {
+    val dateFormatter = remember(locale) {
+        val pattern = DateTimeFormatterBuilder.getLocalizedDateTimePattern(
+            FormatStyle.FULL,
+            null,
+            Chronology.ofLocale(locale),
+            locale,
+        )
+        DateTimeFormatter.ofPattern(pattern)
+    }
+
+    val timeFormatter = remember(locale) {
+        val pattern = DateTimeFormatterBuilder.getLocalizedDateTimePattern(
+            null,
+            FormatStyle.SHORT,
+            Chronology.ofLocale(locale),
+            locale,
+        )
+        DateTimeFormatter.ofPattern(pattern)
+    }
+
     Row(
         modifier = modifier,
         verticalAlignment = Alignment.Bottom,
@@ -180,7 +189,9 @@ private fun CardInfos(
                 .padding(2.dp),
         )
         Spacer(modifier = Modifier.width(2.dp))
-        Text(text = createdDate, style = MaterialTheme.typography.labelMedium)
+        Text(
+            text = diary.createdAt.value.format(dateFormatter),
+        )
 
         Spacer(modifier = Modifier.width(4.dp))
 
@@ -193,33 +204,17 @@ private fun CardInfos(
         )
         Spacer(modifier = Modifier.width(2.dp))
 
-        Text(text = createdTime, style = MaterialTheme.typography.labelMedium)
+        Text(
+            text = diary.createdAt.value.format(timeFormatter),
+        )
     }
 }
 
 @Composable
-private fun CardBody(
-    content: String,
+private fun CardTail(
+    diary: DiaryUi,
     modifier: Modifier = Modifier,
 ) {
-    Text(
-        text = content,
-        modifier = modifier,
-        style = MaterialTheme.typography.bodyMedium,
-        maxLines = 3,
-        overflow = TextOverflow.Ellipsis,
-    )
-}
-
-@Composable
-fun CardFooter(
-    labels: List<LabelUi>,
-    modifier: Modifier = Modifier,
-) {
-    val formattedLabels by remember(labels) {
-        mutableStateOf(labels.joinToString { it.name })
-    }
-
     Row(
         modifier = modifier,
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -232,15 +227,13 @@ fun CardFooter(
         )
         Spacer(modifier = Modifier.width(4.dp))
 
-        if (labels.isEmpty()) {
+        if (diary.labels.isNotEmpty()) {
+            Text(text = diary.labels.joinToString { it.name })
+        } else {
             Text(
                 text = stringResource(R.string.home_list_card_label_empty),
-                style = MaterialTheme.typography.labelMedium.copy(
-                    color = MaterialTheme.colorScheme.secondary,
-                ),
+                color = MaterialTheme.colorScheme.secondary,
             )
-        } else {
-            Text(text = formattedLabels, style = MaterialTheme.typography.labelMedium)
         }
     }
 }
