@@ -26,6 +26,8 @@ interface DreamDiaryRepository {
 
     fun getDreamDiaries(): Flow<PagingData<Diary>>
 
+    fun getDreamDiariesByLabel(labels: List<String>): Flow<PagingData<Diary>>
+
     suspend fun addLabel(label: String)
 
     fun getLabels(search: String): Flow<List<Label>>
