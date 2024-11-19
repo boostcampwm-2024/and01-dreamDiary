@@ -1,19 +1,24 @@
 package com.boostcamp.dreamteam.dreamdiary.community.list
 
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.boostcamp.dreamteam.dreamdiary.community.R
 import com.boostcamp.dreamteam.dreamdiary.community.model.DiaryUi
+import com.boostcamp.dreamteam.dreamdiary.community.model.diariesUiPreview
 import com.boostcamp.dreamteam.dreamdiary.designsystem.theme.DreamdiaryTheme
 import com.boostcamp.dreamteam.dreamdiary.ui.HomeBottomNavItem
 import com.boostcamp.dreamteam.dreamdiary.ui.HomeBottomNavigation
@@ -24,13 +29,15 @@ fun CommunityListScreen(
     onNavigateToDiary: () -> Unit,
     onNavigateToSetting: () -> Unit,
     onDiaryClick: (DiaryUi) -> Unit,
-    modifier: Modifier = Modifier,
+    viewModel: CommunityListViewModel = hiltViewModel(),
 ) {
+    val state by viewModel.state.collectAsStateWithLifecycle()
+
     CommunityListScreenContent(
         onNavigateToDiary = onNavigateToDiary,
         onNavigateToSetting = onNavigateToSetting,
+        diaries = state.diaries,
         onDiaryClick = onDiaryClick,
-        modifier = modifier,
     )
 }
 
@@ -39,6 +46,7 @@ fun CommunityListScreen(
 private fun CommunityListScreenContent(
     onNavigateToDiary: () -> Unit,
     onNavigateToSetting: () -> Unit,
+    diaries: List<DiaryUi>,
     onDiaryClick: (DiaryUi) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -66,10 +74,15 @@ private fun CommunityListScreenContent(
             HomeBottomNavigation(items = navigationItems)
         },
     ) { innerPadding ->
-        Column(
-            modifier = Modifier.fillMaxSize().padding(innerPadding).padding(horizontal = 16.dp),
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+                .padding(horizontal = 16.dp),
         ) {
-            // TODO:
+            items(items = diaries, key = { it.id }) { diary: DiaryUi ->
+                // TODO: Implement DiaryCard
+            }
         }
     }
 }
@@ -82,6 +95,7 @@ private fun CommunityListScreenContentPreview() {
             onNavigateToDiary = { },
             onNavigateToSetting = { },
             onDiaryClick = { },
+            diaries = diariesUiPreview,
         )
     }
 }
