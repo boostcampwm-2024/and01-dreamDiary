@@ -2,6 +2,7 @@ package com.boostcamp.dreamteam.dreamdiary.core.data.repository
 
 import androidx.paging.PagingData
 import com.boostcamp.dreamteam.dreamdiary.core.model.Diary
+import com.boostcamp.dreamteam.dreamdiary.core.model.DiaryContent
 import com.boostcamp.dreamteam.dreamdiary.core.model.Label
 import kotlinx.coroutines.flow.Flow
 import java.time.Instant
@@ -10,6 +11,14 @@ interface DreamDiaryRepository {
     suspend fun addDreamDiary(
         title: String,
         body: String,
+        labels: List<String>,
+        sleepStartAt: Instant,
+        sleepEndAt: Instant,
+    )
+
+    suspend fun addDreamDiary(
+        title: String,
+        diaryContents: List<DiaryContent>,
         labels: List<String>,
         sleepStartAt: Instant,
         sleepEndAt: Instant,

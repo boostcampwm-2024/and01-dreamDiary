@@ -12,4 +12,5 @@ data class Diary(
     val sleepEndAt: Instant,
     val images: List<String>,
     val labels: List<Label>,
+    val diaryContents: List<DiaryContent>,
 )

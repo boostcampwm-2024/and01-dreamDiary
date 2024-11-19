@@ -1,6 +1,7 @@
 package com.boostcamp.dreamteam.dreamdiary.feature.diary.model
 
 import com.boostcamp.dreamteam.dreamdiary.core.model.Diary
+import com.boostcamp.dreamteam.dreamdiary.core.model.DiaryContent
 import com.boostcamp.dreamteam.dreamdiary.core.model.Label
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.vo.DisplayableDateTime
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.vo.toDisplayableDateTime
@@ -20,6 +21,8 @@ data class DiaryUi(
     val sleepStartAt: DisplayableDateTime,
     val sleepEndAt: DisplayableDateTime,
     val sortKey: DisplayableDateTime,
+    val diaryContents: List<DiaryContentUi>,
+    val textContent: String,
 )
 
 internal fun Diary.toDiaryUi(): DiaryUi =
@@ -36,6 +39,8 @@ internal fun Diary.toDiaryUi(): DiaryUi =
             sleepEndAt = sleepEndAt.toDisplayableDateTime(),
             // TODO 어떤 값으로 정렬할 것인지 선택이 가능
             sortKey = sleepEndAt.toDisplayableDateTime(),
+            diaryContents = diaryContents.map { it.toUiState() },
+            textContent = diaryContents.filterIsInstance<DiaryContent.Text>().joinToString("\n") { it.text },
         )
     }
 
@@ -53,6 +58,7 @@ internal val diaryPreview1 = Diary(
     ),
     sleepStartAt = LocalDate.of(2021, 9, 1).atStartOfDay(ZoneId.systemDefault()).toInstant(),
     sleepEndAt = LocalDate.of(2021, 9, 1).atStartOfDay(ZoneId.systemDefault()).toInstant(),
+    diaryContents = listOf(),
 ).toDiaryUi()
 
 internal val diaryPreview2 = Diary(
@@ -68,6 +74,7 @@ internal val diaryPreview2 = Diary(
     ),
     sleepStartAt = LocalDate.of(2021, 8, 30).atStartOfDay(ZoneId.systemDefault()).toInstant(),
     sleepEndAt = LocalDate.of(2021, 8, 31).atStartOfDay(ZoneId.systemDefault()).toInstant(),
+    diaryContents = listOf(),
 ).toDiaryUi()
 
 internal val diariesPreview = run {
@@ -92,6 +99,23 @@ internal val diariesPreview = run {
             sleepStartAt = displayableDateTime,
             sleepEndAt = displayableDateTime,
             sortKey = displayableDateTime,
+            diaryContents = listOf(),
+            textContent = "오늘은 날씨가 좋았다.",
         )
+    }
+}
+
+fun DiaryContent.toUiState(): DiaryContentUi {
+    return when (this) {
+        is DiaryContent.Text -> {
+            DiaryContentUi.Text(
+                text = this.text,
+            )
+        }
+        is DiaryContent.Image -> {
+            DiaryContentUi.Image(
+                path = this.path,
+            )
+        }
     }
 }

@@ -112,7 +112,7 @@ internal fun DiaryCard(
             )
             Spacer(modifier = Modifier.height(16.dp))
 
-            CardBody(diary.content)
+            CardBody(diary.textContent)
             Spacer(modifier = Modifier.height(16.dp))
 
             CardFooter(labels = diary.labels)

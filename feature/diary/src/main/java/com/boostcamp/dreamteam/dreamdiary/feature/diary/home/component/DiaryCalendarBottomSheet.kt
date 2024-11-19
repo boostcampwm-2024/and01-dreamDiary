@@ -198,7 +198,7 @@ private fun ListBottomSheet(
                     Text(text = diary.sortKey.value.format(dateTimeFormatter))
                 },
                 supportingContent = {
-                    Text(text = diary.content, maxLines = 2, overflow = TextOverflow.Ellipsis)
+                    Text(text = diary.textContent, maxLines = 2, overflow = TextOverflow.Ellipsis)
                 },
                 colors = ListItemDefaults.colors(
                     containerColor = MaterialTheme.colorScheme.surfaceContainerLowest,

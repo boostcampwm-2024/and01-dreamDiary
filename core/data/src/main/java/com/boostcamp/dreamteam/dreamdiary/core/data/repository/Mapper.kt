@@ -4,19 +4,21 @@ import com.boostcamp.dreamteam.dreamdiary.core.data.database.model.DreamDiaryEnt
 import com.boostcamp.dreamteam.dreamdiary.core.data.database.model.DreamDiaryWithLabels
 import com.boostcamp.dreamteam.dreamdiary.core.data.database.model.LabelEntity
 import com.boostcamp.dreamteam.dreamdiary.core.model.Diary
+import com.boostcamp.dreamteam.dreamdiary.core.model.DiaryContent
 import com.boostcamp.dreamteam.dreamdiary.core.model.Label
 
-fun DreamDiaryEntity.toDomain(): Diary {
+fun DreamDiaryEntity.toDomain(diaryContents: List<DiaryContent> = listOf()): Diary {
     return Diary(
         id = this.id,
         title = this.title,
         content = this.body,
         createdAt = this.createdAt,
         updatedAt = this.updatedAt,
-        images = listOf(),
+        images = diaryContents.filterIsInstance<DiaryContent.Image>().map { it.path },
         labels = listOf(),
         sleepStartAt = this.sleepStartAt,
         sleepEndAt = this.sleepEndAt,
+        diaryContents = diaryContents,
     )
 }
 
@@ -26,16 +28,17 @@ fun LabelEntity.toDomain(): Label {
     )
 }
 
-fun DreamDiaryWithLabels.toDomain(): Diary {
+fun DreamDiaryWithLabels.toDomain(diaryContents: List<DiaryContent> = listOf()): Diary {
     return Diary(
         id = dreamDiary.id,
         title = dreamDiary.title,
         content = dreamDiary.body,
         createdAt = dreamDiary.createdAt,
         updatedAt = dreamDiary.updatedAt,
-        images = listOf(),
+        images = diaryContents.filterIsInstance<DiaryContent.Image>().map { it.path },
         labels = this.labels.map { it.toDomain() },
         sleepStartAt = dreamDiary.sleepStartAt,
         sleepEndAt = dreamDiary.sleepEndAt,
+        diaryContents = diaryContents,
     )
 }

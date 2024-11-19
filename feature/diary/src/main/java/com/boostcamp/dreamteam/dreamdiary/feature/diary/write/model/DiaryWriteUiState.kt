@@ -1,5 +1,6 @@
 package com.boostcamp.dreamteam.dreamdiary.feature.diary.write.model
 
+import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.DiaryContentUi
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.LabelUi
 import java.time.ZonedDateTime
 
@@ -11,4 +12,5 @@ data class DiaryWriteUiState(
     val selectedLabels: Set<LabelUi> = emptySet(),
     val sleepEndAt: ZonedDateTime = ZonedDateTime.now(),
     val sleepStartAt: ZonedDateTime = sleepEndAt.minusHours(6),
+    val diaryContents: List<DiaryContentUi> = listOf(DiaryContentUi.Text("")),
 )
