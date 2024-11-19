@@ -9,7 +9,9 @@ import androidx.glance.GlanceModifier
 import androidx.glance.GlanceTheme
 import androidx.glance.Image
 import androidx.glance.ImageProvider
+import androidx.glance.action.clickable
 import androidx.glance.appwidget.GlanceAppWidget
+import androidx.glance.appwidget.action.actionRunCallback
 import androidx.glance.appwidget.provideContent
 import androidx.glance.layout.Alignment
 import androidx.glance.layout.Column
@@ -28,7 +30,8 @@ internal class DiaryWriteWidget : GlanceAppWidget() {
                 CreateDiaryWidgetContent(
                     modifier = GlanceModifier
                         .fillMaxSize()
-                        .padding(4.dp),
+                        .padding(4.dp)
+                        .clickable(onClick = actionRunCallback<DiaryWriteAction>()),
                 )
             }
         }
