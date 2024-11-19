@@ -178,7 +178,9 @@ private fun DiaryHomeScreenContentPreview() {
             sleepEndAt = ZonedDateTime.now(),
             labels = filteredLabelsPreview,
             diaryContents = listOf(
-                DiaryContentUi.Text("Body text for whatever you’d like to say. Add main takeaway points, quotes, anecdotes, or even a very very short story.")
+                DiaryContentUi.Text(
+                    "Body text for whatever you’d like to say. Add main takeaway points, quotes, anecdotes, or even a very very short story.",
+                ),
             ),
             onBackClick = {},
         )
