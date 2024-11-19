@@ -2,7 +2,7 @@ package com.boostcamp.dreamteam.dreamdiary.feature.widget
 
 import android.content.Context
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.unit.dp
+import androidx.glance.ColorFilter
 import androidx.glance.GlanceComposable
 import androidx.glance.GlanceId
 import androidx.glance.GlanceModifier
@@ -12,13 +12,11 @@ import androidx.glance.ImageProvider
 import androidx.glance.action.clickable
 import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.action.actionRunCallback
+import androidx.glance.appwidget.components.Scaffold
 import androidx.glance.appwidget.provideContent
 import androidx.glance.layout.Alignment
 import androidx.glance.layout.Column
 import androidx.glance.layout.fillMaxSize
-import androidx.glance.layout.fillMaxWidth
-import androidx.glance.layout.padding
-import androidx.glance.text.Text
 
 internal class DiaryWriteWidget : GlanceAppWidget() {
     override suspend fun provideGlance(
@@ -28,10 +26,7 @@ internal class DiaryWriteWidget : GlanceAppWidget() {
         provideContent {
             GlanceTheme {
                 CreateDiaryWidgetContent(
-                    modifier = GlanceModifier
-                        .fillMaxSize()
-                        .padding(4.dp)
-                        .clickable(onClick = actionRunCallback<DiaryWriteAction>()),
+                    modifier = GlanceModifier.clickable(onClick = actionRunCallback<DiaryWriteAction>()),
                 )
             }
         }
@@ -43,17 +38,22 @@ internal class DiaryWriteWidget : GlanceAppWidget() {
 private fun CreateDiaryWidgetContent(
     modifier: GlanceModifier = GlanceModifier,
 ) {
-    Column(
+    Scaffold(
         modifier = modifier,
-        verticalAlignment = Alignment.Vertical.CenterVertically,
-        horizontalAlignment = Alignment.Horizontal.CenterHorizontally,
+        backgroundColor = GlanceTheme.colors.widgetBackground,
     ) {
-        // TODO: 앱 아이콘으로 변경
-        Image(
-            provider = ImageProvider(resId = R.drawable.ic_android),
-            contentDescription = "꿈 일기 작성",
-            modifier = GlanceModifier.fillMaxWidth(),
-        )
-        Text(text = "꿈 일기 작성")
+        Column(
+            modifier = GlanceModifier.fillMaxSize(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            // TODO: 앱 아이콘으로 변경
+            Image(
+                provider = ImageProvider(resId = R.drawable.ic_android),
+                contentDescription = "꿈 일기 작성",
+                modifier = GlanceModifier.fillMaxSize(),
+                colorFilter = ColorFilter.tint(GlanceTheme.colors.primary),
+            )
+        }
     }
 }
