@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="image_load_fail">이미지 로딩 실패</string>
+</resources>
