@@ -7,12 +7,16 @@ import androidx.paging.map
 import com.boostcamp.dreamteam.dreamdiary.core.domain.usecase.GetDiariesFilterType.SLEEP_END_AT
 import com.boostcamp.dreamteam.dreamdiary.core.domain.usecase.GetDreamDiariesInRangeByUseCase
 import com.boostcamp.dreamteam.dreamdiary.core.domain.usecase.GetDreamDiariesUseCase
+import com.boostcamp.dreamteam.dreamdiary.core.domain.usecase.GetLabelsUseCase
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.tabcalendar.DiaryHomeTabCalendarUIState
+import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.LabelUi
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.toDiaryUi
+import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.toLabelUi
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
@@ -25,6 +29,7 @@ import javax.inject.Inject
 @HiltViewModel
 class DiaryHomeViewModel @Inject constructor(
     getDreamDiariesUseCase: GetDreamDiariesUseCase,
+    getLabelsUseCase: GetLabelsUseCase,
     getDreamDiariesInRangeByUseCase: GetDreamDiariesInRangeByUseCase,
 ) : ViewModel() {
     val dreamDiaries = getDreamDiariesUseCase()
@@ -33,6 +38,29 @@ class DiaryHomeViewModel @Inject constructor(
                 it.toDiaryUi()
             }
         }.cachedIn(viewModelScope)
+
+    val dreamLabels = getLabelsUseCase("")
+        .map { labels -> labels.map { it.toLabelUi() } }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000L),
+            initialValue = emptyList(),
+        )
+
+    private val _labelOptions = MutableStateFlow(setOf<LabelUi>())
+    val labelOptions = _labelOptions.asStateFlow()
+
+    fun toggleLabel(labelUi: LabelUi) {
+        _labelOptions.update {
+            val options = it.toMutableSet()
+            if (options.contains(labelUi)) {
+                options.remove(labelUi)
+            } else {
+                options.add(labelUi)
+            }
+            options
+        }
+    }
 
     private val yearMonth = MutableStateFlow(YearMonth.now())
 

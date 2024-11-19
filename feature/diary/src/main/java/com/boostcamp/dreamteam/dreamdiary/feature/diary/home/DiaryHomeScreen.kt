@@ -37,6 +37,7 @@ import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.tabcalendar.diaryHo
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.tablist.DiaryListTab
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.tablist.pagedDiariesPreview
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.DiaryUi
+import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.LabelUi
 import com.boostcamp.dreamteam.dreamdiary.ui.HomeBottomNavItem
 import com.boostcamp.dreamteam.dreamdiary.ui.HomeBottomNavigation
 import com.boostcamp.dreamteam.dreamdiary.ui.NavigationItem
@@ -52,9 +53,14 @@ fun DiaryHomeScreen(
 ) {
     val diaries = viewModel.dreamDiaries.collectAsLazyPagingItems()
     val calendarUIState by viewModel.tabCalendarUiState.collectAsStateWithLifecycle()
+    val labels by viewModel.dreamLabels.collectAsStateWithLifecycle()
+    val labelOptions by viewModel.labelOptions.collectAsStateWithLifecycle()
 
     DiaryHomeScreenContent(
         diaries = diaries,
+        labels = labels,
+        labelOptions = labelOptions,
+        onCheckLabel = viewModel::toggleLabel,
         calendarUIState = calendarUIState,
         onCalendarYearMothChange = viewModel::setCalendarYearMonth,
         onNavigateToWriteScreen = onNavigateToWriteScreen,
@@ -69,6 +75,9 @@ fun DiaryHomeScreen(
 @Composable
 private fun DiaryHomeScreenContent(
     diaries: LazyPagingItems<DiaryUi>,
+    labels: List<LabelUi>,
+    labelOptions: Set<LabelUi>,
+    onCheckLabel: (LabelUi) -> Unit,
     calendarUIState: DiaryHomeTabCalendarUIState,
     onCalendarYearMothChange: (YearMonth) -> Unit,
     onNavigateToWriteScreen: () -> Unit,
@@ -154,6 +163,9 @@ private fun DiaryHomeScreenContent(
             when (selectedTabIndex) {
                 0 -> DiaryListTab(
                     diaries = diaries,
+                    labels = labels,
+                    labelOptions = labelOptions,
+                    onCheckLabel = onCheckLabel,
                     onDiaryClick = onDiaryClick,
                     onDeleteDiary = onDeleteDiary,
                     modifier = tabModifier,
@@ -207,6 +219,9 @@ private fun DiaryHomeScreenContentPreview() {
     DreamdiaryTheme {
         DiaryHomeScreenContent(
             diaries = pagedDiariesPreview.collectAsLazyPagingItems(),
+            labels = listOf(),
+            labelOptions = setOf(),
+            onCheckLabel = {},
             calendarUIState = diaryHomeTabCalendarUIStatePreview,
             onCalendarYearMothChange = { },
             onNavigateToWriteScreen = {},
