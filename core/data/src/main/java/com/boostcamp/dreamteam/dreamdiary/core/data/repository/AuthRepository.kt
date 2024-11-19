@@ -42,4 +42,17 @@ class AuthRepository @Inject constructor(
         auth.currentUser?.reload()
         return auth.currentUser?.email
     }
+
+    fun getSignInProvider(): String? {
+        val user = auth.currentUser
+        if (user != null) {
+            for (profile in user.providerData) {
+                when (profile.providerId) {
+                    "google.com" -> return "Google"
+                    "github.com" -> return "GitHub"
+                }
+            }
+        }
+        return null
+    }
 }

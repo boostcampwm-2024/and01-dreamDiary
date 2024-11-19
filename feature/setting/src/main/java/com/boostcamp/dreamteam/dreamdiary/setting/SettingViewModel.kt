@@ -27,4 +27,8 @@ class SettingViewModel @Inject constructor(
     fun getUserEmail(): String? {
         return authRepository.getUserEmail()
     }
+
+    fun getSignInProvider(): String? {
+        return authRepository.getSignInProvider()
+    }
 }
