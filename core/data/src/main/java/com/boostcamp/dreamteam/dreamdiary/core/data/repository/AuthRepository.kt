@@ -9,6 +9,7 @@ import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.OAuthProvider
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.tasks.await
+import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -41,5 +42,18 @@ class AuthRepository @Inject constructor(
     fun getUserEmail(): String? {
         auth.currentUser?.reload()
         return auth.currentUser?.email
+    }
+
+    fun getSignInProvider(): String? {
+        val user = auth.currentUser
+        if (user != null) {
+            for (profile in user.providerData) {
+                when (profile.providerId) {
+                    "google.com" -> return "Google"
+                    "github.com" -> return "GitHub"
+                }
+            }
+        }
+        return null
     }
 }
