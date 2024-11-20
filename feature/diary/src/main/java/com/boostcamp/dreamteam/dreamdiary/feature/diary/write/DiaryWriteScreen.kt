@@ -112,7 +112,9 @@ fun DiaryWriteScreen(
         onClickLabelSave = viewModel::addLabel,
         onContentTextChange = viewModel::setContentText,
         onContentImageDelete = viewModel::deleteContentImage,
-        modifier = Modifier.imePadding(),
+        modifier = Modifier
+            .fillMaxSize()
+            .imePadding(),
     )
 }
 
