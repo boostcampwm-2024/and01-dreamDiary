@@ -4,7 +4,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
 import androidx.paging.map
+import com.boostcamp.dreamteam.dreamdiary.core.data.database.dao.DreamDiaryDao
 import com.boostcamp.dreamteam.dreamdiary.core.domain.usecase.GetDiariesFilterType.SLEEP_END_AT
+import com.boostcamp.dreamteam.dreamdiary.core.domain.usecase.GetDreamDiariesByFilterUseCase
 import com.boostcamp.dreamteam.dreamdiary.core.domain.usecase.GetDreamDiariesInRangeByUseCase
 import com.boostcamp.dreamteam.dreamdiary.core.domain.usecase.GetDreamDiariesUseCase
 import com.boostcamp.dreamteam.dreamdiary.core.domain.usecase.GetLabelsUseCase
@@ -28,16 +30,10 @@ import javax.inject.Inject
 
 @HiltViewModel
 class DiaryHomeViewModel @Inject constructor(
-    getDreamDiariesUseCase: GetDreamDiariesUseCase,
+    getDreamDiariesByFilterUseCase: GetDreamDiariesByFilterUseCase,
     getLabelsUseCase: GetLabelsUseCase,
     getDreamDiariesInRangeByUseCase: GetDreamDiariesInRangeByUseCase,
 ) : ViewModel() {
-    val dreamDiaries = getDreamDiariesUseCase()
-        .map { pagingData ->
-            pagingData.map {
-                it.toDiaryUi()
-            }
-        }.cachedIn(viewModelScope)
 
     val dreamLabels = getLabelsUseCase("")
         .map { labels -> labels.map { it.toLabelUi() } }
@@ -49,6 +45,15 @@ class DiaryHomeViewModel @Inject constructor(
 
     private val _labelOptions = MutableStateFlow(setOf<LabelUi>())
     val labelOptions = _labelOptions.asStateFlow()
+
+    val dreamDiaries = _labelOptions.flatMapLatest {
+        getDreamDiariesByFilterUseCase(it.map { it.name })
+            .map { pagingData ->
+                pagingData.map {
+                    it.toDiaryUi()
+                }
+            }
+    }.cachedIn(viewModelScope)
 
     fun toggleLabel(labelUi: LabelUi) {
         _labelOptions.update {
