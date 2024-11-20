@@ -125,6 +125,14 @@ internal class DefaultDreamDiaryRepository @Inject constructor(
         return dreamDiaryEntity.toDomain(parseBody(dreamDiaryEntity.dreamDiary.body))
     }
 
+    override suspend fun getDreamDiariesNeedSync(): List<Diary> {
+        return dreamDiaryDao.getDreamDiariesNeedSync().map { it.toDomain(parseBody(it.dreamDiary.body)) }
+    }
+
+    override suspend fun updateDreamDiaryVersionAndNeedSync(id: String, version: Long) {
+        dreamDiaryDao.updateDreamDiaryVersionAndNeedSync(id, version)
+    }
+
     private suspend fun parseBody(body: String): List<DiaryContent> {
         val diaryContents = mutableListOf<DiaryContent>()
 

@@ -39,6 +39,8 @@ interface DreamDiaryDao {
                 updatedAt = Instant.now(),
                 sleepStartAt = sleepStartAt,
                 sleepEndAt = sleepEndAt,
+                needSync = true,
+                version = 0L,
             ),
         )
         setLabelsToDreamDiary(dreamDiaryId, labels)
@@ -89,4 +91,11 @@ interface DreamDiaryDao {
     @Transaction
     @Query("select * from diary where id = :id")
     suspend fun getDreamDiary(id: String): DreamDiaryWithLabels
+
+    @Transaction
+    @Query("select * from diary where needSync = 1")
+    suspend fun getDreamDiariesNeedSync(): List<DreamDiaryWithLabels>
+
+    @Query("update diary set version = :version, needSync = 0 where id = :id")
+    suspend fun updateDreamDiaryVersionAndNeedSync(id: String, version: Long)
 }

@@ -41,4 +41,8 @@ interface DreamDiaryRepository {
     ): Flow<List<Diary>>
 
     suspend fun getDreamDiary(id: String): Diary
+
+    suspend fun getDreamDiariesNeedSync(): List<Diary>
+
+    suspend fun updateDreamDiaryVersionAndNeedSync(id: String, version: Long)
 }
