@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.boostcamp.dreamteam.dreamdiary.core.domain.usecase.AddDreamDiaryWithContentsUseCase
 import com.boostcamp.dreamteam.dreamdiary.core.domain.usecase.AddLabelUseCase
+import com.boostcamp.dreamteam.dreamdiary.core.domain.usecase.GetDreamDiaryUseCase
 import com.boostcamp.dreamteam.dreamdiary.core.domain.usecase.GetLabelsUseCase
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.DiaryContentUi
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.LabelUi
@@ -14,6 +15,7 @@ import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.toLabelUi
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.write.model.DiaryWriteEvent
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.write.model.DiaryWriteUiState
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.write.model.LabelAddFailureReason
+import com.boostcamp.dreamteam.dreamdiary.feature.diary.write.model.toUiState
 import com.boostcamp.dreamteam.dreamdiary.feature.flowWithStarted
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -32,11 +34,15 @@ import javax.inject.Inject
 
 @HiltViewModel
 class DiaryWriteViewModel @Inject constructor(
-    private val savedStateHandle: SavedStateHandle,
+    savedStateHandle: SavedStateHandle,
     private val addDreamDiaryUseCase: AddDreamDiaryWithContentsUseCase,
+    private val getDreamDiaryUseCase: GetDreamDiaryUseCase,
     private val addLabelUseCase: AddLabelUseCase,
     private val getLabelsUseCase: GetLabelsUseCase,
 ) : ViewModel() {
+    private val diaryId: String? = savedStateHandle.get<String>("diaryId")
+    private val isEditMode = diaryId != null
+
     private val _uiState = MutableStateFlow(DiaryWriteUiState())
     val uiState: StateFlow<DiaryWriteUiState> = _uiState.asStateFlow()
 
@@ -44,6 +50,14 @@ class DiaryWriteViewModel @Inject constructor(
     val event = _event.receiveAsFlow()
 
     init {
+        if (isEditMode) {
+            viewModelScope.launch {
+                diaryId?.let {
+                    _uiState.value = getDreamDiaryUseCase(it).toUiState()
+                }
+            }
+        }
+
         collectLabels()
     }
 
