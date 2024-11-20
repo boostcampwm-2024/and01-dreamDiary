@@ -36,10 +36,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.boostcamp.dreamteam.dreamdiary.designsystem.theme.DreamdiaryTheme
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.R
+import com.boostcamp.dreamteam.dreamdiary.feature.diary.component.component.LabelSelectionDialog
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.LabelUi
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.filteredLabelsPreview
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.selectedLabelsPreview
-import com.boostcamp.dreamteam.dreamdiary.feature.diary.component.component.LabelSelectionDialog
 import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalTime
