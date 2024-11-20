@@ -58,15 +58,15 @@ internal class DefaultDreamDiaryRepository @Inject constructor(
         title: String,
         diaryContents: List<DiaryContent>,
         labels: List<String>,
-        sleepStartAt: Instant?,
-        sleepEndAt: Instant?,
+        sleepStartAt: Instant,
+        sleepEndAt: Instant,
     ) {
         dreamDiaryDao.updateDreamDiary(
             diaryId = diaryId,
             title = title,
             body = makeBody(diaryContents = diaryContents),
-            sleepStartAt = sleepStartAt ?: Instant.now(),
-            sleepEndAt = sleepEndAt ?: Instant.now(),
+            sleepStartAt = sleepStartAt,
+            sleepEndAt = sleepEndAt,
         )
     }
 
