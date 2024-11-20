@@ -43,35 +43,28 @@ internal class DefaultDreamDiaryRepository @Inject constructor(
         sleepStartAt: Instant,
         sleepEndAt: Instant,
     ) {
-        var body = ""
-        for (diaryContent in diaryContents) {
-            val newId = UUID.randomUUID().toString()
-            when (diaryContent) {
-                is DiaryContent.Text -> {
-                    dreamDiaryDao.insertText(
-                        TextEntity(
-                            newId,
-                            diaryContent.text,
-                        ),
-                    )
-                    body += "text:$newId:"
-                }
-
-                is DiaryContent.Image -> {
-                    dreamDiaryDao.insertImage(
-                        ImageEntity(
-                            newId,
-                            diaryContent.path,
-                        ),
-                    )
-                    body += "image:$newId:"
-                }
-            }
-        }
+        val body = makeBody(diaryContents)
         dreamDiaryDao.insertDreamDiary(
             title = title,
             body = body,
             labels = labels,
+            sleepStartAt = sleepStartAt,
+            sleepEndAt = sleepEndAt,
+        )
+    }
+
+    override suspend fun updateDreamDiary(
+        diaryId: String,
+        title: String,
+        diaryContents: List<DiaryContent>,
+        labels: List<String>,
+        sleepStartAt: Instant,
+        sleepEndAt: Instant,
+    ) {
+        dreamDiaryDao.updateDreamDiary(
+            diaryId = diaryId,
+            title = title,
+            body = makeBody(diaryContents = diaryContents),
             sleepStartAt = sleepStartAt,
             sleepEndAt = sleepEndAt,
         )
@@ -87,8 +80,8 @@ internal class DefaultDreamDiaryRepository @Inject constructor(
             }
         }
 
-    override fun getDreamDiariesByLabel(labels: List<String>): Flow<PagingData<Diary>> {
-        return Pager(
+    override fun getDreamDiariesByLabel(labels: List<String>): Flow<PagingData<Diary>> =
+        Pager(
             config = PagingConfig(pageSize = 100),
             pagingSourceFactory = { dreamDiaryDao.getDreamDiariesByLabels(labels) },
         ).flow.map { pagingData ->
@@ -96,7 +89,6 @@ internal class DefaultDreamDiaryRepository @Inject constructor(
                 it.toDomain(parseBody(it.dreamDiary.body))
             }
         }
-    }
 
     override suspend fun addLabel(label: String) {
         dreamDiaryDao.insertLabel(
@@ -133,6 +125,38 @@ internal class DefaultDreamDiaryRepository @Inject constructor(
     override suspend fun getDreamDiary(id: String): Diary {
         val dreamDiaryEntity = dreamDiaryDao.getDreamDiary(id)
         return dreamDiaryEntity.toDomain(parseBody(dreamDiaryEntity.dreamDiary.body))
+    }
+
+    private suspend fun makeBody(diaryContents: List<DiaryContent>): String {
+        var body = ""
+        diaryContents.forEach { diaryContent ->
+            val newId = UUID.randomUUID().toString()
+
+            val token = when (diaryContent) {
+                is DiaryContent.Text -> {
+                    dreamDiaryDao.insertText(
+                        TextEntity(
+                            id = newId,
+                            text = diaryContent.text,
+                        ),
+                    )
+                    "text:$newId:"
+                }
+
+                is DiaryContent.Image -> {
+                    dreamDiaryDao.insertImage(
+                        ImageEntity(
+                            id = newId,
+                            path = diaryContent.path,
+                        ),
+                    )
+                    "image:$newId:"
+                }
+            }
+
+            body += token
+        }
+        return body
     }
 
     private suspend fun parseBody(body: String): List<DiaryContent> {

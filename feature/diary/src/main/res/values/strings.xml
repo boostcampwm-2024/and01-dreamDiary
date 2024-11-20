@@ -12,6 +12,7 @@
     <string name="write_duplicate_error">중복된 라벨입니다.</string>
     <string name="write_insufficient_storage_error">저장공간이 부족합니다.</string>
     <string name="write_unknown_error">알수 없는 에러</string>
+    <string name="write_edit_error">업데이트 실패</string>
     <string name="write_no_label">없음</string>
     <string name="write_content_image">이미지</string>
     <string name="write_add_image">이미지 추가</string>
