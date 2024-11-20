@@ -4,11 +4,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
 import androidx.paging.map
-import com.boostcamp.dreamteam.dreamdiary.core.data.database.dao.DreamDiaryDao
 import com.boostcamp.dreamteam.dreamdiary.core.domain.usecase.GetDiariesFilterType.SLEEP_END_AT
 import com.boostcamp.dreamteam.dreamdiary.core.domain.usecase.GetDreamDiariesByFilterUseCase
 import com.boostcamp.dreamteam.dreamdiary.core.domain.usecase.GetDreamDiariesInRangeByUseCase
-import com.boostcamp.dreamteam.dreamdiary.core.domain.usecase.GetDreamDiariesUseCase
 import com.boostcamp.dreamteam.dreamdiary.core.domain.usecase.GetLabelsUseCase
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.tabcalendar.DiaryHomeTabCalendarUIState
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.LabelUi
@@ -34,7 +32,6 @@ class DiaryHomeViewModel @Inject constructor(
     getLabelsUseCase: GetLabelsUseCase,
     getDreamDiariesInRangeByUseCase: GetDreamDiariesInRangeByUseCase,
 ) : ViewModel() {
-
     val dreamLabels = getLabelsUseCase("")
         .map { labels -> labels.map { it.toLabelUi() } }
         .stateIn(

@@ -80,7 +80,9 @@ interface DreamDiaryDao {
     @Query("select * from diary order by updatedAt desc")
     fun getDreamDiaries(): PagingSource<Int, DreamDiaryWithLabels>
 
-    @Query("select * from diary join diary_label on diary.id = diary_label.diaryId join label on label.label = diary_label.labelId where label.label in (:labels) order by updatedAt desc")
+    @Query(
+        "select * from diary join diary_label on diary.id = diary_label.diaryId join label on label.label = diary_label.labelId where label.label in (:labels) order by updatedAt desc",
+    )
     fun getDreamDiariesByLabels(labels: List<String>): PagingSource<Int, DreamDiaryWithLabels>
 
     @Query("SELECT * FROM diary WHERE sleepEndAt BETWEEN :start AND :end")
