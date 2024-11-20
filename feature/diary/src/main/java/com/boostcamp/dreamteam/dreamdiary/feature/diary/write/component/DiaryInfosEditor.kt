@@ -52,7 +52,7 @@ import java.time.temporal.ChronoUnit
 import java.util.Locale
 
 @Composable
-internal fun DiaryWriteScreenHeader(
+internal fun DiaryInfosEditor(
     labelFilter: String,
     onLabelFilterChange: (String) -> Unit,
     filteredLabels: List<LabelUi>,
@@ -296,7 +296,7 @@ private fun DateHeader(
 @Composable
 private fun DiaryWriteScreenHeaderPreview() {
     DreamdiaryTheme {
-        DiaryWriteScreenHeader(
+        DiaryInfosEditor(
             labelFilter = "",
             onLabelFilterChange = { },
             filteredLabels = filteredLabelsPreview,

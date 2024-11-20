@@ -32,7 +32,7 @@ import com.boostcamp.dreamteam.dreamdiary.feature.diary.R
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.DiaryContentUi
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.LabelUi
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.filteredLabelsPreview
-import com.boostcamp.dreamteam.dreamdiary.feature.diary.write.component.DiaryWriteScreenHeader
+import com.boostcamp.dreamteam.dreamdiary.feature.diary.write.component.DiaryInfosEditor
 import java.time.ZonedDateTime
 
 @Composable
@@ -85,7 +85,7 @@ internal fun DiaryDetailScreen(
                 style = MaterialTheme.typography.titleLarge,
             )
 
-            DiaryWriteScreenHeader(
+            DiaryInfosEditor(
                 labelFilter = "",
                 onLabelFilterChange = { },
                 filteredLabels = emptyList(),

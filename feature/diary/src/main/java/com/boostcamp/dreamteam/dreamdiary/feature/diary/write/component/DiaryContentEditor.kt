@@ -39,7 +39,7 @@ import com.boostcamp.dreamteam.dreamdiary.feature.diary.R
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.DiaryContentUi
 
 @Composable
-internal fun DiaryWriteScreenBody(
+internal fun DiaryContentEditor(
     title: String,
     onTitleChange: (String) -> Unit,
     diaryContents: List<DiaryContentUi>,
@@ -208,7 +208,7 @@ private fun BodyText(
 @Composable
 private fun DiaryWriteScreenBodyPreviewEmpty() {
     DreamdiaryTheme {
-        DiaryWriteScreenBody(
+        DiaryContentEditor(
             title = "",
             onTitleChange = {},
             diaryContents = listOf(DiaryContentUi.Text("")),
@@ -226,7 +226,7 @@ private fun DiaryWriteScreenBodyPreviewEmpty() {
 @Composable
 private fun DiaryWriteScreenBodyPreviewFilled() {
     DreamdiaryTheme {
-        DiaryWriteScreenBody(
+        DiaryContentEditor(
             title = "안녕 뉴라인",
             onTitleChange = {},
             diaryContents = listOf(
