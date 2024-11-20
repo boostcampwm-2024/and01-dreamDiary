@@ -68,7 +68,7 @@ fun DiaryWriteScreen(
     LaunchedEffect(Unit) {
         viewModel.event.collectLatest {
             when (it) {
-                is DiaryWriteEvent.DiaryAddSuccess -> onBackClick()
+                is DiaryWriteEvent.DiaryAddSuccess, is DiaryWriteEvent.DiaryUpdateSuccess -> onBackClick()
 
                 is DiaryWriteEvent.LabelAddSuccess -> {
                     Toast.makeText(context, "라벨 추가 성공", Toast.LENGTH_SHORT).show()
@@ -89,6 +89,10 @@ fun DiaryWriteScreen(
                         }
                     }
                 }
+
+                is DiaryWriteEvent.DiaryUpdateFail -> {
+                    Toast.makeText(context, context.getString(R.string.write_edit_error), Toast.LENGTH_SHORT).show()
+                }
             }
         }
     }
@@ -106,7 +110,7 @@ fun DiaryWriteScreen(
         onSleepEndAtChange = viewModel::setSleepEndAt,
         diaryContents = uiState.diaryContents,
         onContentImageAdd = viewModel::addContentImage,
-        onClickSave = viewModel::addDreamDiary,
+        onClickSave = viewModel::addOrUpdateDreamDiary,
         onCheckChange = viewModel::toggleLabel,
         onLabelFilterChange = viewModel::setLabelFilter,
         onClickLabelSave = viewModel::addLabel,

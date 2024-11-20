@@ -3,9 +3,15 @@ package com.boostcamp.dreamteam.dreamdiary.feature.diary.write.model
 sealed class DiaryWriteEvent {
     data object DiaryAddSuccess : DiaryWriteEvent()
 
+    data object DiaryUpdateSuccess : DiaryWriteEvent()
+
+    data object DiaryUpdateFail : DiaryWriteEvent()
+
     data object LabelAddSuccess : DiaryWriteEvent()
 
-    data class LabelAddFailure(val labelAddFailureReason: LabelAddFailureReason) : DiaryWriteEvent()
+    data class LabelAddFailure(
+        val labelAddFailureReason: LabelAddFailureReason,
+    ) : DiaryWriteEvent()
 }
 
 enum class LabelAddFailureReason {
