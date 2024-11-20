@@ -53,25 +53,19 @@ import java.util.Locale
 
 @Composable
 internal fun DiaryInfosEditor(
-    labelFilter: String,
-    onLabelFilterChange: (String) -> Unit,
-    filteredLabels: List<LabelUi>,
-    selectedLabels: Set<LabelUi>,
-    sleepStartAt: ZonedDateTime,
-    sleepEndAt: ZonedDateTime,
-    onSleepStartAtChange: (ZonedDateTime) -> Unit,
-    onSleepEndAtChange: (ZonedDateTime) -> Unit,
-    onCheckChange: (labelUi: LabelUi) -> Unit,
-    onClickLabelSave: () -> Unit,
+    diaryInfoEditorParams: DiaryInfoEditorParams,
     modifier: Modifier = Modifier,
     readOnly: Boolean = false,
 ) {
+    val selectedLabels = diaryInfoEditorParams.selectedLabels
+    val onSleepStartAtChange = diaryInfoEditorParams.onSleepStartAtChange
+    val onSleepEndAtChange = diaryInfoEditorParams.onSleepEndAtChange
     var isLabelSelectionDialogOpen by rememberSaveable { mutableStateOf(false) }
 
     Column(modifier = modifier) {
         WriteDateInfo(
-            sleepStartAt = sleepStartAt,
-            sleepEndAt = sleepEndAt,
+            sleepStartAt = diaryInfoEditorParams.sleepStartAt,
+            sleepEndAt = diaryInfoEditorParams.sleepEndAt,
             onTimeChange = { sleepStartAt, sleepEndAt ->
                 onSleepStartAtChange(sleepStartAt)
                 onSleepEndAtChange(sleepEndAt)
@@ -106,12 +100,12 @@ internal fun DiaryInfosEditor(
         if (isLabelSelectionDialogOpen) {
             LabelSelectionDialog(
                 onDismissRequest = { isLabelSelectionDialogOpen = false },
-                labelFilter = labelFilter,
-                onLabelFilterChange = onLabelFilterChange,
-                filteredLabels = filteredLabels,
-                selectedLabels = selectedLabels,
-                onCheckChange = onCheckChange,
-                onClickLabelSave = onClickLabelSave,
+                labelFilter = diaryInfoEditorParams.labelFilter,
+                onLabelFilterChange = diaryInfoEditorParams.onLabelFilterChange,
+                filteredLabels = diaryInfoEditorParams.filteredLabels,
+                selectedLabels = diaryInfoEditorParams.selectedLabels,
+                onCheckChange = diaryInfoEditorParams.onCheckChange,
+                onClickLabelSave = diaryInfoEditorParams.onClickLabelSave,
                 modifier = Modifier.width(400.dp),
             )
         }
@@ -292,21 +286,36 @@ private fun DateHeader(
     }
 }
 
+internal data class DiaryInfoEditorParams(
+    val labelFilter: String,
+    val onLabelFilterChange: (String) -> Unit,
+    val filteredLabels: List<LabelUi>,
+    val selectedLabels: Set<LabelUi>,
+    val sleepStartAt: ZonedDateTime,
+    val onSleepStartAtChange: (ZonedDateTime) -> Unit,
+    val sleepEndAt: ZonedDateTime,
+    val onSleepEndAtChange: (ZonedDateTime) -> Unit,
+    val onCheckChange: (LabelUi) -> Unit,
+    val onClickLabelSave: () -> Unit,
+)
+
 @Preview(showBackground = true)
 @Composable
 private fun DiaryWriteScreenHeaderPreview() {
     DreamdiaryTheme {
         DiaryInfosEditor(
-            labelFilter = "",
-            onLabelFilterChange = { },
-            filteredLabels = filteredLabelsPreview,
-            selectedLabels = selectedLabelsPreview,
-            sleepStartAt = ZonedDateTime.now(),
-            sleepEndAt = ZonedDateTime.now(),
-            onSleepStartAtChange = { },
-            onSleepEndAtChange = { },
-            onCheckChange = { },
-            onClickLabelSave = { },
+            diaryInfoEditorParams = DiaryInfoEditorParams(
+                labelFilter = "",
+                onLabelFilterChange = {},
+                filteredLabels = filteredLabelsPreview,
+                selectedLabels = selectedLabelsPreview,
+                sleepStartAt = ZonedDateTime.now(),
+                onSleepStartAtChange = {},
+                sleepEndAt = ZonedDateTime.now(),
+                onSleepEndAtChange = {},
+                onCheckChange = {},
+                onClickLabelSave = {},
+            ),
         )
     }
 }

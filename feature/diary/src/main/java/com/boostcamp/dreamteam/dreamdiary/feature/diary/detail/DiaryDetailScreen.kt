@@ -32,6 +32,7 @@ import com.boostcamp.dreamteam.dreamdiary.feature.diary.R
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.DiaryContentUi
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.LabelUi
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.filteredLabelsPreview
+import com.boostcamp.dreamteam.dreamdiary.feature.diary.write.component.DiaryInfoEditorParams
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.write.component.DiaryInfosEditor
 import java.time.ZonedDateTime
 
@@ -86,16 +87,18 @@ internal fun DiaryDetailScreen(
             )
 
             DiaryInfosEditor(
-                labelFilter = "",
-                onLabelFilterChange = { },
-                filteredLabels = emptyList(),
-                selectedLabels = labels.toSet(),
-                sleepStartAt = sleepStartAt,
-                sleepEndAt = sleepEndAt,
-                onSleepStartAtChange = { },
-                onSleepEndAtChange = { },
-                onCheckChange = { },
-                onClickLabelSave = { },
+                diaryInfoEditorParams = DiaryInfoEditorParams(
+                    labelFilter = "",
+                    onLabelFilterChange = { },
+                    filteredLabels = labels,
+                    selectedLabels = labels.toSet(),
+                    sleepStartAt = sleepStartAt,
+                    onSleepStartAtChange = { },
+                    sleepEndAt = sleepEndAt,
+                    onSleepEndAtChange = { },
+                    onCheckChange = { },
+                    onClickLabelSave = { },
+                ),
                 modifier = Modifier.padding(vertical = 16.dp),
                 readOnly = true,
             )
@@ -155,7 +158,8 @@ internal fun DiaryDetailContent(
 
                 is DiaryContentUi.Image -> {
                     AsyncImage(
-                        model = ImageRequest.Builder(LocalContext.current)
+                        model = ImageRequest
+                            .Builder(LocalContext.current)
                             .data(diaryContent.path)
                             .build(),
                         contentDescription = "aaaa",

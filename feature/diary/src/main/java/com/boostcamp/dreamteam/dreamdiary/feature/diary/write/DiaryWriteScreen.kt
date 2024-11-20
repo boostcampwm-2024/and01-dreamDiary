@@ -43,6 +43,8 @@ import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.DiaryContentUi
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.LabelUi
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.filteredLabelsPreview
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.selectedLabelsPreview
+import com.boostcamp.dreamteam.dreamdiary.feature.diary.write.component.DiaryContentEditorParams
+import com.boostcamp.dreamteam.dreamdiary.feature.diary.write.component.DiaryInfoEditorParams
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.write.model.DiaryWriteEvent
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.write.model.LabelAddFailureReason
 import kotlinx.coroutines.Dispatchers
@@ -185,23 +187,27 @@ private fun DiaryWriteScreenContent(
         },
     ) { innerPadding ->
         DiaryEditor(
-            title = title,
-            onTitleChange = onTitleChange,
-            labelFilter = labelFilter,
-            filteredLabels = filteredLabels,
-            selectedLabels = selectedLabels,
-            onCheckChange = onCheckChange,
-            onLabelFilterChange = onLabelFilterChange,
-            onClickLabelSave = onClickLabelSave,
-            sleepStartAt = sleepStartAt,
-            onSleepStartAtChange = onSleepStartAtChange,
-            sleepEndAt = sleepEndAt,
-            onSleepEndAtChange = onSleepEndAtChange,
-            diaryContents = diaryContents,
-            onContentTextChange = onContentTextChange,
-            onCurrentFocusContentChange = { currentFocusContent = it },
-            onContentTextPositionChange = { currentTextCursorPosition = it },
-            onContentImageDelete = onContentImageDelete,
+            diaryInfoEditorParams = DiaryInfoEditorParams(
+                labelFilter = labelFilter,
+                onLabelFilterChange = onLabelFilterChange,
+                filteredLabels = filteredLabels,
+                selectedLabels = selectedLabels,
+                sleepStartAt = sleepStartAt,
+                onSleepStartAtChange = onSleepStartAtChange,
+                sleepEndAt = sleepEndAt,
+                onSleepEndAtChange = onSleepEndAtChange,
+                onCheckChange = onCheckChange,
+                onClickLabelSave = onClickLabelSave,
+            ),
+            diaryContentEditorParams = DiaryContentEditorParams(
+                title = title,
+                onTitleChange = onTitleChange,
+                diaryContents = diaryContents,
+                onContentTextChange = onContentTextChange,
+                onContentFocusChange = { currentFocusContent = it },
+                onContentTextPositionChange = { currentTextCursorPosition = it },
+                onContentImageDelete = onContentImageDelete,
+            ),
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)

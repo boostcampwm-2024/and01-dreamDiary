@@ -40,30 +40,25 @@ import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.DiaryContentUi
 
 @Composable
 internal fun DiaryContentEditor(
-    title: String,
-    onTitleChange: (String) -> Unit,
-    diaryContents: List<DiaryContentUi>,
-    onContentFocusChange: (contentIndex: Int) -> Unit,
-    onContentTextPositionChange: (textPosition: Int) -> Unit,
-    onContentTextChange: (contentIndex: Int, String) -> Unit,
-    onContentImageDelete: (contentIndex: Int) -> Unit,
+    diaryContentEditorParams: DiaryContentEditorParams,
     modifier: Modifier = Modifier,
+    readOnly: Boolean = false,
 ) {
     Column(modifier = modifier) {
         InputTitle(
-            title = title,
-            onTitleChange = onTitleChange,
+            title = diaryContentEditorParams.title,
+            onTitleChange = diaryContentEditorParams.onTitleChange,
             modifier = Modifier.fillMaxWidth(),
         )
 
         Spacer(modifier = Modifier.height(24.dp))
 
         InputBody(
-            diaryContents = diaryContents,
-            onContentTextPositionChange = onContentTextPositionChange,
-            onContentTextChange = onContentTextChange,
-            onContentFocusChange = onContentFocusChange,
-            onContentImageDelete = onContentImageDelete,
+            diaryContents = diaryContentEditorParams.diaryContents,
+            onContentTextPositionChange = diaryContentEditorParams.onContentTextPositionChange,
+            onContentTextChange = diaryContentEditorParams.onContentTextChange,
+            onContentFocusChange = diaryContentEditorParams.onContentFocusChange,
+            onContentImageDelete = diaryContentEditorParams.onContentImageDelete,
         )
     }
 }
@@ -203,19 +198,31 @@ private fun BodyText(
     )
 }
 
+internal data class DiaryContentEditorParams(
+    val title: String,
+    val onTitleChange: (String) -> Unit,
+    val diaryContents: List<DiaryContentUi>,
+    val onContentTextChange: (Int, String) -> Unit,
+    val onContentFocusChange: (Int) -> Unit,
+    val onContentTextPositionChange: (Int) -> Unit,
+    val onContentImageDelete: (Int) -> Unit,
+)
+
 @Preview(showBackground = true)
 @Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 private fun DiaryWriteScreenBodyPreviewEmpty() {
     DreamdiaryTheme {
         DiaryContentEditor(
-            title = "",
-            onTitleChange = {},
-            diaryContents = listOf(DiaryContentUi.Text("")),
-            onContentTextChange = { _, _ -> },
-            onContentFocusChange = { },
-            onContentTextPositionChange = { },
-            onContentImageDelete = { },
+            diaryContentEditorParams = DiaryContentEditorParams(
+                title = "",
+                onTitleChange = {},
+                diaryContents = emptyList(),
+                onContentTextChange = { _, _ -> },
+                onContentFocusChange = {},
+                onContentTextPositionChange = {},
+                onContentImageDelete = {},
+            ),
             modifier = Modifier.fillMaxSize(),
         )
     }
@@ -227,16 +234,18 @@ private fun DiaryWriteScreenBodyPreviewEmpty() {
 private fun DiaryWriteScreenBodyPreviewFilled() {
     DreamdiaryTheme {
         DiaryContentEditor(
-            title = "안녕 뉴라인",
-            onTitleChange = {},
-            diaryContents = listOf(
-                DiaryContentUi.Text("안녕\n뉴라인"),
-                DiaryContentUi.Image("https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png"),
+            diaryContentEditorParams = DiaryContentEditorParams(
+                title = "Title",
+                onTitleChange = {},
+                diaryContents = listOf(
+                    DiaryContentUi.Text("Text"),
+                    DiaryContentUi.Image("https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png"),
+                ),
+                onContentTextChange = { _, _ -> },
+                onContentFocusChange = {},
+                onContentTextPositionChange = {},
+                onContentImageDelete = {},
             ),
-            onContentTextChange = { _, _ -> },
-            onContentFocusChange = { },
-            onContentTextPositionChange = { },
-            onContentImageDelete = { },
             modifier = Modifier.fillMaxSize(),
         )
     }
