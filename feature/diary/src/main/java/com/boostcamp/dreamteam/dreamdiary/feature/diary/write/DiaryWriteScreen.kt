@@ -343,7 +343,7 @@ private fun PreviewDiaryListScreen() {
             onSleepStartAtChange = {},
             sleepEndAt = ZonedDateTime.now(),
             onSleepEndAtChange = {},
-            diaryContents = emptyList(),
+            diaryContents = listOf(DiaryContentUi.Text("")),
             onContentImageAdd = { _, _, _ -> },
             onClickSave = {},
             onContentTextChange = { _, _ -> },
