@@ -66,7 +66,8 @@ fun NavGraphBuilder.diaryGraph(
 
         composable<DiaryGraph.DiaryDetailRoute> {
             DiaryDetailScreen(
-                navController::navigateUp,
+                onBackClick = navController::navigateUp,
+                onEditDiary = { diaryId -> navController.navigateToWriteScreen(diaryId = diaryId) },
             )
         }
     }
