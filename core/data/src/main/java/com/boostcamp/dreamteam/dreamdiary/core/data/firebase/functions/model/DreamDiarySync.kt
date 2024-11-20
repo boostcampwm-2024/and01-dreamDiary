@@ -9,7 +9,7 @@ data class DreamDiarySync(
 ) {
     @Serializable
     data class DreamDiary(
-        val id: String,
+        val diaryId: String,
         val title: String,
         val createdAt: Long,
         val updatedAt: Long,
@@ -22,7 +22,7 @@ data class DreamDiarySync(
 
 fun Diary.toDreamDiarySync(): DreamDiarySync.DreamDiary {
     return DreamDiarySync.DreamDiary(
-        id = this.id,
+        diaryId = this.id,
         title = this.title,
         createdAt = this.createdAt.toEpochMilli(),
         updatedAt = this.updatedAt.toEpochMilli(),
