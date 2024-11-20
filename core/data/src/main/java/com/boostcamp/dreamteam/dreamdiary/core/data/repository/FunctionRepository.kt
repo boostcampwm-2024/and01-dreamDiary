@@ -2,8 +2,11 @@ package com.boostcamp.dreamteam.dreamdiary.core.data.repository
 
 import com.google.firebase.functions.FirebaseFunctions
 import kotlinx.coroutines.tasks.await
+import javax.inject.Inject
 
-class FunctionRepository(private val functions: FirebaseFunctions) {
+class FunctionRepository @Inject constructor(
+    private val functions: FirebaseFunctions,
+) {
 
     suspend fun helloWorld(): String {
         return try {
