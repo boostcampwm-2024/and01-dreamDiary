@@ -83,9 +83,20 @@ internal class DefaultDreamDiaryRepository @Inject constructor(
             pagingSourceFactory = { dreamDiaryDao.getDreamDiaries() },
         ).flow.map { pagingData ->
             pagingData.map {
-                it.toDomain(parseBody(it.body))
+                it.toDomain(parseBody(it.dreamDiary.body))
             }
         }
+
+    override fun getDreamDiariesByLabel(labels: List<String>): Flow<PagingData<Diary>> {
+        return Pager(
+            config = PagingConfig(pageSize = 100),
+            pagingSourceFactory = { dreamDiaryDao.getDreamDiariesByLabels(labels) },
+        ).flow.map { pagingData ->
+            pagingData.map {
+                it.toDomain(parseBody(it.dreamDiary.body))
+            }
+        }
+    }
 
     override suspend fun addLabel(label: String) {
         dreamDiaryDao.insertLabel(
