@@ -1,7 +1,6 @@
 package com.boostcamp.dreamteam.dreamdiary.feature.diary.write.component
 
 import android.content.res.Configuration
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -29,14 +28,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalInspectionMode
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import coil3.compose.SubcomposeAsyncImage
 import coil3.request.ImageRequest
+import com.boostcamp.dreamteam.dreamdiary.designsystem.component.DdAsyncImage
 import com.boostcamp.dreamteam.dreamdiary.designsystem.theme.DreamdiaryTheme
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.R
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.DiaryContentUi
@@ -135,24 +132,17 @@ private fun BodyImage(
     modifier: Modifier = Modifier,
 ) {
     Box(modifier = modifier) {
-        SubcomposeAsyncImage(
+        DdAsyncImage(
             model = ImageRequest.Builder(LocalContext.current).data(diaryContent.path).build(),
             contentDescription = stringResource(R.string.write_content_image),
             modifier = Modifier
                 .fillMaxWidth()
                 .heightIn(min = 200.dp),
             error = {
-                if (LocalInspectionMode.current) {
-                    Image(
-                        painter = painterResource(R.drawable.google_icon),
-                        contentDescription = stringResource(R.string.write_content_image),
-                    )
-                } else {
-                    Icon(
-                        imageVector = Icons.Outlined.Error,
-                        contentDescription = stringResource(R.string.write_content_image),
-                    )
-                }
+                Icon(
+                    imageVector = Icons.Outlined.Error,
+                    contentDescription = stringResource(R.string.write_content_image),
+                )
             },
         )
         FilledIconButton(

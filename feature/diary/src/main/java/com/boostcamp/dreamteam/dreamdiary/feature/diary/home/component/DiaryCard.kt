@@ -33,7 +33,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import coil3.compose.SubcomposeAsyncImage
+import com.boostcamp.dreamteam.dreamdiary.designsystem.component.DdAsyncImage
 import com.boostcamp.dreamteam.dreamdiary.designsystem.component.DdCard
 import com.boostcamp.dreamteam.dreamdiary.designsystem.theme.DreamdiaryTheme
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.R
@@ -102,7 +102,7 @@ private fun CardOverline(
     modifier: Modifier = Modifier,
 ) {
     diary.images.firstOrNull()?.let {
-        SubcomposeAsyncImage(
+        DdAsyncImage(
             model = it,
             contentDescription = stringResource(R.string.home_list_card_thumbnail, diary.title),
             contentScale = ContentScale.Crop,

@@ -18,14 +18,19 @@ android {
             )
         }
     }
+    buildFeatures {
+        buildConfig = true
+    }
 }
 
 dependencies {
-
     api(libs.material)
     api(libs.androidx.material3)
     api(libs.androidx.material.icons)
     api(libs.androidx.material.icons.android)
 
     implementation(libs.androidx.ui.text.google.fonts)
+
+    // Coil
+    implementation(libs.bundles.coil)
 }
