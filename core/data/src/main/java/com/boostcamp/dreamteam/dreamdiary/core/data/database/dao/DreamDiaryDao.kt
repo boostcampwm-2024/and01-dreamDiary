@@ -47,7 +47,7 @@ interface DreamDiaryDao {
     @Query(
         """
         update diary
-        set title = :title, body = :body,sleepStartAt = :sleepStartAt,sleepEndAt = :sleepEndAt, updatedAt = :updatedAt
+        set title = :title, body = :body, sleepStartAt = :sleepStartAt, sleepEndAt = :sleepEndAt, updatedAt = :updatedAt
         where id = :diaryId
         """,
     )
