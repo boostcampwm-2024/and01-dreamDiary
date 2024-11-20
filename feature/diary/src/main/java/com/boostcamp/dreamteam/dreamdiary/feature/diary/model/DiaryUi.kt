@@ -58,7 +58,7 @@ internal val diaryPreview1 = Diary(
     ),
     sleepStartAt = LocalDate.of(2021, 9, 1).atStartOfDay(ZoneId.systemDefault()).toInstant(),
     sleepEndAt = LocalDate.of(2021, 9, 1).atStartOfDay(ZoneId.systemDefault()).toInstant(),
-    diaryContents = listOf(),
+    diaryContents = listOf(DiaryContent.Text("오늘은 날씨가 좋았다.")),
 ).toDiaryUi()
 
 internal val diaryPreview2 = Diary(
