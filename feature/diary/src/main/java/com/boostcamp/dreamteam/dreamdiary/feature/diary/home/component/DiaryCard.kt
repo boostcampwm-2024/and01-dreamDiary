@@ -13,11 +13,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.Label
 import androidx.compose.material.icons.filled.AccessTime
 import androidx.compose.material.icons.filled.CalendarToday
-import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -37,6 +33,7 @@ import com.boostcamp.dreamteam.dreamdiary.designsystem.component.DdAsyncImage
 import com.boostcamp.dreamteam.dreamdiary.designsystem.component.DdCard
 import com.boostcamp.dreamteam.dreamdiary.designsystem.theme.DreamdiaryTheme
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.R
+import com.boostcamp.dreamteam.dreamdiary.feature.diary.component.DiaryMenuButton
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.DiaryUi
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.diaryPreview1
 import java.time.chrono.Chronology
@@ -49,6 +46,7 @@ import java.util.Locale
 internal fun DiaryCard(
     diary: DiaryUi,
     onDiaryClick: (DiaryUi) -> Unit,
+    onDiaryEdit: (DiaryUi) -> Unit,
     onDeleteDiary: (DiaryUi) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -57,6 +55,7 @@ internal fun DiaryCard(
             CardHeadline(
                 diary = diary,
                 onDeleteDiary = onDeleteDiary,
+                onDiaryEdit = onDiaryEdit,
                 modifier = Modifier.fillMaxWidth(),
             )
         },
@@ -115,6 +114,7 @@ private fun CardOverline(
 private fun CardHeadline(
     diary: DiaryUi,
     onDeleteDiary: (DiaryUi) -> Unit,
+    onDiaryEdit: (DiaryUi) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     var isMenuVisible by remember { mutableStateOf(false) }
@@ -129,25 +129,12 @@ private fun CardHeadline(
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
         )
-        IconButton(onClick = { isMenuVisible = true }) {
-            Icon(
-                imageVector = Icons.Default.MoreVert,
-                contentDescription = stringResource(R.string.home_list_card_menu),
-                modifier = Modifier.height(16.dp),
-            )
-            DropdownMenu(
-                expanded = isMenuVisible,
-                onDismissRequest = { isMenuVisible = false },
-            ) {
-                DropdownMenuItem(
-                    text = { Text(text = stringResource(R.string.home_list_card_menu_delete)) },
-                    onClick = {
-                        onDeleteDiary(diary)
-                        isMenuVisible = false
-                    },
-                )
-            }
-        }
+        DiaryMenuButton(
+            isVisible = isMenuVisible,
+            onVisibleChange = { isMenuVisible = it },
+            onDeleteDiary = { onDeleteDiary(diary) },
+            onDiaryEdit = { onDiaryEdit(diary) },
+        )
     }
 }
 
@@ -245,6 +232,7 @@ private fun DiaryCardPreview() {
         DiaryCard(
             diary = diaryPreview1,
             onDiaryClick = { },
+            onDiaryEdit = { },
             onDeleteDiary = { },
             modifier = Modifier.fillMaxWidth(),
         )

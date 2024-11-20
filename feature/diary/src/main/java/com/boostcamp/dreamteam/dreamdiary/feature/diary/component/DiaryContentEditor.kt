@@ -1,4 +1,4 @@
-package com.boostcamp.dreamteam.dreamdiary.feature.diary.write.component
+package com.boostcamp.dreamteam.dreamdiary.feature.diary.component
 
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.Box
@@ -39,31 +39,28 @@ import com.boostcamp.dreamteam.dreamdiary.feature.diary.R
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.DiaryContentUi
 
 @Composable
-internal fun DiaryWriteScreenBody(
-    title: String,
-    onTitleChange: (String) -> Unit,
-    diaryContents: List<DiaryContentUi>,
-    onContentFocusChange: (contentIndex: Int) -> Unit,
-    onContentTextPositionChange: (textPosition: Int) -> Unit,
-    onContentTextChange: (contentIndex: Int, String) -> Unit,
-    onContentImageDelete: (contentIndex: Int) -> Unit,
+internal fun DiaryContentEditor(
+    diaryContentEditorParams: DiaryContentEditorParams,
     modifier: Modifier = Modifier,
+    readOnly: Boolean = false,
 ) {
     Column(modifier = modifier) {
         InputTitle(
-            title = title,
-            onTitleChange = onTitleChange,
+            title = diaryContentEditorParams.title,
+            onTitleChange = diaryContentEditorParams.onTitleChange,
             modifier = Modifier.fillMaxWidth(),
+            readOnly = readOnly,
         )
 
         Spacer(modifier = Modifier.height(24.dp))
 
         InputBody(
-            diaryContents = diaryContents,
-            onContentTextPositionChange = onContentTextPositionChange,
-            onContentTextChange = onContentTextChange,
-            onContentFocusChange = onContentFocusChange,
-            onContentImageDelete = onContentImageDelete,
+            diaryContents = diaryContentEditorParams.diaryContents,
+            onContentTextPositionChange = diaryContentEditorParams.onContentTextPositionChange,
+            onContentTextChange = diaryContentEditorParams.onContentTextChange,
+            onContentFocusChange = diaryContentEditorParams.onContentFocusChange,
+            onContentImageDelete = diaryContentEditorParams.onContentImageDelete,
+            readOnly = readOnly,
         )
     }
 }
@@ -73,6 +70,7 @@ private fun InputTitle(
     title: String,
     onTitleChange: (String) -> Unit,
     modifier: Modifier = Modifier,
+    readOnly: Boolean = false,
 ) {
     BasicTextField(
         value = title,
@@ -102,6 +100,7 @@ private fun InputBody(
     onContentFocusChange: (contentIndex: Int) -> Unit,
     onContentImageDelete: (contentIndex: Int) -> Unit,
     modifier: Modifier = Modifier,
+    readOnly: Boolean = false,
 ) {
     Column(modifier = modifier) {
         diaryContents.forEachIndexed { index, diaryContent ->
@@ -203,19 +202,31 @@ private fun BodyText(
     )
 }
 
+internal data class DiaryContentEditorParams(
+    val title: String,
+    val onTitleChange: (String) -> Unit,
+    val diaryContents: List<DiaryContentUi>,
+    val onContentTextChange: (Int, String) -> Unit,
+    val onContentFocusChange: (Int) -> Unit,
+    val onContentTextPositionChange: (Int) -> Unit,
+    val onContentImageDelete: (Int) -> Unit,
+)
+
 @Preview(showBackground = true)
 @Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 private fun DiaryWriteScreenBodyPreviewEmpty() {
     DreamdiaryTheme {
-        DiaryWriteScreenBody(
-            title = "",
-            onTitleChange = {},
-            diaryContents = listOf(DiaryContentUi.Text("")),
-            onContentTextChange = { _, _ -> },
-            onContentFocusChange = { },
-            onContentTextPositionChange = { },
-            onContentImageDelete = { },
+        DiaryContentEditor(
+            diaryContentEditorParams = DiaryContentEditorParams(
+                title = "",
+                onTitleChange = {},
+                diaryContents = emptyList(),
+                onContentTextChange = { _, _ -> },
+                onContentFocusChange = {},
+                onContentTextPositionChange = {},
+                onContentImageDelete = {},
+            ),
             modifier = Modifier.fillMaxSize(),
         )
     }
@@ -226,17 +237,19 @@ private fun DiaryWriteScreenBodyPreviewEmpty() {
 @Composable
 private fun DiaryWriteScreenBodyPreviewFilled() {
     DreamdiaryTheme {
-        DiaryWriteScreenBody(
-            title = "안녕 뉴라인",
-            onTitleChange = {},
-            diaryContents = listOf(
-                DiaryContentUi.Text("안녕\n뉴라인"),
-                DiaryContentUi.Image("https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png"),
+        DiaryContentEditor(
+            diaryContentEditorParams = DiaryContentEditorParams(
+                title = "Title",
+                onTitleChange = {},
+                diaryContents = listOf(
+                    DiaryContentUi.Text("Text"),
+                    DiaryContentUi.Image("https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png"),
+                ),
+                onContentTextChange = { _, _ -> },
+                onContentFocusChange = {},
+                onContentTextPositionChange = {},
+                onContentImageDelete = {},
             ),
-            onContentTextChange = { _, _ -> },
-            onContentFocusChange = { },
-            onContentTextPositionChange = { },
-            onContentImageDelete = { },
             modifier = Modifier.fillMaxSize(),
         )
     }

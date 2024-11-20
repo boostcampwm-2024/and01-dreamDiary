@@ -23,8 +23,8 @@ data class DiaryUiState(
     val diaryContents: List<DiaryContentUi> = listOf(),
 )
 
-fun Diary.toUIState(): DiaryUiState {
-    return DiaryUiState(
+fun Diary.toUIState(): DiaryUiState =
+    DiaryUiState(
         id = this.id,
         title = this.title,
         labels = this.labels.map { it.toLabelUi() },
@@ -33,4 +33,3 @@ fun Diary.toUIState(): DiaryUiState {
         sleepEndAt = this.sleepEndAt.atZone(ZoneId.systemDefault()),
         diaryContents = this.diaryContents.map { it.toUiState() },
     )
-}

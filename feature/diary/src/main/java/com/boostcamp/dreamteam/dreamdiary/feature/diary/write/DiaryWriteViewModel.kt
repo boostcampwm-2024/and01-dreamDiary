@@ -1,11 +1,14 @@
 package com.boostcamp.dreamteam.dreamdiary.feature.diary.write
 
 import android.database.sqlite.SQLiteConstraintException
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.boostcamp.dreamteam.dreamdiary.core.domain.usecase.AddDreamDiaryWithContentsUseCase
 import com.boostcamp.dreamteam.dreamdiary.core.domain.usecase.AddLabelUseCase
+import com.boostcamp.dreamteam.dreamdiary.core.domain.usecase.GetDreamDiaryUseCase
 import com.boostcamp.dreamteam.dreamdiary.core.domain.usecase.GetLabelsUseCase
+import com.boostcamp.dreamteam.dreamdiary.core.domain.usecase.UpdateDreamDiaryWithContentsUseCase
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.DiaryContentUi
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.LabelUi
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.toDomain
@@ -13,6 +16,7 @@ import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.toLabelUi
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.write.model.DiaryWriteEvent
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.write.model.DiaryWriteUiState
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.write.model.LabelAddFailureReason
+import com.boostcamp.dreamteam.dreamdiary.feature.diary.write.model.toUiState
 import com.boostcamp.dreamteam.dreamdiary.feature.flowWithStarted
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -31,10 +35,16 @@ import javax.inject.Inject
 
 @HiltViewModel
 class DiaryWriteViewModel @Inject constructor(
+    savedStateHandle: SavedStateHandle,
     private val addDreamDiaryUseCase: AddDreamDiaryWithContentsUseCase,
+    private val updateDreamDiaryUseCase: UpdateDreamDiaryWithContentsUseCase,
+    private val getDreamDiaryUseCase: GetDreamDiaryUseCase,
     private val addLabelUseCase: AddLabelUseCase,
     private val getLabelsUseCase: GetLabelsUseCase,
 ) : ViewModel() {
+    private val diaryId: String? = savedStateHandle.get<String>("diaryId")
+    private val isEditMode = diaryId != null
+
     private val _uiState = MutableStateFlow(DiaryWriteUiState())
     val uiState: StateFlow<DiaryWriteUiState> = _uiState.asStateFlow()
 
@@ -42,6 +52,16 @@ class DiaryWriteViewModel @Inject constructor(
     val event = _event.receiveAsFlow()
 
     init {
+        if (isEditMode) {
+            if (diaryId != null) {
+                viewModelScope.launch {
+                    _uiState.value = getDreamDiaryUseCase(diaryId).toUiState()
+                }
+            } else {
+                Timber.e("`diaryId` must not be null in edit mode")
+            }
+        }
+
         collectLabels()
     }
 
@@ -67,21 +87,38 @@ class DiaryWriteViewModel @Inject constructor(
         }
     }
 
-    fun addDreamDiary() {
+    fun addOrUpdateDreamDiary() {
         val title = _uiState.value.title
         val labels = _uiState.value.selectedLabels.map { it.name }
         val sleepStartAt = _uiState.value.sleepStartAt
         val sleepEndAt = _uiState.value.sleepEndAt
         val diaryContents = _uiState.value.diaryContents
         viewModelScope.launch {
-            addDreamDiaryUseCase(
-                title = title,
-                diaryContents = diaryContents.map { it.toDomain() },
-                labels = labels,
-                sleepStartAt = sleepStartAt,
-                sleepEndAt = sleepEndAt,
-            )
-            _event.trySend(DiaryWriteEvent.DiaryAddSuccess)
+            if (isEditMode) {
+                diaryId?.let {
+                    updateDreamDiaryUseCase(
+                        diaryId = diaryId,
+                        title = title,
+                        diaryContents = diaryContents.map { it.toDomain() },
+                        labels = labels,
+                        sleepStartAt = sleepStartAt,
+                        sleepEndAt = sleepEndAt,
+                    )
+                    _event.trySend(DiaryWriteEvent.DiaryUpdateSuccess)
+                } ?: run {
+                    Timber.e("diaryId is null at updateDreamDiary")
+                    _event.trySend(DiaryWriteEvent.DiaryUpdateFail)
+                }
+            } else {
+                addDreamDiaryUseCase(
+                    title = title,
+                    diaryContents = diaryContents.map { it.toDomain() },
+                    labels = labels,
+                    sleepStartAt = sleepStartAt,
+                    sleepEndAt = sleepEndAt,
+                )
+                _event.trySend(DiaryWriteEvent.DiaryAddSuccess)
+            }
         }
     }
 

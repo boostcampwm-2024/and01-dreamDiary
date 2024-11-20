@@ -12,6 +12,7 @@
     <string name="write_duplicate_error">중복된 라벨입니다.</string>
     <string name="write_insufficient_storage_error">저장공간이 부족합니다.</string>
     <string name="write_unknown_error">알수 없는 에러</string>
+    <string name="write_edit_error">업데이트 실패</string>
     <string name="write_no_label">없음</string>
     <string name="write_content_image">이미지</string>
     <string name="write_add_image">이미지 추가</string>
@@ -39,6 +40,7 @@
     <string name="home_list_card_label">라벨</string>
     <string name="home_list_card_label_empty">없음</string>
     <string name="home_list_card_menu">메뉴</string>
+    <string name="home_list_card_menu_edit">편집</string>
     <string name="home_list_card_menu_delete">삭제</string>
     <string name="home_list_card_thumbnail">%1$s 이미지</string>
     <string name="label_search">검색</string>

@@ -57,10 +57,11 @@ import java.time.YearMonth
 @Composable
 fun DiaryHomeScreen(
     onDiaryClick: (DiaryUi) -> Unit,
-    onNavigateToWriteScreen: () -> Unit,
+    onDiaryEdit: (DiaryUi) -> Unit,
     onNavigateToCommunity: () -> Unit,
     onNavigateToSetting: () -> Unit,
     viewModel: DiaryHomeViewModel = hiltViewModel(),
+    onNavigateToWriteScreen: () -> Unit,
 ) {
     val diaries = viewModel.dreamDiaries.collectAsLazyPagingItems()
     val calendarUIState by viewModel.tabCalendarUiState.collectAsStateWithLifecycle()
@@ -86,6 +87,7 @@ fun DiaryHomeScreen(
         onNavigateToSetting = onNavigateToSetting,
         onDeleteDiary = { /* TODO: diary 삭제 기능 구현 */ },
         onDiaryClick = onDiaryClick,
+        onDiaryEdit = onDiaryEdit,
     )
 }
 
@@ -131,6 +133,7 @@ private fun DiaryHomeScreenContent(
     onNavigateToCommunity: () -> Unit,
     onNavigateToSetting: () -> Unit,
     onDiaryClick: (DiaryUi) -> Unit,
+    onDiaryEdit: (DiaryUi) -> Unit,
     onDeleteDiary: (DiaryUi) -> Unit,
     modifier: Modifier = Modifier,
     onSearchClick: () -> Unit = {},
@@ -214,6 +217,7 @@ private fun DiaryHomeScreenContent(
                     labelOptions = labelOptions,
                     onCheckLabel = onCheckLabel,
                     onDiaryClick = onDiaryClick,
+                    onDiaryEdit = onDiaryEdit,
                     onDeleteDiary = onDeleteDiary,
                     modifier = tabModifier,
                 )
@@ -278,6 +282,7 @@ private fun DiaryHomeScreenContentPreview() {
             onDeleteDiary = {},
             onSearchClick = {},
             onNotificationClick = {},
+            onDiaryEdit = {},
         )
     }
 }
