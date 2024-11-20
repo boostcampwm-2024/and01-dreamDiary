@@ -86,7 +86,7 @@ class DiaryWriteViewModel @Inject constructor(
     }
 
     fun addLabel() {
-        val addLabel = _uiState.value.labelFilter
+        val addLabel = _uiState.value.labelFilter.trim()
         viewModelScope.launch {
             try {
                 addLabelUseCase(addLabel)
@@ -189,18 +189,19 @@ class DiaryWriteViewModel @Inject constructor(
 
     private fun collectLabels() {
         viewModelScope.launch {
-            _uiState.flatMapLatest {
-                getLabelsUseCase(it.labelFilter)
-            }.flowWithStarted(
-                _uiState.subscriptionCount,
-                SharingStarted.WhileSubscribed(5000L),
-            ).collect { labels ->
-                _uiState.update { uiState ->
-                    uiState.copy(
-                        filteredLabels = labels.map { it.toLabelUi() },
-                    )
+            _uiState
+                .flatMapLatest {
+                    getLabelsUseCase(it.labelFilter)
+                }.flowWithStarted(
+                    _uiState.subscriptionCount,
+                    SharingStarted.WhileSubscribed(5000L),
+                ).collect { labels ->
+                    _uiState.update { uiState ->
+                        uiState.copy(
+                            filteredLabels = labels.map { it.toLabelUi() },
+                        )
+                    }
                 }
-            }
         }
     }
 }
