@@ -29,11 +29,11 @@ import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import com.boostcamp.dreamteam.dreamdiary.designsystem.theme.DreamdiaryTheme
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.R
+import com.boostcamp.dreamteam.dreamdiary.feature.diary.component.DiaryInfoEditorParams
+import com.boostcamp.dreamteam.dreamdiary.feature.diary.component.DiaryInfosEditor
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.DiaryContentUi
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.LabelUi
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.filteredLabelsPreview
-import com.boostcamp.dreamteam.dreamdiary.feature.diary.write.component.DiaryInfoEditorParams
-import com.boostcamp.dreamteam.dreamdiary.feature.diary.write.component.DiaryInfosEditor
 import java.time.ZonedDateTime
 
 @Composable

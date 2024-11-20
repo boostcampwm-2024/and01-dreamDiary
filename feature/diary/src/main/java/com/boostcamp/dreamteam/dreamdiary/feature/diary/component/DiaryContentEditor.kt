@@ -1,4 +1,4 @@
-package com.boostcamp.dreamteam.dreamdiary.feature.diary.write.component
+package com.boostcamp.dreamteam.dreamdiary.feature.diary.component
 
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.Box
@@ -49,6 +49,7 @@ internal fun DiaryContentEditor(
             title = diaryContentEditorParams.title,
             onTitleChange = diaryContentEditorParams.onTitleChange,
             modifier = Modifier.fillMaxWidth(),
+            readOnly = readOnly,
         )
 
         Spacer(modifier = Modifier.height(24.dp))
@@ -59,6 +60,7 @@ internal fun DiaryContentEditor(
             onContentTextChange = diaryContentEditorParams.onContentTextChange,
             onContentFocusChange = diaryContentEditorParams.onContentFocusChange,
             onContentImageDelete = diaryContentEditorParams.onContentImageDelete,
+            readOnly = readOnly,
         )
     }
 }
@@ -68,6 +70,7 @@ private fun InputTitle(
     title: String,
     onTitleChange: (String) -> Unit,
     modifier: Modifier = Modifier,
+    readOnly: Boolean = false,
 ) {
     BasicTextField(
         value = title,
@@ -97,6 +100,7 @@ private fun InputBody(
     onContentFocusChange: (contentIndex: Int) -> Unit,
     onContentImageDelete: (contentIndex: Int) -> Unit,
     modifier: Modifier = Modifier,
+    readOnly: Boolean = false,
 ) {
     Column(modifier = modifier) {
         diaryContents.forEachIndexed { index, diaryContent ->

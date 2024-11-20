@@ -39,12 +39,13 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.boostcamp.dreamteam.dreamdiary.designsystem.theme.DreamdiaryTheme
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.R
+import com.boostcamp.dreamteam.dreamdiary.feature.diary.component.DiaryContentEditorParams
+import com.boostcamp.dreamteam.dreamdiary.feature.diary.component.DiaryEditor
+import com.boostcamp.dreamteam.dreamdiary.feature.diary.component.DiaryInfoEditorParams
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.DiaryContentUi
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.LabelUi
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.filteredLabelsPreview
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.selectedLabelsPreview
-import com.boostcamp.dreamteam.dreamdiary.feature.diary.write.component.DiaryContentEditorParams
-import com.boostcamp.dreamteam.dreamdiary.feature.diary.write.component.DiaryInfoEditorParams
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.write.model.DiaryWriteEvent
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.write.model.LabelAddFailureReason
 import kotlinx.coroutines.Dispatchers

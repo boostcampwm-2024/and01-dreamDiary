@@ -1,4 +1,4 @@
-package com.boostcamp.dreamteam.dreamdiary.feature.diary.write.component
+package com.boostcamp.dreamteam.dreamdiary.feature.diary.component
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -39,6 +39,7 @@ import com.boostcamp.dreamteam.dreamdiary.feature.diary.R
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.LabelUi
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.filteredLabelsPreview
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.selectedLabelsPreview
+import com.boostcamp.dreamteam.dreamdiary.feature.diary.write.component.LabelSelectionDialog
 import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalTime

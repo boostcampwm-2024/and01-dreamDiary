@@ -1,4 +1,4 @@
-package com.boostcamp.dreamteam.dreamdiary.feature.diary.write
+package com.boostcamp.dreamteam.dreamdiary.feature.diary.component
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -11,10 +11,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.boostcamp.dreamteam.dreamdiary.feature.diary.write.component.DiaryContentEditor
-import com.boostcamp.dreamteam.dreamdiary.feature.diary.write.component.DiaryContentEditorParams
-import com.boostcamp.dreamteam.dreamdiary.feature.diary.write.component.DiaryInfoEditorParams
-import com.boostcamp.dreamteam.dreamdiary.feature.diary.write.component.DiaryInfosEditor
 
 @Composable
 internal fun DiaryEditor(
