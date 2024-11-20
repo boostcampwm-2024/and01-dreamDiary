@@ -51,10 +51,12 @@ class DiaryWriteViewModel @Inject constructor(
 
     init {
         if (isEditMode) {
-            viewModelScope.launch {
-                diaryId?.let {
-                    _uiState.value = getDreamDiaryUseCase(it).toUiState()
+            if (diaryId != null) {
+                viewModelScope.launch {
+                    _uiState.value = getDreamDiaryUseCase(diaryId).toUiState()
                 }
+            } else {
+                Timber.e("`diaryId` must not be null in edit mode")
             }
         }
 
