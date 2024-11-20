@@ -138,4 +138,8 @@ interface DreamDiaryDao {
     @Transaction
     @Query("select * from diary where id = :id")
     suspend fun getDreamDiary(id: String): DreamDiaryWithLabels
+
+    @Transaction
+    @Query("select * from diary where id = :id")
+    fun getDreamDiaryAsFlow(id: String): Flow<DreamDiaryWithLabels>
 }
