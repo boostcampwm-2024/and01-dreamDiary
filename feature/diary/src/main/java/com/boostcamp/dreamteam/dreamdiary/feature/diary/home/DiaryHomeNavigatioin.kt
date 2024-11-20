@@ -3,6 +3,7 @@ package com.boostcamp.dreamteam.dreamdiary.feature.diary.home
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
+import androidx.navigation.navDeepLink
 import androidx.navigation.navOptions
 import androidx.navigation.navigation
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.detail.DiaryDetailScreen
@@ -18,7 +19,9 @@ data object DiaryGraph {
     data object DiaryWriteRoute
 
     @Serializable
-    data class DiaryDetailRoute(val id: String)
+    data class DiaryDetailRoute(
+        val id: String,
+    )
 }
 
 fun NavGraphBuilder.diaryGraph(
@@ -45,7 +48,13 @@ fun NavGraphBuilder.diaryGraph(
             )
         }
 
-        composable<DiaryGraph.DiaryWriteRoute> {
+        composable<DiaryGraph.DiaryWriteRoute>(
+            deepLinks = listOf(
+                navDeepLink<DiaryGraph.DiaryWriteRoute>(
+                    basePath = "dreamdiary://diary/write",
+                ),
+            ),
+        ) {
             DiaryWriteScreen(
                 onBackClick = navController::navigateUp,
             )
