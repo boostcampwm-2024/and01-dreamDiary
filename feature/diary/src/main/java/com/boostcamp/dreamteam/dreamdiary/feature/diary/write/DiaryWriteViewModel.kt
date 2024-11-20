@@ -1,6 +1,7 @@
 package com.boostcamp.dreamteam.dreamdiary.feature.diary.write
 
 import android.database.sqlite.SQLiteConstraintException
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.boostcamp.dreamteam.dreamdiary.core.domain.usecase.AddDreamDiaryWithContentsUseCase
@@ -31,6 +32,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class DiaryWriteViewModel @Inject constructor(
+    private val savedStateHandle: SavedStateHandle,
     private val addDreamDiaryUseCase: AddDreamDiaryWithContentsUseCase,
     private val addLabelUseCase: AddLabelUseCase,
     private val getLabelsUseCase: GetLabelsUseCase,

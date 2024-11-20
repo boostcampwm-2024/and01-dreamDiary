@@ -14,6 +14,8 @@ import androidx.compose.material.icons.automirrored.outlined.Label
 import androidx.compose.material.icons.filled.AccessTime
 import androidx.compose.material.icons.filled.CalendarToday
 import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.outlined.Delete
+import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
@@ -49,6 +51,7 @@ import java.util.Locale
 internal fun DiaryCard(
     diary: DiaryUi,
     onDiaryClick: (DiaryUi) -> Unit,
+    onDiaryEdit: (DiaryUi) -> Unit,
     onDeleteDiary: (DiaryUi) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -57,6 +60,7 @@ internal fun DiaryCard(
             CardHeadline(
                 diary = diary,
                 onDeleteDiary = onDeleteDiary,
+                onDiaryEdit = onDiaryEdit,
                 modifier = Modifier.fillMaxWidth(),
             )
         },
@@ -115,6 +119,7 @@ private fun CardOverline(
 private fun CardHeadline(
     diary: DiaryUi,
     onDeleteDiary: (DiaryUi) -> Unit,
+    onDiaryEdit: (DiaryUi) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     var isMenuVisible by remember { mutableStateOf(false) }
@@ -140,11 +145,20 @@ private fun CardHeadline(
                 onDismissRequest = { isMenuVisible = false },
             ) {
                 DropdownMenuItem(
+                    text = { Text(text = stringResource(R.string.home_list_card_menu_edit)) },
+                    onClick = {
+                        onDiaryEdit(diary)
+                        isMenuVisible = false
+                    },
+                    leadingIcon = { Icon(imageVector = Icons.Outlined.Edit, contentDescription = null) },
+                )
+                DropdownMenuItem(
                     text = { Text(text = stringResource(R.string.home_list_card_menu_delete)) },
                     onClick = {
                         onDeleteDiary(diary)
                         isMenuVisible = false
                     },
+                    leadingIcon = { Icon(imageVector = Icons.Outlined.Delete, contentDescription = null) },
                 )
             }
         }
@@ -245,6 +259,7 @@ private fun DiaryCardPreview() {
         DiaryCard(
             diary = diaryPreview1,
             onDiaryClick = { },
+            onDiaryEdit = { },
             onDeleteDiary = { },
             modifier = Modifier.fillMaxWidth(),
         )

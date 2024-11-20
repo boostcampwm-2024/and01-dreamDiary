@@ -8,11 +8,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Label
 import androidx.compose.material.icons.filled.ArrowDropDown
-import androidx.compose.material.icons.filled.Label
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -48,6 +46,7 @@ internal fun DiaryListTab(
     labelOptions: Set<LabelUi>,
     onCheckLabel: (LabelUi) -> Unit,
     onDiaryClick: (DiaryUi) -> Unit,
+    onDiaryEdit: (DiaryUi) -> Unit,
     onDeleteDiary: (DiaryUi) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -77,6 +76,7 @@ internal fun DiaryListTab(
                     DiaryCard(
                         diary = diary,
                         onDiaryClick = { onDiaryClick(diary) },
+                        onDiaryEdit = { onDiaryEdit(diary) },
                         onDeleteDiary = onDeleteDiary,
                         modifier = Modifier.fillMaxWidth(),
                     )
@@ -156,6 +156,7 @@ private fun DiaryListTabPreview() {
             labelOptions = setOf(),
             onCheckLabel = { },
             onDiaryClick = { },
+            onDiaryEdit = { },
             onDeleteDiary = { },
         )
     }
