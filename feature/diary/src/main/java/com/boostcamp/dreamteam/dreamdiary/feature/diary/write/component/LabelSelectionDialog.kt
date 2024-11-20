@@ -123,7 +123,24 @@ internal fun LabelSelectionDialog(
 
 @Preview(showBackground = true)
 @Composable
-private fun LabelSelectionDialogPreview() {
+private fun LabelSelectionDialogPreviewEmpty() {
+    DreamdiaryTheme {
+        LabelSelectionDialog(
+            onDismissRequest = {},
+            labelFilter = "",
+            onLabelFilterChange = {},
+            onCheckChange = {},
+            filteredLabels = emptyList(),
+            selectedLabels = emptySet(),
+            onClickLabelSave = {},
+            modifier = Modifier.width(400.dp),
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun LabelSelectionDialogPreviewWithItems() {
     DreamdiaryTheme {
         LabelSelectionDialog(
             onDismissRequest = {},
