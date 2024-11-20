@@ -29,8 +29,8 @@ interface DreamDiaryRepository {
         title: String,
         diaryContents: List<DiaryContent>,
         labels: List<String>,
-        sleepStartAt: Instant?,
-        sleepEndAt: Instant?,
+        sleepStartAt: Instant,
+        sleepEndAt: Instant,
     )
 
     fun getDreamDiaries(): Flow<PagingData<Diary>>
