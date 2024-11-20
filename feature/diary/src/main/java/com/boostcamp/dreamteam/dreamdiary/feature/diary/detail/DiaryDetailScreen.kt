@@ -8,7 +8,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -18,6 +17,9 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -31,6 +33,7 @@ import com.boostcamp.dreamteam.dreamdiary.designsystem.theme.DreamdiaryTheme
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.R
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.component.DiaryInfoEditorParams
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.component.DiaryInfosEditor
+import com.boostcamp.dreamteam.dreamdiary.feature.diary.component.DiaryMenuButton
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.DiaryContentUi
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.LabelUi
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.filteredLabelsPreview
@@ -39,6 +42,7 @@ import java.time.ZonedDateTime
 @Composable
 fun DiaryDetailScreen(
     onBackClick: () -> Unit,
+    onEditDiary: (diaryId: String) -> Unit,
     viewModel: DiaryDetailViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -52,6 +56,8 @@ fun DiaryDetailScreen(
             labels = diaryUiState.labels,
             diaryContents = diaryUiState.diaryContents,
             onBackClick = onBackClick,
+            onEditDiary = { onEditDiary(diaryUiState.id) },
+            onDeleteDiary = { /*TODO 삭제 로직 추가*/ },
         )
     }
 }
@@ -64,6 +70,8 @@ internal fun DiaryDetailScreen(
     labels: List<LabelUi>,
     diaryContents: List<DiaryContentUi>,
     onBackClick: () -> Unit,
+    onDeleteDiary: () -> Unit,
+    onEditDiary: () -> Unit,
 ) {
     val scrollState = rememberScrollState()
 
@@ -71,6 +79,8 @@ internal fun DiaryDetailScreen(
         topBar = {
             DiaryDetailScreenTopAppBar(
                 onBackClick = onBackClick,
+                onDeleteDiary = onDeleteDiary,
+                onDiaryEdit = onEditDiary,
             )
         },
     ) { innerPadding ->
@@ -112,8 +122,16 @@ internal fun DiaryDetailScreen(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-internal fun DiaryDetailScreenTopAppBar(onBackClick: () -> Unit) {
+internal fun DiaryDetailScreenTopAppBar(
+    onBackClick: () -> Unit,
+    onDeleteDiary: () -> Unit,
+    onDiaryEdit: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    var isMenuVisible by remember { mutableStateOf(false) }
     TopAppBar(
+        title = { },
+        modifier = modifier,
         navigationIcon = {
             IconButton(
                 onClick = onBackClick,
@@ -125,16 +143,13 @@ internal fun DiaryDetailScreenTopAppBar(onBackClick: () -> Unit) {
             }
         },
         actions = {
-            IconButton(
-                onClick = { /*TODO*/ },
-            ) {
-                Icon(
-                    imageVector = Icons.Default.MoreVert,
-                    contentDescription = stringResource(R.string.detail_menu),
-                )
-            }
+            DiaryMenuButton(
+                isVisible = isMenuVisible,
+                onVisibleChange = { isMenuVisible = it },
+                onDeleteDiary = onDeleteDiary,
+                onDiaryEdit = onDiaryEdit,
+            )
         },
-        title = { },
     )
 }
 
@@ -187,6 +202,8 @@ private fun DiaryHomeScreenContentPreview() {
                 ),
             ),
             onBackClick = {},
+            onEditDiary = {},
+            onDeleteDiary = {},
         )
     }
 }
