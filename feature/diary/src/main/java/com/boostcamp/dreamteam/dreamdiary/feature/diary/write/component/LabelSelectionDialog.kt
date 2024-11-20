@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
@@ -14,6 +15,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -51,41 +53,35 @@ internal fun LabelSelectionDialog(
             modifier = modifier,
         ) {
             Column {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
+                TextField(
+                    value = labelFilter,
+                    onValueChange = { onLabelFilterChange(it) },
                     modifier = Modifier.fillMaxWidth(),
-                ) {
-                    TextField(
-                        value = labelFilter,
-                        onValueChange = { onLabelFilterChange(it) },
-                        modifier = Modifier.fillMaxWidth(),
-                        label = { Text(stringResource(R.string.label_search)) },
-                        placeholder = { Text(stringResource(R.string.label_search_or_add)) },
-                        trailingIcon = {
-                            if (labelFilter.isNotEmpty()) {
-                                Icon(
-                                    imageVector = Icons.Default.Add,
-                                    contentDescription = "Add Label",
-                                    modifier = Modifier.clickable {
-                                        onClickLabelSave()
-                                    },
-                                )
-                            } else {
-                                Icon(
-                                    imageVector = Icons.Default.Search,
-                                    contentDescription = "Search Label",
-                                )
-                            }
-                        },
-                        singleLine = true,
-                    )
-                }
-
-                Spacer(modifier = Modifier.height(8.dp))
+                    label = { Text(stringResource(R.string.label_search)) },
+                    placeholder = { Text(stringResource(R.string.label_search_or_add)) },
+                    trailingIcon = {
+                        if (labelFilter.isNotEmpty()) {
+                            Icon(
+                                imageVector = Icons.Default.Add,
+                                contentDescription = "Add Label",
+                                modifier = Modifier.clickable {
+                                    onClickLabelSave()
+                                },
+                            )
+                        } else {
+                            Icon(
+                                imageVector = Icons.Default.Search,
+                                contentDescription = "Search Label",
+                            )
+                        }
+                    },
+                    singleLine = true,
+                )
 
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
+                        .heightIn(min = 160.dp, max = 200.dp)
                         .verticalScroll(rememberScrollState()),
                 ) {
                     filteredLabels.forEach { filteredLabel ->
@@ -99,17 +95,19 @@ internal fun LabelSelectionDialog(
                         )
                     }
                 }
-
-                Spacer(modifier = Modifier.height(16.dp))
+                HorizontalDivider()
+                Spacer(modifier = Modifier.height(24.dp))
 
                 Row(
                     modifier = Modifier.align(Alignment.End),
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
-                    TextButton(onClick = {
-                        onDismissRequest()
-                        onLabelFilterChange("")
-                    }) {
+                    TextButton(
+                        onClick = {
+                            onDismissRequest()
+                            onLabelFilterChange("")
+                        },
+                    ) {
                         Text("취소")
                     }
                     TextButton(onClick = { onDismissRequest() }) {
