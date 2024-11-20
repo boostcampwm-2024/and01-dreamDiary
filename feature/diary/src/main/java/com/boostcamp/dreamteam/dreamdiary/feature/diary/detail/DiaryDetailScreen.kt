@@ -29,10 +29,11 @@ import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import com.boostcamp.dreamteam.dreamdiary.designsystem.theme.DreamdiaryTheme
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.R
+import com.boostcamp.dreamteam.dreamdiary.feature.diary.component.DiaryInfoEditorParams
+import com.boostcamp.dreamteam.dreamdiary.feature.diary.component.DiaryInfosEditor
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.DiaryContentUi
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.LabelUi
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.filteredLabelsPreview
-import com.boostcamp.dreamteam.dreamdiary.feature.diary.write.component.DiaryWriteScreenHeader
 import java.time.ZonedDateTime
 
 @Composable
@@ -85,17 +86,19 @@ internal fun DiaryDetailScreen(
                 style = MaterialTheme.typography.titleLarge,
             )
 
-            DiaryWriteScreenHeader(
-                labelFilter = "",
-                onLabelFilterChange = { },
-                filteredLabels = emptyList(),
-                selectedLabels = labels.toSet(),
-                sleepStartAt = sleepStartAt,
-                sleepEndAt = sleepEndAt,
-                onSleepStartAtChange = { },
-                onSleepEndAtChange = { },
-                onCheckChange = { },
-                onClickLabelSave = { },
+            DiaryInfosEditor(
+                diaryInfoEditorParams = DiaryInfoEditorParams(
+                    labelFilter = "",
+                    onLabelFilterChange = { },
+                    filteredLabels = labels,
+                    selectedLabels = labels.toSet(),
+                    sleepStartAt = sleepStartAt,
+                    onSleepStartAtChange = { },
+                    sleepEndAt = sleepEndAt,
+                    onSleepEndAtChange = { },
+                    onCheckChange = { },
+                    onClickLabelSave = { },
+                ),
                 modifier = Modifier.padding(vertical = 16.dp),
                 readOnly = true,
             )
@@ -155,7 +158,8 @@ internal fun DiaryDetailContent(
 
                 is DiaryContentUi.Image -> {
                     AsyncImage(
-                        model = ImageRequest.Builder(LocalContext.current)
+                        model = ImageRequest
+                            .Builder(LocalContext.current)
                             .data(diaryContent.path)
                             .build(),
                         contentDescription = "aaaa",

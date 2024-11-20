@@ -8,17 +8,12 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Check
@@ -40,17 +35,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.boostcamp.dreamteam.dreamdiary.designsystem.theme.DreamdiaryTheme
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.R
+import com.boostcamp.dreamteam.dreamdiary.feature.diary.component.DiaryContentEditorParams
+import com.boostcamp.dreamteam.dreamdiary.feature.diary.component.DiaryEditor
+import com.boostcamp.dreamteam.dreamdiary.feature.diary.component.DiaryInfoEditorParams
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.DiaryContentUi
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.LabelUi
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.filteredLabelsPreview
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.selectedLabelsPreview
-import com.boostcamp.dreamteam.dreamdiary.feature.diary.write.component.DiaryWriteScreenBody
-import com.boostcamp.dreamteam.dreamdiary.feature.diary.write.component.DiaryWriteScreenHeader
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.write.model.DiaryWriteEvent
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.write.model.LabelAddFailureReason
 import kotlinx.coroutines.Dispatchers
@@ -192,85 +187,32 @@ private fun DiaryWriteScreenContent(
             )
         },
     ) { innerPadding ->
-        DiaryWriteScreen(
-            title = title,
-            onTitleChange = onTitleChange,
-            labelFilter = labelFilter,
-            filteredLabels = filteredLabels,
-            selectedLabels = selectedLabels,
-            onCheckChange = onCheckChange,
-            onLabelFilterChange = onLabelFilterChange,
-            onClickLabelSave = onClickLabelSave,
-            sleepStartAt = sleepStartAt,
-            onSleepStartAtChange = onSleepStartAtChange,
-            sleepEndAt = sleepEndAt,
-            onSleepEndAtChange = onSleepEndAtChange,
-            diaryContents = diaryContents,
-            onContentTextChange = onContentTextChange,
-            onCurrentFocusContentChange = { currentFocusContent = it },
-            onContentTextPositionChange = { currentTextCursorPosition = it },
-            onContentImageDelete = onContentImageDelete,
+        DiaryEditor(
+            diaryInfoEditorParams = DiaryInfoEditorParams(
+                labelFilter = labelFilter,
+                onLabelFilterChange = onLabelFilterChange,
+                filteredLabels = filteredLabels,
+                selectedLabels = selectedLabels,
+                sleepStartAt = sleepStartAt,
+                onSleepStartAtChange = onSleepStartAtChange,
+                sleepEndAt = sleepEndAt,
+                onSleepEndAtChange = onSleepEndAtChange,
+                onCheckChange = onCheckChange,
+                onClickLabelSave = onClickLabelSave,
+            ),
+            diaryContentEditorParams = DiaryContentEditorParams(
+                title = title,
+                onTitleChange = onTitleChange,
+                diaryContents = diaryContents,
+                onContentTextChange = onContentTextChange,
+                onContentFocusChange = { currentFocusContent = it },
+                onContentTextPositionChange = { currentTextCursorPosition = it },
+                onContentImageDelete = onContentImageDelete,
+            ),
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
                 .consumeWindowInsets(innerPadding),
-        )
-    }
-}
-
-@Composable
-private fun DiaryWriteScreen(
-    title: String,
-    onTitleChange: (String) -> Unit,
-    labelFilter: String,
-    filteredLabels: List<LabelUi>,
-    selectedLabels: Set<LabelUi>,
-    onCheckChange: (LabelUi) -> Unit,
-    onLabelFilterChange: (String) -> Unit,
-    onClickLabelSave: () -> Unit,
-    sleepStartAt: ZonedDateTime,
-    onSleepStartAtChange: (ZonedDateTime) -> Unit,
-    sleepEndAt: ZonedDateTime,
-    onSleepEndAtChange: (ZonedDateTime) -> Unit,
-    diaryContents: List<DiaryContentUi>,
-    onContentTextChange: (contentIndex: Int, String) -> Unit,
-    onCurrentFocusContentChange: (Int) -> Unit,
-    onContentTextPositionChange: (Int) -> Unit,
-    onContentImageDelete: (Int) -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    val scrollState = rememberScrollState()
-
-    Column(modifier = modifier.verticalScroll(scrollState)) {
-        DiaryWriteScreenHeader(
-            labelFilter = labelFilter,
-            onLabelFilterChange = onLabelFilterChange,
-            filteredLabels = filteredLabels,
-            selectedLabels = selectedLabels,
-            sleepStartAt = sleepStartAt,
-            sleepEndAt = sleepEndAt,
-            onSleepStartAtChange = onSleepStartAtChange,
-            onSleepEndAtChange = onSleepEndAtChange,
-            onCheckChange = onCheckChange,
-            onClickLabelSave = onClickLabelSave,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp),
-        )
-
-        Spacer(modifier = Modifier.height(24.dp))
-
-        DiaryWriteScreenBody(
-            title = title,
-            onTitleChange = onTitleChange,
-            diaryContents = diaryContents,
-            onContentTextChange = onContentTextChange,
-            onContentFocusChange = { onCurrentFocusContentChange(it) },
-            onContentTextPositionChange = { onContentTextPositionChange(it) },
-            onContentImageDelete = onContentImageDelete,
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(horizontal = 16.dp),
         )
     }
 }
@@ -327,7 +269,7 @@ private fun DiaryWriteBottomBar(
 
 @Composable
 @Preview(showBackground = true)
-private fun PreviewDiaryListScreen() {
+private fun DiaryWriteScreenPreview() {
     DreamdiaryTheme {
         DiaryWriteScreenContent(
             onBackClick = {},
@@ -343,7 +285,7 @@ private fun PreviewDiaryListScreen() {
             onSleepStartAtChange = {},
             sleepEndAt = ZonedDateTime.now(),
             onSleepEndAtChange = {},
-            diaryContents = emptyList(),
+            diaryContents = listOf(DiaryContentUi.Text("")),
             onContentImageAdd = { _, _, _ -> },
             onClickSave = {},
             onContentTextChange = { _, _ -> },
