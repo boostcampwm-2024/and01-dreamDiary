@@ -44,6 +44,47 @@ interface DreamDiaryDao {
         setLabelsToDreamDiary(dreamDiaryId, labels)
     }
 
+    @Query(
+        """
+        update diary
+        set title = :title, body = :body,sleepStartAt = :sleepStartAt,sleepEndAt = :sleepEndAt, updatedAt = :updatedAt
+        where id = :diaryId
+        """,
+    )
+    suspend fun updateDreamDiary(
+        diaryId: String,
+        title: String,
+        body: String,
+        sleepStartAt: Instant,
+        sleepEndAt: Instant,
+        updatedAt: Instant = Instant.now(),
+    )
+
+    @Transaction
+    suspend fun updateDreamDiary(
+        diaryId: String,
+        title: String,
+        body: String,
+        labels: List<String>,
+        sleepStartAt: Instant,
+        sleepEndAt: Instant,
+        updatedAt: Instant = Instant.now(),
+    ) {
+        updateDreamDiary(
+            diaryId = diaryId,
+            title = title,
+            body = body,
+            sleepStartAt = sleepStartAt,
+            sleepEndAt = sleepEndAt,
+        )
+
+        deleteDreamDiaryLabels(diaryId = diaryId)
+        setLabelsToDreamDiary(
+            diaryId = diaryId,
+            labels = labels,
+        )
+    }
+
     @Insert
     suspend fun insertText(textEntity: TextEntity)
 
@@ -64,6 +105,9 @@ interface DreamDiaryDao {
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertDreamDiaryLabels(dreamDiaryEntity: List<DreamDiaryLabelEntity>)
+
+    @Query("delete from diary_label where diaryId = :diaryId")
+    suspend fun deleteDreamDiaryLabels(diaryId: String)
 
     @Transaction
     suspend fun setLabelsToDreamDiary(
