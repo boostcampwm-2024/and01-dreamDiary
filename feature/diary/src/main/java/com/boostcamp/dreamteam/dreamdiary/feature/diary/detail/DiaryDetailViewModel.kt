@@ -27,6 +27,10 @@ class DiaryDetailViewModel @Inject constructor(
     val uiState = _uiState.asStateFlow()
 
     init {
+        collectDiary()
+    }
+
+    private fun collectDiary() {
         viewModelScope.launch {
             if (id != null) {
                 _uiState
