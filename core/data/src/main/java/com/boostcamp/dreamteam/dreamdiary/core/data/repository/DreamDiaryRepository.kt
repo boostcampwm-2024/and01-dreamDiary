@@ -24,6 +24,15 @@ interface DreamDiaryRepository {
         sleepEndAt: Instant,
     )
 
+    suspend fun updateDreamDiary(
+        diaryId: String,
+        title: String,
+        diaryContents: List<DiaryContent>,
+        labels: List<String>,
+        sleepStartAt: Instant?,
+        sleepEndAt: Instant?,
+    )
+
     fun getDreamDiaries(): Flow<PagingData<Diary>>
 
     fun getDreamDiariesByLabel(labels: List<String>): Flow<PagingData<Diary>>
