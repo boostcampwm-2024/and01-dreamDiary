@@ -19,21 +19,7 @@ class CommunityViewModel @Inject constructor(
                 val result = functionRepository.helloWorld()
                 Timber.d("Result: $result")
             } catch (e: Exception) {
-                Timber.d("Error: ${e.message}")
-            }
-        }
-    }
-
-
-    fun calculateSum(firstNumber: Int, secondNumber: Int) {
-        viewModelScope.launch {
-            try {
-                val sum = functionRepository.addNumbers(firstNumber, secondNumber)
-                // Update UI with the result
-                println("Sum: $sum")
-            } catch (e: Exception) {
-                // Handle error
-                println("Error: ${e.message}")
+                Timber.d("Error: ${e}")
             }
         }
     }
