@@ -90,6 +90,7 @@ class DiaryWriteViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 addLabelUseCase(addLabel)
+                toggleLabel(LabelUi(addLabel))
                 _event.trySend(DiaryWriteEvent.LabelAddSuccess)
             } catch (e: SQLiteConstraintException) {
                 Timber.d("addLabel: Duplicate label error - ${e.message}")
