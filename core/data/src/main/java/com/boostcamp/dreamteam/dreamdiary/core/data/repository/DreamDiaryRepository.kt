@@ -59,4 +59,6 @@ interface DreamDiaryRepository {
     suspend fun getDreamDiary(id: String): Diary
 
     fun getDreamDiaryAsFlow(id: String): Flow<Diary>
+
+    suspend fun deleteDreamDiary(diaryId: String)
 }
