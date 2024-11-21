@@ -52,4 +52,6 @@ interface DreamDiaryRepository {
     ): Flow<List<Diary>>
 
     suspend fun getDreamDiary(id: String): Diary
+
+    fun getDreamDiaryAsFlow(id: String): Flow<Diary>
 }

@@ -127,6 +127,11 @@ internal class DefaultDreamDiaryRepository @Inject constructor(
         return dreamDiaryEntity.toDomain(parseBody(dreamDiaryEntity.dreamDiary.body))
     }
 
+    override fun getDreamDiaryAsFlow(id: String): Flow<Diary> =
+        dreamDiaryDao.getDreamDiaryAsFlow(id).map { dreamDiaryWithLabels ->
+            dreamDiaryWithLabels.toDomain(parseBody(dreamDiaryWithLabels.dreamDiary.body))
+        }
+
     private suspend fun makeBody(diaryContents: List<DiaryContent>): String {
         var body = ""
         diaryContents.forEach { diaryContent ->
