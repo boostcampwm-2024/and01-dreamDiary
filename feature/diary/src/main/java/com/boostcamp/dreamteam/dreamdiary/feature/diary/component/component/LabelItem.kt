@@ -48,7 +48,7 @@ internal fun LabelItem(
             modifier = modifier,
             headlineContent = {
                 val focusRequester = remember { FocusRequester() }
-                LaunchedEffect(isEditMode) { focusRequester.requestFocus() }
+                LaunchedEffect(Unit) { focusRequester.requestFocus() }
 
                 BasicTextField(
                     value = textFieldValueState,
