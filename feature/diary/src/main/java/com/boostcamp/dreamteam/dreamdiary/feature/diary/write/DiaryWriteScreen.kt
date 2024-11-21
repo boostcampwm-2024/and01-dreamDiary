@@ -125,6 +125,8 @@ fun DiaryWriteScreen(
         onClickLabelSave = viewModel::addLabel,
         onContentTextChange = viewModel::setContentText,
         onContentImageDelete = viewModel::deleteContentImage,
+        onEditLabel = viewModel::updateLabel,
+        onDeleteLabel = viewModel::deleteLabel,
         modifier = Modifier
             .fillMaxSize()
             .imePadding(),
@@ -151,6 +153,8 @@ private fun DiaryWriteScreenContent(
     onClickLabelSave: () -> Unit,
     onContentTextChange: (Int, String) -> Unit,
     onContentImageDelete: (Int) -> Unit,
+    onEditLabel: (labelUi: LabelUi, newValue: String) -> Unit,
+    onDeleteLabel: (labelUi: LabelUi) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     // 현재는 사실상 Text만 포커스 됨
@@ -214,6 +218,8 @@ private fun DiaryWriteScreenContent(
                 onSleepEndAtChange = onSleepEndAtChange,
                 onCheckChange = onCheckChange,
                 onClickLabelSave = onClickLabelSave,
+                onEditLabel = onEditLabel,
+                onDeleteLabel = onDeleteLabel,
             ),
             diaryContentEditorParams = DiaryContentEditorParams(
                 title = title,
@@ -289,13 +295,10 @@ private fun DiaryWriteScreenPreview() {
         DiaryWriteScreenContent(
             onBackClick = {},
             title = "",
+            onTitleChange = {},
             labelFilter = "",
             filteredLabels = filteredLabelsPreview,
             selectedLabels = selectedLabelsPreview,
-            onTitleChange = {},
-            onCheckChange = {},
-            onClickLabelSave = {},
-            onLabelFilterChange = {},
             sleepStartAt = ZonedDateTime.now(),
             onSleepStartAtChange = {},
             sleepEndAt = ZonedDateTime.now(),
@@ -303,8 +306,13 @@ private fun DiaryWriteScreenPreview() {
             diaryContents = listOf(DiaryContentUi.Text("")),
             onContentImageAdd = { _, _, _ -> },
             onClickSave = {},
+            onCheckChange = {},
+            onLabelFilterChange = {},
+            onClickLabelSave = {},
             onContentTextChange = { _, _ -> },
             onContentImageDelete = { },
+            onEditLabel = { _, _ -> },
+            onDeleteLabel = { },
         )
     }
 }

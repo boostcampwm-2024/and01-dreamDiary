@@ -142,6 +142,17 @@ class DiaryWriteViewModel @Inject constructor(
         }
     }
 
+    fun updateLabel(
+        labelUi: LabelUi,
+        newValue: String,
+    ) {
+        // TODO: Implement editLabel
+    }
+
+    fun deleteLabel(labelUi: LabelUi) {
+        // TODO: Implement deleteLabel
+    }
+
     fun setSleepStartAt(sleepStartAt: ZonedDateTime) {
         _uiState.value = _uiState.value.copy(
             sleepStartAt = sleepStartAt,

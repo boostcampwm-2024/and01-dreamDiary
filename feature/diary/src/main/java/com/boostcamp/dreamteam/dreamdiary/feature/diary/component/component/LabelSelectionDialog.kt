@@ -44,6 +44,8 @@ internal fun LabelSelectionDialog(
     selectedLabels: Set<LabelUi>,
     onLabelFilterChange: (String) -> Unit,
     onCheckChange: (labelUi: LabelUi) -> Unit,
+    onEditLabel: (labelUi: LabelUi, newValue: String) -> Unit,
+    onDeleteLabel: (labelUi: LabelUi) -> Unit,
     onClickLabelSave: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -92,6 +94,8 @@ internal fun LabelSelectionDialog(
                             label = filteredLabel.name,
                             isChecked = filteredLabel in selectedLabels,
                             onLabelClick = onCheckChange,
+                            onEditLabel = { newValue -> onEditLabel(filteredLabel, newValue) },
+                            onDeleteLabel = { onDeleteLabel(filteredLabel) },
                         )
                     }
                 }
@@ -132,6 +136,8 @@ private fun LabelSelectionDialogPreviewEmpty() {
             selectedLabels = emptySet(),
             onClickLabelSave = {},
             modifier = Modifier.width(400.dp),
+            onEditLabel = { _, _ -> },
+            onDeleteLabel = { },
         )
     }
 }
@@ -149,6 +155,8 @@ private fun LabelSelectionDialogPreviewWithItems() {
             selectedLabels = selectedLabelsPreview,
             onClickLabelSave = {},
             modifier = Modifier.width(400.dp),
+            onEditLabel = { _, _ -> },
+            onDeleteLabel = { },
         )
     }
 }
