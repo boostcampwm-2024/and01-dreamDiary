@@ -154,7 +154,6 @@ private fun SignInScreenContent(
             ) {
                 Image(
                     painter = painterResource(R.drawable.logo),
-
                     contentDescription = stringResource(R.string.singIn_dream_diary_logo),
                     modifier = Modifier
                         .size(72.dp)
