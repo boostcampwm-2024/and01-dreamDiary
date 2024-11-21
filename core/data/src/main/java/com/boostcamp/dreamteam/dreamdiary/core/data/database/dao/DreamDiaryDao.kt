@@ -87,17 +87,32 @@ interface DreamDiaryDao {
         )
     }
 
+    @Transaction
+    suspend fun deleteDreamDiary(diaryId: String) {
+        deleteDreamDiaryLabels(diaryId = diaryId)
+        privateDeleteDreamDiary(diaryId = diaryId)
+    }
+
+    @Query("delete from diary where id = :diaryId")
+    suspend fun privateDeleteDreamDiary(diaryId: String)
+
     @Insert
     suspend fun insertText(textEntity: TextEntity)
 
     @Query("select * from text where :id = id")
     suspend fun getText(id: String): TextEntity?
 
+    @Query("delete from text where id = :id")
+    suspend fun deleteText(id: String)
+
     @Insert
     suspend fun insertImage(imageEntity: ImageEntity)
 
     @Query("select * from image where :id = id")
     suspend fun getImage(id: String): ImageEntity?
+
+    @Query("delete from image where id = :id")
+    suspend fun deleteImage(id: String)
 
     @Insert
     suspend fun insertLabel(labelEntity: LabelEntity)

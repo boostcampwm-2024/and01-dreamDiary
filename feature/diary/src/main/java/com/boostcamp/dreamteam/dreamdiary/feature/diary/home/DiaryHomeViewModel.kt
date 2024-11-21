@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
 import androidx.paging.map
+import com.boostcamp.dreamteam.dreamdiary.core.domain.usecase.DeleteDreamDiariesUseCase
 import com.boostcamp.dreamteam.dreamdiary.core.domain.usecase.GetDiariesFilterType.SLEEP_END_AT
 import com.boostcamp.dreamteam.dreamdiary.core.domain.usecase.GetDreamDiariesByFilterUseCase
 import com.boostcamp.dreamteam.dreamdiary.core.domain.usecase.GetDreamDiariesInRangeByUseCase
@@ -21,6 +22,7 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.time.YearMonth
 import java.time.ZoneId
@@ -29,8 +31,9 @@ import javax.inject.Inject
 @HiltViewModel
 class DiaryHomeViewModel @Inject constructor(
     getDreamDiariesByFilterUseCase: GetDreamDiariesByFilterUseCase,
-    getLabelsUseCase: GetLabelsUseCase,
     getDreamDiariesInRangeByUseCase: GetDreamDiariesInRangeByUseCase,
+    private val deleteDreamDiariesUseCase: DeleteDreamDiariesUseCase,
+    getLabelsUseCase: GetLabelsUseCase,
 ) : ViewModel() {
     val dreamLabels = getLabelsUseCase("")
         .map { labels -> labels.map { it.toLabelUi() } }
@@ -61,6 +64,18 @@ class DiaryHomeViewModel @Inject constructor(
                 options.add(labelUi)
             }
             options
+        }
+    }
+
+    fun deleteDiary(diaryId: String) {
+        viewModelScope.launch {
+            runCatching {
+                deleteDreamDiariesUseCase(diaryId)
+            }.onSuccess {
+                Timber.d("Diary deleted: diaryId = $diaryId")
+            }.onFailure {
+                Timber.e(it)
+            }
         }
     }
 
