@@ -1,9 +1,13 @@
 package com.boostcamp.dreamteam.dreamdiary.feature.diary.write.model
 
 sealed class DiaryWriteEvent {
-    data object DiaryAddSuccess : DiaryWriteEvent()
+    data class DiaryAddSuccess(
+        val diaryId: String,
+    ) : DiaryWriteEvent()
 
-    data object DiaryUpdateSuccess : DiaryWriteEvent()
+    data class DiaryUpdateSuccess(
+        val diaryId: String,
+    ) : DiaryWriteEvent()
 
     data object DiaryUpdateFail : DiaryWriteEvent()
 

@@ -16,13 +16,18 @@ interface DreamDiaryRepository {
         sleepEndAt: Instant,
     )
 
+    /**
+     * Add dream diary
+     *
+     * @return diary id when success
+     */
     suspend fun addDreamDiary(
         title: String,
         diaryContents: List<DiaryContent>,
         labels: List<String>,
         sleepStartAt: Instant,
         sleepEndAt: Instant,
-    )
+    ): String
 
     suspend fun updateDreamDiary(
         diaryId: String,
