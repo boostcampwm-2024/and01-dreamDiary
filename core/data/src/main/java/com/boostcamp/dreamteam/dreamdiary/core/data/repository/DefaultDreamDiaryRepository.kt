@@ -119,7 +119,14 @@ internal class DefaultDreamDiaryRepository @Inject constructor(
     override fun getDreamDiariesBySleepEndInRange(
         start: Instant,
         end: Instant,
-    ): Flow<List<Diary>> = dreamDiaryDao.getDreamDiariesBySleepEndInRange(start, end).map { list -> list.map { it.toDomain(parseBody(it.body)) } }
+    ): Flow<List<Diary>> =
+        dreamDiaryDao
+            .getDreamDiariesBySleepEndInRange(start, end)
+            .map { list ->
+                list.map {
+                    it.toDomain(parseBody(it.body))
+                }
+            }
 
     override suspend fun getDreamDiary(id: String): Diary {
         val dreamDiaryEntity = dreamDiaryDao.getDreamDiary(id)
