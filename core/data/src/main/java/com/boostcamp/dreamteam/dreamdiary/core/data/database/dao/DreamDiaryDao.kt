@@ -48,9 +48,9 @@ interface DreamDiaryDao {
 
     @Query(
         """
-        update diary
-        set title = :title, body = :body, sleepStartAt = :sleepStartAt, sleepEndAt = :sleepEndAt, updatedAt = :updatedAt
-        where id = :diaryId
+            update diary
+            set title = :title, body = :body, sleepStartAt = :sleepStartAt, sleepEndAt = :sleepEndAt, updatedAt = :updatedAt
+            where id = :diaryId
         """,
     )
     suspend fun updateDreamDiary(
@@ -93,8 +93,11 @@ interface DreamDiaryDao {
         privateDeleteDreamDiary(diaryId = diaryId)
     }
 
-    @Query("delete from diary where id = :diaryId")
-    suspend fun privateDeleteDreamDiary(diaryId: String)
+    @Query("update diary set deletedAt = :deletedAt where id = :diaryId")
+    suspend fun privateDeleteDreamDiary(
+        diaryId: String,
+        deletedAt: Instant = Instant.now(),
+    )
 
     @Insert
     suspend fun insertText(textEntity: TextEntity)
@@ -138,25 +141,40 @@ interface DreamDiaryDao {
     @Query("select * from label where :search is null or label like :search")
     fun getLabels(search: String?): Flow<List<LabelEntity>>
 
-    @Query("select * from diary order by updatedAt desc")
+    @Query("select * from diary where deletedAt is null order by updatedAt desc")
     fun getDreamDiaries(): PagingSource<Int, DreamDiaryWithLabels>
 
     @Query(
-        "select Distinct diary.* from diary join diary_label on diary.id = diary_label.diaryId join label on label.label = diary_label.labelId where label.label in (:labels) order by updatedAt desc",
+        """
+            select Distinct diary.*
+            from diary
+                join diary_label on diary.id = diary_label.diaryId
+                join label on label.label = diary_label.labelId
+            where label.label in (:labels)
+                and diary.deletedAt is null
+            order by updatedAt desc
+        """,
     )
     fun getDreamDiariesByLabels(labels: List<String>): PagingSource<Int, DreamDiaryWithLabels>
 
-    @Query("SELECT * FROM diary WHERE sleepEndAt BETWEEN :start AND :end")
+    @Query(
+        """
+            SELECT *
+            FROM diary
+            WHERE sleepEndAt BETWEEN :start AND :end
+                AND deletedAt IS NULL
+        """,
+    )
     fun getDreamDiariesBySleepEndInRange(
         start: Instant,
         end: Instant,
     ): Flow<List<DreamDiaryEntity>>
 
     @Transaction
-    @Query("select * from diary where id = :id")
+    @Query("select * from diary where id = :id and deletedAt is null")
     suspend fun getDreamDiary(id: String): DreamDiaryWithLabels
 
     @Transaction
-    @Query("select * from diary where id = :id")
+    @Query("select * from diary where id = :id and deletedAt is null")
     fun getDreamDiaryAsFlow(id: String): Flow<DreamDiaryWithLabels>
 }
