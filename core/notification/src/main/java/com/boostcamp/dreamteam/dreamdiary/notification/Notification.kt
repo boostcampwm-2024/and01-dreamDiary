@@ -2,7 +2,6 @@ package com.boostcamp.dreamteam.dreamdiary.notification
 
 import android.Manifest
 import android.app.Activity
-import android.app.Application
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.Service
@@ -55,4 +54,18 @@ fun launchNotificationSetting(activity: Activity) {
         .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         .putExtra(Settings.EXTRA_APP_PACKAGE, activity.packageName)
     activity.startActivity(notificationIntent)
+}
+
+fun startTrackingService(context: Context) {
+    val intent = Intent(context, ScreenTrackingService::class.java)
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        ContextCompat.startForegroundService(context, intent)
+    } else {
+        context.startService(intent)
+    }
+}
+
+fun stopTrackingService(context: Context) {
+    val intent = Intent(context, ScreenTrackingService::class.java)
+    context.stopService(intent)
 }

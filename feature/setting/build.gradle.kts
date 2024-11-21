@@ -25,10 +25,11 @@ dependencies {
     implementation(projects.core.domain)
     implementation(projects.core.model)
     implementation(projects.core.ui)
+    implementation(project(":core:notification"))
+    implementation(project(":core:data"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
-    implementation(project(":core:data"))
     androidTestImplementation(libs.androidx.espresso.core)
 
     // Hilt

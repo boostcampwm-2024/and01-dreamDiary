@@ -1,5 +1,6 @@
 package com.boostcamp.dreamteam.dreamdiary.setting
 
+import android.app.Activity
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -12,6 +13,9 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.Comment
 import androidx.compose.material.icons.automirrored.outlined.Logout
+import androidx.compose.material.icons.filled.Accessibility
+import androidx.compose.material.icons.filled.Bedtime
+import androidx.compose.material.icons.filled.BedtimeOff
 import androidx.compose.material.icons.outlined.AccountBox
 import androidx.compose.material.icons.outlined.Alarm
 import androidx.compose.material.icons.outlined.CloudUpload
@@ -38,10 +42,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.boostcamp.dreamteam.dreamdiary.designsystem.theme.DreamdiaryTheme
 import com.boostcamp.dreamteam.dreamdiary.ui.HomeBottomNavItem
 import com.boostcamp.dreamteam.dreamdiary.ui.HomeBottomNavigation
@@ -58,6 +64,9 @@ internal fun SettingScreen(
 ) {
     val rememberScrollState = rememberScrollState()
     var showSNSDialog by remember { mutableStateOf(false) }
+    val onTracking by settingViewModel.onTracking.collectAsStateWithLifecycle()
+    val activity = LocalContext.current as Activity
+    val context = LocalContext.current
 
     val navigationItems = listOf(
         NavigationItem(
@@ -112,6 +121,31 @@ internal fun SettingScreen(
             verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             SettingCategory(text = stringResource(R.string.setting_alarm_setting))
+            SettingOption(
+                icon = Icons.Default.Accessibility,
+                text = stringResource(R.string.setting_notification_setting),
+                modifier = Modifier.clickable(onClick = {
+                    settingViewModel.goToLaunchNotificationSetting(activity)
+                }),
+            )
+            if (!onTracking) {
+                SettingOption(
+                    icon = Icons.Default.Bedtime,
+                    text = stringResource(R.string.setting_on_notification_diary_),
+                    modifier = Modifier.clickable(onClick = {
+                        settingViewModel.startTracking(context)
+                    }),
+                )
+            }
+            else {
+                SettingOption(
+                    icon = Icons.Default.BedtimeOff,
+                    text = stringResource(R.string.setting_off_notification_diary),
+                    modifier = Modifier.clickable(onClick = {
+                        settingViewModel.stopTracking(context)
+                    }),
+                )
+            }
             SettingOption(
                 icon = Icons.Outlined.Alarm,
                 text = stringResource(R.string.setting_schedule_alarm),
