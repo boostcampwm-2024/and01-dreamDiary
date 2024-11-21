@@ -78,7 +78,9 @@ internal fun DiaryListTab(
                         onDiaryClick = { onDiaryClick(diary) },
                         onDiaryEdit = { onDiaryEdit(diary) },
                         onDeleteDiary = onDeleteDiary,
-                        modifier = Modifier.fillMaxWidth(),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .animateItem(),
                     )
                 }
             }
