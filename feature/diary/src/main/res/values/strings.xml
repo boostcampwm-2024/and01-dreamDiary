@@ -52,4 +52,7 @@
     <string name="home_filter_label">필터 라벨</string>
     <string name="home_filter_label_list">필터 라벨 목록</string>
     <string name="home_filter_label_name">라벨</string>
+    <string name="home_tab_list_empty_diary_list">아직 아무런 꿈도\n작성하지 않으셨군요\nTㅅT</string>
+    <string name="home_filter_label_name_multiple_selection">%1$s 외 %2$s종</string>
+    <string name="home_filter_label_empty">아직 라벨을 만들지 않으셨군요!</string>
 </resources>
