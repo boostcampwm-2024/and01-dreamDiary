@@ -16,4 +16,6 @@ data class DreamDiaryEntity(
     val updatedAt: Instant,
     val sleepStartAt: Instant,
     val sleepEndAt: Instant,
+    val needSync: Boolean,
+    val version: Long,
 )

@@ -2,7 +2,6 @@ package com.boostcamp.dreamteam.dreamdiary.core.data.repository.di
 
 import com.boostcamp.dreamteam.dreamdiary.core.data.repository.DefaultDreamDiaryRepository
 import com.boostcamp.dreamteam.dreamdiary.core.data.repository.DreamDiaryRepository
-import com.boostcamp.dreamteam.dreamdiary.core.data.repository.FunctionRepository
 import com.google.firebase.functions.FirebaseFunctions
 import dagger.Binds
 import dagger.Module
@@ -20,12 +19,10 @@ internal abstract class RepositoryModule {
     companion object {
         @Provides
         @Singleton
-        fun provideFirebaseFunctions(): FirebaseFunctions = FirebaseFunctions.getInstance()
-
-        @Provides
-        @Singleton
-        fun provideFunctionRepository(functions: FirebaseFunctions): FunctionRepository {
-            return FunctionRepository(functions)
+        fun provideFirebaseFunctions(): FirebaseFunctions {
+            val functions = FirebaseFunctions.getInstance("asia-northeast3")
+            // functions.useEmulator("ip", 5001)
+            return functions
         }
     }
 }

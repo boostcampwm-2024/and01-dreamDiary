@@ -2,8 +2,8 @@ package com.boostcamp.dreamteam.dreamdiary.core.data.repository
 
 import androidx.paging.PagingData
 import com.boostcamp.dreamteam.dreamdiary.core.model.Diary
-import com.boostcamp.dreamteam.dreamdiary.core.model.DiaryContent
 import com.boostcamp.dreamteam.dreamdiary.core.model.Label
+import com.boostcamp.dreamteam.dreamdiary.core.model.NewDiaryContent
 import kotlinx.coroutines.flow.Flow
 import java.time.Instant
 
@@ -18,7 +18,7 @@ interface DreamDiaryRepository {
 
     suspend fun addDreamDiary(
         title: String,
-        diaryContents: List<DiaryContent>,
+        diaryContents: List<NewDiaryContent>,
         labels: List<String>,
         sleepStartAt: Instant,
         sleepEndAt: Instant,
@@ -41,4 +41,8 @@ interface DreamDiaryRepository {
     ): Flow<List<Diary>>
 
     suspend fun getDreamDiary(id: String): Diary
+
+    suspend fun getDreamDiariesNeedSync(): List<Diary>
+
+    suspend fun updateDreamDiaryVersionAndNeedSync(id: String, version: Long)
 }

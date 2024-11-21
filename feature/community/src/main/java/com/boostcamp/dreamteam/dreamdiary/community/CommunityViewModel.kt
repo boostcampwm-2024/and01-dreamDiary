@@ -19,7 +19,7 @@ class CommunityViewModel @Inject constructor(
                 val result = functionRepository.helloWorld()
                 Timber.d("Result: $result")
             } catch (e: Exception) {
-                Timber.d("Error: ${e}")
+                Timber.d("Error: ${e.message}")
             }
         }
     }

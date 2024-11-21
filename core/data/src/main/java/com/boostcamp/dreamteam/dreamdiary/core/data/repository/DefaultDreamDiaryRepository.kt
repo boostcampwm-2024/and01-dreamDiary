@@ -11,6 +11,7 @@ import com.boostcamp.dreamteam.dreamdiary.core.data.database.model.TextEntity
 import com.boostcamp.dreamteam.dreamdiary.core.model.Diary
 import com.boostcamp.dreamteam.dreamdiary.core.model.DiaryContent
 import com.boostcamp.dreamteam.dreamdiary.core.model.Label
+import com.boostcamp.dreamteam.dreamdiary.core.model.NewDiaryContent
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import java.time.Instant
@@ -38,7 +39,7 @@ internal class DefaultDreamDiaryRepository @Inject constructor(
 
     override suspend fun addDreamDiary(
         title: String,
-        diaryContents: List<DiaryContent>,
+        diaryContents: List<NewDiaryContent>,
         labels: List<String>,
         sleepStartAt: Instant,
         sleepEndAt: Instant,
@@ -47,7 +48,7 @@ internal class DefaultDreamDiaryRepository @Inject constructor(
         for (diaryContent in diaryContents) {
             val newId = UUID.randomUUID().toString()
             when (diaryContent) {
-                is DiaryContent.Text -> {
+                is NewDiaryContent.Text -> {
                     dreamDiaryDao.insertText(
                         TextEntity(
                             newId,
@@ -57,7 +58,7 @@ internal class DefaultDreamDiaryRepository @Inject constructor(
                     body += "text:$newId:"
                 }
 
-                is DiaryContent.Image -> {
+                is NewDiaryContent.Image -> {
                     dreamDiaryDao.insertImage(
                         ImageEntity(
                             newId,
@@ -124,6 +125,14 @@ internal class DefaultDreamDiaryRepository @Inject constructor(
         return dreamDiaryEntity.toDomain(parseBody(dreamDiaryEntity.dreamDiary.body))
     }
 
+    override suspend fun getDreamDiariesNeedSync(): List<Diary> {
+        return dreamDiaryDao.getDreamDiariesNeedSync().map { it.toDomain(parseBody(it.dreamDiary.body)) }
+    }
+
+    override suspend fun updateDreamDiaryVersionAndNeedSync(id: String, version: Long) {
+        dreamDiaryDao.updateDreamDiaryVersionAndNeedSync(id, version)
+    }
+
     private suspend fun parseBody(body: String): List<DiaryContent> {
         val diaryContents = mutableListOf<DiaryContent>()
 
@@ -137,6 +146,7 @@ internal class DefaultDreamDiaryRepository @Inject constructor(
                 val textEntity = dreamDiaryDao.getText(id) ?: continue
                 diaryContents.add(
                     DiaryContent.Text(
+                        id = textEntity.id,
                         text = textEntity.text,
                     ),
                 )
@@ -146,6 +156,7 @@ internal class DefaultDreamDiaryRepository @Inject constructor(
                 val imageEntity = dreamDiaryDao.getImage(id) ?: continue
                 diaryContents.add(
                     DiaryContent.Image(
+                        id = imageEntity.id,
                         path = imageEntity.path,
                     ),
                 )
