@@ -181,19 +181,26 @@ fun ExpandableChip(
             expanded = expanded,
             onDismissRequest = { expanded = false },
         ) {
-            labels.forEach { label ->
+            if (labels.isEmpty()) {
                 DropdownMenuItem(
-                    text = { Text(text = label.name) },
-                    onClick = {
-                        onCheckLabel(label)
-                    },
-                    trailingIcon = {
-                        Checkbox(
-                            checked = label in labelOptions,
-                            onCheckedChange = null,
-                        )
-                    },
+                    text = { Text(text = stringResource(R.string.home_filter_label_empty)) },
+                    onClick = { },
                 )
+            } else {
+                labels.forEach { label ->
+                    DropdownMenuItem(
+                        text = { Text(text = label.name) },
+                        onClick = {
+                            onCheckLabel(label)
+                        },
+                        trailingIcon = {
+                            Checkbox(
+                                checked = label in labelOptions,
+                                onCheckedChange = null,
+                            )
+                        },
+                    )
+                }
             }
         }
     }
