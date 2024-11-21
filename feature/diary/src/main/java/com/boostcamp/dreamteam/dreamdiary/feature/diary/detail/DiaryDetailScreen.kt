@@ -135,6 +135,8 @@ internal fun DiaryDetailScreen(
                     onSleepEndAtChange = { },
                     onCheckChange = { },
                     onClickLabelSave = { },
+                    onDeleteLabel = { },
+                    onEditLabel = { _, _ -> },
                 ),
                 modifier = Modifier.padding(vertical = 16.dp),
                 readOnly = true,

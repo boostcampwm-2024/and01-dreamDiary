@@ -128,18 +128,31 @@ class DiaryWriteViewModel @Inject constructor(
             try {
                 addLabelUseCase(addLabel)
                 toggleLabel(LabelUi(addLabel))
-                _event.trySend(DiaryWriteEvent.LabelAddSuccess)
+                _event.trySend(DiaryWriteEvent.Label.AddSuccess)
             } catch (e: SQLiteConstraintException) {
                 Timber.d("addLabel: Duplicate label error - ${e.message}")
-                _event.trySend(DiaryWriteEvent.LabelAddFailure(LabelAddFailureReason.DUPLICATE_LABEL))
+                _event.trySend(DiaryWriteEvent.Label.AddFailure(LabelAddFailureReason.DUPLICATE_LABEL))
             } catch (e: IOException) {
                 Timber.d("addLabel: Duplicate label error - ${e.message}")
-                _event.trySend(DiaryWriteEvent.LabelAddFailure(LabelAddFailureReason.INSUFFICIENT_STORAGE))
+                _event.trySend(DiaryWriteEvent.Label.AddFailure(LabelAddFailureReason.INSUFFICIENT_STORAGE))
             } catch (e: Exception) {
                 Timber.d("addLabel: ${e.message} ${e.cause}")
-                _event.trySend(DiaryWriteEvent.LabelAddFailure(LabelAddFailureReason.UNKNOWN_ERROR))
+                _event.trySend(DiaryWriteEvent.Label.AddFailure(LabelAddFailureReason.UNKNOWN_ERROR))
             }
         }
+    }
+
+    fun updateLabel(
+        labelUi: LabelUi,
+        newValue: String,
+    ) {
+        // TODO: 라벨 업데이트 기능 추가
+        _event.trySend(DiaryWriteEvent.Label.UpdateFailure)
+    }
+
+    fun deleteLabel(labelUi: LabelUi) {
+        // TODO: 라벨 삭제 기능 추가
+        _event.trySend(DiaryWriteEvent.Label.DeleteFailure)
     }
 
     fun setSleepStartAt(sleepStartAt: ZonedDateTime) {
