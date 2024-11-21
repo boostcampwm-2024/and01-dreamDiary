@@ -1,6 +1,7 @@
 package com.boostcamp.dreamteam.dreamdiary
 
 import android.app.Application
+import com.boostcamp.dreamteam.dreamdiary.notification.createNotificationChannel
 import dagger.hilt.android.HiltAndroidApp
 import timber.log.Timber
 
@@ -10,6 +11,7 @@ class DreamDiaryApplication : Application() {
         super.onCreate()
 
         initTimber()
+        createNotificationChannel(this)
     }
 
     private fun initTimber() {

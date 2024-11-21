@@ -1,11 +1,5 @@
 package com.boostcamp.dreamteam.dreamdiary.feature.diary.home
 
-import android.app.Activity
-import android.app.NotificationChannel
-import android.app.NotificationManager
-import android.content.Context
-import android.content.pm.PackageManager
-import android.os.Build
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -29,13 +23,8 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.core.app.ActivityCompat.requestPermissions
-import androidx.core.app.NotificationCompat
-import androidx.core.app.NotificationManagerCompat
-import androidx.core.content.ContextCompat.checkSelfPermission
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.compose.LazyPagingItems
@@ -68,13 +57,6 @@ fun DiaryHomeScreen(
     val labels by viewModel.dreamLabels.collectAsStateWithLifecycle()
     val labelOptions by viewModel.labelOptions.collectAsStateWithLifecycle()
 
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-        if (checkSelfPermission(LocalContext.current, android.Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(LocalContext.current as Activity, arrayOf(android.Manifest.permission.POST_NOTIFICATIONS), 1001)
-        }
-    }
-
-    sendLocalNotification(LocalContext.current, "test", "hi")
     DiaryHomeScreenContent(
         diaries = diaries,
         labels = labels,
@@ -89,35 +71,6 @@ fun DiaryHomeScreen(
         onDiaryClick = onDiaryClick,
         onDiaryEdit = onDiaryEdit,
     )
-}
-
-fun sendLocalNotification(
-    context: Context,
-    title: String,
-    message: String,
-) {
-    val channelId = "local_notification_channel"
-    val notificationId = 1001
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-        val channelName = "Local Notifications"
-        val importance = NotificationManager.IMPORTANCE_DEFAULT
-        val channel = NotificationChannel(channelId, channelName, importance).apply {
-            description = "Channel for local notifications"
-        }
-        val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        notificationManager.createNotificationChannel(channel)
-    }
-
-    val notification = NotificationCompat.Builder(context, channelId)
-        .setSmallIcon(android.R.drawable.ic_dialog_info)
-        .setContentTitle(title)
-        .setContentText(message)
-        .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-        .setAutoCancel(true)
-        .build()
-    if (checkSelfPermission(context, android.Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED) {
-        NotificationManagerCompat.from(context).notify(notificationId, notification)
-    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
