@@ -119,10 +119,7 @@ internal class DefaultDreamDiaryRepository @Inject constructor(
     override fun getDreamDiariesBySleepEndInRange(
         start: Instant,
         end: Instant,
-    ): Flow<List<Diary>> =
-        dreamDiaryDao
-            .getDreamDiariesBySleepEndInRange(start, end)
-            .map { list -> list.map { it.toDomain(parseBody(it.body)) } }
+    ): Flow<List<Diary>> = dreamDiaryDao.getDreamDiariesBySleepEndInRange(start, end).map { list -> list.map { it.toDomain(parseBody(it.body)) } }
 
     override suspend fun getDreamDiary(id: String): Diary {
         val dreamDiaryEntity = dreamDiaryDao.getDreamDiary(id)
@@ -133,6 +130,12 @@ internal class DefaultDreamDiaryRepository @Inject constructor(
         dreamDiaryDao.getDreamDiaryAsFlow(id).map { dreamDiaryWithLabels ->
             dreamDiaryWithLabels.toDomain(parseBody(dreamDiaryWithLabels.dreamDiary.body))
         }
+
+    override suspend fun deleteDreamDiary(diaryId: String) {
+        val dreamDiaryEntity = dreamDiaryDao.getDreamDiary(diaryId)
+        deleteBody(dreamDiaryEntity.dreamDiary.body)
+        dreamDiaryDao.deleteDreamDiary(diaryId)
+    }
 
     private suspend fun makeBody(diaryContents: List<DiaryContent>): String {
         var body = ""
@@ -147,7 +150,7 @@ internal class DefaultDreamDiaryRepository @Inject constructor(
                             text = diaryContent.text,
                         ),
                     )
-                    "text:$newId:"
+                    "$TEXT$DELIMITER$newId$DELIMITER"
                 }
 
                 is DiaryContent.Image -> {
@@ -157,7 +160,7 @@ internal class DefaultDreamDiaryRepository @Inject constructor(
                             path = diaryContent.path,
                         ),
                     )
-                    "image:$newId:"
+                    "$IMAGE$DELIMITER$newId$DELIMITER"
                 }
             }
 
@@ -169,11 +172,11 @@ internal class DefaultDreamDiaryRepository @Inject constructor(
     private suspend fun parseBody(body: String): List<DiaryContent> {
         val diaryContents = mutableListOf<DiaryContent>()
 
-        val parsingDiaryContent = body.split(":")
+        val parsingDiaryContent = body.split(DELIMITER)
         var index = 0
 
         while (index < parsingDiaryContent.size) {
-            if (parsingDiaryContent[index] == "text") {
+            if (parsingDiaryContent[index] == TEXT) {
                 index += 1
                 val id = parsingDiaryContent[index]
                 val textEntity = dreamDiaryDao.getText(id) ?: continue
@@ -182,7 +185,7 @@ internal class DefaultDreamDiaryRepository @Inject constructor(
                         text = textEntity.text,
                     ),
                 )
-            } else if (parsingDiaryContent[index] == "image") {
+            } else if (parsingDiaryContent[index] == IMAGE) {
                 index += 1
                 val id = parsingDiaryContent[index]
                 val imageEntity = dreamDiaryDao.getImage(id) ?: continue
@@ -197,5 +200,30 @@ internal class DefaultDreamDiaryRepository @Inject constructor(
             }
         }
         return diaryContents
+    }
+
+    private suspend fun deleteBody(body: String) {
+        val parsingDiaryContent = body.split(DELIMITER)
+        var index = 0
+        while (index < parsingDiaryContent.size) {
+            if (parsingDiaryContent[index] == TEXT) {
+                index += 1
+                val id = parsingDiaryContent[index]
+                dreamDiaryDao.deleteText(id)
+            } else if (parsingDiaryContent[index] == IMAGE) {
+                index += 1
+                val id = parsingDiaryContent[index]
+                dreamDiaryDao.deleteImage(id)
+            } else {
+                index += 1
+                continue
+            }
+        }
+    }
+
+    private companion object BodyToken {
+        const val TEXT = "text"
+        const val IMAGE = "image"
+        const val DELIMITER = ":"
     }
 }
