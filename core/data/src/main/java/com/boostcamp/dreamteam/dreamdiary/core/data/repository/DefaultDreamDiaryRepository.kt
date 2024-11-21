@@ -64,9 +64,10 @@ internal class DefaultDreamDiaryRepository @Inject constructor(
         dreamDiaryDao.updateDreamDiary(
             diaryId = diaryId,
             title = title,
-            body = makeBody(diaryContents = diaryContents),
             sleepStartAt = sleepStartAt,
             sleepEndAt = sleepEndAt,
+            body = makeBody(diaryContents = diaryContents),
+            labels = labels,
         )
     }
 
