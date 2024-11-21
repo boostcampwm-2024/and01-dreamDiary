@@ -11,11 +11,27 @@ sealed class DiaryWriteEvent {
 
     data object DiaryUpdateFail : DiaryWriteEvent()
 
-    data object LabelAddSuccess : DiaryWriteEvent()
+    sealed class Label : DiaryWriteEvent() {
+        data object AddSuccess : Label()
 
-    data class LabelAddFailure(
-        val labelAddFailureReason: LabelAddFailureReason,
-    ) : DiaryWriteEvent()
+        data class AddFailure(
+            val labelAddFailureReason: LabelAddFailureReason,
+        ) : Label()
+
+        /* TODO: 업데이트 성공시 이벤트
+        data class LabelUpdateSuccess(
+            val labelId: String,
+        ) : Label()
+         */
+
+        data object UpdateFailure : Label()
+
+        /* TODO: 삭제 성공시 이벤트
+        data object LabelDeleteSuccess : Label()
+         */
+
+        data object DeleteFailure : Label()
+    }
 }
 
 enum class LabelAddFailureReason {

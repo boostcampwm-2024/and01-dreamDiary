@@ -79,28 +79,45 @@ fun DiaryWriteScreen(
                     onWriteSuccess(writeEvent.diaryId)
                 }
 
-                is DiaryWriteEvent.LabelAddSuccess -> {
-                    Toast.makeText(context, "라벨 추가 성공", Toast.LENGTH_SHORT).show()
-                }
-
-                is DiaryWriteEvent.LabelAddFailure -> {
-                    when (writeEvent.labelAddFailureReason) {
-                        LabelAddFailureReason.DUPLICATE_LABEL -> {
-                            Toast.makeText(context, context.getString(R.string.write_duplicate_error), Toast.LENGTH_SHORT).show()
-                        }
-
-                        LabelAddFailureReason.INSUFFICIENT_STORAGE -> {
-                            Toast.makeText(context, context.getString(R.string.write_insufficient_storage_error), Toast.LENGTH_SHORT).show()
-                        }
-
-                        LabelAddFailureReason.UNKNOWN_ERROR -> {
-                            Toast.makeText(context, context.getString(R.string.write_unknown_error), Toast.LENGTH_SHORT).show()
-                        }
-                    }
-                }
-
                 is DiaryWriteEvent.DiaryUpdateFail -> {
                     Toast.makeText(context, context.getString(R.string.write_edit_error), Toast.LENGTH_SHORT).show()
+                }
+
+                is DiaryWriteEvent.Label -> {
+                    when (writeEvent) {
+                        is DiaryWriteEvent.Label.AddSuccess -> {
+                            Toast.makeText(context, "라벨 추가 성공", Toast.LENGTH_SHORT).show()
+                        }
+
+                        is DiaryWriteEvent.Label.AddFailure -> {
+                            when (writeEvent.labelAddFailureReason) {
+                                LabelAddFailureReason.DUPLICATE_LABEL -> {
+                                    Toast.makeText(context, context.getString(R.string.write_duplicate_error), Toast.LENGTH_SHORT).show()
+                                }
+
+                                LabelAddFailureReason.INSUFFICIENT_STORAGE -> {
+                                    Toast
+                                        .makeText(
+                                            context,
+                                            context.getString(R.string.write_insufficient_storage_error),
+                                            Toast.LENGTH_SHORT,
+                                        ).show()
+                                }
+
+                                LabelAddFailureReason.UNKNOWN_ERROR -> {
+                                    Toast.makeText(context, context.getString(R.string.write_unknown_error), Toast.LENGTH_SHORT).show()
+                                }
+                            }
+                        }
+
+                        is DiaryWriteEvent.Label.UpdateFailure -> {
+                            Toast.makeText(context, "아직 수정 기능 없지롱~", Toast.LENGTH_SHORT).show()
+                        }
+
+                        is DiaryWriteEvent.Label.DeleteFailure -> {
+                            Toast.makeText(context, "아직 삭제 기능 없지롱~", Toast.LENGTH_SHORT).show()
+                        }
+                    }
                 }
             }
         }
