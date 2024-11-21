@@ -13,4 +13,5 @@
     <string name="signIn_google_fail">구글 로그인 실패</string>
     <string name="signIn_github_fail">깃허브 로그인 실패</string>
     <string name="signIn_unkown_error">알수 없는 에러</string>
+    <string name="singIn_dream_diary_logo">dreamdiary logo</string>
 </resources>
