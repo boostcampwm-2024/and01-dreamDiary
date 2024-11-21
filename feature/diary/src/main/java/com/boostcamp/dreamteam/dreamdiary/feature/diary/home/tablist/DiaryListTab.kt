@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -58,11 +59,13 @@ internal fun DiaryListTab(
     modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier) {
-        ExpandableChip(
-            labels = labels,
-            labelOptions = labelOptions,
-            onCheckLabel = onCheckLabel,
-        )
+        Row(modifier = Modifier.fillMaxWidth()) {
+            ExpandableChip(
+                labels = labels,
+                labelOptions = labelOptions,
+                onCheckLabel = onCheckLabel,
+            )
+        }
 
         val contentModifier = Modifier.fillMaxSize()
         if (diaries.itemCount == 0) {
@@ -114,7 +117,7 @@ private fun DiaryListTabContent(
 ) {
     LazyColumn(
         modifier = modifier.fillMaxSize(),
-        contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
+        contentPadding = PaddingValues(horizontal = 16.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         items(
@@ -142,6 +145,7 @@ fun ExpandableChip(
     labels: List<LabelUi>,
     labelOptions: Set<LabelUi>,
     onCheckLabel: (LabelUi) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     var expanded by remember { mutableStateOf(false) }
     val name = if (labelOptions.isEmpty()) {
@@ -151,7 +155,7 @@ fun ExpandableChip(
     } else {
         stringResource(R.string.home_filter_label_name_multiple_selection, labelOptions.first().name, labelOptions.size - 1)
     }
-    Box {
+    Box(modifier = modifier) {
         FilterChip(
             selected = expanded,
             onClick = { expanded = !expanded },
@@ -177,21 +181,19 @@ fun ExpandableChip(
             expanded = expanded,
             onDismissRequest = { expanded = false },
         ) {
-            Column {
-                labels.forEach { label ->
-                    DropdownMenuItem(
-                        text = { Text(text = label.name) },
-                        onClick = {
-                            onCheckLabel(label)
-                        },
-                        trailingIcon = {
-                            Checkbox(
-                                checked = label in labelOptions,
-                                onCheckedChange = null,
-                            )
-                        },
-                    )
-                }
+            labels.forEach { label ->
+                DropdownMenuItem(
+                    text = { Text(text = label.name) },
+                    onClick = {
+                        onCheckLabel(label)
+                    },
+                    trailingIcon = {
+                        Checkbox(
+                            checked = label in labelOptions,
+                            onCheckedChange = null,
+                        )
+                    },
+                )
             }
         }
     }
