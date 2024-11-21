@@ -122,7 +122,7 @@ private fun DiaryListTabContent(
     ) {
         items(
             count = diaries.itemCount,
-            key = { diaries.peek(it) ?: PagingIndexKey(it) },
+            key = { diaries.peek(it)?.id ?: PagingIndexKey(it) },
         ) { diaryIndex ->
             val diary = diaries[diaryIndex]
             if (diary != null) {
