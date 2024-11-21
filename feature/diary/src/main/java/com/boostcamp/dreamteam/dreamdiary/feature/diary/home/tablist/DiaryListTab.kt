@@ -145,11 +145,11 @@ fun ExpandableChip(
 ) {
     var expanded by remember { mutableStateOf(false) }
     val name = if (labelOptions.isEmpty()) {
-        "정렬"
+        stringResource(R.string.home_filter_label_name)
     } else if (labelOptions.size == 1) {
         labelOptions.first().name
     } else {
-        "${labelOptions.first().name} 외 ${labelOptions.size - 1}종"
+        stringResource(R.string.home_filter_label_name_multiple_selection, labelOptions.first().name, labelOptions.size - 1)
     }
     Box {
         FilterChip(
