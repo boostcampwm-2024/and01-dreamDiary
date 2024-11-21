@@ -67,7 +67,7 @@ fun DiaryHomeScreen(
         onNavigateToWriteScreen = onNavigateToWriteScreen,
         onNavigateToCommunity = onNavigateToCommunity,
         onNavigateToSetting = onNavigateToSetting,
-        onDeleteDiary = { /* TODO: diary 삭제 기능 구현 */ },
+        onDeleteDiary = { viewModel.deleteDiary(it.id) },
         onDiaryClick = onDiaryClick,
         onDiaryEdit = onDiaryEdit,
     )
