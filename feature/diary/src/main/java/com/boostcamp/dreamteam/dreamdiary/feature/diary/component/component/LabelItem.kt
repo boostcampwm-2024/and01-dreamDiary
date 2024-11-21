@@ -40,7 +40,7 @@ internal fun LabelItem(
     onEditLabel: (newValue: String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    var (isEditMode, setIsEditMode) = remember { mutableStateOf(false) }
+    var isEditMode by remember { mutableStateOf(false) }
 
     if (isEditMode) {
         var textFieldValueState by remember { mutableStateOf(TextFieldValue(text = label, selection = TextRange(label.length))) }
@@ -62,7 +62,7 @@ internal fun LabelItem(
                 IconButton(
                     onClick = {
                         onEditLabel(textFieldValueState.text)
-                        setIsEditMode(false)
+                        isEditMode = false
                     },
                     content = { Icon(imageVector = Icons.Outlined.Check, contentDescription = "수정 완료") },
                 )
@@ -83,7 +83,7 @@ internal fun LabelItem(
             trailingContent = {
                 Row {
                     IconButton(
-                        onClick = { setIsEditMode(true) },
+                        onClick = { isEditMode = true },
                         content = { Icon(imageVector = Icons.Outlined.Edit, contentDescription = "수정") },
                     )
                     IconButton(
