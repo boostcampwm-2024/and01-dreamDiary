@@ -38,8 +38,8 @@ fun NavGraphBuilder.diaryGraph(
         composable<DiaryGraph.DiaryHomeRoute> {
             DiaryHomeScreen(
                 onDiaryClick = { diaryUI ->
-                    navController.navigate(
-                        route = DiaryGraph.DiaryDetailRoute(diaryUI.id),
+                    navController.navigateToDetailScreen(
+                        diaryId = diaryUI.id,
                         navOptions = navOptions {
                             launchSingleTop = true
                         },
@@ -61,6 +61,17 @@ fun NavGraphBuilder.diaryGraph(
         ) {
             DiaryWriteScreen(
                 onBackClick = navController::navigateUp,
+                onWriteSuccess = { diaryId ->
+                    navController.navigateToDetailScreen(
+                        diaryId = diaryId,
+                        navOptions = navOptions {
+                            popUpTo<DiaryGraph.DiaryWriteRoute> {
+                                inclusive = true
+                            }
+                            launchSingleTop = true
+                        },
+                    )
+                },
             )
         }
 
@@ -78,4 +89,11 @@ private fun NavController.navigateToWriteScreen(
     navOptions: NavOptions? = null,
 ) {
     navigate(route = DiaryGraph.DiaryWriteRoute(diaryId), navOptions = navOptions)
+}
+
+private fun NavController.navigateToDetailScreen(
+    diaryId: String,
+    navOptions: NavOptions? = null,
+) {
+    navigate(route = DiaryGraph.DiaryDetailRoute(diaryId), navOptions = navOptions)
 }

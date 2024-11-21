@@ -42,9 +42,10 @@ internal class DefaultDreamDiaryRepository @Inject constructor(
         labels: List<String>,
         sleepStartAt: Instant,
         sleepEndAt: Instant,
-    ) {
+    ): String {
         val body = makeBody(diaryContents)
-        dreamDiaryDao.insertDreamDiary(
+
+        return dreamDiaryDao.insertDreamDiary(
             title = title,
             body = body,
             labels = labels,

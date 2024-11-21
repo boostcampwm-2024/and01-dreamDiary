@@ -104,20 +104,20 @@ class DiaryWriteViewModel @Inject constructor(
                         sleepStartAt = sleepStartAt,
                         sleepEndAt = sleepEndAt,
                     )
-                    _event.trySend(DiaryWriteEvent.DiaryUpdateSuccess)
+                    _event.trySend(DiaryWriteEvent.DiaryUpdateSuccess(diaryId))
                 } ?: run {
                     Timber.e("diaryId is null at updateDreamDiary")
                     _event.trySend(DiaryWriteEvent.DiaryUpdateFail)
                 }
             } else {
-                addDreamDiaryUseCase(
+                val newDiaryId = addDreamDiaryUseCase(
                     title = title,
                     diaryContents = diaryContents.map { it.toDomain() },
                     labels = labels,
                     sleepStartAt = sleepStartAt,
                     sleepEndAt = sleepEndAt,
                 )
-                _event.trySend(DiaryWriteEvent.DiaryAddSuccess)
+                _event.trySend(DiaryWriteEvent.DiaryAddSuccess(diaryId = newDiaryId))
             }
         }
     }

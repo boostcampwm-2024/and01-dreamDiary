@@ -60,22 +60,31 @@ import java.util.UUID
 @Composable
 fun DiaryWriteScreen(
     onBackClick: () -> Unit,
+    onWriteSuccess: (diaryId: String) -> Unit,
     viewModel: DiaryWriteViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     val context = LocalContext.current
-    LaunchedEffect(Unit) {
-        viewModel.event.collectLatest {
-            when (it) {
-                is DiaryWriteEvent.DiaryAddSuccess, is DiaryWriteEvent.DiaryUpdateSuccess -> onBackClick()
+    LaunchedEffect(onBackClick, onWriteSuccess) {
+        viewModel.event.collectLatest { writeEvent ->
+            when (writeEvent) {
+                is DiaryWriteEvent.DiaryAddSuccess -> {
+                    Toast.makeText(context, "일기 작성 성공", Toast.LENGTH_SHORT).show()
+                    onWriteSuccess(writeEvent.diaryId)
+                }
+
+                is DiaryWriteEvent.DiaryUpdateSuccess -> {
+                    Toast.makeText(context, "일기 수정 성공", Toast.LENGTH_SHORT).show()
+                    onWriteSuccess(writeEvent.diaryId)
+                }
 
                 is DiaryWriteEvent.LabelAddSuccess -> {
                     Toast.makeText(context, "라벨 추가 성공", Toast.LENGTH_SHORT).show()
                 }
 
                 is DiaryWriteEvent.LabelAddFailure -> {
-                    when (it.labelAddFailureReason) {
+                    when (writeEvent.labelAddFailureReason) {
                         LabelAddFailureReason.DUPLICATE_LABEL -> {
                             Toast.makeText(context, context.getString(R.string.write_duplicate_error), Toast.LENGTH_SHORT).show()
                         }
