@@ -23,12 +23,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.boostcamp.dreamteam.dreamdiary.designsystem.theme.DreamdiaryTheme
+import com.boostcamp.dreamteam.dreamdiary.feature.diary.R
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.LabelUi
 
 @Composable
@@ -64,7 +66,12 @@ internal fun LabelItem(
                         onEditLabel(textFieldValueState.text)
                         isEditMode = false
                     },
-                    content = { Icon(imageVector = Icons.Outlined.Check, contentDescription = "수정 완료") },
+                    content = {
+                        Icon(
+                            imageVector = Icons.Outlined.Check,
+                            contentDescription = stringResource(R.string.label_dialog_confirm_edit),
+                        )
+                    },
                 )
             },
         )
@@ -84,11 +91,21 @@ internal fun LabelItem(
                 Row {
                     IconButton(
                         onClick = { isEditMode = true },
-                        content = { Icon(imageVector = Icons.Outlined.Edit, contentDescription = "수정") },
+                        content = {
+                            Icon(
+                                imageVector = Icons.Outlined.Edit,
+                                contentDescription = stringResource(R.string.label_dialog_edit),
+                            )
+                        },
                     )
                     IconButton(
                         onClick = onDeleteLabel,
-                        content = { Icon(imageVector = Icons.Outlined.Delete, contentDescription = "삭제") },
+                        content = {
+                            Icon(
+                                imageVector = Icons.Outlined.Delete,
+                                contentDescription = stringResource(R.string.label_dialog_delete),
+                            )
+                        },
                     )
                 }
             },
