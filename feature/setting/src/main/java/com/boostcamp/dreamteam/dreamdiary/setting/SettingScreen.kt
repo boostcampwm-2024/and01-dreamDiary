@@ -192,7 +192,7 @@ internal fun SettingScreen(
 }
 
 @Composable
-private fun SettingCategory(
+internal fun SettingCategory(
     text: String,
     modifier: Modifier = Modifier,
 ) {
@@ -209,7 +209,7 @@ private fun SettingCategory(
 }
 
 @Composable
-private fun SettingOption(
+internal fun SettingOption(
     icon: ImageVector,
     text: String,
     modifier: Modifier = Modifier,
