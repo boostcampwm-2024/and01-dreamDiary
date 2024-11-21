@@ -3,10 +3,10 @@ package com.boostcamp.dreamteam.dreamdiary.feature.auth
 import android.widget.Toast
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -16,7 +16,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
@@ -33,6 +32,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -152,14 +152,18 @@ private fun SignInScreenContent(
                     .padding(innerPadding),
                 verticalArrangement = Arrangement.spacedBy(8.dp),
             ) {
-                Box(
+                Image(
+                    painter = painterResource(R.drawable.logo),
+                    contentDescription = stringResource(R.string.singIn_dream_diary_logo),
                     modifier = Modifier
-                        .size(60.dp)
-                        .clip(RoundedCornerShape(10.dp))
-                        .background(Color(130, 211, 224)),
+                        .size(72.dp)
+                        .clip(MaterialTheme.shapes.medium)
+                        .background(Color.Black)
+                        .padding(8.dp),
                 )
                 Text(
                     stringResource(R.string.signIn_dream_diary),
+                    fontWeight = FontWeight.SemiBold,
                     fontSize = 40.sp,
                 )
             }
