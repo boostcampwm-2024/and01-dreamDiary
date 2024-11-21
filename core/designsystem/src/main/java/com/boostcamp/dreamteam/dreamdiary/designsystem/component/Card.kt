@@ -91,7 +91,9 @@ fun DdCard(
             Spacer(modifier = Modifier.height(16.dp))
 
             decoratedBodyContent()
-            Spacer(modifier = Modifier.height(16.dp))
+            if (tail != null) {
+                Spacer(modifier = Modifier.height(16.dp))
+            }
 
             decoratedTailContent()
         }
