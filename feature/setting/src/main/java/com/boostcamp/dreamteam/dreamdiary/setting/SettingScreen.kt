@@ -45,7 +45,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.boostcamp.dreamteam.dreamdiary.designsystem.theme.DreamdiaryTheme
 import com.boostcamp.dreamteam.dreamdiary.ui.HomeBottomNavItem
 import com.boostcamp.dreamteam.dreamdiary.ui.HomeBottomNavigation
-import com.boostcamp.dreamteam.dreamdiary.ui.NavigationItem
+import com.boostcamp.dreamteam.dreamdiary.ui.toNavigationItem
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -60,23 +60,15 @@ internal fun SettingScreen(
     var showSNSDialog by remember { mutableStateOf(false) }
 
     val navigationItems = listOf(
-        NavigationItem(
-            icon = HomeBottomNavItem.MyDream.icon,
-            labelRes = HomeBottomNavItem.MyDream.label,
-            isSelected = false,
+        HomeBottomNavItem.MyDream.toNavigationItem(
             onClick = onNavigateToDiary,
         ),
-        NavigationItem(
-            icon = HomeBottomNavItem.Community.icon,
-            labelRes = HomeBottomNavItem.Community.label,
-            isSelected = false,
+        HomeBottomNavItem.Community.toNavigationItem(
             onClick = onNavigateToCommunity,
         ),
-        NavigationItem(
-            icon = HomeBottomNavItem.Setting.icon,
-            labelRes = HomeBottomNavItem.Setting.label,
+        HomeBottomNavItem.Setting.toNavigationItem(
+            onClick = { /* no-op */ },
             isSelected = true,
-            onClick = {},
         ),
     )
 

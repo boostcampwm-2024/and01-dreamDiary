@@ -6,28 +6,44 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 
 data class NavigationItem(
     val icon: ImageVector,
+    val selectedIcon: ImageVector,
     @StringRes val labelRes: Int,
     val onClick: () -> Unit,
     val isSelected: Boolean,
 )
 
+fun HomeBottomNavItem.toNavigationItem(
+    onClick: () -> Unit,
+    isSelected: Boolean = false,
+) = NavigationItem(
+    icon = icon,
+    selectedIcon = selectedIcon,
+    labelRes = label,
+    onClick = onClick,
+    isSelected = isSelected,
+)
+
 @Composable
-fun HomeBottomNavigation(items: List<NavigationItem>) {
-    BottomAppBar {
+fun HomeBottomNavigation(
+    items: List<NavigationItem>,
+    modifier: Modifier = Modifier,
+) {
+    BottomAppBar(modifier = modifier) {
         items.forEach { item ->
             NavigationBarItem(
                 icon = {
                     Icon(
-                        imageVector = item.icon,
+                        imageVector = if (item.isSelected) item.selectedIcon else item.icon,
                         contentDescription = null,
                     )
                 },
-                label = { Text(stringResource(item.labelRes)) },
+                label = { Text(text = stringResource(item.labelRes)) },
                 onClick = item.onClick,
                 selected = item.isSelected,
             )
