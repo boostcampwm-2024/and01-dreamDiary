@@ -1,4 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="community_title">다른 사람 글</string>
+    <string name="community_list_card_create_date">공유 날짜</string>
+    <string name="community_list_card_create_at">공유 시각</string>
+    <string name="community_list_diary_card_like">좋아요</string>
+    <string name="community_list_diary_card_comment">댓글</string>
 </resources>
