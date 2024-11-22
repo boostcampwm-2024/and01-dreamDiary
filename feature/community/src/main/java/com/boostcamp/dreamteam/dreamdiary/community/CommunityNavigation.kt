@@ -9,6 +9,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
+import androidx.navigation.navOptions
 import androidx.navigation.navigation
 import com.boostcamp.dreamteam.dreamdiary.community.list.CommunityListScreen
 import kotlinx.serialization.Serializable
@@ -36,7 +37,12 @@ fun NavGraphBuilder.communityGraph(
             CommunityListScreen(
                 onNavigateToDiary = onDiaryClick,
                 onNavigateToSetting = onSettingClick,
-                onDiaryClick = { diaryId -> navController.navigateToCommunityDetail(diaryId) },
+                onDiaryClick = { diaryId ->
+                    navController.navigateToCommunityDetail(
+                        diaryId = diaryId,
+                        navOptions = navOptions { launchSingleTop = true },
+                    )
+                },
             )
         }
         composable<CommunityGraph.CommunityDetailRoute> { backStackEntry ->
@@ -47,11 +53,11 @@ fun NavGraphBuilder.communityGraph(
 }
 
 private fun NavController.navigateToCommunityDetail(
-    id: String,
+    diaryId: String,
     navOptions: NavOptions? = null,
 ) {
     navigate(
-        route = CommunityGraph.CommunityDetailRoute(id),
+        route = CommunityGraph.CommunityDetailRoute(diaryId),
         navOptions = navOptions,
     )
 }
