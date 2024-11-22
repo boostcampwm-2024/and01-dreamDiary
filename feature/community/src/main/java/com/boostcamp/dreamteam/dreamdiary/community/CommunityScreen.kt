@@ -11,7 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.boostcamp.dreamteam.dreamdiary.ui.HomeBottomNavItem
 import com.boostcamp.dreamteam.dreamdiary.ui.HomeBottomNavigation
-import com.boostcamp.dreamteam.dreamdiary.ui.NavigationItem
+import com.boostcamp.dreamteam.dreamdiary.ui.toNavigationItem
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -21,22 +21,14 @@ fun CommunityScreen(
     modifier: Modifier = Modifier,
 ) {
     val navigationItems = listOf(
-        NavigationItem(
-            icon = HomeBottomNavItem.MyDream.icon,
-            labelRes = HomeBottomNavItem.MyDream.label,
-            isSelected = false,
+        HomeBottomNavItem.MyDream.toNavigationItem(
             onClick = onNavigateToDiary,
         ),
-        NavigationItem(
-            icon = HomeBottomNavItem.Community.icon,
-            labelRes = HomeBottomNavItem.Community.label,
+        HomeBottomNavItem.Community.toNavigationItem(
+            onClick = { /* no-op */ },
             isSelected = true,
-            onClick = {},
         ),
-        NavigationItem(
-            icon = HomeBottomNavItem.Setting.icon,
-            labelRes = HomeBottomNavItem.Setting.label,
-            isSelected = false,
+        HomeBottomNavItem.Setting.toNavigationItem(
             onClick = onNavigateToSetting,
         ),
     )
