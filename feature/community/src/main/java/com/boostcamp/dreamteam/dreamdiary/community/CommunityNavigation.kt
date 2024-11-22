@@ -36,7 +36,7 @@ fun NavGraphBuilder.communityGraph(
             CommunityListScreen(
                 onNavigateToDiary = onDiaryClick,
                 onNavigateToSetting = onSettingClick,
-                onDiaryClick = { diaryUi -> navController.navigateToCommunityDetail(diaryUi.id) },
+                onDiaryClick = { diaryId -> navController.navigateToCommunityDetail(diaryId) },
             )
         }
         composable<CommunityGraph.CommunityDetailRoute> { backStackEntry ->

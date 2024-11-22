@@ -28,7 +28,7 @@ import com.boostcamp.dreamteam.dreamdiary.ui.toNavigationItem
 fun CommunityListScreen(
     onNavigateToDiary: () -> Unit,
     onNavigateToSetting: () -> Unit,
-    onDiaryClick: (DiaryUi) -> Unit,
+    onDiaryClick: (diaryId: String) -> Unit,
     viewModel: CommunityListViewModel = hiltViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -37,7 +37,7 @@ fun CommunityListScreen(
         onNavigateToDiary = onNavigateToDiary,
         onNavigateToSetting = onNavigateToSetting,
         diaries = state.diaries,
-        onDiaryClick = onDiaryClick,
+        onDiaryClick = { diary -> onDiaryClick(diary.id) },
     )
 }
 
