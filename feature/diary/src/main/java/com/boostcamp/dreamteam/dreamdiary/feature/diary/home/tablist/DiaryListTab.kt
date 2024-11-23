@@ -83,7 +83,7 @@ internal fun DiaryListTab(
 }
 
 @Composable
-fun EmptyDiaryListTabContent(modifier: Modifier = Modifier) {
+private fun EmptyDiaryListTabContent(modifier: Modifier = Modifier) {
     ProvideTextStyle(
         value = MaterialTheme.typography.titleLarge.copy(
             color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.4f),
@@ -141,7 +141,7 @@ private fun DiaryListTabContent(
 }
 
 @Composable
-fun ExpandableChip(
+private fun ExpandableChip(
     labels: List<LabelUi>,
     labelOptions: Set<LabelUi>,
     onCheckLabel: (LabelUi) -> Unit,
