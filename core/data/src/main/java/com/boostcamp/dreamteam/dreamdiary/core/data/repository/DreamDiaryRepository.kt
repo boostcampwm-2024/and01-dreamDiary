@@ -1,6 +1,7 @@
 package com.boostcamp.dreamteam.dreamdiary.core.data.repository
 
 import androidx.paging.PagingData
+import com.boostcamp.dreamteam.dreamdiary.core.data.repository.model.DiarySort
 import com.boostcamp.dreamteam.dreamdiary.core.model.Diary
 import com.boostcamp.dreamteam.dreamdiary.core.model.DiaryContent
 import com.boostcamp.dreamteam.dreamdiary.core.model.Label
@@ -39,6 +40,8 @@ interface DreamDiaryRepository {
     )
 
     fun getDreamDiaries(): Flow<PagingData<Diary>>
+
+    fun getDreamDiariesOrderBy(sort: DiarySort): Flow<PagingData<Diary>>
 
     fun getDreamDiariesByLabel(labels: List<String>): Flow<PagingData<Diary>>
 

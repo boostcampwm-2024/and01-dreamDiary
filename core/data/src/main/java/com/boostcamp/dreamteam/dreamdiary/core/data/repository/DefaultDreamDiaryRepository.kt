@@ -8,6 +8,7 @@ import com.boostcamp.dreamteam.dreamdiary.core.data.database.dao.DreamDiaryDao
 import com.boostcamp.dreamteam.dreamdiary.core.data.database.model.ImageEntity
 import com.boostcamp.dreamteam.dreamdiary.core.data.database.model.LabelEntity
 import com.boostcamp.dreamteam.dreamdiary.core.data.database.model.TextEntity
+import com.boostcamp.dreamteam.dreamdiary.core.data.repository.model.DiarySort
 import com.boostcamp.dreamteam.dreamdiary.core.model.Diary
 import com.boostcamp.dreamteam.dreamdiary.core.model.DiaryContent
 import com.boostcamp.dreamteam.dreamdiary.core.model.Label
@@ -76,6 +77,21 @@ internal class DefaultDreamDiaryRepository @Inject constructor(
         Pager(
             config = PagingConfig(pageSize = 100),
             pagingSourceFactory = { dreamDiaryDao.getDreamDiaries() },
+        ).flow.map { pagingData ->
+            pagingData.map {
+                it.toDomain(parseBody(it.dreamDiary.body))
+            }
+        }
+
+    override fun getDreamDiariesOrderBy(sort: DiarySort): Flow<PagingData<Diary>> =
+        Pager(
+            config = PagingConfig(pageSize = 100),
+            pagingSourceFactory = {
+                dreamDiaryDao.getDreamDiariesOrderBy(
+                    sortType = sort.type.value,
+                    orderCode = sort.order.code,
+                )
+            },
         ).flow.map { pagingData ->
             pagingData.map {
                 it.toDomain(parseBody(it.dreamDiary.body))

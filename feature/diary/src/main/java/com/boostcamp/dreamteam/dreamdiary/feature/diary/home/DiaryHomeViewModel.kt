@@ -5,14 +5,14 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
 import androidx.paging.map
 import com.boostcamp.dreamteam.dreamdiary.core.domain.usecase.DeleteDreamDiariesUseCase
+import com.boostcamp.dreamteam.dreamdiary.core.domain.usecase.DiarySort
+import com.boostcamp.dreamteam.dreamdiary.core.domain.usecase.DiarySortOrder.DESC
+import com.boostcamp.dreamteam.dreamdiary.core.domain.usecase.DiarySortType.CREATED
 import com.boostcamp.dreamteam.dreamdiary.core.domain.usecase.GetDiariesFilterType.SLEEP_END_AT
 import com.boostcamp.dreamteam.dreamdiary.core.domain.usecase.GetDreamDiariesByFilterUseCase
 import com.boostcamp.dreamteam.dreamdiary.core.domain.usecase.GetDreamDiariesInRangeByUseCase
 import com.boostcamp.dreamteam.dreamdiary.core.domain.usecase.GetLabelsUseCase
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.tabcalendar.DiaryHomeTabCalendarUIState
-import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.tablist.DiarySort
-import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.tablist.DiarySortOrder.*
-import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.tablist.DiarySortType.*
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.LabelUi
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.toDiaryUi
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.toLabelUi
@@ -21,6 +21,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
@@ -52,13 +53,15 @@ class DiaryHomeViewModel @Inject constructor(
     private val _sortOption = MutableStateFlow(DiarySort(CREATED, DESC))
     val sortOption = _sortOption.asStateFlow()
 
-    val dreamDiaries = _labelOptions.flatMapLatest {
-        getDreamDiariesByFilterUseCase(it.map { it.name })
-            .map { pagingData ->
-                pagingData.map {
-                    it.toDiaryUi()
-                }
-            }
+    val dreamDiaries = combine(_labelOptions, _sort) { labels, sort ->
+        labels to sort
+    }.flatMapLatest { (labels, sort) ->
+        getDreamDiariesByFilterUseCase(
+            labels = labels.map { it.name },
+            sort = sort,
+        ).map { pagingData ->
+            pagingData.map { it.toDiaryUi() }
+        }
     }.cachedIn(viewModelScope)
 
     fun setSort(diarySort: DiarySort) {
