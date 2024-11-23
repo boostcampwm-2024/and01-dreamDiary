@@ -95,7 +95,7 @@ internal fun SettingScreen(
                 title = { Text("${settingViewModel.getSignInProvider()}") },
                 text = { Text("${settingViewModel.getUserEmail()}") },
                 confirmButton = {
-                    TextButton(onClick = { showSNSDialog = false }) { Text("확인") }
+                    TextButton(onClick = { showSNSDialog = false }) { Text(stringResource(R.string.setting_confirm)) }
                 },
             )
         }
