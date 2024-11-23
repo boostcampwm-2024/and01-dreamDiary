@@ -25,7 +25,6 @@ internal fun SettingOption(
     helpText: String? = null,
     modifier: Modifier = Modifier,
 ) {
-
     Row(
         modifier = modifier.padding(8.dp),
         verticalAlignment = Alignment.CenterVertically,
@@ -49,11 +48,7 @@ internal fun SettingOption(
                 )
             }
         }
-
-
     }
-
-
 }
 
 @Preview(showBackground = true)

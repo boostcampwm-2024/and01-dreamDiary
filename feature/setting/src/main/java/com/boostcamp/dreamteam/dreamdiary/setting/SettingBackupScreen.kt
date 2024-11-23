@@ -28,13 +28,9 @@ import com.boostcamp.dreamteam.dreamdiary.designsystem.theme.DreamdiaryTheme
 import com.boostcamp.dreamteam.dreamdiary.setting.component.SettingCategory
 import com.boostcamp.dreamteam.dreamdiary.setting.component.SettingOption
 
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-
-internal fun SettingBackupScreen(
-    onBackClick: () -> Unit
-) {
+internal fun SettingBackupScreen(onBackClick: () -> Unit) {
     val rememberScrollState = rememberScrollState()
 
     Scaffold(
@@ -47,19 +43,19 @@ internal fun SettingBackupScreen(
                     IconButton(onClick = onBackClick) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = stringResource(R.string.setting_back)
+                            contentDescription = stringResource(R.string.setting_back),
                         )
                     }
-                }
+                },
             )
-        }
+        },
     ) { innerPadding ->
         Column(
             modifier = Modifier
                 .padding(innerPadding)
                 .fillMaxWidth()
                 .padding(8.dp)
-                .verticalScroll(rememberScrollState)
+                .verticalScroll(rememberScrollState),
         ) {
             SettingCategory(text = stringResource(R.string.setting_backup_data_backup))
             SettingOption(
