@@ -63,6 +63,7 @@ fun DreamDiaryNavHost(
         )
 
         communityGraph(
+            navController = navController,
             onDiaryClick = {
                 val options = NavOptions.Builder()
                     .setPopUpTo(CommunityGraph, inclusive = false, saveState = true)
