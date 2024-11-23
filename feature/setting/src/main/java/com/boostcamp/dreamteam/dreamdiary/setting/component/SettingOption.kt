@@ -1,6 +1,7 @@
 package com.boostcamp.dreamteam.dreamdiary.setting.component
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -21,24 +22,38 @@ import androidx.compose.ui.unit.dp
 internal fun SettingOption(
     icon: ImageVector,
     text: String,
+    helpText: String? = null,
     modifier: Modifier = Modifier,
 ) {
+
     Row(
         modifier = modifier.padding(8.dp),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(4.dp),
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         Icon(
             imageVector = icon,
             contentDescription = text,
             modifier = Modifier.size(24.dp),
         )
+        Column {
+            Text(
+                text = text,
+                style = MaterialTheme.typography.bodyLarge,
+            )
+            if (helpText != null) {
+                Text(
+                    text = helpText,
+                    style = MaterialTheme.typography.bodySmall
+                        .copy(color = MaterialTheme.colorScheme.onSurfaceVariant),
+                )
+            }
+        }
 
-        Text(
-            text = text,
-            style = MaterialTheme.typography.bodyLarge,
-        )
+
     }
+
+
 }
 
 @Preview(showBackground = true)
@@ -46,7 +61,8 @@ internal fun SettingOption(
 private fun SettingOptionPreview() {
     SettingOption(
         icon = Icons.Outlined.Alarm,
-        text = "Settings",
-        modifier = Modifier.width(200.dp),
+        text = "기상 알림 시간 설정",
+        helpText = "10:00",
+        modifier = Modifier.width(400.dp),
     )
 }
