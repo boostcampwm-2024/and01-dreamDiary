@@ -1,5 +1,11 @@
 package com.boostcamp.dreamteam.dreamdiary.feature.diary.home.tablist
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -10,10 +16,15 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Label
+import androidx.compose.material.icons.automirrored.filled.Sort
+import androidx.compose.material.icons.filled.ArrowDownward
 import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material.icons.filled.ArrowUpward
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -23,11 +34,14 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ProvideTextStyle
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
@@ -40,6 +54,11 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import com.boostcamp.dreamteam.dreamdiary.designsystem.theme.DreamdiaryTheme
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.R
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.component.DiaryCard
+import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.tablist.DiarySortOrder.ASC
+import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.tablist.DiarySortOrder.DESC
+import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.tablist.DiarySortType.CREATED
+import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.tablist.DiarySortType.SLEEP
+import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.tablist.DiarySortType.UPDATED
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.DiaryUi
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.LabelUi
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.PagingIndexKey
@@ -56,14 +75,23 @@ internal fun DiaryListTab(
     onDiaryClick: (DiaryUi) -> Unit,
     onDiaryEdit: (DiaryUi) -> Unit,
     onDeleteDiary: (DiaryUi) -> Unit,
+    sort: DiarySort,
+    onChangeSort: (DiarySort) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier) {
-        Row(modifier = Modifier.fillMaxWidth()) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+        ) {
             ExpandableChip(
                 labels = labels,
                 labelOptions = labelOptions,
                 onCheckLabel = onCheckLabel,
+            )
+            SortButton(
+                sort = sort,
+                onChangeSort = onChangeSort,
             )
         }
 
@@ -219,10 +247,145 @@ private fun DiaryListTabPreviewEmpty() {
                 onDiaryClick = { },
                 onDiaryEdit = { },
                 onDeleteDiary = { },
+                onChangeSort = { },
+                sort = DiarySort(UPDATED, DESC),
             )
         }
     }
 }
+
+@Composable
+private fun SortButton(
+    sort: DiarySort,
+    onChangeSort: (DiarySort) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    val (isMenuExpanded, setIsMenuExpanded) = remember { mutableStateOf(false) }
+
+    Box(modifier = modifier) {
+        TextButton(
+            onClick = { setIsMenuExpanded(true) },
+            modifier = Modifier.padding(8.dp),
+        ) {
+            val sortTextId by remember(sort.type) {
+                mutableIntStateOf(
+                    when (sort.type) {
+                        CREATED -> R.string.home_list_filter_sort_createdAt
+                        UPDATED -> R.string.home_list_filter_sort_updatedAt
+                        SLEEP -> R.string.home_list_filter_sort_sleepStartAt
+                    },
+                )
+            }
+            val sortIcon by remember(sort.order) { mutableStateOf(sort.order.toIcon()) }
+            Icon(
+                imageVector = Icons.AutoMirrored.Default.Sort,
+                contentDescription = stringResource(R.string.home_list_filter_sort_descending),
+            )
+            Spacer(modifier = Modifier.width(6.dp))
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                AnimatedContent(
+                    targetState = sortTextId,
+                    transitionSpec = {
+                        slideInVertically { it } + fadeIn() togetherWith
+                            slideOutVertically { -it } + fadeOut()
+                    },
+                    label = "",
+                ) { targetSortTextId ->
+                    Text(
+                        text = stringResource(targetSortTextId),
+                        color = MaterialTheme.colorScheme.onSurface,
+                    )
+                }
+                AnimatedContent(
+                    targetState = sortIcon,
+                    label = "",
+                ) { targetSortIcon ->
+                    Icon(
+                        imageVector = targetSortIcon,
+                        contentDescription = stringResource(R.string.home_list_filter_sort_descending),
+                        modifier = Modifier.size(16.dp),
+                    )
+                }
+            }
+        }
+        SortDropDownMenu(
+            isMenuExpanded = isMenuExpanded,
+            setIsMenuExpanded = setIsMenuExpanded,
+            onClickSort = onChangeSort,
+            sort = sort,
+        )
+    }
+}
+
+@Composable
+private fun SortDropDownMenu(
+    isMenuExpanded: Boolean,
+    setIsMenuExpanded: (Boolean) -> Unit,
+    onClickSort: (DiarySort) -> Unit,
+    sort: DiarySort,
+    modifier: Modifier = Modifier,
+) {
+    DropdownMenu(
+        expanded = isMenuExpanded,
+        onDismissRequest = { setIsMenuExpanded(false) },
+        modifier = modifier,
+    ) {
+        val items = listOf(
+            SortItem(
+                name = stringResource(R.string.home_list_filter_sort_createdAt),
+                sortType = CREATED,
+                sortOrder = if (sort.type == CREATED && sort.order == DESC) ASC else DESC,
+            ),
+            SortItem(
+                name = stringResource(R.string.home_list_filter_sort_updatedAt),
+                sortType = UPDATED,
+                sortOrder = if (sort.type == UPDATED && sort.order == DESC) ASC else DESC,
+            ),
+            SortItem(
+                name = stringResource(R.string.home_list_filter_sort_sleepStartAt),
+                sortType = SLEEP,
+                sortOrder = if (sort.type == SLEEP && sort.order == DESC) ASC else DESC,
+            ),
+        )
+
+        items.forEach { item ->
+            DropdownMenuItem(
+                text = {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Text(text = item.name)
+                        Icon(
+                            imageVector = item.sortOrder.toIcon(),
+                            contentDescription = stringResource(R.string.home_list_filter_sort_descending),
+                        )
+                    }
+                },
+                onClick = {
+                    onClickSort(item.sort)
+                    setIsMenuExpanded(false)
+                },
+            )
+        }
+    }
+}
+
+data class SortItem(
+    val name: String,
+    val sortOrder: DiarySortOrder,
+    val sortType: DiarySortType,
+) {
+    val sort = DiarySort(sortType, sortOrder)
+}
+
+private fun DiarySortOrder.toIcon() =
+    if (this == ASC) {
+        Icons.Default.ArrowUpward
+    } else {
+        Icons.Default.ArrowDownward
+    }
 
 @Preview
 @Composable
@@ -237,6 +400,11 @@ private fun DiaryListTabPreview() {
                 onDiaryClick = { },
                 onDiaryEdit = { },
                 onDeleteDiary = { },
+                onChangeSort = { },
+                sort = DiarySort(
+                    UPDATED,
+                    DESC,
+                ),
             )
         }
     }
