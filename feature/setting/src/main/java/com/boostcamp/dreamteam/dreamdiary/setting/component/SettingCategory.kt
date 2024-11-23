@@ -9,6 +9,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.boostcamp.dreamteam.dreamdiary.designsystem.theme.DreamdiaryTheme
 
 @Composable
 internal fun SettingCategory(
@@ -30,7 +31,9 @@ internal fun SettingCategory(
 @Composable
 @Preview
 private fun SettingCategoryPreview() {
-    SettingCategory(
-        text = "Settings",
-    )
+    DreamdiaryTheme {
+        SettingCategory(
+            text = "Settings",
+        )
+    }
 }
