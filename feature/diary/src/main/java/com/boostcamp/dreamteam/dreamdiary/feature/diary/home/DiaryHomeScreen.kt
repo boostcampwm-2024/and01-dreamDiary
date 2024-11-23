@@ -35,9 +35,9 @@ import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.tabcalendar.DiaryCa
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.tabcalendar.DiaryHomeTabCalendarUIState
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.tabcalendar.diaryHomeTabCalendarUIStatePreview
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.tablist.DiaryListTab
-import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.tablist.DiarySort
-import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.tablist.DiarySortOrder
-import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.tablist.DiarySortType
+import com.boostcamp.dreamteam.dreamdiary.core.domain.usecase.DiarySort
+import com.boostcamp.dreamteam.dreamdiary.core.domain.usecase.DiarySortOrder
+import com.boostcamp.dreamteam.dreamdiary.core.domain.usecase.DiarySortType
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.tablist.pagedDiariesPreview
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.DiaryUi
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.LabelUi
