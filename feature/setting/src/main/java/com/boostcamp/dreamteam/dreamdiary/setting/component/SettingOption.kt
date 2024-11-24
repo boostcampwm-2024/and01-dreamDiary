@@ -17,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.boostcamp.dreamteam.dreamdiary.designsystem.theme.DreamdiaryTheme
 
 @Composable
 internal fun SettingOption(
@@ -54,10 +55,12 @@ internal fun SettingOption(
 @Preview(showBackground = true)
 @Composable
 private fun SettingOptionPreview() {
-    SettingOption(
-        icon = Icons.Outlined.Alarm,
-        text = "기상 알림 시간 설정",
-        helpText = "10:00",
-        modifier = Modifier.width(400.dp),
-    )
+    DreamdiaryTheme {
+        SettingOption(
+            icon = Icons.Outlined.Alarm,
+            text = "기상 알림 시간 설정",
+            helpText = "10:00",
+            modifier = Modifier.width(400.dp),
+        )
+    }
 }
