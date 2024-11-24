@@ -49,8 +49,8 @@ class DiaryHomeViewModel @Inject constructor(
     private val _labelOptions = MutableStateFlow(setOf<LabelUi>())
     val labelOptions = _labelOptions.asStateFlow()
 
-    private val _sort = MutableStateFlow(DiarySort(CREATED, DESC))
-    val sort = _sort.asStateFlow()
+    private val _sortOption = MutableStateFlow(DiarySort(CREATED, DESC))
+    val sortOption = _sortOption.asStateFlow()
 
     val dreamDiaries = _labelOptions.flatMapLatest {
         getDreamDiariesByFilterUseCase(it.map { it.name })
@@ -62,7 +62,7 @@ class DiaryHomeViewModel @Inject constructor(
     }.cachedIn(viewModelScope)
 
     fun setSort(diarySort: DiarySort) {
-        _sort.update { diarySort }
+        _sortOption.update { diarySort }
     }
 
     fun toggleLabel(labelUi: LabelUi) {

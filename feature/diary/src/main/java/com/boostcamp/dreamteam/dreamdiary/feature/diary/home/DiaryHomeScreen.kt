@@ -59,7 +59,7 @@ fun DiaryHomeScreen(
     val calendarUIState by viewModel.tabCalendarUiState.collectAsStateWithLifecycle()
     val labels by viewModel.dreamLabels.collectAsStateWithLifecycle()
     val labelOptions by viewModel.labelOptions.collectAsStateWithLifecycle()
-    val sort by viewModel.sort.collectAsStateWithLifecycle()
+    val sortOption by viewModel.sortOption.collectAsStateWithLifecycle()
 
     DiaryHomeScreenContent(
         diaries = diaries,
@@ -75,7 +75,7 @@ fun DiaryHomeScreen(
         onDiaryEdit = onDiaryEdit,
         onDeleteDiary = { viewModel.deleteDiary(it.id) },
         onChangeSort = viewModel::setSort,
-        sort = sort,
+        sortOption = sortOption,
     )
 }
 
@@ -94,7 +94,7 @@ private fun DiaryHomeScreenContent(
     onDiaryClick: (DiaryUi) -> Unit,
     onDiaryEdit: (DiaryUi) -> Unit,
     onDeleteDiary: (DiaryUi) -> Unit,
-    sort: DiarySort,
+    sortOption: DiarySort,
     onChangeSort: (DiarySort) -> Unit,
     modifier: Modifier = Modifier,
     onSearchClick: () -> Unit = {},
@@ -172,7 +172,7 @@ private fun DiaryHomeScreenContent(
                     onDiaryClick = onDiaryClick,
                     onDiaryEdit = onDiaryEdit,
                     onDeleteDiary = onDeleteDiary,
-                    sort = sort,
+                    sortOption = sortOption,
                     onChangeSort = onChangeSort,
                     modifier = tabModifier,
                 )
@@ -239,7 +239,7 @@ private fun DiaryHomeScreenContentPreview() {
             onChangeSort = {},
             onSearchClick = {},
             onNotificationClick = {},
-            sort = DiarySort(
+            sortOption = DiarySort(
                 DiarySortType.UPDATED,
                 DiarySortOrder.DESC,
             ),

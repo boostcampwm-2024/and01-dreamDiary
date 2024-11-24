@@ -75,7 +75,7 @@ internal fun DiaryListTab(
     onDiaryClick: (DiaryUi) -> Unit,
     onDiaryEdit: (DiaryUi) -> Unit,
     onDeleteDiary: (DiaryUi) -> Unit,
-    sort: DiarySort,
+    sortOption: DiarySort,
     onChangeSort: (DiarySort) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -90,7 +90,7 @@ internal fun DiaryListTab(
                 onCheckLabel = onCheckLabel,
             )
             SortButton(
-                sort = sort,
+                sortOption = sortOption,
                 onChangeSort = onChangeSort,
             )
         }
@@ -248,7 +248,7 @@ private fun DiaryListTabPreviewEmpty() {
                 onDiaryEdit = { },
                 onDeleteDiary = { },
                 onChangeSort = { },
-                sort = DiarySort(UPDATED, DESC),
+                sortOption = DiarySort(UPDATED, DESC),
             )
         }
     }
@@ -256,7 +256,7 @@ private fun DiaryListTabPreviewEmpty() {
 
 @Composable
 private fun SortButton(
-    sort: DiarySort,
+    sortOption: DiarySort,
     onChangeSort: (DiarySort) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -267,16 +267,16 @@ private fun SortButton(
             onClick = { setIsMenuExpanded(true) },
             modifier = Modifier.padding(8.dp),
         ) {
-            val sortTextId by remember(sort.type) {
+            val sortTextId by remember(sortOption.type) {
                 mutableIntStateOf(
-                    when (sort.type) {
+                    when (sortOption.type) {
                         CREATED -> R.string.home_list_filter_sort_createdAt
                         UPDATED -> R.string.home_list_filter_sort_updatedAt
                         SLEEP -> R.string.home_list_filter_sort_sleepStartAt
                     },
                 )
             }
-            val sortIcon by remember(sort.order) { mutableStateOf(sort.order.toIcon()) }
+            val sortIcon by remember(sortOption.order) { mutableStateOf(sortOption.order.toIcon()) }
             Icon(
                 imageVector = Icons.AutoMirrored.Default.Sort,
                 contentDescription = stringResource(R.string.home_list_filter_sort_descending),
@@ -312,7 +312,7 @@ private fun SortButton(
             isMenuExpanded = isMenuExpanded,
             setIsMenuExpanded = setIsMenuExpanded,
             onClickSort = onChangeSort,
-            sort = sort,
+            sortOption = sortOption,
         )
     }
 }
@@ -322,7 +322,7 @@ private fun SortDropDownMenu(
     isMenuExpanded: Boolean,
     setIsMenuExpanded: (Boolean) -> Unit,
     onClickSort: (DiarySort) -> Unit,
-    sort: DiarySort,
+    sortOption: DiarySort,
     modifier: Modifier = Modifier,
 ) {
     DropdownMenu(
@@ -334,17 +334,17 @@ private fun SortDropDownMenu(
             SortItem(
                 name = stringResource(R.string.home_list_filter_sort_createdAt),
                 sortType = CREATED,
-                sortOrder = if (sort.type == CREATED && sort.order == DESC) ASC else DESC,
+                sortOrder = if (sortOption.type == CREATED && sortOption.order == DESC) ASC else DESC,
             ),
             SortItem(
                 name = stringResource(R.string.home_list_filter_sort_updatedAt),
                 sortType = UPDATED,
-                sortOrder = if (sort.type == UPDATED && sort.order == DESC) ASC else DESC,
+                sortOrder = if (sortOption.type == UPDATED && sortOption.order == DESC) ASC else DESC,
             ),
             SortItem(
                 name = stringResource(R.string.home_list_filter_sort_sleepStartAt),
                 sortType = SLEEP,
-                sortOrder = if (sort.type == SLEEP && sort.order == DESC) ASC else DESC,
+                sortOrder = if (sortOption.type == SLEEP && sortOption.order == DESC) ASC else DESC,
             ),
         )
 
@@ -401,7 +401,7 @@ private fun DiaryListTabPreview() {
                 onDiaryEdit = { },
                 onDeleteDiary = { },
                 onChangeSort = { },
-                sort = DiarySort(
+                sortOption = DiarySort(
                     UPDATED,
                     DESC,
                 ),
