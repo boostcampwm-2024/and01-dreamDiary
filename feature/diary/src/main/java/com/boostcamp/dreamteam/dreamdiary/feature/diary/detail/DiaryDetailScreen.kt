@@ -1,5 +1,6 @@
 package com.boostcamp.dreamteam.dreamdiary.feature.diary.detail
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -16,6 +17,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -34,9 +36,11 @@ import com.boostcamp.dreamteam.dreamdiary.feature.diary.R
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.component.DiaryInfoEditorParams
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.component.DiaryInfosEditor
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.component.DiaryMenuButton
+import com.boostcamp.dreamteam.dreamdiary.feature.diary.detail.model.DiaryDetailEvent
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.DiaryContentUi
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.LabelUi
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.filteredLabelsPreview
+import timber.log.Timber
 import java.time.ZonedDateTime
 
 @Composable
@@ -45,7 +49,30 @@ fun DiaryDetailScreen(
     onEditDiary: (diaryId: String) -> Unit,
     viewModel: DiaryDetailViewModel = hiltViewModel(),
 ) {
+    val context = LocalContext.current
+    LaunchedEffect(onBackClick, context) {
+        viewModel.event.collect { event ->
+            Timber.d("DiaryDetailScreen event: $event")
+            when (event) {
+                is DiaryDetailEvent.DeleteDiary.Success -> {
+                    Toast.makeText(context, "삭제 성공", Toast.LENGTH_SHORT).show()
+                }
+
+                is DiaryDetailEvent.DeleteDiary.Failure -> { // no-op
+                }
+
+                is DiaryDetailEvent.LoadDiary.Failure -> {
+                    onBackClick()
+                }
+
+                is DiaryDetailEvent.LoadDiary.Success -> { // no-op
+                }
+            }
+        }
+    }
+
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
     val diaryUiState = uiState.diaryUIState
     val loading = uiState.loading
     if (!loading) {
@@ -57,7 +84,7 @@ fun DiaryDetailScreen(
             diaryContents = diaryUiState.diaryContents,
             onBackClick = onBackClick,
             onEditDiary = { onEditDiary(diaryUiState.id) },
-            onDeleteDiary = { /*TODO 삭제 로직 추가*/ },
+            onDeleteDiary = { viewModel.deleteDiary() },
         )
     }
 }
@@ -108,6 +135,8 @@ internal fun DiaryDetailScreen(
                     onSleepEndAtChange = { },
                     onCheckChange = { },
                     onClickLabelSave = { },
+                    onDeleteLabel = { },
+                    onEditLabel = { _, _ -> },
                 ),
                 modifier = Modifier.padding(vertical = 16.dp),
                 readOnly = true,

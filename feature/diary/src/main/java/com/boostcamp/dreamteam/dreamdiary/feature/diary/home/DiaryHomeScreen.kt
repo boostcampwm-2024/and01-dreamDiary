@@ -40,7 +40,7 @@ import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.DiaryUi
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.LabelUi
 import com.boostcamp.dreamteam.dreamdiary.ui.HomeBottomNavItem
 import com.boostcamp.dreamteam.dreamdiary.ui.HomeBottomNavigation
-import com.boostcamp.dreamteam.dreamdiary.ui.NavigationItem
+import com.boostcamp.dreamteam.dreamdiary.ui.toNavigationItem
 import java.time.YearMonth
 
 @Composable
@@ -96,22 +96,14 @@ private fun DiaryHomeScreenContent(
     val tabs = listOf(stringResource(R.string.home_tab_dream), stringResource(R.string.home_tab_calendar))
 
     val navigationItems = listOf(
-        NavigationItem(
-            icon = HomeBottomNavItem.MyDream.icon,
-            labelRes = HomeBottomNavItem.MyDream.label,
+        HomeBottomNavItem.MyDream.toNavigationItem(
+            onClick = { /* no-op */ },
             isSelected = true,
-            onClick = { /* Nothing */ },
         ),
-        NavigationItem(
-            icon = HomeBottomNavItem.Community.icon,
-            labelRes = HomeBottomNavItem.Community.label,
-            isSelected = false,
+        HomeBottomNavItem.Community.toNavigationItem(
             onClick = onNavigateToCommunity,
         ),
-        NavigationItem(
-            icon = HomeBottomNavItem.Setting.icon,
-            labelRes = HomeBottomNavItem.Setting.label,
-            isSelected = false,
+        HomeBottomNavItem.Setting.toNavigationItem(
             onClick = onNavigateToSetting,
         ),
     )

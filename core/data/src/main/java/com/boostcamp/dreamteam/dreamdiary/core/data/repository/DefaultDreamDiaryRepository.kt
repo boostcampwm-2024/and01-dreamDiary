@@ -139,8 +139,6 @@ internal class DefaultDreamDiaryRepository @Inject constructor(
         }
 
     override suspend fun deleteDreamDiary(diaryId: String) {
-        val dreamDiaryEntity = dreamDiaryDao.getDreamDiary(diaryId)
-        deleteBody(dreamDiaryEntity.dreamDiary.body)
         dreamDiaryDao.deleteDreamDiary(diaryId)
     }
 
@@ -207,25 +205,6 @@ internal class DefaultDreamDiaryRepository @Inject constructor(
             }
         }
         return diaryContents
-    }
-
-    private suspend fun deleteBody(body: String) {
-        val parsingDiaryContent = body.split(DELIMITER)
-        var index = 0
-        while (index < parsingDiaryContent.size) {
-            if (parsingDiaryContent[index] == TEXT) {
-                index += 1
-                val id = parsingDiaryContent[index]
-                dreamDiaryDao.deleteText(id)
-            } else if (parsingDiaryContent[index] == IMAGE) {
-                index += 1
-                val id = parsingDiaryContent[index]
-                dreamDiaryDao.deleteImage(id)
-            } else {
-                index += 1
-                continue
-            }
-        }
     }
 
     private companion object BodyToken {

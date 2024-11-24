@@ -42,8 +42,8 @@ import com.boostcamp.dreamteam.dreamdiary.setting.component.SettingOption
 import com.boostcamp.dreamteam.dreamdiary.ui.HomeBottomNavItem
 import com.boostcamp.dreamteam.dreamdiary.ui.HomeBottomNavigation
 import com.boostcamp.dreamteam.dreamdiary.ui.NavigationItem
+import com.boostcamp.dreamteam.dreamdiary.ui.toNavigationItem
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun SettingScreen(
     onNavigateToDiary: () -> Unit,
@@ -52,30 +52,41 @@ internal fun SettingScreen(
     modifier: Modifier = Modifier,
     settingViewModel: SettingViewModel = hiltViewModel(),
 ) {
-    val rememberScrollState = rememberScrollState()
-    var showSNSDialog by remember { mutableStateOf(false) }
-
     val navigationItems = listOf(
-        NavigationItem(
-            icon = HomeBottomNavItem.MyDream.icon,
-            labelRes = HomeBottomNavItem.MyDream.label,
-            isSelected = false,
+        HomeBottomNavItem.MyDream.toNavigationItem(
             onClick = onNavigateToDiary,
         ),
-        NavigationItem(
-            icon = HomeBottomNavItem.Community.icon,
-            labelRes = HomeBottomNavItem.Community.label,
-            isSelected = false,
+        HomeBottomNavItem.Community.toNavigationItem(
             onClick = onNavigateToCommunity,
         ),
-        NavigationItem(
-            icon = HomeBottomNavItem.Setting.icon,
-            labelRes = HomeBottomNavItem.Setting.label,
+        HomeBottomNavItem.Setting.toNavigationItem(
+            onClick = { /* no-op */ },
             isSelected = true,
-            onClick = {},
         ),
     )
 
+    SettingScreenContent(
+        navigationItems = navigationItems,
+        onLogoutClick = onLogoutClick,
+        modifier = modifier,
+        signInProvider = settingViewModel.getSignInProvider(),
+        userEmail = settingViewModel.getUserEmail(),
+        onSignOut = settingViewModel::signOut,
+        onNonPasswordSignIn = settingViewModel::nonPasswordSignIn,
+    )
+}
+
+@Composable
+@OptIn(ExperimentalMaterial3Api::class)
+private fun SettingScreenContent(
+    navigationItems: List<NavigationItem>,
+    onLogoutClick: () -> Unit,
+    signInProvider: String?,
+    onSignOut: () -> Unit,
+    onNonPasswordSignIn: () -> Unit,
+    userEmail: String?,
+    modifier: Modifier = Modifier,
+) {
     Scaffold(
         modifier = modifier,
         topBar = {
@@ -89,111 +100,146 @@ internal fun SettingScreen(
             HomeBottomNavigation(items = navigationItems)
         },
     ) { innerPadding ->
-        if (showSNSDialog) {
-            AlertDialog(
-                onDismissRequest = { showSNSDialog = false },
-                title = { Text("${settingViewModel.getSignInProvider()}") },
-                text = { Text("${settingViewModel.getUserEmail()}") },
-                confirmButton = {
-                    TextButton(onClick = { showSNSDialog = false }) { Text(stringResource(R.string.setting_confirm)) }
-                },
+        SettingScreenBody(
+            signInProvider = signInProvider,
+            userEmail = userEmail,
+            onNonPasswordSignIn = onNonPasswordSignIn,
+            onLogoutClick = onLogoutClick,
+            onSignOut = onSignOut,
+            modifier = Modifier.padding(innerPadding),
+        )
+    }
+}
+
+@Composable
+private fun SettingScreenBody(
+    signInProvider: String?,
+    userEmail: String?,
+    onNonPasswordSignIn: () -> Unit,
+    onLogoutClick: () -> Unit,
+    onSignOut: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    val rememberScrollState = rememberScrollState()
+    var showSNSDialog by remember { mutableStateOf(false) }
+    if (showSNSDialog) {
+        AlertDialog(
+            onDismissRequest = { showSNSDialog = false },
+            title = { Text("$signInProvider") },
+            text = { Text("$userEmail") },
+            confirmButton = {
+                TextButton(onClick = { showSNSDialog = false }) { Text("확인") }
+            },
+        )
+    }
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(8.dp)
+            .verticalScroll(rememberScrollState),
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+    ) {
+        SettingCategory(text = stringResource(R.string.setting_alarm_setting))
+        SettingOption(
+            icon = Icons.Outlined.Alarm,
+            text = stringResource(R.string.setting_schedule_alarm),
+        )
+        SettingOption(
+            icon = Icons.AutoMirrored.Outlined.Comment,
+            text = stringResource(R.string.setting_comment_alarm),
+        )
+
+        SettingCategory(text = stringResource(R.string.setting_data_restore))
+        SettingOption(
+            icon = Icons.Outlined.CloudUpload,
+            text = stringResource(R.string.setting_data_restore),
+        )
+        SettingOption(
+            icon = Icons.Outlined.ResetTv,
+            text = stringResource(R.string.setting_reset),
+        )
+
+        SettingCategory(text = stringResource(R.string.setting_communication))
+        SettingOption(
+            icon = Icons.Outlined.NoAccounts,
+            text = stringResource(R.string.setting_block),
+        )
+        SettingOption(
+            icon = Icons.Outlined.PeopleOutline,
+            text = stringResource(R.string.setting_subscribe),
+        )
+        SettingOption(
+            icon = Icons.Outlined.Image,
+            text = stringResource(R.string.setting_picture),
+        )
+
+        SettingCategory(text = stringResource(R.string.setting_information))
+        SettingOption(
+            icon = Icons.Outlined.DarkMode,
+            text = stringResource(R.string.setting_darkmode),
+        )
+        SettingOption(
+            icon = Icons.Outlined.Lock,
+            text = stringResource(R.string.setting_lock_setting),
+        )
+
+        if (userEmail == null) {
+            SettingOption(
+                icon = Icons.AutoMirrored.Outlined.Logout,
+                text = stringResource(R.string.setting_login_go),
+                modifier = Modifier.clickable(onClick = {
+                    onNonPasswordSignIn()
+                    onLogoutClick()
+                }),
+            )
+        } else {
+            SettingOption(
+                icon = Icons.Outlined.AccountBox,
+                text = stringResource(R.string.setting_check_account),
+                modifier = Modifier.clickable(onClick = {
+                    showSNSDialog = true
+                }),
+            )
+            SettingOption(
+                icon = Icons.AutoMirrored.Outlined.Logout,
+                text = stringResource(R.string.setting_logout),
+                modifier = Modifier.clickable(onClick = {
+                    onSignOut()
+                    onLogoutClick()
+                }),
             )
         }
-        Column(
-            modifier = Modifier
-                .padding(innerPadding)
-                .fillMaxWidth()
-                .padding(8.dp)
-                .verticalScroll(rememberScrollState),
-            verticalArrangement = Arrangement.spacedBy(8.dp),
-        ) {
-            SettingCategory(text = stringResource(R.string.setting_alarm_setting))
-            SettingOption(
-                icon = Icons.Outlined.Alarm,
-                text = stringResource(R.string.setting_schedule_alarm),
-            )
-            SettingOption(
-                icon = Icons.AutoMirrored.Outlined.Comment,
-                text = stringResource(R.string.setting_comment_alarm),
-            )
 
-            SettingCategory(text = stringResource(R.string.setting_data_restore))
-            SettingOption(
-                icon = Icons.Outlined.CloudUpload,
-                text = stringResource(R.string.setting_data_restore),
-            )
-            SettingOption(
-                icon = Icons.Outlined.ResetTv,
-                text = stringResource(R.string.setting_reset),
-            )
-
-            SettingCategory(text = stringResource(R.string.setting_communication))
-            SettingOption(
-                icon = Icons.Outlined.NoAccounts,
-                text = stringResource(R.string.setting_block),
-            )
-            SettingOption(
-                icon = Icons.Outlined.PeopleOutline,
-                text = stringResource(R.string.setting_subscribe),
-            )
-            SettingOption(
-                icon = Icons.Outlined.Image,
-                text = stringResource(R.string.setting_picture),
-            )
-
-            SettingCategory(text = stringResource(R.string.setting_information))
-            SettingOption(
-                icon = Icons.Outlined.DarkMode,
-                text = stringResource(R.string.setting_darkmode),
-            )
-            SettingOption(
-                icon = Icons.Outlined.Lock,
-                text = stringResource(R.string.setting_lock_setting),
-            )
-
-            if (settingViewModel.getUserEmail() == null) {
-                SettingOption(
-                    icon = Icons.AutoMirrored.Outlined.Logout,
-                    text = stringResource(R.string.setting_login_go),
-                    modifier = Modifier.clickable(onClick = {
-                        settingViewModel.nonPasswordSignIn()
-                        onLogoutClick()
-                    }),
-                )
-            } else {
-                SettingOption(
-                    icon = Icons.Outlined.AccountBox,
-                    text = stringResource(R.string.setting_check_account),
-                    modifier = Modifier.clickable(onClick = {
-                        showSNSDialog = true
-                    }),
-                )
-                SettingOption(
-                    icon = Icons.AutoMirrored.Outlined.Logout,
-                    text = stringResource(R.string.setting_logout),
-                    modifier = Modifier.clickable(onClick = {
-                        settingViewModel.signOut()
-                        onLogoutClick()
-                    }),
-                )
-            }
-
-            SettingOption(
-                icon = Icons.Outlined.Window,
-                text = stringResource(R.string.setting_withdraw),
-            )
-        }
+        SettingOption(
+            icon = Icons.Outlined.Window,
+            text = stringResource(R.string.setting_withdraw),
+        )
     }
 }
 
 @Preview(showBackground = true)
 @Composable
 private fun SettingScreenPreview() {
+    val navigationItems = listOf(
+        HomeBottomNavItem.MyDream.toNavigationItem(
+            onClick = {},
+        ),
+        HomeBottomNavItem.Community.toNavigationItem(
+            onClick = {},
+        ),
+        HomeBottomNavItem.Setting.toNavigationItem(
+            onClick = { /* no-op */ },
+            isSelected = true,
+        ),
+    )
     DreamdiaryTheme {
-        SettingScreen(
-            onNavigateToDiary = {},
-            onNavigateToCommunity = {},
+        SettingScreenContent(
+            navigationItems = navigationItems,
             onLogoutClick = {},
+            signInProvider = "Google",
+            onSignOut = {},
+            onNonPasswordSignIn = {},
+            userEmail = "someone@example.com",
         )
     }
 }
