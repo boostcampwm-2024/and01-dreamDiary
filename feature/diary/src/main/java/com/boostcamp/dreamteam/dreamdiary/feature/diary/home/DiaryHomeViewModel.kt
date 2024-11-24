@@ -53,12 +53,12 @@ class DiaryHomeViewModel @Inject constructor(
     private val _sortOption = MutableStateFlow(DiarySort(CREATED, DESC))
     val sortOption = _sortOption.asStateFlow()
 
-    val dreamDiaries = combine(_labelOptions, _sort) { labels, sort ->
-        labels to sort
-    }.flatMapLatest { (labels, sort) ->
+    val dreamDiaries = combine(_labelOptions, _sortOption) { labels, sortOption ->
+        labels to sortOption
+    }.flatMapLatest { (labels, sortOption) ->
         getDreamDiariesByFilterUseCase(
             labels = labels.map { it.name },
-            sort = sort,
+            sortOption = sortOption,
         ).map { pagingData ->
             pagingData.map { it.toDiaryUi() }
         }

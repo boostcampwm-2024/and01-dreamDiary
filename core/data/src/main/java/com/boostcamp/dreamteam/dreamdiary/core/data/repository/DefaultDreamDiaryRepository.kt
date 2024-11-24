@@ -108,6 +108,25 @@ internal class DefaultDreamDiaryRepository @Inject constructor(
             }
         }
 
+    override fun getDreamDiariesByLabelsOrderBy(
+        labels: List<String>,
+        sort: DiarySort,
+    ): Flow<PagingData<Diary>> =
+        Pager(
+            config = PagingConfig(pageSize = 100),
+            pagingSourceFactory = {
+                dreamDiaryDao.getDreamDiariesByLabelsOrderBy(
+                    labels = labels,
+                    sortType = sort.type.value,
+                    orderCode = sort.order.code,
+                )
+            },
+        ).flow.map { pagingData ->
+            pagingData.map {
+                it.toDomain(parseBody(it.dreamDiary.body))
+            }
+        }
+
     override suspend fun addLabel(label: String) {
         dreamDiaryDao.insertLabel(
             LabelEntity(

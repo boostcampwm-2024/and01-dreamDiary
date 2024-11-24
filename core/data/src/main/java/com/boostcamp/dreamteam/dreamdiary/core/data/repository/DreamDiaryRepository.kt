@@ -45,6 +45,11 @@ interface DreamDiaryRepository {
 
     fun getDreamDiariesByLabel(labels: List<String>): Flow<PagingData<Diary>>
 
+    fun getDreamDiariesByLabelsOrderBy(
+        labels: List<String>,
+        sort: DiarySort,
+    ): Flow<PagingData<Diary>>
+
     suspend fun addLabel(label: String)
 
     fun getLabels(search: String): Flow<List<Label>>

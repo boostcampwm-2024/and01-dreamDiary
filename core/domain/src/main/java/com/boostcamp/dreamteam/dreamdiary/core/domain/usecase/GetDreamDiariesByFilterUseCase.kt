@@ -20,13 +20,13 @@ class GetDreamDiariesByFilterUseCase @Inject constructor(
 ) {
     operator fun invoke(
         labels: List<String> = emptyList(),
-        sort: DiarySort = DiarySort(CREATED, DESC),
+        sortOption: DiarySort = DiarySort(CREATED, DESC),
     ): Flow<PagingData<Diary>> {
-        Timber.d("GetDreamDiariesByFilterUseCase: labels=$labels, sort=$sort")
+        Timber.d("GetDreamDiariesByFilterUseCase: labels=$labels, sort=$sortOption")
         return if (labels.isEmpty()) {
-            dreamDiaryRepository.getDreamDiariesOrderBy(sort = sort.toDataDiarySort())
+            dreamDiaryRepository.getDreamDiariesOrderBy(sort = sortOption.toDataDiarySort())
         } else {
-            dreamDiaryRepository.getDreamDiariesByLabel(labels)
+            dreamDiaryRepository.getDreamDiariesByLabelsOrderBy(labels = labels, sort = sortOption.toDataDiarySort())
         }
     }
 }

@@ -178,6 +178,29 @@ interface DreamDiaryDao {
 
     @Query(
         """
+            select *
+            from diary
+                join diary_label on diary.id = diary_label.diaryId
+                join label on label.label = diary_label.labelId
+            where label.label in (:labels)
+                and deletedAt is null
+            order by
+                case when :sortType = 'createdAt' and :orderCode = 0 then createdAt end asc,
+                case when :sortType = 'createdAt' and :orderCode = 1 then createdAt end desc,
+                case when :sortType = 'updatedAt' and :orderCode = 0 then updatedAt end asc,
+                case when :sortType = 'updatedAt' and :orderCode = 1 then updatedAt end desc,
+                case when :sortType = 'sleepEndAt' and :orderCode = 0 then sleepEndAt end asc,
+                case when :sortType = 'sleepEndAt' and :orderCode = 1 then sleepEndAt end desc
+            """,
+    )
+    fun getDreamDiariesByLabelsOrderBy(
+        labels: List<String>,
+        sortType: String,
+        orderCode: Int,
+    ): PagingSource<Int, DreamDiaryWithLabels>
+
+    @Query(
+        """
             SELECT *
             FROM diary
             WHERE sleepEndAt BETWEEN :start AND :end
