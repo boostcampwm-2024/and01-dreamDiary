@@ -10,6 +10,9 @@ import com.boostcamp.dreamteam.dreamdiary.core.domain.usecase.GetDreamDiariesByF
 import com.boostcamp.dreamteam.dreamdiary.core.domain.usecase.GetDreamDiariesInRangeByUseCase
 import com.boostcamp.dreamteam.dreamdiary.core.domain.usecase.GetLabelsUseCase
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.tabcalendar.DiaryHomeTabCalendarUIState
+import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.tablist.DiarySort
+import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.tablist.DiarySortOrder.*
+import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.tablist.DiarySortType.*
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.LabelUi
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.toDiaryUi
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.toLabelUi
@@ -46,6 +49,9 @@ class DiaryHomeViewModel @Inject constructor(
     private val _labelOptions = MutableStateFlow(setOf<LabelUi>())
     val labelOptions = _labelOptions.asStateFlow()
 
+    private val _sortOption = MutableStateFlow(DiarySort(CREATED, DESC))
+    val sortOption = _sortOption.asStateFlow()
+
     val dreamDiaries = _labelOptions.flatMapLatest {
         getDreamDiariesByFilterUseCase(it.map { it.name })
             .map { pagingData ->
@@ -54,6 +60,10 @@ class DiaryHomeViewModel @Inject constructor(
                 }
             }
     }.cachedIn(viewModelScope)
+
+    fun setSort(diarySort: DiarySort) {
+        _sortOption.update { diarySort }
+    }
 
     fun toggleLabel(labelUi: LabelUi) {
         _labelOptions.update {

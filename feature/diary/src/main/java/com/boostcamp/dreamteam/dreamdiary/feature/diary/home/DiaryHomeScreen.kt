@@ -35,6 +35,9 @@ import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.tabcalendar.DiaryCa
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.tabcalendar.DiaryHomeTabCalendarUIState
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.tabcalendar.diaryHomeTabCalendarUIStatePreview
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.tablist.DiaryListTab
+import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.tablist.DiarySort
+import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.tablist.DiarySortOrder
+import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.tablist.DiarySortType
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.tablist.pagedDiariesPreview
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.DiaryUi
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.LabelUi
@@ -56,6 +59,7 @@ fun DiaryHomeScreen(
     val calendarUIState by viewModel.tabCalendarUiState.collectAsStateWithLifecycle()
     val labels by viewModel.dreamLabels.collectAsStateWithLifecycle()
     val labelOptions by viewModel.labelOptions.collectAsStateWithLifecycle()
+    val sortOption by viewModel.sortOption.collectAsStateWithLifecycle()
 
     DiaryHomeScreenContent(
         diaries = diaries,
@@ -67,9 +71,11 @@ fun DiaryHomeScreen(
         onNavigateToWriteScreen = onNavigateToWriteScreen,
         onNavigateToCommunity = onNavigateToCommunity,
         onNavigateToSetting = onNavigateToSetting,
-        onDeleteDiary = { viewModel.deleteDiary(it.id) },
         onDiaryClick = onDiaryClick,
         onDiaryEdit = onDiaryEdit,
+        onDeleteDiary = { viewModel.deleteDiary(it.id) },
+        onChangeSort = viewModel::setSort,
+        sortOption = sortOption,
     )
 }
 
@@ -88,6 +94,8 @@ private fun DiaryHomeScreenContent(
     onDiaryClick: (DiaryUi) -> Unit,
     onDiaryEdit: (DiaryUi) -> Unit,
     onDeleteDiary: (DiaryUi) -> Unit,
+    sortOption: DiarySort,
+    onChangeSort: (DiarySort) -> Unit,
     modifier: Modifier = Modifier,
     onSearchClick: () -> Unit = {},
     onNotificationClick: () -> Unit = {},
@@ -164,6 +172,8 @@ private fun DiaryHomeScreenContent(
                     onDiaryClick = onDiaryClick,
                     onDiaryEdit = onDiaryEdit,
                     onDeleteDiary = onDeleteDiary,
+                    sortOption = sortOption,
+                    onChangeSort = onChangeSort,
                     modifier = tabModifier,
                 )
 
@@ -224,10 +234,15 @@ private fun DiaryHomeScreenContentPreview() {
             onNavigateToCommunity = {},
             onNavigateToSetting = {},
             onDiaryClick = {},
+            onDiaryEdit = {},
             onDeleteDiary = {},
+            onChangeSort = {},
             onSearchClick = {},
             onNotificationClick = {},
-            onDiaryEdit = {},
+            sortOption = DiarySort(
+                DiarySortType.UPDATED,
+                DiarySortOrder.DESC,
+            ),
         )
     }
 }

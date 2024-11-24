@@ -6,3 +6,19 @@ data class DiaryHomeTabListUIState(
     val diaries: List<DiaryUi> = listOf(),
     val loading: Boolean = false,
 )
+
+data class DiarySort(
+    val type: DiarySortType,
+    val order: DiarySortOrder,
+)
+
+enum class DiarySortType {
+    CREATED,
+    UPDATED,
+    SLEEP,
+}
+
+enum class DiarySortOrder {
+    ASC,
+    DESC,
+}
