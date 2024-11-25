@@ -30,7 +30,6 @@ class SynchronizationWorker @AssistedInject constructor(
     private val dreamDiaryDao: DreamDiaryDao,
     private val functionRepository: FunctionRepository,
 ) : CoroutineWorker(context, workerParams) {
-
     override suspend fun doWork(): Result {
         return withContext(Dispatchers.IO) {
             try {
@@ -51,9 +50,9 @@ class SynchronizationWorker @AssistedInject constructor(
             dreamDiariesWithVersion.map {
                 SyncVersionRequest(
                     id = it.id,
-                    version = it.currentVersion
+                    version = it.currentVersion,
                 )
-            }
+            },
         )
 
         if (syncResponse != null) {
@@ -74,7 +73,6 @@ class SynchronizationWorker @AssistedInject constructor(
         const val UNIQUE_WORK_NAME = "SynchronizationWorker"
 
         fun initWorker(application: Application) {
-
             val hiltWorkerFactory = EntryPointAccessors.fromApplication(
                 application,
                 HiltWorkerFactoryEntryPoint::class.java,
@@ -84,7 +82,7 @@ class SynchronizationWorker @AssistedInject constructor(
                 application,
                 Configuration.Builder()
                     .setWorkerFactory(hiltWorkerFactory)
-                    .build()
+                    .build(),
             )
         }
 

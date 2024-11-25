@@ -16,10 +16,9 @@ import javax.inject.Inject
 class FunctionRepository @Inject constructor(
     private val functions: FirebaseFunctions,
 ) {
-
     suspend fun syncVersion(syncVersions: List<SyncVersionRequest>): SyncVersionResponse? {
         val data = FunctionsSyncVersionRequest(
-            list = syncVersions.map { it.toDreamDiarySyncVersion() }
+            list = syncVersions.map { it.toDreamDiarySyncVersion() },
         )
         val jsonData = Json.encodeToJsonElement(data).jsonObject.convertToFirebaseData()
 

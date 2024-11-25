@@ -17,5 +17,5 @@ data class SynchronizingDreamDiaryEntity(
     val sleepStartAt: Instant,
     val sleepEndAt: Instant,
     val version: String,
-    val needData: Boolean
+    val needData: Boolean,
 )

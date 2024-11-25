@@ -25,7 +25,6 @@ fun JsonElement.convertToFirebaseData(): Any? {
                 content.toLong()
             }
         }
-
     }
 }
 

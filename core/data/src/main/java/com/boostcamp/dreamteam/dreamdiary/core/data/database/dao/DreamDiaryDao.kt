@@ -103,7 +103,7 @@ interface DreamDiaryDao {
     suspend fun privateDeleteDreamDiary(
         diaryId: String,
         deletedAt: Instant = Instant.now(),
-        currentVersion: String = UUID.randomUUID().toString()
+        currentVersion: String = UUID.randomUUID().toString(),
     )
 
     @Insert
@@ -239,7 +239,10 @@ interface DreamDiaryDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertSynchronizingDreamDiary(synchronizingDreamDiaryEntity: SynchronizingDreamDiaryEntity)
 
-    suspend fun insertSynchronizingDreamDiary(id: String, version: String) {
+    suspend fun insertSynchronizingDreamDiary(
+        id: String,
+        version: String,
+    ) {
         insertSynchronizingDreamDiary(
             SynchronizingDreamDiaryEntity(
                 id = id,
@@ -251,7 +254,7 @@ interface DreamDiaryDao {
                 sleepEndAt = Instant.ofEpochMilli(0),
                 version = version,
                 needData = true,
-            )
+            ),
         )
     }
 }
