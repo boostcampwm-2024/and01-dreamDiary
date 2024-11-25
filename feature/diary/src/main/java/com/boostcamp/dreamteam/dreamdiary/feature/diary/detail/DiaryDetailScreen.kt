@@ -40,6 +40,7 @@ import com.boostcamp.dreamteam.dreamdiary.feature.diary.detail.model.DiaryDetail
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.DiaryContentUi
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.LabelUi
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.filteredLabelsPreview
+import com.boostcamp.dreamteam.dreamdiary.feature.widget.util.updateWidget
 import timber.log.Timber
 import java.time.ZonedDateTime
 
@@ -55,6 +56,7 @@ fun DiaryDetailScreen(
             Timber.d("DiaryDetailScreen event: $event")
             when (event) {
                 is DiaryDetailEvent.DeleteDiary.Success -> {
+                    updateWidget(context)
                     Toast.makeText(context, "삭제 성공", Toast.LENGTH_SHORT).show()
                 }
 
