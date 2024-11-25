@@ -1,8 +1,10 @@
 package com.boostcamp.dreamteam.dreamdiary.feature.widget
 
 import android.content.Context
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.runtime.Composable
-import androidx.glance.ColorFilter
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.glance.GlanceComposable
 import androidx.glance.GlanceId
 import androidx.glance.GlanceModifier
@@ -13,20 +15,27 @@ import androidx.glance.action.clickable
 import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.action.actionRunCallback
 import androidx.glance.appwidget.components.Scaffold
+import androidx.glance.appwidget.cornerRadius
 import androidx.glance.appwidget.provideContent
+import androidx.glance.background
 import androidx.glance.currentState
 import androidx.glance.layout.Alignment
-import androidx.glance.layout.Column
+import androidx.glance.layout.Box
+import androidx.glance.layout.Row
 import androidx.glance.layout.fillMaxSize
+import androidx.glance.layout.padding
+import androidx.glance.layout.size
 import com.boostcamp.dreamteam.dreamdiary.feature.widget.constant.DiaryWritePreferencesKey
 import com.boostcamp.dreamteam.dreamdiary.feature.widget.model.DiaryUi
 import kotlinx.serialization.json.Json
+import com.boostcamp.dreamteam.dreamdiary.designsystem.R as DesignSystemR
 
 internal class DiaryWriteWidget : GlanceAppWidget() {
     override suspend fun provideGlance(
         context: Context,
         id: GlanceId,
     ) {
+        Modifier.aspectRatio(1f)
         provideContent {
             GlanceTheme {
                 CreateDiaryWidgetContent(
@@ -49,18 +58,33 @@ private fun CreateDiaryWidgetContent(modifier: GlanceModifier = GlanceModifier) 
         modifier = modifier,
         backgroundColor = GlanceTheme.colors.widgetBackground,
     ) {
-        Column(
+        Row(
             modifier = GlanceModifier.fillMaxSize(),
             verticalAlignment = Alignment.CenterVertically,
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            // TODO: 앱 아이콘으로 변경
-            Image(
-                provider = ImageProvider(resId = R.drawable.ic_android),
-                contentDescription = "꿈 일기 작성",
-                modifier = GlanceModifier.fillMaxSize(),
-                colorFilter = ColorFilter.tint(GlanceTheme.colors.primary),
-            )
+            Box(
+                modifier = GlanceModifier
+                    .cornerRadius(radius = 32.dp)
+                    .size(64.dp)
+                    .background(GlanceTheme.colors.primaryContainer)
+                    .padding(4.dp),
+                contentAlignment = Alignment.Center,
+            ) {
+                if (diaries.isEmpty()) {
+                    Image(
+                        provider = ImageProvider(DesignSystemR.drawable.sun),
+                        contentDescription = "일기 작성하러 가기",
+                        modifier = GlanceModifier.fillMaxSize(),
+                    )
+                } else {
+                    Image(
+                        provider = ImageProvider(DesignSystemR.mipmap.ic_launcher),
+                        contentDescription = "꿈 일기 작성",
+                        modifier = GlanceModifier.fillMaxSize(),
+                    )
+                }
+            }
         }
     }
 }
