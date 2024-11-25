@@ -23,6 +23,9 @@ android {
 }
 
 dependencies {
+    implementation(projects.core.model)
+    implementation(projects.core.data)
+
     // WorkManager
     implementation(libs.androidx.work.runtime.ktx)
 
