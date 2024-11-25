@@ -9,6 +9,7 @@ import com.boostcamp.dreamteam.dreamdiary.core.data.database.model.DreamDiaryLab
 import com.boostcamp.dreamteam.dreamdiary.core.data.database.model.ImageEntity
 import com.boostcamp.dreamteam.dreamdiary.core.data.database.model.LabelEntity
 import com.boostcamp.dreamteam.dreamdiary.core.data.database.model.SynchronizingDreamDiaryEntity
+import com.boostcamp.dreamteam.dreamdiary.core.data.database.model.SynchronizingLabelEntity
 import com.boostcamp.dreamteam.dreamdiary.core.data.database.model.TextEntity
 
 @Database(
@@ -19,6 +20,7 @@ import com.boostcamp.dreamteam.dreamdiary.core.data.database.model.TextEntity
         TextEntity::class,
         ImageEntity::class,
         SynchronizingDreamDiaryEntity::class,
+        SynchronizingLabelEntity::class,
     ],
     version = 1,
 )
