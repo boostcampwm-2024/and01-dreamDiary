@@ -75,7 +75,13 @@ fun NavGraphBuilder.diaryGraph(
             )
         }
 
-        composable<DiaryGraph.DiaryDetailRoute> {
+        composable<DiaryGraph.DiaryDetailRoute>(
+            deepLinks = listOf(
+                navDeepLink<DiaryGraph.DiaryDetailRoute>(
+                    basePath = "dreamdiary://diary/detail",
+                ),
+            ),
+        ) {
             DiaryDetailScreen(
                 onBackClick = navController::navigateUp,
                 onEditDiary = { diaryId -> navController.navigateToWriteScreen(diaryId = diaryId) },

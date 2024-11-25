@@ -11,6 +11,7 @@ import androidx.glance.GlanceModifier
 import androidx.glance.GlanceTheme
 import androidx.glance.Image
 import androidx.glance.ImageProvider
+import androidx.glance.action.actionParametersOf
 import androidx.glance.action.clickable
 import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.action.actionRunCallback
@@ -38,9 +39,7 @@ internal class DiaryWriteWidget : GlanceAppWidget() {
         Modifier.aspectRatio(1f)
         provideContent {
             GlanceTheme {
-                CreateDiaryWidgetContent(
-                    modifier = GlanceModifier.clickable(onClick = actionRunCallback<DiaryWriteAction>()),
-                )
+                CreateDiaryWidgetContent(modifier = GlanceModifier.clickable(onClick = actionRunCallback<DiaryWriteAction>()))
             }
         }
     }
@@ -55,7 +54,15 @@ private fun CreateDiaryWidgetContent(modifier: GlanceModifier = GlanceModifier) 
     } ?: emptyList()
 
     Scaffold(
-        modifier = modifier,
+        modifier = modifier.clickable(
+            onClick = if (diaries.isEmpty()) {
+                actionRunCallback<DiaryWriteAction>()
+            } else {
+                actionRunCallback<DiaryDetailAction>(
+                    parameters = actionParametersOf(DiaryDetailAction.diaryId to diaries.last().id),
+                )
+            },
+        ),
         backgroundColor = GlanceTheme.colors.widgetBackground,
     ) {
         Row(
