@@ -11,7 +11,9 @@ import com.boostcamp.dreamteam.dreamdiary.core.data.database.model.DreamDiaryLab
 import com.boostcamp.dreamteam.dreamdiary.core.data.database.model.DreamDiaryWithLabels
 import com.boostcamp.dreamteam.dreamdiary.core.data.database.model.ImageEntity
 import com.boostcamp.dreamteam.dreamdiary.core.data.database.model.LabelEntity
+import com.boostcamp.dreamteam.dreamdiary.core.data.database.model.SynchronizingDreamDiaryEntity
 import com.boostcamp.dreamteam.dreamdiary.core.data.database.model.TextEntity
+import com.boostcamp.dreamteam.dreamdiary.core.data.database.model.synchronization.DreamDiaryOnlyVersion
 import kotlinx.coroutines.flow.Flow
 import java.time.Instant
 import java.util.UUID
@@ -39,6 +41,9 @@ interface DreamDiaryDao {
                 updatedAt = Instant.now(),
                 sleepStartAt = sleepStartAt,
                 sleepEndAt = sleepEndAt,
+                needSync = true,
+                lastSyncVersion = "init",
+                currentVersion = UUID.randomUUID().toString(),
             ),
         )
         setLabelsToDreamDiary(dreamDiaryId, labels)
@@ -49,7 +54,7 @@ interface DreamDiaryDao {
     @Query(
         """
             update diary
-            set title = :title, body = :body, sleepStartAt = :sleepStartAt, sleepEndAt = :sleepEndAt, updatedAt = :updatedAt
+            set title = :title, body = :body, sleepStartAt = :sleepStartAt, sleepEndAt = :sleepEndAt, updatedAt = :updatedAt, currentVersion = :currentVersion
             where id = :diaryId
         """,
     )
@@ -60,6 +65,7 @@ interface DreamDiaryDao {
         sleepStartAt: Instant,
         sleepEndAt: Instant,
         updatedAt: Instant = Instant.now(),
+        currentVersion: String = UUID.randomUUID().toString(),
     )
 
     @Transaction
@@ -93,10 +99,11 @@ interface DreamDiaryDao {
         privateDeleteDreamDiary(diaryId = diaryId)
     }
 
-    @Query("update diary set deletedAt = :deletedAt where id = :diaryId")
+    @Query("update diary set deletedAt = :deletedAt, currentVersion = :currentVersion where id = :diaryId")
     suspend fun privateDeleteDreamDiary(
         diaryId: String,
         deletedAt: Instant = Instant.now(),
+        currentVersion: String = UUID.randomUUID().toString(),
     )
 
     @Insert
@@ -219,4 +226,35 @@ interface DreamDiaryDao {
     @Transaction
     @Query("select * from diary where id = :id and deletedAt is null")
     fun getDreamDiaryAsFlow(id: String): Flow<DreamDiaryWithLabels>
+
+    @Query("select id, currentVersion from diary")
+    suspend fun getDreamDiaryVersion(): List<DreamDiaryOnlyVersion>
+
+    @Query("select id, version as currentVersion from synchronizing_diary")
+    suspend fun getDreamDiaryVersionInSynchronizing(): List<DreamDiaryOnlyVersion>
+
+    @Query("update diary set needSync = 1 where id = :id")
+    suspend fun setNeedSync(id: String): Int
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertSynchronizingDreamDiary(synchronizingDreamDiaryEntity: SynchronizingDreamDiaryEntity)
+
+    suspend fun insertSynchronizingDreamDiary(
+        id: String,
+        version: String,
+    ) {
+        insertSynchronizingDreamDiary(
+            SynchronizingDreamDiaryEntity(
+                id = id,
+                title = "",
+                body = "",
+                createdAt = Instant.ofEpochMilli(0),
+                updatedAt = Instant.ofEpochMilli(0),
+                sleepStartAt = Instant.ofEpochMilli(0),
+                sleepEndAt = Instant.ofEpochMilli(0),
+                version = version,
+                needData = true,
+            ),
+        )
+    }
 }

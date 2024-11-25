@@ -5,19 +5,17 @@ import androidx.room.PrimaryKey
 import java.time.Instant
 
 @Entity(
-    tableName = "diary",
+    tableName = "synchronizing_diary",
 )
-data class DreamDiaryEntity(
+data class SynchronizingDreamDiaryEntity(
     @PrimaryKey
     val id: String,
     val title: String,
     val body: String,
     val createdAt: Instant,
     val updatedAt: Instant,
-    val deletedAt: Instant? = null,
     val sleepStartAt: Instant,
     val sleepEndAt: Instant,
-    val needSync: Boolean,
-    val lastSyncVersion: String,
-    val currentVersion: String,
+    val version: String,
+    val needData: Boolean,
 )
