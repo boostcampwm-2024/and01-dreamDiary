@@ -25,6 +25,7 @@ internal fun SettingOption(
     icon: ImageVector,
     text: String,
     helpText: String? = null,
+    switchOption: Boolean = false,
     onClick: () -> Unit = {},
     modifier: Modifier = Modifier,
 ) {
@@ -56,10 +57,12 @@ internal fun SettingOption(
                 )
             }
         }
-        Switch(
-            checked = false,
-            onCheckedChange = {/* TODO */ },
-        )
+        if (switchOption) {
+            Switch(
+                checked = false,
+                onCheckedChange = {/* TODO */ },
+            )
+        }
     }
 }
 
@@ -71,6 +74,20 @@ private fun SettingOptionPreview() {
             icon = Icons.Outlined.Alarm,
             text = "기상 알림 시간 설정",
             helpText = "10:00",
+            modifier = Modifier.width(400.dp),
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun SettingOptionSwitchPreview() {
+    DreamdiaryTheme {
+        SettingOption(
+            icon = Icons.Outlined.Alarm,
+            text = "기상 알림 시간 설정",
+            helpText = "10:00",
+            switchOption = true,
             modifier = Modifier.width(400.dp),
         )
     }
