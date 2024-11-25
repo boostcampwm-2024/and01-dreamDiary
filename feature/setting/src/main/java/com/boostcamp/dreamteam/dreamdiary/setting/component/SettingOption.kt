@@ -1,5 +1,6 @@
 package com.boostcamp.dreamteam.dreamdiary.setting.component
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -24,10 +25,13 @@ internal fun SettingOption(
     icon: ImageVector,
     text: String,
     helpText: String? = null,
+    onClick: () -> Unit = {},
     modifier: Modifier = Modifier,
 ) {
     Row(
-        modifier = modifier.padding(8.dp),
+        modifier = modifier
+            .padding(8.dp)
+            .clickable(onClick = onClick),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(8.dp),
     ) {
