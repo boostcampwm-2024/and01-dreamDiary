@@ -1,23 +1,35 @@
 package com.boostcamp.dreamteam.dreamdiary.core.data.repository
 
+import android.content.Context
+import androidx.core.net.toUri
 import com.boostcamp.dreamteam.dreamdiary.core.data.convertToFirebaseData
 import com.boostcamp.dreamteam.dreamdiary.core.data.firebase.functions.model.FunctionsSyncVersionRequest
+import com.boostcamp.dreamteam.dreamdiary.core.data.firebase.functions.model.FunctionsUploadImageContentRequest
+import com.boostcamp.dreamteam.dreamdiary.core.data.firebase.functions.model.FunctionsUploadTextContentRequest
 import com.boostcamp.dreamteam.dreamdiary.core.data.firebase.functions.model.toFunctionsRequest
 import com.boostcamp.dreamteam.dreamdiary.core.model.synchronization.SyncVersionRequest
 import com.boostcamp.dreamteam.dreamdiary.core.model.synchronization.SyncVersionResponse
 import com.boostcamp.dreamteam.dreamdiary.core.model.synchronization.SynchronizeDreamDiaryRequest
 import com.boostcamp.dreamteam.dreamdiary.core.model.synchronization.SynchronizeDreamDiaryResponse
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.functions.FirebaseFunctions
+import com.google.firebase.storage.FirebaseStorage
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.tasks.await
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.encodeToJsonElement
 import kotlinx.serialization.json.jsonObject
 import timber.log.Timber
+import java.io.File
 import javax.inject.Inject
 
 class FunctionRepository @Inject constructor(
     private val functions: FirebaseFunctions,
+    private val storage: FirebaseStorage,
+    @ApplicationContext private val applicationContext: Context,
 ) {
+    private val firebaseAuth: FirebaseAuth = FirebaseAuth.getInstance()
+
     suspend fun syncVersion(syncVersions: List<SyncVersionRequest>): SyncVersionResponse? {
         val data = FunctionsSyncVersionRequest(
             list = syncVersions.map { it.toFunctionsRequest() },
@@ -117,5 +129,51 @@ class FunctionRepository @Inject constructor(
             }
         }
         return null
+    }
+
+    suspend fun uploadText(id: String, text: String): Boolean {
+        val jsonData =
+            Json.encodeToJsonElement(FunctionsUploadTextContentRequest(id, text)).jsonObject.convertToFirebaseData()
+
+        val response = functions
+            .getHttpsCallable("uploadText")
+            .call(jsonData)
+            .await()
+            .data
+
+        if (response != null) {
+            val response = response as Map<String, Any>
+            return response["isSuccess"] == true
+        } else {
+            return false
+        }
+    }
+
+    suspend fun uploadImage(id: String, path: String): Boolean {
+        val jsonData =
+            Json.encodeToJsonElement(FunctionsUploadImageContentRequest(id, path)).jsonObject.convertToFirebaseData()
+
+        val response = functions
+            .getHttpsCallable("uploadImage")
+            .call(jsonData)
+            .await()
+            .data
+
+        if (response != null) {
+            val response = response as Map<String, Any>
+            if (response["isSuccess"] == true) {
+                val uid = firebaseAuth.uid
+                if (uid != null) {
+                    val userDirectory = storage.reference.child("images").child(uid)
+                    val file = File(applicationContext.filesDir, path)
+                    userDirectory
+                        .child(path)
+                        .putFile(file.toUri())
+                        .await()
+                }
+                return true
+            }
+        }
+        return false
     }
 }
