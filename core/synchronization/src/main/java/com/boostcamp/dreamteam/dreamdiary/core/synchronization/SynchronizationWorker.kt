@@ -10,6 +10,9 @@ import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
+import com.boostcamp.dreamteam.dreamdiary.core.data.database.dao.DreamDiaryDao
+import com.boostcamp.dreamteam.dreamdiary.core.data.repository.FunctionRepository
+import com.boostcamp.dreamteam.dreamdiary.core.model.synchronization.SyncVersionRequest
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import dagger.hilt.EntryPoint
@@ -24,11 +27,14 @@ import timber.log.Timber
 class SynchronizationWorker @AssistedInject constructor(
     @Assisted private val context: Context,
     @Assisted private val workerParams: WorkerParameters,
+    private val dreamDiaryDao: DreamDiaryDao,
+    private val functionRepository: FunctionRepository,
 ) : CoroutineWorker(context, workerParams) {
 
     override suspend fun doWork(): Result {
         return withContext(Dispatchers.IO) {
             try {
+                synchronizeVersion()
                 Result.success()
             } catch (e: Exception) {
                 Timber.e(e, "SynchronizationWorker")
@@ -36,6 +42,34 @@ class SynchronizationWorker @AssistedInject constructor(
             }
         }
     }
+
+    private suspend fun synchronizeVersion() {
+        val dreamDiariesWithVersion =
+            dreamDiaryDao.getDreamDiaryVersion() + dreamDiaryDao.getDreamDiaryVersionInSynchronizing()
+
+        val syncResponse = functionRepository.syncVersion(
+            dreamDiariesWithVersion.map {
+                SyncVersionRequest(
+                    id = it.id,
+                    version = it.currentVersion
+                )
+            }
+        )
+
+        if (syncResponse != null) {
+            for (i in syncResponse.needSyncDiaries) {
+                val lines = dreamDiaryDao.setNeedSync(i.diaryId)
+                if (lines == 0) {
+                    dreamDiaryDao.insertSynchronizingDreamDiary(i.diaryId, "init")
+                }
+            }
+
+            for (i in syncResponse.serverOnlyDiaries) {
+                dreamDiaryDao.insertSynchronizingDreamDiary(i.diaryId, "init")
+            }
+        }
+    }
+
     companion object {
         const val UNIQUE_WORK_NAME = "SynchronizationWorker"
 
