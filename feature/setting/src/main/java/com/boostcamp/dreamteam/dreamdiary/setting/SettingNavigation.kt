@@ -33,16 +33,19 @@ fun NavGraphBuilder.settingGraph(
                 onNavigateToDiary = onDiaryClick,
                 onNavigateToCommunity = onCommunityClick,
                 onNavigateToSettingBackup = {
-                    navController.navigate(SettingGraph.SettingBackupRoute, navOptions = navOptions {
-                        launchSingleTop = true
-                    })
+                    navController.navigate(
+                        SettingGraph.SettingBackupRoute,
+                        navOptions = navOptions {
+                            launchSingleTop = true
+                        },
+                    )
                 },
                 onLogoutClick = onLogoutClick,
             )
         }
         composable<SettingGraph.SettingBackupRoute> {
             SettingBackupScreen(
-                onBackClick = navController::navigateUp
+                onBackClick = navController::navigateUp,
             )
         }
     }
