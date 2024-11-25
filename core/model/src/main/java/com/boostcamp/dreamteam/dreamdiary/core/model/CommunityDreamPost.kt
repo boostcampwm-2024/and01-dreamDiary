@@ -3,6 +3,7 @@ package com.boostcamp.dreamteam.dreamdiary.core.model
 import java.time.Instant
 
 data class CommunityDreamPost(
+    val id: String,
     val author: String,
     val title: String,
     val content: String,

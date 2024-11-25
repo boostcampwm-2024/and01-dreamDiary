@@ -22,6 +22,8 @@ class AddCommunityPostUseCase @Inject constructor(
                 sleepStartAt = Instant.now(),
                 sleepEndAt = Instant.now(),
                 createdAt = Instant.now(),
+                id = "ididid",
+                labels = emptyList(),
             ),
         )
     }
