@@ -62,8 +62,8 @@ class ScreenTrackingService : Service() {
     private fun sendScreenOffNotification() {
         val notification = NotificationCompat.Builder(this, "aaaaa")
             .setSmallIcon(android.R.drawable.ic_dialog_alert)
-            .setContentTitle("지금 잠에서 깨지 않으면 우린 춤을 출거에요")
-            .setContentText("야레야레 못말리는 아가씨")
+            .setContentTitle(getString(R.string.notification_screen_off_title))
+            .setContentText(getString(R.string.notification_screen_off_text))
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setAutoCancel(true)
             .build()
