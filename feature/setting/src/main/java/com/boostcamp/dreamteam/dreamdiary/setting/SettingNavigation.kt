@@ -11,6 +11,9 @@ data object SettingGraph {
     data object SettingRoute
 
     @Serializable
+    data object SettingBackupRoute
+
+    @Serializable
     data class SettingDetailRoute(val id: Long)
 }
 
