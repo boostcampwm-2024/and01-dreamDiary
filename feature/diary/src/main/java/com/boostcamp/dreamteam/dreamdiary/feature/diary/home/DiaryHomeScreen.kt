@@ -29,6 +29,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
+import com.boostcamp.dreamteam.dreamdiary.core.domain.usecase.DiarySort
+import com.boostcamp.dreamteam.dreamdiary.core.domain.usecase.DiarySortOrder
+import com.boostcamp.dreamteam.dreamdiary.core.domain.usecase.DiarySortType
 import com.boostcamp.dreamteam.dreamdiary.designsystem.theme.DreamdiaryTheme
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.R
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.tabcalendar.DiaryCalendarTab
@@ -40,7 +43,7 @@ import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.DiaryUi
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.LabelUi
 import com.boostcamp.dreamteam.dreamdiary.ui.HomeBottomNavItem
 import com.boostcamp.dreamteam.dreamdiary.ui.HomeBottomNavigation
-import com.boostcamp.dreamteam.dreamdiary.ui.NavigationItem
+import com.boostcamp.dreamteam.dreamdiary.ui.toNavigationItem
 import java.time.YearMonth
 
 @Composable
@@ -56,6 +59,7 @@ fun DiaryHomeScreen(
     val calendarUIState by viewModel.tabCalendarUiState.collectAsStateWithLifecycle()
     val labels by viewModel.dreamLabels.collectAsStateWithLifecycle()
     val labelOptions by viewModel.labelOptions.collectAsStateWithLifecycle()
+    val sortOption by viewModel.sortOption.collectAsStateWithLifecycle()
 
     DiaryHomeScreenContent(
         diaries = diaries,
@@ -67,9 +71,11 @@ fun DiaryHomeScreen(
         onNavigateToWriteScreen = onNavigateToWriteScreen,
         onNavigateToCommunity = onNavigateToCommunity,
         onNavigateToSetting = onNavigateToSetting,
-        onDeleteDiary = { /* TODO: diary 삭제 기능 구현 */ },
         onDiaryClick = onDiaryClick,
         onDiaryEdit = onDiaryEdit,
+        onDeleteDiary = { viewModel.deleteDiary(it.id) },
+        onChangeSort = viewModel::setSort,
+        sortOption = sortOption,
     )
 }
 
@@ -88,6 +94,8 @@ private fun DiaryHomeScreenContent(
     onDiaryClick: (DiaryUi) -> Unit,
     onDiaryEdit: (DiaryUi) -> Unit,
     onDeleteDiary: (DiaryUi) -> Unit,
+    sortOption: DiarySort,
+    onChangeSort: (DiarySort) -> Unit,
     modifier: Modifier = Modifier,
     onSearchClick: () -> Unit = {},
     onNotificationClick: () -> Unit = {},
@@ -96,22 +104,14 @@ private fun DiaryHomeScreenContent(
     val tabs = listOf(stringResource(R.string.home_tab_dream), stringResource(R.string.home_tab_calendar))
 
     val navigationItems = listOf(
-        NavigationItem(
-            icon = HomeBottomNavItem.MyDream.icon,
-            labelRes = HomeBottomNavItem.MyDream.label,
+        HomeBottomNavItem.MyDream.toNavigationItem(
+            onClick = { /* no-op */ },
             isSelected = true,
-            onClick = { /* Nothing */ },
         ),
-        NavigationItem(
-            icon = HomeBottomNavItem.Community.icon,
-            labelRes = HomeBottomNavItem.Community.label,
-            isSelected = false,
+        HomeBottomNavItem.Community.toNavigationItem(
             onClick = onNavigateToCommunity,
         ),
-        NavigationItem(
-            icon = HomeBottomNavItem.Setting.icon,
-            labelRes = HomeBottomNavItem.Setting.label,
-            isSelected = false,
+        HomeBottomNavItem.Setting.toNavigationItem(
             onClick = onNavigateToSetting,
         ),
     )
@@ -172,6 +172,8 @@ private fun DiaryHomeScreenContent(
                     onDiaryClick = onDiaryClick,
                     onDiaryEdit = onDiaryEdit,
                     onDeleteDiary = onDeleteDiary,
+                    sortOption = sortOption,
+                    onChangeSort = onChangeSort,
                     modifier = tabModifier,
                 )
 
@@ -232,10 +234,15 @@ private fun DiaryHomeScreenContentPreview() {
             onNavigateToCommunity = {},
             onNavigateToSetting = {},
             onDiaryClick = {},
+            onDiaryEdit = {},
             onDeleteDiary = {},
+            onChangeSort = {},
             onSearchClick = {},
             onNotificationClick = {},
-            onDiaryEdit = {},
+            sortOption = DiarySort(
+                DiarySortType.UPDATED,
+                DiarySortOrder.DESC,
+            ),
         )
     }
 }

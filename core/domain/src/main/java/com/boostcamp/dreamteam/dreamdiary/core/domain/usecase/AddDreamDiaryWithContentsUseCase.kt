@@ -14,7 +14,7 @@ class AddDreamDiaryWithContentsUseCase @Inject constructor(
         labels: List<String> = listOf(),
         sleepStartAt: ZonedDateTime,
         sleepEndAt: ZonedDateTime,
-    ) {
+    ): String =
         dreamDiaryRepository.addDreamDiary(
             title = title,
             diaryContents = diaryContents,
@@ -22,5 +22,4 @@ class AddDreamDiaryWithContentsUseCase @Inject constructor(
             sleepStartAt = sleepStartAt.toInstant(),
             sleepEndAt = sleepEndAt.toInstant(),
         )
-    }
 }

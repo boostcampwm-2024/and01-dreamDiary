@@ -18,6 +18,17 @@
     <string name="setting_withdraw">탈퇴</string>
     <string name="setting_login_go">로그인 하러가기</string>
     <string name="setting_notification_setting">알림 권한</string>
-    <string name="setting_on_notification_diary_">일기 알림 기능 활성화</string>
-    <string name="setting_off_notification_diary">일기 알림 기능 비활성화</string>
+    <string name="setting_notification_diary_on">일기 알림 기능 활성화</string>
+    <string name="setting_notification_diary_off">일기 알림 기능 비활성화</string>
+    <string name="setting_backup_title">데이터 백업 및 복원</string>
+    <string name="setting_back">뒤로가기</string>
+    <string name="setting_backup_data_backup">데이터 백업</string>
+    <string name="setting_backup_now_backup">지금 내보내기</string>
+    <string name="setting_backup_realtime_sync">실시간 동기화</string>
+    <string name="setting_backup_info">백업 정보</string>
+    <string name="setting_backup_alarm">백업 알림</string>
+    <string name="setting_backup_now_get">지금 가져오기</string>
+    <string name="setting_backup_reset">초기화</string>
+    <string name="setting_backup_restore">복원</string>
+    <string name="setting_confirm">확인</string>
 </resources>

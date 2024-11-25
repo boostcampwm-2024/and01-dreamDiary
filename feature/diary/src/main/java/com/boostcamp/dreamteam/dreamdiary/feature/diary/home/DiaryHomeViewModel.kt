@@ -4,6 +4,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
 import androidx.paging.map
+import com.boostcamp.dreamteam.dreamdiary.core.domain.usecase.DeleteDreamDiariesUseCase
+import com.boostcamp.dreamteam.dreamdiary.core.domain.usecase.DiarySort
+import com.boostcamp.dreamteam.dreamdiary.core.domain.usecase.DiarySortOrder.DESC
+import com.boostcamp.dreamteam.dreamdiary.core.domain.usecase.DiarySortType.CREATED
 import com.boostcamp.dreamteam.dreamdiary.core.domain.usecase.GetDiariesFilterType.SLEEP_END_AT
 import com.boostcamp.dreamteam.dreamdiary.core.domain.usecase.GetDreamDiariesByFilterUseCase
 import com.boostcamp.dreamteam.dreamdiary.core.domain.usecase.GetDreamDiariesInRangeByUseCase
@@ -17,10 +21,12 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.time.YearMonth
 import java.time.ZoneId
@@ -29,8 +35,9 @@ import javax.inject.Inject
 @HiltViewModel
 class DiaryHomeViewModel @Inject constructor(
     getDreamDiariesByFilterUseCase: GetDreamDiariesByFilterUseCase,
-    getLabelsUseCase: GetLabelsUseCase,
     getDreamDiariesInRangeByUseCase: GetDreamDiariesInRangeByUseCase,
+    private val deleteDreamDiariesUseCase: DeleteDreamDiariesUseCase,
+    getLabelsUseCase: GetLabelsUseCase,
 ) : ViewModel() {
     val dreamLabels = getLabelsUseCase("")
         .map { labels -> labels.map { it.toLabelUi() } }
@@ -43,14 +50,23 @@ class DiaryHomeViewModel @Inject constructor(
     private val _labelOptions = MutableStateFlow(setOf<LabelUi>())
     val labelOptions = _labelOptions.asStateFlow()
 
-    val dreamDiaries = _labelOptions.flatMapLatest {
-        getDreamDiariesByFilterUseCase(it.map { it.name })
-            .map { pagingData ->
-                pagingData.map {
-                    it.toDiaryUi()
-                }
-            }
+    private val _sortOption = MutableStateFlow(DiarySort(CREATED, DESC))
+    val sortOption = _sortOption.asStateFlow()
+
+    val dreamDiaries = combine(_labelOptions, _sortOption) { labels, sortOption ->
+        labels to sortOption
+    }.flatMapLatest { (labels, sortOption) ->
+        getDreamDiariesByFilterUseCase(
+            labels = labels.map { it.name },
+            sortOption = sortOption,
+        ).map { pagingData ->
+            pagingData.map { it.toDiaryUi() }
+        }
     }.cachedIn(viewModelScope)
+
+    fun setSort(diarySort: DiarySort) {
+        _sortOption.update { diarySort }
+    }
 
     fun toggleLabel(labelUi: LabelUi) {
         _labelOptions.update {
@@ -61,6 +77,18 @@ class DiaryHomeViewModel @Inject constructor(
                 options.add(labelUi)
             }
             options
+        }
+    }
+
+    fun deleteDiary(diaryId: String) {
+        viewModelScope.launch {
+            runCatching {
+                deleteDreamDiariesUseCase(diaryId)
+            }.onSuccess {
+                Timber.d("Diary deleted: diaryId = $diaryId")
+            }.onFailure {
+                Timber.e(it)
+            }
         }
     }
 

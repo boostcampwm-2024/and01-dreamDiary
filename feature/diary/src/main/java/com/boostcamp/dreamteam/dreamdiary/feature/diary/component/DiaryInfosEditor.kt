@@ -108,6 +108,8 @@ internal fun DiaryInfosEditor(
                 onCheckChange = diaryInfoEditorParams.onCheckChange,
                 onClickLabelSave = diaryInfoEditorParams.onClickLabelSave,
                 modifier = Modifier.width(400.dp),
+                onEditLabel = diaryInfoEditorParams.onEditLabel,
+                onDeleteLabel = diaryInfoEditorParams.onDeleteLabel,
             )
         }
     }
@@ -298,6 +300,8 @@ internal data class DiaryInfoEditorParams(
     val onSleepEndAtChange: (ZonedDateTime) -> Unit,
     val onCheckChange: (LabelUi) -> Unit,
     val onClickLabelSave: () -> Unit,
+    val onEditLabel: (labelUi: LabelUi, newValue: String) -> Unit,
+    val onDeleteLabel: (labelUi: LabelUi) -> Unit,
 )
 
 @Preview(showBackground = true)
@@ -316,6 +320,8 @@ private fun DiaryWriteScreenHeaderPreview() {
                 onSleepEndAtChange = {},
                 onCheckChange = {},
                 onClickLabelSave = {},
+                onEditLabel = { _, _ -> },
+                onDeleteLabel = {},
             ),
         )
     }

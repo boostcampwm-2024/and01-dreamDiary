@@ -60,38 +60,64 @@ import java.util.UUID
 @Composable
 fun DiaryWriteScreen(
     onBackClick: () -> Unit,
+    onWriteSuccess: (diaryId: String) -> Unit,
     viewModel: DiaryWriteViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     val context = LocalContext.current
-    LaunchedEffect(Unit) {
-        viewModel.event.collectLatest {
-            when (it) {
-                is DiaryWriteEvent.DiaryAddSuccess, is DiaryWriteEvent.DiaryUpdateSuccess -> onBackClick()
-
-                is DiaryWriteEvent.LabelAddSuccess -> {
-                    Toast.makeText(context, "라벨 추가 성공", Toast.LENGTH_SHORT).show()
+    LaunchedEffect(onBackClick, onWriteSuccess) {
+        viewModel.event.collectLatest { writeEvent ->
+            when (writeEvent) {
+                is DiaryWriteEvent.DiaryAddSuccess -> {
+                    Toast.makeText(context, "일기 작성 성공", Toast.LENGTH_SHORT).show()
+                    onWriteSuccess(writeEvent.diaryId)
                 }
 
-                is DiaryWriteEvent.LabelAddFailure -> {
-                    when (it.labelAddFailureReason) {
-                        LabelAddFailureReason.DUPLICATE_LABEL -> {
-                            Toast.makeText(context, context.getString(R.string.write_duplicate_error), Toast.LENGTH_SHORT).show()
-                        }
-
-                        LabelAddFailureReason.INSUFFICIENT_STORAGE -> {
-                            Toast.makeText(context, context.getString(R.string.write_insufficient_storage_error), Toast.LENGTH_SHORT).show()
-                        }
-
-                        LabelAddFailureReason.UNKNOWN_ERROR -> {
-                            Toast.makeText(context, context.getString(R.string.write_unknown_error), Toast.LENGTH_SHORT).show()
-                        }
-                    }
+                is DiaryWriteEvent.DiaryUpdateSuccess -> {
+                    Toast.makeText(context, "일기 수정 성공", Toast.LENGTH_SHORT).show()
+                    onWriteSuccess(writeEvent.diaryId)
                 }
 
                 is DiaryWriteEvent.DiaryUpdateFail -> {
                     Toast.makeText(context, context.getString(R.string.write_edit_error), Toast.LENGTH_SHORT).show()
+                }
+
+                is DiaryWriteEvent.Label -> {
+                    when (writeEvent) {
+                        is DiaryWriteEvent.Label.AddSuccess -> {
+                            Toast.makeText(context, "라벨 추가 성공", Toast.LENGTH_SHORT).show()
+                        }
+
+                        is DiaryWriteEvent.Label.AddFailure -> {
+                            when (writeEvent.labelAddFailureReason) {
+                                LabelAddFailureReason.DUPLICATE_LABEL -> {
+                                    Toast.makeText(context, context.getString(R.string.write_duplicate_error), Toast.LENGTH_SHORT).show()
+                                }
+
+                                LabelAddFailureReason.INSUFFICIENT_STORAGE -> {
+                                    Toast
+                                        .makeText(
+                                            context,
+                                            context.getString(R.string.write_insufficient_storage_error),
+                                            Toast.LENGTH_SHORT,
+                                        ).show()
+                                }
+
+                                LabelAddFailureReason.UNKNOWN_ERROR -> {
+                                    Toast.makeText(context, context.getString(R.string.write_unknown_error), Toast.LENGTH_SHORT).show()
+                                }
+                            }
+                        }
+
+                        is DiaryWriteEvent.Label.UpdateFailure -> {
+                            Toast.makeText(context, "아직 수정 기능 없지롱~", Toast.LENGTH_SHORT).show()
+                        }
+
+                        is DiaryWriteEvent.Label.DeleteFailure -> {
+                            Toast.makeText(context, "아직 삭제 기능 없지롱~", Toast.LENGTH_SHORT).show()
+                        }
+                    }
                 }
             }
         }
@@ -116,6 +142,8 @@ fun DiaryWriteScreen(
         onClickLabelSave = viewModel::addLabel,
         onContentTextChange = viewModel::setContentText,
         onContentImageDelete = viewModel::deleteContentImage,
+        onEditLabel = viewModel::updateLabel,
+        onDeleteLabel = viewModel::deleteLabel,
         modifier = Modifier
             .fillMaxSize()
             .imePadding(),
@@ -142,6 +170,8 @@ private fun DiaryWriteScreenContent(
     onClickLabelSave: () -> Unit,
     onContentTextChange: (Int, String) -> Unit,
     onContentImageDelete: (Int) -> Unit,
+    onEditLabel: (labelUi: LabelUi, newValue: String) -> Unit,
+    onDeleteLabel: (labelUi: LabelUi) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     // 현재는 사실상 Text만 포커스 됨
@@ -205,6 +235,8 @@ private fun DiaryWriteScreenContent(
                 onSleepEndAtChange = onSleepEndAtChange,
                 onCheckChange = onCheckChange,
                 onClickLabelSave = onClickLabelSave,
+                onEditLabel = onEditLabel,
+                onDeleteLabel = onDeleteLabel,
             ),
             diaryContentEditorParams = DiaryContentEditorParams(
                 title = title,
@@ -280,13 +312,10 @@ private fun DiaryWriteScreenPreview() {
         DiaryWriteScreenContent(
             onBackClick = {},
             title = "",
+            onTitleChange = {},
             labelFilter = "",
             filteredLabels = filteredLabelsPreview,
             selectedLabels = selectedLabelsPreview,
-            onTitleChange = {},
-            onCheckChange = {},
-            onClickLabelSave = {},
-            onLabelFilterChange = {},
             sleepStartAt = ZonedDateTime.now(),
             onSleepStartAtChange = {},
             sleepEndAt = ZonedDateTime.now(),
@@ -294,8 +323,13 @@ private fun DiaryWriteScreenPreview() {
             diaryContents = listOf(DiaryContentUi.Text("")),
             onContentImageAdd = { _, _, _ -> },
             onClickSave = {},
+            onCheckChange = {},
+            onLabelFilterChange = {},
+            onClickLabelSave = {},
             onContentTextChange = { _, _ -> },
             onContentImageDelete = { },
+            onEditLabel = { _, _ -> },
+            onDeleteLabel = { },
         )
     }
 }

@@ -8,6 +8,7 @@ import com.boostcamp.dreamteam.dreamdiary.core.data.database.dao.DreamDiaryDao
 import com.boostcamp.dreamteam.dreamdiary.core.data.database.model.ImageEntity
 import com.boostcamp.dreamteam.dreamdiary.core.data.database.model.LabelEntity
 import com.boostcamp.dreamteam.dreamdiary.core.data.database.model.TextEntity
+import com.boostcamp.dreamteam.dreamdiary.core.data.repository.model.DiarySort
 import com.boostcamp.dreamteam.dreamdiary.core.model.Diary
 import com.boostcamp.dreamteam.dreamdiary.core.model.DiaryContent
 import com.boostcamp.dreamteam.dreamdiary.core.model.Label
@@ -42,9 +43,10 @@ internal class DefaultDreamDiaryRepository @Inject constructor(
         labels: List<String>,
         sleepStartAt: Instant,
         sleepEndAt: Instant,
-    ) {
+    ): String {
         val body = makeBody(diaryContents)
-        dreamDiaryDao.insertDreamDiary(
+
+        return dreamDiaryDao.insertDreamDiary(
             title = title,
             body = body,
             labels = labels,
@@ -64,9 +66,10 @@ internal class DefaultDreamDiaryRepository @Inject constructor(
         dreamDiaryDao.updateDreamDiary(
             diaryId = diaryId,
             title = title,
-            body = makeBody(diaryContents = diaryContents),
             sleepStartAt = sleepStartAt,
             sleepEndAt = sleepEndAt,
+            body = makeBody(diaryContents = diaryContents),
+            labels = labels,
         )
     }
 
@@ -80,10 +83,44 @@ internal class DefaultDreamDiaryRepository @Inject constructor(
             }
         }
 
+    override fun getDreamDiariesOrderBy(sort: DiarySort): Flow<PagingData<Diary>> =
+        Pager(
+            config = PagingConfig(pageSize = 100),
+            pagingSourceFactory = {
+                dreamDiaryDao.getDreamDiariesOrderBy(
+                    sortType = sort.type.value,
+                    orderCode = sort.order.code,
+                )
+            },
+        ).flow.map { pagingData ->
+            pagingData.map {
+                it.toDomain(parseBody(it.dreamDiary.body))
+            }
+        }
+
     override fun getDreamDiariesByLabel(labels: List<String>): Flow<PagingData<Diary>> =
         Pager(
             config = PagingConfig(pageSize = 100),
             pagingSourceFactory = { dreamDiaryDao.getDreamDiariesByLabels(labels) },
+        ).flow.map { pagingData ->
+            pagingData.map {
+                it.toDomain(parseBody(it.dreamDiary.body))
+            }
+        }
+
+    override fun getDreamDiariesByLabelsOrderBy(
+        labels: List<String>,
+        sort: DiarySort,
+    ): Flow<PagingData<Diary>> =
+        Pager(
+            config = PagingConfig(pageSize = 100),
+            pagingSourceFactory = {
+                dreamDiaryDao.getDreamDiariesByLabelsOrderBy(
+                    labels = labels,
+                    sortType = sort.type.value,
+                    orderCode = sort.order.code,
+                )
+            },
         ).flow.map { pagingData ->
             pagingData.map {
                 it.toDomain(parseBody(it.dreamDiary.body))
@@ -120,11 +157,24 @@ internal class DefaultDreamDiaryRepository @Inject constructor(
     ): Flow<List<Diary>> =
         dreamDiaryDao
             .getDreamDiariesBySleepEndInRange(start, end)
-            .map { list -> list.map { it.toDomain(parseBody(it.body)) } }
+            .map { list ->
+                list.map {
+                    it.toDomain(parseBody(it.body))
+                }
+            }
 
     override suspend fun getDreamDiary(id: String): Diary {
         val dreamDiaryEntity = dreamDiaryDao.getDreamDiary(id)
         return dreamDiaryEntity.toDomain(parseBody(dreamDiaryEntity.dreamDiary.body))
+    }
+
+    override fun getDreamDiaryAsFlow(id: String): Flow<Diary> =
+        dreamDiaryDao.getDreamDiaryAsFlow(id).map { dreamDiaryWithLabels ->
+            dreamDiaryWithLabels.toDomain(parseBody(dreamDiaryWithLabels.dreamDiary.body))
+        }
+
+    override suspend fun deleteDreamDiary(diaryId: String) {
+        dreamDiaryDao.deleteDreamDiary(diaryId)
     }
 
     private suspend fun makeBody(diaryContents: List<DiaryContent>): String {
@@ -140,7 +190,7 @@ internal class DefaultDreamDiaryRepository @Inject constructor(
                             text = diaryContent.text,
                         ),
                     )
-                    "text:$newId:"
+                    "$TEXT$DELIMITER$newId$DELIMITER"
                 }
 
                 is DiaryContent.Image -> {
@@ -150,7 +200,7 @@ internal class DefaultDreamDiaryRepository @Inject constructor(
                             path = diaryContent.path,
                         ),
                     )
-                    "image:$newId:"
+                    "$IMAGE$DELIMITER$newId$DELIMITER"
                 }
             }
 
@@ -162,11 +212,11 @@ internal class DefaultDreamDiaryRepository @Inject constructor(
     private suspend fun parseBody(body: String): List<DiaryContent> {
         val diaryContents = mutableListOf<DiaryContent>()
 
-        val parsingDiaryContent = body.split(":")
+        val parsingDiaryContent = body.split(DELIMITER)
         var index = 0
 
         while (index < parsingDiaryContent.size) {
-            if (parsingDiaryContent[index] == "text") {
+            if (parsingDiaryContent[index] == TEXT) {
                 index += 1
                 val id = parsingDiaryContent[index]
                 val textEntity = dreamDiaryDao.getText(id) ?: continue
@@ -175,7 +225,7 @@ internal class DefaultDreamDiaryRepository @Inject constructor(
                         text = textEntity.text,
                     ),
                 )
-            } else if (parsingDiaryContent[index] == "image") {
+            } else if (parsingDiaryContent[index] == IMAGE) {
                 index += 1
                 val id = parsingDiaryContent[index]
                 val imageEntity = dreamDiaryDao.getImage(id) ?: continue
@@ -190,5 +240,11 @@ internal class DefaultDreamDiaryRepository @Inject constructor(
             }
         }
         return diaryContents
+    }
+
+    private companion object BodyToken {
+        const val TEXT = "text"
+        const val IMAGE = "image"
+        const val DELIMITER = ":"
     }
 }
