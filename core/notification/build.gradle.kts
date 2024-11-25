@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.dreamdiary.android.library)
     alias(libs.plugins.ksp)
+    alias(libs.plugins.hilt)
 }
 
 android {
@@ -16,7 +17,7 @@ android {
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
+                "proguard-rules.pro",
             )
         }
     }
@@ -24,5 +25,8 @@ android {
 
 dependencies {
     implementation(libs.androidx.appcompat)
+
+    // Hilt
     implementation(libs.hilt.android)
+    ksp(libs.hilt.compiler)
 }

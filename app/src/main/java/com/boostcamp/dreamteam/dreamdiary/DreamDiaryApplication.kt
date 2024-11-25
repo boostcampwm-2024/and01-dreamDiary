@@ -10,7 +10,6 @@ import javax.inject.Inject
 
 @HiltAndroidApp
 class DreamDiaryApplication : Application() {
-
     @Inject
     lateinit var sharedPreferences: SharedPreferences
 

@@ -9,11 +9,14 @@ import android.content.SharedPreferences
 class ScreenOffTimeTracker(
     private val context: Context,
     private val sharedPreferences: SharedPreferences,
-    ) {
+) {
     private var isScreenOff: Boolean = false
 
     private val screenStateReceiver = object : BroadcastReceiver() {
-        override fun onReceive(context: Context, intent: Intent) {
+        override fun onReceive(
+            context: Context,
+            intent: Intent,
+        ) {
             when (intent.action) {
                 Intent.ACTION_SCREEN_OFF -> {
                     sharedPreferences.edit().putLong("screenOffTime", System.currentTimeMillis()).apply()
@@ -42,4 +45,3 @@ class ScreenOffTimeTracker(
         return isScreenOff && (System.currentTimeMillis() - sharedPreferences.getLong("screenOffTime", 0) >= duration)
     }
 }
-

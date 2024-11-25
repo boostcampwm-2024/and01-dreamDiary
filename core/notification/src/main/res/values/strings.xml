@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="notification_startforeground_title">화면 상태 추적 중</string>
+    <string name="notification_startforeground_text">화면 꺼짐/켜짐 시간을 기록하고 있습니다.</string>
+</resources>

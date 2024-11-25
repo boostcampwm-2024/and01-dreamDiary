@@ -20,9 +20,9 @@ class SettingViewModel @Inject constructor(
     private val authRepository: AuthRepository,
     private val sharedPreferences: SharedPreferences,
 ) : ViewModel() {
-
     private val _onTracking = MutableStateFlow<Boolean>(sharedPreferences.getBoolean("onTracking", false))
     val onTracking = _onTracking.asStateFlow()
+
     fun signOut() {
         authRepository.firebaseSignOut()
         viewModelScope.launch {

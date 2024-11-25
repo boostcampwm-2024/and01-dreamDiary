@@ -136,8 +136,7 @@ internal fun SettingScreen(
                         settingViewModel.startTracking(context)
                     }),
                 )
-            }
-            else {
+            } else {
                 SettingOption(
                     icon = Icons.Default.BedtimeOff,
                     text = stringResource(R.string.setting_off_notification_diary),
