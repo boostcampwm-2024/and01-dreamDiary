@@ -14,9 +14,13 @@ import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.action.actionRunCallback
 import androidx.glance.appwidget.components.Scaffold
 import androidx.glance.appwidget.provideContent
+import androidx.glance.currentState
 import androidx.glance.layout.Alignment
 import androidx.glance.layout.Column
 import androidx.glance.layout.fillMaxSize
+import com.boostcamp.dreamteam.dreamdiary.feature.widget.constant.DiaryWritePreferencesKey
+import com.boostcamp.dreamteam.dreamdiary.feature.widget.model.DiaryUi
+import kotlinx.serialization.json.Json
 
 internal class DiaryWriteWidget : GlanceAppWidget() {
     override suspend fun provideGlance(
@@ -36,6 +40,11 @@ internal class DiaryWriteWidget : GlanceAppWidget() {
 @Composable
 @GlanceComposable
 private fun CreateDiaryWidgetContent(modifier: GlanceModifier = GlanceModifier) {
+    val encodedDiaries = currentState(key = DiaryWritePreferencesKey.encodedDiaries) ?: ""
+    val diaries: List<DiaryUi> = encodedDiaries.takeIf { it.isNotEmpty() }?.let {
+        Json.decodeFromString<List<DiaryUi>>(it)
+    } ?: emptyList()
+
     Scaffold(
         modifier = modifier,
         backgroundColor = GlanceTheme.colors.widgetBackground,
