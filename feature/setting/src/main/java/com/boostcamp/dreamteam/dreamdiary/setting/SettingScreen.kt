@@ -48,6 +48,7 @@ import com.boostcamp.dreamteam.dreamdiary.ui.toNavigationItem
 internal fun SettingScreen(
     onNavigateToDiary: () -> Unit,
     onNavigateToCommunity: () -> Unit,
+    onNavigateToSettingBackup: () -> Unit,
     onLogoutClick: () -> Unit,
     modifier: Modifier = Modifier,
     settingViewModel: SettingViewModel = hiltViewModel(),
@@ -68,6 +69,7 @@ internal fun SettingScreen(
     SettingScreenContent(
         navigationItems = navigationItems,
         onLogoutClick = onLogoutClick,
+        onNavigateToSettingBackup = onNavigateToSettingBackup,
         modifier = modifier,
         signInProvider = settingViewModel.getSignInProvider(),
         userEmail = settingViewModel.getUserEmail(),
@@ -81,6 +83,7 @@ internal fun SettingScreen(
 private fun SettingScreenContent(
     navigationItems: List<NavigationItem>,
     onLogoutClick: () -> Unit,
+    onNavigateToSettingBackup: () -> Unit,
     signInProvider: String?,
     onSignOut: () -> Unit,
     onNonPasswordSignIn: () -> Unit,
@@ -105,6 +108,7 @@ private fun SettingScreenContent(
             userEmail = userEmail,
             onNonPasswordSignIn = onNonPasswordSignIn,
             onLogoutClick = onLogoutClick,
+            onNavigateToSettingBackup = onNavigateToSettingBackup,
             onSignOut = onSignOut,
             modifier = Modifier.padding(innerPadding),
         )
@@ -117,6 +121,7 @@ private fun SettingScreenBody(
     userEmail: String?,
     onNonPasswordSignIn: () -> Unit,
     onLogoutClick: () -> Unit,
+    onNavigateToSettingBackup: () -> Unit,
     onSignOut: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -153,6 +158,7 @@ private fun SettingScreenBody(
         SettingOption(
             icon = Icons.Outlined.CloudUpload,
             text = stringResource(R.string.setting_data_restore),
+            onClick = onNavigateToSettingBackup,
         )
         SettingOption(
             icon = Icons.Outlined.ResetTv,
@@ -236,6 +242,7 @@ private fun SettingScreenPreview() {
         SettingScreenContent(
             navigationItems = navigationItems,
             onLogoutClick = {},
+            onNavigateToSettingBackup = {},
             signInProvider = "Google",
             onSignOut = {},
             onNonPasswordSignIn = {},
