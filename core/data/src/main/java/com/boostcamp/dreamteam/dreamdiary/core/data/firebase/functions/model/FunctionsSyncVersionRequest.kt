@@ -14,7 +14,7 @@ data class FunctionsSyncVersionRequest(
     )
 }
 
-fun SyncVersionRequest.toDreamDiarySyncVersion(): FunctionsSyncVersionRequest.IdAndVersion {
+fun SyncVersionRequest.toFunctionsRequest(): FunctionsSyncVersionRequest.IdAndVersion {
     return FunctionsSyncVersionRequest.IdAndVersion(
         diaryId = this.id,
         version = this.version,
