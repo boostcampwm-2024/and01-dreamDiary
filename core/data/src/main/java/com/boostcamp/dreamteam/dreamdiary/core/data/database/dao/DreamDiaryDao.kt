@@ -52,7 +52,7 @@ interface DreamDiaryDao {
     @Query(
         """
             update diary
-            set title = :title, body = :body, sleepStartAt = :sleepStartAt, sleepEndAt = :sleepEndAt, updatedAt = :updatedAt
+            set title = :title, body = :body, sleepStartAt = :sleepStartAt, sleepEndAt = :sleepEndAt, updatedAt = :updatedAt, currentVersion = :currentVersion
             where id = :diaryId
         """,
     )
@@ -63,6 +63,7 @@ interface DreamDiaryDao {
         sleepStartAt: Instant,
         sleepEndAt: Instant,
         updatedAt: Instant = Instant.now(),
+        currentVersion: String = UUID.randomUUID().toString(),
     )
 
     @Transaction
@@ -96,10 +97,11 @@ interface DreamDiaryDao {
         privateDeleteDreamDiary(diaryId = diaryId)
     }
 
-    @Query("update diary set deletedAt = :deletedAt where id = :diaryId")
+    @Query("update diary set deletedAt = :deletedAt, currentVersion = :currentVersion where id = :diaryId")
     suspend fun privateDeleteDreamDiary(
         diaryId: String,
         deletedAt: Instant = Instant.now(),
+        currentVersion: String = UUID.randomUUID().toString()
     )
 
     @Insert
