@@ -11,7 +11,9 @@ import com.boostcamp.dreamteam.dreamdiary.core.data.database.model.DreamDiaryLab
 import com.boostcamp.dreamteam.dreamdiary.core.data.database.model.DreamDiaryWithLabels
 import com.boostcamp.dreamteam.dreamdiary.core.data.database.model.ImageEntity
 import com.boostcamp.dreamteam.dreamdiary.core.data.database.model.LabelEntity
+import com.boostcamp.dreamteam.dreamdiary.core.data.database.model.SynchronizingDreamDiaryEntity
 import com.boostcamp.dreamteam.dreamdiary.core.data.database.model.TextEntity
+import com.boostcamp.dreamteam.dreamdiary.core.data.database.model.synchronization.DreamDiaryOnlyVersion
 import kotlinx.coroutines.flow.Flow
 import java.time.Instant
 import java.util.UUID
@@ -224,4 +226,32 @@ interface DreamDiaryDao {
     @Transaction
     @Query("select * from diary where id = :id and deletedAt is null")
     fun getDreamDiaryAsFlow(id: String): Flow<DreamDiaryWithLabels>
+
+    @Query("select id, currentVersion from diary")
+    suspend fun getDreamDiaryVersion(): List<DreamDiaryOnlyVersion>
+
+    @Query("select id, version as currentVersion from synchronizing_diary")
+    suspend fun getDreamDiaryVersionInSynchronizing(): List<DreamDiaryOnlyVersion>
+
+    @Query("update diary set needSync = 1 where id = :id")
+    suspend fun setNeedSync(id: String): Int
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertSynchronizingDreamDiary(synchronizingDreamDiaryEntity: SynchronizingDreamDiaryEntity)
+
+    suspend fun insertSynchronizingDreamDiary(id: String, version: String) {
+        insertSynchronizingDreamDiary(
+            SynchronizingDreamDiaryEntity(
+                id = id,
+                title = "",
+                body = "",
+                createdAt = Instant.ofEpochMilli(0),
+                updatedAt = Instant.ofEpochMilli(0),
+                sleepStartAt = Instant.ofEpochMilli(0),
+                sleepEndAt = Instant.ofEpochMilli(0),
+                version = version,
+                needData = true,
+            )
+        )
+    }
 }
