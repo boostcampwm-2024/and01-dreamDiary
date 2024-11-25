@@ -60,7 +60,7 @@ internal fun SettingOption(
         if (switchOption) {
             Switch(
                 checked = false,
-                onCheckedChange = {/* TODO */ },
+                onCheckedChange = { /* TODO */ },
             )
         }
     }
