@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "bbb78f97c81991973cd786ef39ddae2a",
+    "identityHash": "9fae95dfb9602b465e712740b14cc2c4",
     "entities": [
       {
         "tableName": "diary",
@@ -273,12 +273,66 @@
         },
         "indices": [],
         "foreignKeys": []
+      },
+      {
+        "tableName": "synchronizing_label",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `diaryId` TEXT NOT NULL, FOREIGN KEY(`diaryId`) REFERENCES `synchronizing_diary`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "diaryId",
+            "columnName": "diaryId",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_synchronizing_label_diaryId",
+            "unique": false,
+            "columnNames": [
+              "diaryId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_synchronizing_label_diaryId` ON `${TABLE_NAME}` (`diaryId`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "synchronizing_diary",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "diaryId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
       }
     ],
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'bbb78f97c81991973cd786ef39ddae2a')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '9fae95dfb9602b465e712740b14cc2c4')"
     ]
   }
 }
