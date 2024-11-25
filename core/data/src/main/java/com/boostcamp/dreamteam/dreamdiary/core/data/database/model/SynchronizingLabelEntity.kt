@@ -8,9 +8,14 @@ import androidx.room.PrimaryKey
 @Entity(
     tableName = "synchronizing_label",
     foreignKeys = [
-        ForeignKey(entity = SynchronizingDreamDiaryEntity::class, parentColumns = ["id"], childColumns = ["diaryId"], onDelete = ForeignKey.CASCADE),
+        ForeignKey(
+            entity = SynchronizingDreamDiaryEntity::class,
+            parentColumns = ["id"],
+            childColumns = ["diaryId"],
+            onDelete = ForeignKey.CASCADE,
+        ),
     ],
-    indices = [Index("diaryId")]
+    indices = [Index("diaryId")],
 )
 data class SynchronizingLabelEntity(
     @PrimaryKey(autoGenerate = true)

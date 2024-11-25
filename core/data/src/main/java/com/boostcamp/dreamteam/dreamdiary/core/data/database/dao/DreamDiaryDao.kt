@@ -288,7 +288,10 @@ interface DreamDiaryDao {
     suspend fun deleteSynchronizingLabelOfDiaryId(diaryId: String)
 
     @Query("update diary set lastSyncVersion = :version, currentVersion = :version, needSync = 0 where id = :id")
-    suspend fun updateDreamDiarySyncVersionAndCurrentVersion(id: String, version: String)
+    suspend fun updateDreamDiarySyncVersionAndCurrentVersion(
+        id: String,
+        version: String,
+    )
 
     @Transaction
     suspend fun insertSynchronizingDreamDiaryAndUpdateVersion(
@@ -313,7 +316,7 @@ interface DreamDiaryDao {
                 sleepEndAt = sleepEndAt,
                 version = version,
                 needData = false,
-            )
+            ),
         )
         deleteSynchronizingLabelOfDiaryId(diaryId = id)
         for (label in labels) {
@@ -321,7 +324,7 @@ interface DreamDiaryDao {
                 InsertSynchronizingLabel(
                     name = label,
                     diaryId = id,
-                )
+                ),
             )
         }
         updateDreamDiarySyncVersionAndCurrentVersion(id, version)

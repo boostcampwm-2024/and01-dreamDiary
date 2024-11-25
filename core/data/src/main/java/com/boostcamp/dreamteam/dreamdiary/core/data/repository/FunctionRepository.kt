@@ -81,7 +81,7 @@ class FunctionRepository @Inject constructor(
                         sleepStartAt = newDiaryResponse["sleepStartAt"] as Long,
                         title = newDiaryResponse["title"] as String,
                         updatedAt = newDiaryResponse["updatedAt"] as Long,
-                        content = newDiaryResponse["content"] as String
+                        content = newDiaryResponse["content"] as String,
                     )
                 } else {
                     null
@@ -95,7 +95,7 @@ class FunctionRepository @Inject constructor(
                         sleepStartAt = updateDiaryResponse["sleepStartAt"] as Long,
                         title = updateDiaryResponse["title"] as String,
                         updatedAt = updateDiaryResponse["updatedAt"] as Long,
-                        content = updateDiaryResponse["content"] as String
+                        content = updateDiaryResponse["content"] as String,
                     )
                 } else {
                     null
@@ -103,7 +103,7 @@ class FunctionRepository @Inject constructor(
                 val deletedDiary = if ("deletedDiary" in response) {
                     val deletedDiaryResponse = response["deletedDiary"] as Map<String, Any>
                     SynchronizeDreamDiaryResponse.DeletedDiary(
-                        deleted = deletedDiaryResponse["deleted"] as Boolean
+                        deleted = deletedDiaryResponse["deleted"] as Boolean,
                     )
                 } else {
                     null

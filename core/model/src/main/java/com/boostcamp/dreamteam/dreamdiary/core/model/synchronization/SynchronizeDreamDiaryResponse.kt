@@ -15,6 +15,7 @@ data class SynchronizeDreamDiaryResponse(
         val updatedAt: Long,
         val content: String,
     )
+
     data class UpdateDiary(
         val createdAt: Long,
         val labels: List<String>,
@@ -24,6 +25,7 @@ data class SynchronizeDreamDiaryResponse(
         val updatedAt: Long,
         val content: String,
     )
+
     data class DeletedDiary(
         val deleted: Boolean,
     )

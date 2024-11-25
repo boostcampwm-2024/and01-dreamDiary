@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class FunctionsSynchronizeDiaryRequest(
-    val list: List<DreamDiary>
+    val list: List<DreamDiary>,
 ) {
     @Serializable
     data class DreamDiary(

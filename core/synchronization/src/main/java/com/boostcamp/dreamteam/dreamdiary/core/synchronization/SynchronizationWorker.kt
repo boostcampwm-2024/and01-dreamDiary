@@ -11,11 +11,8 @@ import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
 import com.boostcamp.dreamteam.dreamdiary.core.data.database.dao.DreamDiaryDao
-import com.boostcamp.dreamteam.dreamdiary.core.data.database.model.DreamDiaryWithLabels
-import com.boostcamp.dreamteam.dreamdiary.core.data.database.model.SynchronizingDreamDiaryEntity
 import com.boostcamp.dreamteam.dreamdiary.core.data.repository.FunctionRepository
 import com.boostcamp.dreamteam.dreamdiary.core.model.synchronization.SyncVersionRequest
-import com.boostcamp.dreamteam.dreamdiary.core.model.synchronization.SynchronizeDreamDiaryRequest
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import dagger.hilt.EntryPoint

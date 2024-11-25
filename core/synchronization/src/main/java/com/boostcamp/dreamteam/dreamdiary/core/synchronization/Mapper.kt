@@ -17,7 +17,7 @@ internal fun SynchronizingDreamDiaryEntity.toRequest(): SynchronizeDreamDiaryReq
         labels = emptyList(),
         diaryContents = emptyList(),
         previousVersion = this.version,
-        currentVersion = this.version
+        currentVersion = this.version,
     )
 }
 

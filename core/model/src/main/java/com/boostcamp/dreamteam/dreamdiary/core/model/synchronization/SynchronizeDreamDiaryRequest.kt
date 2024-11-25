@@ -18,7 +18,7 @@ data class SynchronizeDreamDiaryRequest(
 ) {
     sealed class ContentId {
         data class Image(val id: String) : ContentId()
+
         data class Text(val id: String) : ContentId()
     }
 }
-
