@@ -6,8 +6,7 @@ import java.util.Locale
 
 data class DisplayableDateTime(
     val value: Instant,
-    val formattedDate: String,
-    val formattedTime: String,
+    val formatted: String,
 ) {
     companion object {
         val localedFormatter: Map<Locale, DisplayableDateTimeFormatter> = emptyMap()
@@ -19,15 +18,14 @@ internal fun Instant.toDisplayableDateTime(
     locale: Locale = Locale.getDefault(),
 ): DisplayableDateTime {
     val zonedDateTime = this.atZone(zoneId)
-    val formatters = DisplayableDateTime.localedFormatter.getOrPut(locale)
+    val formatter = DisplayableDateTime.localedFormatter.getOrPut(locale)
 
     return DisplayableDateTime(
         value = this,
-        formattedDate = zonedDateTime.format(formatters.dateFormatter),
-        formattedTime = zonedDateTime.format(formatters.timeFormatter),
+        formatted = formatter.format(zonedDateTime),
     )
 }
 
 private fun Map<Locale, DisplayableDateTimeFormatter>.getOrPut(locale: Locale): DisplayableDateTimeFormatter =
     this[locale]
-        ?: DisplayableDateTimeFormatter.of(locale = locale).also { this.toMutableMap()[locale] = it }
+        ?: DisplayableDateTimeFormatter(locale = locale).also { this.toMutableMap()[locale] = it }
