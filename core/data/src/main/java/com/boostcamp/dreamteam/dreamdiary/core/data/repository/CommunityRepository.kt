@@ -7,7 +7,6 @@ import javax.inject.Inject
 class CommunityRepository @Inject constructor(
     private val communityRemoteDataSource: CommunityRemoteDataSource,
 ) {
-
     /**
      * save community post
      * @return true when success, false when fail

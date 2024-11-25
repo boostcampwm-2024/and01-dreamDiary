@@ -11,5 +11,5 @@ data class CommunityDreamPost(
     val likes: Int = 0,
     val sleepStartAt: Instant,
     val sleepEndAt: Instant,
-    val createdAt: Instant
+    val createdAt: Instant,
 )

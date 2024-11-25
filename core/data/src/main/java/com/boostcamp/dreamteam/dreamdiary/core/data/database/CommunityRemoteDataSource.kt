@@ -8,7 +8,6 @@ import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
 class CommunityRemoteDataSource @Inject constructor() {
-
     private val db = FirebaseFirestore.getInstance()
 
     suspend fun addCommunityPost(communityDreamPost: CommunityDreamPost): Boolean {

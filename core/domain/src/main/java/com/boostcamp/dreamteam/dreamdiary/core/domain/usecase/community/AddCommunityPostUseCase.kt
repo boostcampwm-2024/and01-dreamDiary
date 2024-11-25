@@ -21,8 +21,8 @@ class AddCommunityPostUseCase @Inject constructor(
                 // todo: 수정하기
                 sleepStartAt = Instant.now(),
                 sleepEndAt = Instant.now(),
-                createdAt = Instant.now()
-            )
+                createdAt = Instant.now(),
+            ),
         )
     }
 }
