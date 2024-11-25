@@ -29,9 +29,9 @@ fun CommunityDreamPost.toPostUi(): PostUi {
         author = UserUi(
             id = this.author,
             username = this.author,
-            /* Todo */
+            // Todo
             profileImageUrl = "https://picsum.photos/200/300",
-        )
+        ),
     )
 }
 
