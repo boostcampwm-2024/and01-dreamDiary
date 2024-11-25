@@ -187,8 +187,9 @@ private fun DiaryWriteScreenContent(
             uri?.let {
                 context.contentResolver.takePersistableUriPermission(uri, Intent.FLAG_GRANT_READ_URI_PERMISSION)
                 coroutineScope.launch(Dispatchers.IO) {
+                    val fileName = UUID.randomUUID().toString()
                     val inputStream = context.contentResolver.openInputStream(uri)
-                    val outputFile = File(context.filesDir, UUID.randomUUID().toString())
+                    val outputFile = File(context.filesDir, fileName)
                     val outputStream = FileOutputStream(outputFile)
 
                     inputStream?.use { input ->
@@ -201,7 +202,7 @@ private fun DiaryWriteScreenContent(
                         onContentImageAdd(
                             currentFocusContent,
                             currentTextCursorPosition,
-                            outputFile.path,
+                            fileName,
                         )
                     }
                 }

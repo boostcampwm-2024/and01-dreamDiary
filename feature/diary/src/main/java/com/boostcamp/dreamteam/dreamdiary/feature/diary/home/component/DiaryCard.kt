@@ -24,6 +24,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -36,6 +37,7 @@ import com.boostcamp.dreamteam.dreamdiary.feature.diary.R
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.component.DiaryMenuButton
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.DiaryUi
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.diaryPreview1
+import java.io.File
 import java.time.chrono.Chronology
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeFormatterBuilder
@@ -101,8 +103,9 @@ private fun CardOverline(
     modifier: Modifier = Modifier,
 ) {
     diary.images.firstOrNull()?.let {
+        val context = LocalContext.current
         DdAsyncImage(
-            model = it,
+            model = File(context.filesDir, it).path,
             contentDescription = stringResource(R.string.home_list_card_thumbnail, diary.title),
             contentScale = ContentScale.Crop,
             modifier = modifier,
