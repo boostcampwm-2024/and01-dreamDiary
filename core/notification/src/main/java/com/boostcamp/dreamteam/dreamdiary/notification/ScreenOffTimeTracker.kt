@@ -61,7 +61,10 @@ class ScreenOffTimeTracker(
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setAutoCancel(true)
             .build()
-
-        NotificationManagerCompat.from(context).notify(2, notification)
+        try {
+            NotificationManagerCompat.from(context).notify(12, notification)
+        } catch (e: SecurityException) {
+            Timber.d(e)
+        }
     }
 }

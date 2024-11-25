@@ -14,6 +14,7 @@ import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
+import timber.log.Timber
 
 fun hasNotificationPermission(context: Context): Boolean {
     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) return true
@@ -45,7 +46,11 @@ fun sendLocalNotification(
         .setAutoCancel(true)
         .build()
     if (hasNotificationPermission(context)) {
-        NotificationManagerCompat.from(context).notify(1002, notification)
+        try {
+            NotificationManagerCompat.from(context).notify(1002, notification)
+        } catch (e: SecurityException) {
+            Timber.d(e)
+        }
     }
 }
 
