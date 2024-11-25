@@ -1,7 +1,5 @@
 package com.boostcamp.dreamteam.dreamdiary.setting
 
-import android.app.Activity
-import android.content.Context
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -10,10 +8,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.outlined.Comment
 import androidx.compose.material.icons.automirrored.outlined.Logout
-import androidx.compose.material.icons.filled.Bedtime
-import androidx.compose.material.icons.filled.BedtimeOff
 import androidx.compose.material.icons.outlined.AccountBox
 import androidx.compose.material.icons.outlined.Alarm
 import androidx.compose.material.icons.outlined.CloudUpload
@@ -36,12 +31,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.boostcamp.dreamteam.dreamdiary.designsystem.theme.DreamdiaryTheme
 import com.boostcamp.dreamteam.dreamdiary.setting.component.SettingCategory
 import com.boostcamp.dreamteam.dreamdiary.setting.component.SettingOption
@@ -54,12 +47,12 @@ import com.boostcamp.dreamteam.dreamdiary.ui.toNavigationItem
 internal fun SettingScreen(
     onNavigateToDiary: () -> Unit,
     onNavigateToCommunity: () -> Unit,
+    onNavigateToSettingNotification: () -> Unit,
     onNavigateToSettingBackup: () -> Unit,
     onLogoutClick: () -> Unit,
     modifier: Modifier = Modifier,
     settingViewModel: SettingViewModel = hiltViewModel(),
 ) {
-    val onTracking by settingViewModel.onTracking.collectAsStateWithLifecycle()
     val navigationItems = listOf(
         HomeBottomNavItem.MyDream.toNavigationItem(
             onClick = onNavigateToDiary,
@@ -76,16 +69,13 @@ internal fun SettingScreen(
     SettingScreenContent(
         navigationItems = navigationItems,
         onLogoutClick = onLogoutClick,
+        onNavigateToSettingNotification = onNavigateToSettingNotification,
         onNavigateToSettingBackup = onNavigateToSettingBackup,
         modifier = modifier,
         signInProvider = settingViewModel.getSignInProvider(),
         userEmail = settingViewModel.getUserEmail(),
-        onTracking = onTracking,
         onSignOut = settingViewModel::signOut,
         onNonPasswordSignIn = settingViewModel::nonPasswordSignIn,
-        goToLaunchNotificationSetting = settingViewModel::goToLaunchNotificationSetting,
-        startTracking = settingViewModel::startTracking,
-        stopTracking = settingViewModel::stopTracking,
     )
 }
 
@@ -94,15 +84,12 @@ internal fun SettingScreen(
 private fun SettingScreenContent(
     navigationItems: List<NavigationItem>,
     onLogoutClick: () -> Unit,
+    onNavigateToSettingNotification: () -> Unit,
     onNavigateToSettingBackup: () -> Unit,
     signInProvider: String?,
     onSignOut: () -> Unit,
     onNonPasswordSignIn: () -> Unit,
-    goToLaunchNotificationSetting: (Activity) -> Unit,
-    startTracking: (Context) -> Unit,
-    stopTracking: (Context) -> Unit,
     userEmail: String?,
-    onTracking: Boolean,
     modifier: Modifier = Modifier,
 ) {
     Scaffold(
@@ -121,12 +108,9 @@ private fun SettingScreenContent(
         SettingScreenBody(
             signInProvider = signInProvider,
             userEmail = userEmail,
-            onTracking = onTracking,
             onNonPasswordSignIn = onNonPasswordSignIn,
-            goToLaunchNotificationSetting = goToLaunchNotificationSetting,
-            startTracking = startTracking,
-            stopTracking = stopTracking,
             onLogoutClick = onLogoutClick,
+            onNavigateToSettingNotification = onNavigateToSettingNotification,
             onNavigateToSettingBackup = onNavigateToSettingBackup,
             onSignOut = onSignOut,
             modifier = Modifier.padding(innerPadding),
@@ -138,12 +122,9 @@ private fun SettingScreenContent(
 private fun SettingScreenBody(
     signInProvider: String?,
     userEmail: String?,
-    onTracking: Boolean,
     onNonPasswordSignIn: () -> Unit,
-    goToLaunchNotificationSetting: (Activity) -> Unit,
-    startTracking: (Context) -> Unit,
-    stopTracking: (Context) -> Unit,
     onLogoutClick: () -> Unit,
+    onNavigateToSettingNotification: () -> Unit,
     onNavigateToSettingBackup: () -> Unit,
     onSignOut: () -> Unit,
     modifier: Modifier = Modifier,
@@ -167,39 +148,12 @@ private fun SettingScreenBody(
             .verticalScroll(rememberScrollState),
         verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
-        val activity = LocalContext.current as Activity
-        val context = LocalContext.current
-
         SettingCategory(text = stringResource(R.string.setting_alarm_setting))
         SettingOption(
             icon = Icons.Outlined.Alarm,
-            text = stringResource(R.string.setting_schedule_alarm),
-            modifier = Modifier.clickable(onClick = {
-                goToLaunchNotificationSetting(activity)
-            }),
+            text = stringResource(R.string.setting_alarm_setting),
+            onClick = onNavigateToSettingNotification,
         )
-        if (!onTracking) {
-            SettingOption(
-                icon = Icons.Default.Bedtime,
-                text = stringResource(R.string.setting_notification_diary_on),
-                modifier = Modifier.clickable(onClick = {
-                    startTracking(context)
-                }),
-            )
-        } else {
-            SettingOption(
-                icon = Icons.Default.BedtimeOff,
-                text = stringResource(R.string.setting_notification_diary_off),
-                modifier = Modifier.clickable(onClick = {
-                    stopTracking(context)
-                }),
-            )
-        }
-        SettingOption(
-            icon = Icons.AutoMirrored.Outlined.Comment,
-            text = stringResource(R.string.setting_comment_alarm),
-        )
-
         SettingCategory(text = stringResource(R.string.setting_data_restore))
         SettingOption(
             icon = Icons.Outlined.CloudUpload,
@@ -288,15 +242,12 @@ private fun SettingScreenPreview() {
         SettingScreenContent(
             navigationItems = navigationItems,
             onLogoutClick = {},
+            onNavigateToSettingNotification = {},
             onNavigateToSettingBackup = {},
             signInProvider = "Google",
             onSignOut = {},
             onNonPasswordSignIn = {},
             userEmail = "someone@example.com",
-            onTracking = false,
-            goToLaunchNotificationSetting = {},
-            startTracking = {},
-            stopTracking = {},
         )
     }
 }

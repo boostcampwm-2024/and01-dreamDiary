@@ -31,4 +31,6 @@
     <string name="setting_backup_reset">초기화</string>
     <string name="setting_backup_restore">복원</string>
     <string name="setting_confirm">확인</string>
+    <string name="setting_notification_authority">알림 권한</string>
+    <string name="setting_notification_wakeup">기상 알림</string>
 </resources>

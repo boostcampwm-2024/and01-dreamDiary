@@ -13,6 +13,9 @@ data object SettingGraph {
     data object SettingRoute
 
     @Serializable
+    data object SettingNotificationRoute
+
+    @Serializable
     data object SettingBackupRoute
 
     @Serializable
@@ -32,6 +35,14 @@ fun NavGraphBuilder.settingGraph(
             SettingScreen(
                 onNavigateToDiary = onDiaryClick,
                 onNavigateToCommunity = onCommunityClick,
+                onNavigateToSettingNotification = {
+                    navController.navigate(
+                        SettingGraph.SettingNotificationRoute,
+                        navOptions = navOptions {
+                            launchSingleTop = true
+                        },
+                    )
+                },
                 onNavigateToSettingBackup = {
                     navController.navigate(
                         SettingGraph.SettingBackupRoute,
@@ -41,6 +52,11 @@ fun NavGraphBuilder.settingGraph(
                     )
                 },
                 onLogoutClick = onLogoutClick,
+            )
+        }
+        composable<SettingGraph.SettingNotificationRoute> {
+            SettingNotificationScreen(
+                onBackClick = navController::navigateUp,
             )
         }
         composable<SettingGraph.SettingBackupRoute> {
