@@ -338,7 +338,11 @@ interface DreamDiaryDao {
     suspend fun getSynchronizingContent(id: String): SynchronizingContentEntity?
 
     @Transaction
-    suspend fun insertSynchronizingContentWhenNotDone(contentId: String, diaryId: String, type: String) {
+    suspend fun insertSynchronizingContentWhenNotDone(
+        contentId: String,
+        diaryId: String,
+        type: String,
+    ) {
         val synchronizingContent = getSynchronizingContent(contentId)
         if (synchronizingContent == null || !synchronizingContent.isDone) {
             insertSynchronizingContent(
@@ -348,7 +352,7 @@ interface DreamDiaryDao {
                     needUpload = true,
                     isDone = false,
                     type = type,
-                )
+                ),
             )
         }
     }

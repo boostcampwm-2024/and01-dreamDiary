@@ -131,7 +131,10 @@ class FunctionRepository @Inject constructor(
         return null
     }
 
-    suspend fun uploadText(id: String, text: String): Boolean {
+    suspend fun uploadText(
+        id: String,
+        text: String,
+    ): Boolean {
         val jsonData =
             Json.encodeToJsonElement(FunctionsUploadTextContentRequest(id, text)).jsonObject.convertToFirebaseData()
 
@@ -149,7 +152,10 @@ class FunctionRepository @Inject constructor(
         }
     }
 
-    suspend fun uploadImage(id: String, path: String): Boolean {
+    suspend fun uploadImage(
+        id: String,
+        path: String,
+    ): Boolean {
         val jsonData =
             Json.encodeToJsonElement(FunctionsUploadImageContentRequest(id, path)).jsonObject.convertToFirebaseData()
 
