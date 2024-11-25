@@ -17,4 +17,7 @@ data class DreamDiaryEntity(
     val deletedAt: Instant? = null,
     val sleepStartAt: Instant,
     val sleepEndAt: Instant,
+    val needSync: Boolean,
+    val lastSyncVersion: String,
+    val currentVersion: String,
 )

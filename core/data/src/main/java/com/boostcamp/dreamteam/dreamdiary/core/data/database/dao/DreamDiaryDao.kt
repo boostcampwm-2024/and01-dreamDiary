@@ -39,6 +39,9 @@ interface DreamDiaryDao {
                 updatedAt = Instant.now(),
                 sleepStartAt = sleepStartAt,
                 sleepEndAt = sleepEndAt,
+                needSync = true,
+                lastSyncVersion = "init",
+                currentVersion = UUID.randomUUID().toString(),
             ),
         )
         setLabelsToDreamDiary(dreamDiaryId, labels)
