@@ -3,7 +3,6 @@ package com.boostcamp.dreamteam.dreamdiary.community.model.vo
 import java.time.Instant
 import java.time.ZoneId
 import java.util.Locale
-import java.util.concurrent.ConcurrentHashMap
 
 data class DisplayableDateTime(
     val value: Instant,
@@ -11,7 +10,7 @@ data class DisplayableDateTime(
     val formattedTime: String,
 ) {
     companion object {
-        val localedFormatter: Map<Locale, DisplayableDateTimeFormatter> = ConcurrentHashMap()
+        val localedFormatter: Map<Locale, DisplayableDateTimeFormatter> = emptyMap()
     }
 }
 
