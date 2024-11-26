@@ -9,6 +9,9 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardActionScope
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.outlined.Error
@@ -18,6 +21,7 @@ import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -25,16 +29,20 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import coil3.request.ImageRequest
 import com.boostcamp.dreamteam.dreamdiary.community.R
 import com.boostcamp.dreamteam.dreamdiary.community.model.vo.PostContentUi
 import com.boostcamp.dreamteam.dreamdiary.designsystem.component.DdAsyncImage
+import com.boostcamp.dreamteam.dreamdiary.ui.util.conditional
 
 internal data class CommunityEditorState(
     val title: String,
@@ -52,11 +60,13 @@ internal fun CommunityEditor(
 ) {
     var currentFocusContent by remember { mutableIntStateOf(0) }
     var currentTextCursorPosition by remember { mutableIntStateOf(0) }
+    val firstTextFieldFocusRequester = remember { FocusRequester() }
 
     Column(modifier = modifier) {
         InputTitle(
             title = state.title,
             onTitleChange = state.onTitleChange,
+            onNext = { firstTextFieldFocusRequester.requestFocus() },
             modifier = Modifier.fillMaxWidth(),
             readOnly = state.readOnly,
         )
@@ -68,6 +78,7 @@ internal fun CommunityEditor(
             onContentFocusChange = { currentFocusContent = it },
             onContentImageDelete = state.onContentImageDelete,
             modifier = Modifier.fillMaxWidth(),
+            firstTextFieldFocusRequester = firstTextFieldFocusRequester,
             readOnly = state.readOnly,
         )
     }
@@ -77,6 +88,7 @@ internal fun CommunityEditor(
 private fun InputTitle(
     title: String,
     onTitleChange: (String) -> Unit,
+    onNext: (KeyboardActionScope.() -> Unit),
     modifier: Modifier = Modifier,
     readOnly: Boolean = false,
 ) {
@@ -89,6 +101,12 @@ private fun InputTitle(
         readOnly = readOnly,
         textStyle = MaterialTheme.typography.titleLarge.copy(
             color = MaterialTheme.colorScheme.onSurface,
+        ),
+        keyboardOptions = KeyboardOptions(
+            imeAction = ImeAction.Next,
+        ),
+        keyboardActions = KeyboardActions(
+            onNext = onNext,
         ),
         singleLine = true,
         cursorBrush = SolidColor(MaterialTheme.colorScheme.tertiary),
@@ -115,8 +133,11 @@ private fun InputBody(
     onContentFocusChange: (contentIndex: Int) -> Unit,
     onContentImageDelete: (contentIndex: Int) -> Unit,
     modifier: Modifier = Modifier,
+    firstTextFieldFocusRequester: FocusRequester = remember { FocusRequester() },
     readOnly: Boolean = false,
 ) {
+    val firstTextFieldIndex = remember { derivedStateOf { postContents.indexOfFirst { it is PostContentUi.Text } } }
+
     LazyColumn(modifier = modifier) {
         items(count = postContents.size) { index ->
             when (val content = postContents[index]) {
@@ -126,6 +147,7 @@ private fun InputBody(
                     onContentTextChange = { onContentTextChange(index, it) },
                     onFocusChange = { if (it) onContentFocusChange(index) },
                     modifier = Modifier.fillMaxWidth(),
+                    focusRequester = if (index == firstTextFieldIndex.value) firstTextFieldFocusRequester else null,
                     readOnly = readOnly,
                 )
 
@@ -147,6 +169,7 @@ private fun BodyText(
     onContentTextChange: (String) -> Unit,
     onFocusChange: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
+    focusRequester: FocusRequester? = null,
     readOnly: Boolean = false,
 ) {
     var isFocused by remember { mutableStateOf(false) }
@@ -163,10 +186,20 @@ private fun BodyText(
             onContentTextPositionChange(it.selection.end)
             onContentTextChange(it.text)
         },
-        modifier = modifier.onFocusChanged {
-            isFocused = it.isFocused
-            onFocusChange(it.isFocused)
-        },
+        modifier = modifier
+            .conditional(
+                condition = focusRequester != null,
+                ifTrue = {
+                    if (focusRequester == null) {
+                        this
+                    } else {
+                        focusRequester(focusRequester)
+                    }
+                },
+            ).onFocusChanged {
+                isFocused = it.isFocused
+                onFocusChange(it.isFocused)
+            },
         readOnly = readOnly,
         textStyle = MaterialTheme.typography.bodyLarge.copy(
             color = MaterialTheme.colorScheme.onSurface,
