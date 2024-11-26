@@ -193,26 +193,26 @@ private fun SettingScreenBody(
             SettingOption(
                 icon = Icons.AutoMirrored.Outlined.Logout,
                 text = stringResource(R.string.setting_login_go),
-                modifier = Modifier.clickable(onClick = {
+                onClick = {
                     onNonPasswordSignIn()
                     onLogoutClick()
-                }),
+                },
             )
         } else {
             SettingOption(
                 icon = Icons.Outlined.AccountBox,
                 text = stringResource(R.string.setting_check_account),
-                modifier = Modifier.clickable(onClick = {
+                onClick = {
                     showSNSDialog = true
-                }),
+                },
             )
             SettingOption(
                 icon = Icons.AutoMirrored.Outlined.Logout,
                 text = stringResource(R.string.setting_logout),
-                modifier = Modifier.clickable(onClick = {
+                onClick = {
                     onSignOut()
                     onLogoutClick()
-                }),
+                },
             )
         }
 
