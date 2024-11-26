@@ -3,9 +3,13 @@ package com.boostcamp.dreamteam.dreamdiary.core.data.repository
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
+import androidx.paging.map
 import com.boostcamp.dreamteam.dreamdiary.core.data.database.CommunityRemoteDataSource
+import com.boostcamp.dreamteam.dreamdiary.core.data.dto.CommunityPostRequest
+import com.boostcamp.dreamteam.dreamdiary.core.data.dto.toDomain
 import com.boostcamp.dreamteam.dreamdiary.core.model.CommunityDreamPost
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class CommunityRepository @Inject constructor(
@@ -15,8 +19,8 @@ class CommunityRepository @Inject constructor(
      * save community post
      * @return true when success, false when fail
      */
-    suspend fun saveCommunityPost(communityDreamPost: CommunityDreamPost): Boolean {
-        return communityRemoteDataSource.addCommunityPost(communityDreamPost)
+    suspend fun saveCommunityPost(request: CommunityPostRequest): Boolean {
+        return communityRemoteDataSource.addCommunityPost(request)
     }
 
     fun getCommunityPosts(): Flow<PagingData<CommunityDreamPost>> {
@@ -26,6 +30,8 @@ class CommunityRepository @Inject constructor(
                 enablePlaceholders = false,
             ),
             pagingSourceFactory = { communityRemoteDataSource.getCommunityPostsPagingSource() },
-        ).flow
+        ).flow.map { pagingData ->
+            pagingData.map { it.toDomain() }
+        }
     }
 }
