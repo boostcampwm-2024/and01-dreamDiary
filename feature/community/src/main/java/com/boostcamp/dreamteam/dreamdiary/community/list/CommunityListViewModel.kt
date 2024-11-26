@@ -38,14 +38,4 @@ class CommunityListViewModel @Inject constructor(
             pagingData.map { it.toPostUi() } // CommunityDreamPost -> PostUi 변환
         }
         .cachedIn(viewModelScope)
-
-//    fun getPosts() {
-//        viewModelScope.launch {
-//            getCommunityPostUseCase()
-//                .cachedIn(viewModelScope) // Paging 캐싱
-//                .collectLatest { pagingData ->
-//                    _posts.value = pagingData
-//                }
-//        }
-//    }
 }
