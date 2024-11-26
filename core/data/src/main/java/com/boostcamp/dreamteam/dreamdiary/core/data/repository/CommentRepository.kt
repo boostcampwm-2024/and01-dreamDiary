@@ -21,7 +21,10 @@ class CommentRepository @Inject constructor(
         ).flow
     }
 
-    suspend fun addComment(postId: String, comment: Comment): Boolean {
+    suspend fun addComment(
+        postId: String,
+        comment: Comment,
+    ): Boolean {
         return commentDataSource.addComment(postId, comment)
     }
 }

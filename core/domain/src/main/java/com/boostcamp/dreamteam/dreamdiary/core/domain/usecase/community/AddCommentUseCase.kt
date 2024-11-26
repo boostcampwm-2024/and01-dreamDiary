@@ -20,8 +20,8 @@ class AddCommentUseCase @Inject constructor(
                 content = content,
                 author = Author(
                     userName = userName,
-                    profileImageUrl = profileImageUrl
-                )
+                    profileImageUrl = profileImageUrl,
+                ),
             ),
         )
     }

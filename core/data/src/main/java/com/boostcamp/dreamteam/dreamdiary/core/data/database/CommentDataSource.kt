@@ -15,7 +15,10 @@ import kotlin.coroutines.suspendCoroutine
 class CommentDataSource @Inject constructor() {
     private val db = FirebaseFirestore.getInstance()
 
-    suspend fun addComment(postId: String, comment: Comment): Boolean {
+    suspend fun addComment(
+        postId: String,
+        comment: Comment,
+    ): Boolean {
         return suspendCoroutine { continuation ->
             db.collection("community")
                 .document(postId)
@@ -33,7 +36,6 @@ class CommentDataSource @Inject constructor() {
                 }
         }
     }
-
 
     fun getCommentsForPostPagingSource(postId: String): PagingSource<Query, Comment> {
         return object : PagingSource<Query, Comment>() {
