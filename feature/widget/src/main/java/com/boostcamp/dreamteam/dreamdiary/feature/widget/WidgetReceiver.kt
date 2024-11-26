@@ -15,6 +15,8 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import timber.log.Timber
+import java.time.ZonedDateTime
+import java.time.temporal.ChronoUnit
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -36,7 +38,12 @@ internal class WidgetReceiver : GlanceAppWidgetReceiver() {
     private fun collectData(context: Context) {
         goAsync {
             GlanceAppWidgetManager(context).getGlanceIds(DiaryWriteWidget::class.java).firstOrNull()?.let { glanceId ->
-                getDreamDiariesForTodayUseCase().let { diaries ->
+                val start = ZonedDateTime.now().truncatedTo(ChronoUnit.DAYS).toInstant()
+                val end = start.plusSeconds(24 * 60 * 60 - 1)
+                getDreamDiariesForTodayUseCase(
+                    start = start,
+                    end = end,
+                ).let { diaries ->
                     Timber.d("Diaries: $diaries")
                     updateAppWidgetState(
                         context = context,
