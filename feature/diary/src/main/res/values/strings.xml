@@ -64,4 +64,5 @@
     <string name="home_list_filter_sort">정렬</string>
     <string name="home_list_filter_sort_ascending">오름차순</string>
     <string name="home_list_filter_sort_descending">내림차순</string>
+    <string name="home_list_card_menu_share">공유</string>
 </resources>

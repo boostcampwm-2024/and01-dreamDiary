@@ -49,6 +49,7 @@ import java.time.ZonedDateTime
 fun DiaryDetailScreen(
     onBackClick: () -> Unit,
     onEditDiary: (diaryId: String) -> Unit,
+    onShareDiary: (diaryId: String) -> Unit,
     viewModel: DiaryDetailViewModel = hiltViewModel(),
 ) {
     val context = LocalContext.current
@@ -88,6 +89,7 @@ fun DiaryDetailScreen(
             onBackClick = onBackClick,
             onEditDiary = { onEditDiary(diaryUiState.id) },
             onDeleteDiary = { viewModel.deleteDiary() },
+            onShareDiary = { onShareDiary(diaryUiState.id) },
         )
     }
 }
@@ -100,8 +102,9 @@ internal fun DiaryDetailScreen(
     labels: List<LabelUi>,
     diaryContents: List<DiaryContentUi>,
     onBackClick: () -> Unit,
-    onDeleteDiary: () -> Unit,
     onEditDiary: () -> Unit,
+    onDeleteDiary: () -> Unit,
+    onShareDiary: () -> Unit,
 ) {
     val scrollState = rememberScrollState()
 
@@ -109,8 +112,9 @@ internal fun DiaryDetailScreen(
         topBar = {
             DiaryDetailScreenTopAppBar(
                 onBackClick = onBackClick,
-                onDeleteDiary = onDeleteDiary,
                 onDiaryEdit = onEditDiary,
+                onDeleteDiary = onDeleteDiary,
+                onShareDiary = onShareDiary,
             )
         },
     ) { innerPadding ->
@@ -158,6 +162,7 @@ internal fun DiaryDetailScreenTopAppBar(
     onBackClick: () -> Unit,
     onDeleteDiary: () -> Unit,
     onDiaryEdit: () -> Unit,
+    onShareDiary: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     var isMenuVisible by remember { mutableStateOf(false) }
@@ -180,6 +185,7 @@ internal fun DiaryDetailScreenTopAppBar(
                 onVisibleChange = { isMenuVisible = it },
                 onDeleteDiary = onDeleteDiary,
                 onDiaryEdit = onDiaryEdit,
+                onShareDiary = onShareDiary,
             )
         },
     )
@@ -236,6 +242,7 @@ private fun DiaryHomeScreenContentPreview() {
             ),
             onBackClick = {},
             onEditDiary = {},
+            onShareDiary = {},
             onDeleteDiary = {},
         )
     }
