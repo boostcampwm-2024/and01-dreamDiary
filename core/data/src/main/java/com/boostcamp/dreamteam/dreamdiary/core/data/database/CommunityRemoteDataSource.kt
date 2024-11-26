@@ -9,6 +9,7 @@ import kotlinx.coroutines.tasks.await
 import timber.log.Timber
 import javax.inject.Inject
 import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 
 class CommunityRemoteDataSource @Inject constructor() {
@@ -26,7 +27,7 @@ class CommunityRemoteDataSource @Inject constructor() {
                 }
                 .addOnFailureListener { exception ->
                     Timber.w(exception, "Error adding document")
-                    continuation.resume(false)
+                    continuation.resumeWithException(exception)
                 }
         }
     }

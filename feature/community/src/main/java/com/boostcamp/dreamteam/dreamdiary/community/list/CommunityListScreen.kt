@@ -29,6 +29,7 @@ import com.boostcamp.dreamteam.dreamdiary.community.model.pagedPostPreview
 import com.boostcamp.dreamteam.dreamdiary.designsystem.theme.DreamdiaryTheme
 import com.boostcamp.dreamteam.dreamdiary.ui.HomeBottomNavItem
 import com.boostcamp.dreamteam.dreamdiary.ui.HomeBottomNavigation
+import com.boostcamp.dreamteam.dreamdiary.ui.PagingIndexKey
 import com.boostcamp.dreamteam.dreamdiary.ui.toNavigationItem
 
 @Composable
@@ -97,7 +98,7 @@ private fun CommunityListScreenContent(
         ) {
             items(
                 count = diaries.itemCount,
-                key = { diaries.peek(it)?.id ?: it },
+                key = { diaries.peek(it)?.id ?: PagingIndexKey(it) },
             ) { diaryIndex ->
                 val diary = diaries[diaryIndex]
                 if (diary != null) {
