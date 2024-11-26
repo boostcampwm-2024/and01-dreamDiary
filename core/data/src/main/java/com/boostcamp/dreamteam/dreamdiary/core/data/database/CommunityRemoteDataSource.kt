@@ -18,8 +18,10 @@ class CommunityRemoteDataSource @Inject constructor() {
         return suspendCoroutine { continuation ->
             db.collection("community")
                 .add(communityDreamPost)
-                .addOnSuccessListener {
-                    Timber.d("DocumentSnapshot added with ID: ${it.id}")
+                .addOnSuccessListener { documentReference ->
+                    Timber.d("DocumentSnapshot added with ID: ${documentReference.id}")
+                    val updatedPost = communityDreamPost.copy(id = documentReference.id)
+                    documentReference.set(updatedPost)
                     continuation.resume(true)
                 }
                 .addOnFailureListener { exception ->

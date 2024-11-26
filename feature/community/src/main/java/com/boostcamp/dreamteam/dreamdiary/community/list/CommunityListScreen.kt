@@ -1,8 +1,11 @@
 package com.boostcamp.dreamteam.dreamdiary.community.list
 
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
@@ -14,18 +17,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.boostcamp.dreamteam.dreamdiary.community.R
+import com.boostcamp.dreamteam.dreamdiary.community.list.component.CommunityDiaryCard
 import com.boostcamp.dreamteam.dreamdiary.community.model.PostUi
 import com.boostcamp.dreamteam.dreamdiary.community.model.pagedPostPreview
 import com.boostcamp.dreamteam.dreamdiary.designsystem.theme.DreamdiaryTheme
 import com.boostcamp.dreamteam.dreamdiary.ui.HomeBottomNavItem
 import com.boostcamp.dreamteam.dreamdiary.ui.HomeBottomNavigation
 import com.boostcamp.dreamteam.dreamdiary.ui.toNavigationItem
-import timber.log.Timber
 
 @Composable
 fun CommunityListScreen(
@@ -83,20 +87,41 @@ private fun CommunityListScreenContent(
             HomeBottomNavigation(items = navigationItems)
         },
     ) { innerPadding ->
-        Column(
-            modifier = modifier.padding(innerPadding),
+
+        LazyColumn(
+            modifier = modifier
+                .fillMaxSize()
+                .padding(innerPadding),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+            contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
         ) {
-            Button(
-                modifier = modifier.padding(innerPadding),
-                onClick = {
-                    onSaveClick()
-                    Timber.d(diaries.toString())
-                },
-            ) {
-                Text(text = "저장")
+            items(
+                count = diaries.itemCount,
+                key = { diaries.peek(it)?.id ?: it },
+            ) { diaryIndex ->
+                val diary = diaries[diaryIndex]
+                if (diary != null) {
+                    CommunityDiaryCard(
+                        diary = diary,
+                        onClickMenu = {},
+                        onClickLike = {},
+                        modifier = Modifier
+                            .clickable(onClick = { onDiaryClick(diary) })
+                            .animateItem(),
+                    )
+                }
             }
         }
 
+//        Button(
+//            modifier = modifier.padding(innerPadding),
+//            onClick = {
+//                onSaveClick()
+//                Timber.d(diaries.toString())
+//            },
+//        ) {
+//            Text(text = "저장")
+//        }
 //        LazyColumn(
 //            modifier = Modifier
 //                .fillMaxSize()

@@ -18,11 +18,10 @@ class AddCommunityPostUseCase @Inject constructor(
                 author = author,
                 title = title,
                 content = content,
-                // todo: 수정하기
-                sleepStartAt = Instant.now(),
-                sleepEndAt = Instant.now(),
-                createdAt = Instant.now(),
-                id = "ididid",
+                // todo: sleepStartAt 수정하기
+                sleepStartAt = 0L,
+                sleepEndAt = Instant.now().toEpochMilli(),
+                createdAt = Instant.now().toEpochMilli(),
                 labels = emptyList(),
             ),
         )
