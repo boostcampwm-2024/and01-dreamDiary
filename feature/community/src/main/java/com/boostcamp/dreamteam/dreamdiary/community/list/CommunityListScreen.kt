@@ -103,8 +103,8 @@ private fun CommunityListScreenContent(
                 if (diary != null) {
                     CommunityDiaryCard(
                         diary = diary,
-                        onClickMenu = {},
-                        onClickLike = {},
+                        onClickMenu = { /* TODO: 메뉴 눌렀을 때 기능 추가하기 */ },
+                        onClickLike = { /* TODO: 좋아요 눌렀을 때 기능 추가하기 */ },
                         modifier = Modifier
                             .clickable(onClick = { onDiaryClick(diary) })
                             .animateItem(),
@@ -121,24 +121,6 @@ private fun CommunityListScreenContent(
 //            },
 //        ) {
 //            Text(text = "저장")
-//        }
-//        LazyColumn(
-//            modifier = Modifier
-//                .fillMaxSize()
-//                .padding(innerPadding),
-//            contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
-//            verticalArrangement = Arrangement.spacedBy(16.dp),
-//        ) {
-//            items(items = diaries, key = { it.id }) { diary ->
-//                CommunityDiaryCard(
-//                    diary = diary,
-//                    onClickMenu = { /* TODO: 메뉴 눌렀을 때 기능 추가하기 */ },
-//                    onClickLike = { /* TODO: 좋아요 눌렀을 때 기능 추가하기 */ },
-//                    modifier = Modifier
-//                        .clickable(onClick = { onDiaryClick(diary) })
-//                        .animateItem(),
-//                )
-//            }
 //        }
     }
 }
