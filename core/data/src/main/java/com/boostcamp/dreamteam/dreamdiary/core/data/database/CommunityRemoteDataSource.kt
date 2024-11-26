@@ -14,8 +14,9 @@ import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 
-class CommunityRemoteDataSource @Inject constructor() {
-    private val db = FirebaseFirestore.getInstance()
+class CommunityRemoteDataSource @Inject constructor(
+    private val db: FirebaseFirestore,
+) {
 
     suspend fun addCommunityPost(request: CommunityPostRequest): Boolean {
         return suspendCoroutine { continuation ->
