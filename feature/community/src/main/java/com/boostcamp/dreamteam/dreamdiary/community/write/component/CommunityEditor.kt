@@ -92,12 +92,10 @@ private fun InputTitle(
     modifier: Modifier = Modifier,
     readOnly: Boolean = false,
 ) {
-    var isTitleFocused by remember { mutableStateOf(false) }
-
     BasicTextField(
         value = title,
         onValueChange = onTitleChange,
-        modifier = modifier.onFocusChanged { isTitleFocused = it.isFocused },
+        modifier = modifier,
         readOnly = readOnly,
         textStyle = MaterialTheme.typography.titleLarge.copy(
             color = MaterialTheme.colorScheme.onSurface,
@@ -111,16 +109,15 @@ private fun InputTitle(
         singleLine = true,
         cursorBrush = SolidColor(MaterialTheme.colorScheme.tertiary),
         decorationBox = { innerTextField ->
-            if (title.isEmpty() && !isTitleFocused) {
+            if (title.isEmpty()) {
                 Text(
                     text = stringResource(R.string.community_write_editor_title_placeholder),
                     style = MaterialTheme.typography.titleLarge.copy(
                         color = MaterialTheme.colorScheme.secondary.copy(alpha = 0.6f),
                     ),
                 )
-            } else {
-                innerTextField()
             }
+            innerTextField()
         },
     )
 }
@@ -172,7 +169,6 @@ private fun BodyText(
     focusRequester: FocusRequester? = null,
     readOnly: Boolean = false,
 ) {
-    var isFocused by remember { mutableStateOf(false) }
     var textFieldValueState by remember {
         mutableStateOf(TextFieldValue(textContent.text))
     }
@@ -196,26 +192,22 @@ private fun BodyText(
                         focusRequester(focusRequester)
                     }
                 },
-            ).onFocusChanged {
-                isFocused = it.isFocused
-                onFocusChange(it.isFocused)
-            },
+            ).onFocusChanged { onFocusChange(it.isFocused) },
         readOnly = readOnly,
         textStyle = MaterialTheme.typography.bodyLarge.copy(
             color = MaterialTheme.colorScheme.onSurface,
         ),
         cursorBrush = SolidColor(MaterialTheme.colorScheme.tertiary),
         decorationBox = { innerTextField ->
-            if (textFieldValue.text.isEmpty() && !isFocused) {
+            if (textFieldValue.text.isEmpty()) {
                 Text(
                     text = stringResource(R.string.community_write_editor_body_placeholder),
                     style = MaterialTheme.typography.bodyLarge.copy(
                         color = MaterialTheme.colorScheme.secondary.copy(alpha = 0.6f),
                     ),
                 )
-            } else {
-                innerTextField()
             }
+            innerTextField()
         },
     )
 }
