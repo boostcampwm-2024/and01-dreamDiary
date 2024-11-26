@@ -24,16 +24,11 @@ class ScreenOffTimeTracker(
             when (intent.action) {
                 Intent.ACTION_SCREEN_OFF -> {
                     sharedPreferences.edit().putLong("screenOffTime", System.currentTimeMillis()).apply()
-                    Timber.tag("123").d("ACTION_SCREEN_OFF")
-                    Timber.tag("123").d("${sharedPreferences.getLong("screenOffTime", 0)}")
                     isScreenOff = true
                 }
                 Intent.ACTION_SCREEN_ON -> {
                     isScreenOff = false
-                    Timber.tag("123").d("ACTION_SCREEN_ON")
-                    Timber.tag("123").d("${System.currentTimeMillis()}")
                     if (System.currentTimeMillis() - sharedPreferences.getLong("screenOffTime", 0) >= screenOffDuration) {
-                        Timber.tag("123").d("good")
                         sendScreenOffNotification()
                     }
                 }
