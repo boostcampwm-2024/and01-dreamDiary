@@ -51,6 +51,7 @@ dependencies {
     implementation(projects.feature.community)
     implementation(projects.feature.setting)
     implementation(projects.feature.widget)
+    implementation(projects.core.synchronization)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)

@@ -4,6 +4,7 @@ import android.app.Application
 import android.content.SharedPreferences
 import com.boostcamp.dreamteam.dreamdiary.notification.createNotificationChannel
 import com.boostcamp.dreamteam.dreamdiary.notification.startTrackingService
+import com.boostcamp.dreamteam.dreamdiary.core.synchronization.SynchronizationWorker
 import dagger.hilt.android.HiltAndroidApp
 import timber.log.Timber
 import javax.inject.Inject
@@ -21,6 +22,7 @@ class DreamDiaryApplication : Application() {
         if (sharedPreferences.getBoolean("onTracking", false)) {
             startTrackingService(this)
         }
+        SynchronizationWorker.initWorker(this)
     }
 
     private fun initTimber() {
