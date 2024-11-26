@@ -20,6 +20,7 @@ import androidx.compose.material3.ProvideTextStyle
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -40,9 +41,7 @@ internal data class CommunityEditorState(
     val title: String,
     val onTitleChange: (String) -> Unit,
     val postContents: List<PostContentUi>,
-    val onContentTextPositionChange: (textPosition: Int) -> Unit,
     val onContentTextChange: (contentIndex: Int, String) -> Unit,
-    val onContentFocusChange: (contentIndex: Int) -> Unit,
     val onContentImageDelete: (contentIndex: Int) -> Unit,
     val readOnly: Boolean = false,
 )
@@ -52,6 +51,9 @@ internal fun CommunityEditor(
     state: CommunityEditorState,
     modifier: Modifier = Modifier,
 ) {
+    var currentFocusContent by remember { mutableIntStateOf(0) }
+    var currentTextCursorPosition by remember { mutableIntStateOf(0) }
+
     Column(modifier = modifier) {
         InputTitle(
             title = state.title,
@@ -62,9 +64,9 @@ internal fun CommunityEditor(
         Spacer(modifier = Modifier.height(24.dp))
         InputBody(
             postContents = state.postContents,
-            onContentTextPositionChange = state.onContentTextPositionChange,
+            onContentTextPositionChange = { currentTextCursorPosition = it },
             onContentTextChange = state.onContentTextChange,
-            onContentFocusChange = state.onContentFocusChange,
+            onContentFocusChange = { currentFocusContent = it },
             onContentImageDelete = state.onContentImageDelete,
             modifier = Modifier.fillMaxWidth(),
             readOnly = state.readOnly,

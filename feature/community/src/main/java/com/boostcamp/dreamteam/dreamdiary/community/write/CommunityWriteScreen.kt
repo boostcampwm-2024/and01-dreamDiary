@@ -12,11 +12,13 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.boostcamp.dreamteam.dreamdiary.community.R
 import com.boostcamp.dreamteam.dreamdiary.community.write.component.CommunityEditor
 import com.boostcamp.dreamteam.dreamdiary.community.write.component.CommunityEditorState
@@ -28,19 +30,19 @@ fun CommunityWriteScreen(
     modifier: Modifier = Modifier,
     viewModel: CommunityWriteViewModel = hiltViewModel(),
 ) {
+    val state by viewModel.uiState.collectAsStateWithLifecycle()
+
     CommunityWriteScreenContent(
         topAppbarParams = CommunityWriteTopAppbarState(
             onClickBack = onClickBack,
-            onClickSave = viewModel::onClickSave,
+            onClickSave = viewModel::writePost,
         ),
         editorState = CommunityEditorState(
-            title = "",
-            onTitleChange = { },
-            postContents = emptyList(),
-            onContentTextPositionChange = { },
-            onContentTextChange = { _, _ -> },
-            onContentFocusChange = { },
-            onContentImageDelete = { },
+            title = state.editorState.title,
+            onTitleChange = viewModel::setTitle,
+            postContents = state.editorState.contents,
+            onContentTextChange = viewModel::setContentText,
+            onContentImageDelete = viewModel::deleteContentImage,
         ),
         modifier = modifier,
     )
@@ -111,16 +113,14 @@ private fun CommunityWriteScreenContentPreview() {
     DreamdiaryTheme {
         CommunityWriteScreenContent(
             topAppbarParams = CommunityWriteTopAppbarState(
-                onClickBack = {},
-                onClickSave = {},
+                onClickBack = { },
+                onClickSave = { },
             ),
             editorState = CommunityEditorState(
                 title = "",
                 onTitleChange = { },
                 postContents = emptyList(),
-                onContentTextPositionChange = { },
                 onContentTextChange = { _, _ -> },
-                onContentFocusChange = { },
                 onContentImageDelete = { },
             ),
         )
