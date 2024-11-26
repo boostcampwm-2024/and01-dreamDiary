@@ -31,18 +31,18 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.boostcamp.dreamteam.dreamdiary.community.R
-import com.boostcamp.dreamteam.dreamdiary.community.model.DiaryUi
+import com.boostcamp.dreamteam.dreamdiary.community.model.PostUi
 import com.boostcamp.dreamteam.dreamdiary.community.model.UserUi
-import com.boostcamp.dreamteam.dreamdiary.community.model.diaryUiPreview1
-import com.boostcamp.dreamteam.dreamdiary.community.model.diaryUiPreview2
+import com.boostcamp.dreamteam.dreamdiary.community.model.postUiPreview1
+import com.boostcamp.dreamteam.dreamdiary.community.model.postUiPreview2
 import com.boostcamp.dreamteam.dreamdiary.designsystem.component.DdAsyncImage
 import com.boostcamp.dreamteam.dreamdiary.designsystem.component.DdCard
 
 @Composable
 internal fun CommunityDiaryCard(
-    diary: DiaryUi,
-    onClickMenu: (diary: DiaryUi) -> Unit,
-    onClickLike: (diary: DiaryUi) -> Unit,
+    diary: PostUi,
+    onClickMenu: (diary: PostUi) -> Unit,
+    onClickLike: (diary: PostUi) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     DdCard(
@@ -166,7 +166,7 @@ private fun AuthorHeader(
 private fun CommunityDiaryCardPreviewWithoutImage() {
     MaterialTheme {
         CommunityDiaryCard(
-            diary = diaryUiPreview1,
+            diary = postUiPreview1,
             onClickMenu = { },
             onClickLike = { },
         )
@@ -178,7 +178,7 @@ private fun CommunityDiaryCardPreviewWithoutImage() {
 private fun CommunityDiaryCardPreviewWithImage() {
     MaterialTheme {
         CommunityDiaryCard(
-            diary = diaryUiPreview2,
+            diary = postUiPreview2,
             onClickMenu = { },
             onClickLike = { },
         )

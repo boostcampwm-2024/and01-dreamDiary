@@ -64,9 +64,9 @@ import com.boostcamp.dreamteam.dreamdiary.feature.diary.R
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.component.DiaryCard
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.DiaryUi
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.LabelUi
-import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.PagingIndexKey
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.diaryPreview1
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.diaryPreview2
+import com.boostcamp.dreamteam.dreamdiary.ui.PagingIndexKey
 import kotlinx.coroutines.flow.flowOf
 
 @Composable
