@@ -3,7 +3,7 @@
 
     <application>
         <receiver
-            android:name="com.boostcamp.dreamteam.dreamdiary.feature.widget.WidgetReceiver"
+            android:name="com.boostcamp.dreamteam.dreamdiary.feature.widget.DiaryWriteWidgetReceiver"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />

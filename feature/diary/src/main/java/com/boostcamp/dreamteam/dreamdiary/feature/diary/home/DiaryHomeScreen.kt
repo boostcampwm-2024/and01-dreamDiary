@@ -18,11 +18,13 @@ import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRowDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -41,6 +43,7 @@ import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.tablist.DiaryListTa
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.tablist.pagedDiariesPreview
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.DiaryUi
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.LabelUi
+import com.boostcamp.dreamteam.dreamdiary.feature.widget.util.updateWidget
 import com.boostcamp.dreamteam.dreamdiary.ui.HomeBottomNavItem
 import com.boostcamp.dreamteam.dreamdiary.ui.HomeBottomNavigation
 import com.boostcamp.dreamteam.dreamdiary.ui.toNavigationItem
@@ -60,6 +63,17 @@ fun DiaryHomeScreen(
     val labels by viewModel.dreamLabels.collectAsStateWithLifecycle()
     val labelOptions by viewModel.labelOptions.collectAsStateWithLifecycle()
     val sortOption by viewModel.sortOption.collectAsStateWithLifecycle()
+
+    val context = LocalContext.current
+    LaunchedEffect(Unit) {
+        viewModel.event.collect {
+            when (it) {
+                is DiaryHomeEvent.Delete.Success -> {
+                    updateWidget(context)
+                }
+            }
+        }
+    }
 
     DiaryHomeScreenContent(
         diaries = diaries,

@@ -48,6 +48,7 @@ import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.filteredLabelsPrev
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.selectedLabelsPreview
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.write.model.DiaryWriteEvent
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.write.model.LabelAddFailureReason
+import com.boostcamp.dreamteam.dreamdiary.feature.widget.util.updateWidget
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -70,6 +71,7 @@ fun DiaryWriteScreen(
         viewModel.event.collectLatest { writeEvent ->
             when (writeEvent) {
                 is DiaryWriteEvent.DiaryAddSuccess -> {
+                    updateWidget(context)
                     Toast.makeText(context, "일기 작성 성공", Toast.LENGTH_SHORT).show()
                     onWriteSuccess(writeEvent.diaryId)
                 }
