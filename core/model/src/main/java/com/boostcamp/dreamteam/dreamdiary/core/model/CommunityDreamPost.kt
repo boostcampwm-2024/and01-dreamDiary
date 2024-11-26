@@ -10,5 +10,6 @@ data class CommunityDreamPost(
     val likes: Int = 0,
     val sleepStartAt: Long = 0L,
     val sleepEndAt: Long = 0L,
+    val images: List<String> = emptyList(),
     val createdAt: Long = 0L,
 )

@@ -103,6 +103,7 @@ private fun CommunityListScreenContent(
                 if (diary != null) {
                     CommunityDiaryCard(
                         diary = diary,
+                        onPostClick = { /* Todo: 게시글 클릭 시 동작 추가하기 */ },
                         onClickMenu = { /* TODO: 메뉴 눌렀을 때 기능 추가하기 */ },
                         onClickLike = { /* TODO: 좋아요 눌렀을 때 기능 추가하기 */ },
                         modifier = Modifier
