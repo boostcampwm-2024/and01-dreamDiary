@@ -12,6 +12,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navOptions
 import androidx.navigation.navigation
 import com.boostcamp.dreamteam.dreamdiary.community.list.CommunityListScreen
+import com.boostcamp.dreamteam.dreamdiary.community.write.CommunityWriteScreen
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -22,6 +23,11 @@ data object CommunityGraph {
     @Serializable
     data class CommunityDetailRoute(
         val id: String,
+    )
+
+    @Serializable
+    data class CommunityWriteRoute(
+        val diaryId: String? = null,
     )
 }
 
@@ -35,6 +41,7 @@ fun NavGraphBuilder.communityGraph(
     ) {
         composable<CommunityGraph.CommunityListRoute> {
             CommunityListScreen(
+                onClickFab = { navController.navigateToCommunityWrite() },
                 onNavigateToDiary = onDiaryClick,
                 onNavigateToSetting = onSettingClick,
                 onDiaryClick = { diaryId ->
@@ -49,7 +56,22 @@ fun NavGraphBuilder.communityGraph(
             val id = backStackEntry.id
             Text(text = "CommunityDetailScreen: $id", modifier = Modifier.padding(16.dp))
         }
+        composable<CommunityGraph.CommunityWriteRoute> {
+            CommunityWriteScreen(
+                onClickBack = { navController.popBackStack() },
+            )
+        }
     }
+}
+
+fun NavController.navigateToCommunityWrite(
+    diaryId: String? = null,
+    navOptions: NavOptions? = null,
+) {
+    navigate(
+        route = CommunityGraph.CommunityWriteRoute(diaryId),
+        navOptions = navOptions,
+    )
 }
 
 private fun NavController.navigateToCommunityDetail(
