@@ -19,6 +19,7 @@ data object DiaryGraph {
     @Serializable
     data class DiaryWriteRoute(
         val diaryId: String? = null,
+        val sleepTime: String? = null,
     )
 
     @Serializable

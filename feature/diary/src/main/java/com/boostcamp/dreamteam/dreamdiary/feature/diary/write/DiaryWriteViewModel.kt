@@ -43,6 +43,7 @@ class DiaryWriteViewModel @Inject constructor(
     private val getLabelsUseCase: GetLabelsUseCase,
 ) : ViewModel() {
     private val diaryId: String? = savedStateHandle.get<String>("diaryId")
+    private val sleepTime: String? = savedStateHandle.get<String>("sleepTime")
     private val isEditMode = diaryId != null
 
     private val _uiState = MutableStateFlow(DiaryWriteUiState())
@@ -52,6 +53,9 @@ class DiaryWriteViewModel @Inject constructor(
     val event = _event.receiveAsFlow()
 
     init {
+        if (sleepTime != null) {
+            setSleepStartAt(ZonedDateTime.now().minusSeconds(sleepTime.toLong() / 1000))
+        }
         if (isEditMode) {
             if (diaryId != null) {
                 viewModelScope.launch {
