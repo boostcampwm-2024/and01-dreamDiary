@@ -11,8 +11,14 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
@@ -31,6 +37,9 @@ import com.boostcamp.dreamteam.dreamdiary.ui.HomeBottomNavItem
 import com.boostcamp.dreamteam.dreamdiary.ui.HomeBottomNavigation
 import com.boostcamp.dreamteam.dreamdiary.ui.PagingIndexKey
 import com.boostcamp.dreamteam.dreamdiary.ui.toNavigationItem
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlin.time.Duration.Companion.seconds
 
 @Composable
 fun CommunityListScreen(
@@ -75,6 +84,9 @@ private fun CommunityListScreenContent(
     )
 
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
+    val refreshState = rememberPullToRefreshState()
+    var isRefreshing by remember { mutableStateOf(false) }
+    val coroutineScope = rememberCoroutineScope()
 
     Scaffold(
         modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
@@ -88,28 +100,41 @@ private fun CommunityListScreenContent(
             HomeBottomNavigation(items = navigationItems)
         },
     ) { innerPadding ->
-
-        LazyColumn(
-            modifier = modifier
+        PullToRefreshBox(
+            isRefreshing = isRefreshing,
+            onRefresh = {
+                coroutineScope.launch {
+                    isRefreshing = true
+                    delay(1.seconds)
+                    // TODO: 새로고침 로직 추가
+                    isRefreshing = false
+                }
+            },
+            modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding),
-            verticalArrangement = Arrangement.spacedBy(16.dp),
-            contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
+            state = refreshState,
         ) {
-            items(
-                count = diaries.itemCount,
-                key = { diaries.peek(it)?.id ?: PagingIndexKey(it) },
-            ) { diaryIndex ->
-                val diary = diaries[diaryIndex]
-                if (diary != null) {
-                    CommunityDiaryCard(
-                        diary = diary,
-                        onClickMenu = { /* TODO: 메뉴 눌렀을 때 기능 추가하기 */ },
-                        onClickLike = { /* TODO: 좋아요 눌렀을 때 기능 추가하기 */ },
-                        modifier = Modifier
-                            .clickable(onClick = { onDiaryClick(diary) })
-                            .animateItem(),
-                    )
+            LazyColumn(
+                modifier = Modifier.fillMaxSize(),
+                contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+            ) {
+                items(
+                    count = diaries.itemCount,
+                    key = { diaries.peek(it)?.id ?: PagingIndexKey(it) },
+                ) { diaryIndex ->
+                    val diary = diaries[diaryIndex]
+                    if (diary != null) {
+                        CommunityDiaryCard(
+                            diary = diary,
+                            onClickMenu = { /* TODO: 메뉴 눌렀을 때 기능 추가하기 */ },
+                            onClickLike = { /* TODO: 좋아요 눌렀을 때 기능 추가하기 */ },
+                            modifier = Modifier
+                                .clickable(onClick = { onDiaryClick(diary) })
+                                .animateItem(),
+                        )
+                    }
                 }
             }
         }
