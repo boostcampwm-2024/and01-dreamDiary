@@ -14,6 +14,7 @@ import com.boostcamp.dreamteam.dreamdiary.core.data.database.model.InsertSynchro
 import com.boostcamp.dreamteam.dreamdiary.core.data.database.model.LabelEntity
 import com.boostcamp.dreamteam.dreamdiary.core.data.database.model.SynchronizingContentEntity
 import com.boostcamp.dreamteam.dreamdiary.core.data.database.model.SynchronizingDreamDiaryEntity
+import com.boostcamp.dreamteam.dreamdiary.core.data.database.model.SynchronizingDreamDiaryWithLabels
 import com.boostcamp.dreamteam.dreamdiary.core.data.database.model.SynchronizingLabelEntity
 import com.boostcamp.dreamteam.dreamdiary.core.data.database.model.TextEntity
 import com.boostcamp.dreamteam.dreamdiary.core.data.database.model.synchronization.DreamDiaryOnlyVersion
@@ -25,6 +26,9 @@ import java.util.UUID
 interface DreamDiaryDao {
     @Insert
     suspend fun insertDreamDiary(dreamDiaryEntity: DreamDiaryEntity)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertDreamDiaryReplace(dreamDiaryEntity: DreamDiaryEntity)
 
     @Transaction
     suspend fun insertDreamDiary(
@@ -362,4 +366,81 @@ interface DreamDiaryDao {
 
     @Query("update synchronizing_content set isDone = 1 where id = :id")
     suspend fun setSynchronizingContentDone(id: String)
+
+    @Query(
+        """
+            delete from synchronizing_diary
+            where id in (
+                select synchronizing_diary.id
+                from synchronizing_diary, diary
+                where synchronizing_diary.id = diary.id and synchronizing_diary.version != diary.currentVersion
+            )
+        """,
+    )
+    suspend fun removeSynchronizingDreamDiaryIfVersionNotEquals()
+
+    @Query("select id from synchronizing_diary")
+    suspend fun getSynchronizingDreamDiaryIds(): List<String>
+
+    @Transaction
+    @Query("select * from synchronizing_diary where id = :id and needData = 0")
+    suspend fun getSynchronizingDreamDiaryWithLabels(id: String): SynchronizingDreamDiaryWithLabels?
+
+    @Transaction
+    suspend fun moveToDreamDiaryIfSynced(id: String) {
+        val dreamDiaryWithLabels = getSynchronizingDreamDiaryWithLabels(id) ?: return
+
+        val synchronizingDreamDiary = dreamDiaryWithLabels.diary
+        val labels = dreamDiaryWithLabels.labels.map { it.name }
+
+        val body = synchronizingDreamDiary.body
+        body.split(":")
+
+        val parsingDiaryContent = body.split(":")
+        var index = 0
+
+        while (index < parsingDiaryContent.size) {
+            if (parsingDiaryContent[index] == "text") {
+                index += 1
+                val contentId = parsingDiaryContent[index]
+                val textEntity = getText(contentId)
+                if (textEntity == null) {
+                    return
+                }
+            } else if (parsingDiaryContent[index] == "image") {
+                index += 1
+                val contentId = parsingDiaryContent[index]
+                val imageEntity = getImage(contentId)
+                if (imageEntity == null) {
+                    return
+                }
+            } else {
+                index += 1
+            }
+        }
+
+        insertDreamDiaryReplace(
+            DreamDiaryEntity(
+                id = synchronizingDreamDiary.id,
+                title = synchronizingDreamDiary.title,
+                body = synchronizingDreamDiary.body,
+                createdAt = synchronizingDreamDiary.createdAt,
+                updatedAt = synchronizingDreamDiary.updatedAt,
+                sleepStartAt = synchronizingDreamDiary.sleepStartAt,
+                sleepEndAt = synchronizingDreamDiary.sleepEndAt,
+                needSync = false,
+                lastSyncVersion = synchronizingDreamDiary.version,
+                currentVersion = synchronizingDreamDiary.version,
+            )
+        )
+        deleteDreamDiaryLabels(synchronizingDreamDiary.id)
+        setLabelsToDreamDiary(
+            diaryId = synchronizingDreamDiary.id,
+            labels = labels,
+        )
+        deleteSynchronizingDreamDiary(synchronizingDreamDiary.id)
+    }
+
+    @Query("select * from synchronizing_diary")
+    suspend fun getSynchronizingDreamDiaries(): List<SynchronizingDreamDiaryEntity>
 }
