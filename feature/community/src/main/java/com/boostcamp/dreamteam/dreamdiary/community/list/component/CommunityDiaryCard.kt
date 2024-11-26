@@ -1,6 +1,7 @@
 package com.boostcamp.dreamteam.dreamdiary.community.list.component
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -41,6 +42,7 @@ import com.boostcamp.dreamteam.dreamdiary.designsystem.component.DdCard
 @Composable
 internal fun CommunityDiaryCard(
     diary: PostUi,
+    onPostClick: (PostUi) -> Unit,
     onClickMenu: (diary: PostUi) -> Unit,
     onClickLike: (diary: PostUi) -> Unit,
     modifier: Modifier = Modifier,
@@ -60,7 +62,7 @@ internal fun CommunityDiaryCard(
                 )
             }
         },
-        modifier = modifier,
+        modifier = modifier.clickable(onClick = { onPostClick(diary) }),
         overline = {
             Column(modifier = Modifier.fillMaxWidth()) {
                 AuthorHeader(
@@ -70,9 +72,9 @@ internal fun CommunityDiaryCard(
                     sharedAt = diary.sharedAt.formatted,
                 )
                 Spacer(modifier = Modifier.height(8.dp))
-                diary.thumbnail?.let { thumbnail ->
+                diary.images.firstOrNull()?.let { image ->
                     DdAsyncImage(
-                        model = thumbnail,
+                        model = image,
                         contentDescription = null,
                         contentScale = ContentScale.Crop,
                         modifier = Modifier
@@ -167,6 +169,7 @@ private fun CommunityDiaryCardPreviewWithoutImage() {
     MaterialTheme {
         CommunityDiaryCard(
             diary = postUiPreview1,
+            onPostClick = { },
             onClickMenu = { },
             onClickLike = { },
         )
@@ -179,6 +182,7 @@ private fun CommunityDiaryCardPreviewWithImage() {
     MaterialTheme {
         CommunityDiaryCard(
             diary = postUiPreview2,
+            onPostClick = {},
             onClickMenu = { },
             onClickLike = { },
         )
