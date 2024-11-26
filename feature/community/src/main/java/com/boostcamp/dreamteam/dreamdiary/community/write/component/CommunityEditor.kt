@@ -23,7 +23,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -55,11 +54,11 @@ internal data class CommunityEditorState(
 
 @Composable
 internal fun CommunityEditor(
+    setCurrentFocusContent: (Int) -> Unit,
+    setCurrentTextCursorPosition: (Int) -> Unit,
     state: CommunityEditorState,
     modifier: Modifier = Modifier,
 ) {
-    var currentFocusContent by remember { mutableIntStateOf(0) }
-    var currentTextCursorPosition by remember { mutableIntStateOf(0) }
     val firstTextFieldFocusRequester = remember { FocusRequester() }
 
     Column(modifier = modifier) {
@@ -73,9 +72,9 @@ internal fun CommunityEditor(
         Spacer(modifier = Modifier.height(24.dp))
         InputBody(
             postContents = state.postContents,
-            onContentTextPositionChange = { currentTextCursorPosition = it },
+            onContentTextPositionChange = setCurrentFocusContent,
             onContentTextChange = state.onContentTextChange,
-            onContentFocusChange = { currentFocusContent = it },
+            onContentFocusChange = setCurrentTextCursorPosition,
             onContentImageDelete = state.onContentImageDelete,
             modifier = Modifier.fillMaxWidth(),
             firstTextFieldFocusRequester = firstTextFieldFocusRequester,
