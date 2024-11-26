@@ -45,6 +45,7 @@ android {
 
 dependencies {
     implementation(projects.core.designsystem)
+    implementation(projects.core.notification)
     implementation(projects.feature.auth)
     implementation(projects.feature.diary)
     implementation(projects.feature.community)
