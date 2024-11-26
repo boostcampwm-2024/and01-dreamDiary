@@ -443,4 +443,16 @@ interface DreamDiaryDao {
 
     @Query("select * from synchronizing_diary")
     suspend fun getSynchronizingDreamDiaries(): List<SynchronizingDreamDiaryEntity>
+
+    @Transaction
+    suspend fun removeSyncData() {
+        deleteAllSynchronizingDreamDiary()
+        deleteAllSynchronizingContent()
+    }
+
+    @Query("delete from synchronizing_diary")
+    suspend fun deleteAllSynchronizingDreamDiary(): Int
+
+    @Query("delete from synchronizing_content")
+    suspend fun deleteAllSynchronizingContent(): Int
 }
