@@ -25,7 +25,7 @@ fun CommunityDreamPost.toPostUi(): PostUi {
         thumbnail = null,
         title = this.title,
         previewText = this.content.take(50),
-        sharedAt = DisplayableDateTime(this.createdAt, ":)"),
+        sharedAt = Instant.ofEpochMilli(this.createdAt).toDisplayableDateTime(),
         commentCount = this.comments.size.toLong(),
         isLiked = this.likes > 0,
         author = UserUi(
