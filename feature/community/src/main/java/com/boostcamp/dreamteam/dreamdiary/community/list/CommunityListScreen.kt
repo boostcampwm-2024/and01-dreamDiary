@@ -25,13 +25,16 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.boostcamp.dreamteam.dreamdiary.community.R
 import com.boostcamp.dreamteam.dreamdiary.community.list.component.CommunityDiaryCard
-import com.boostcamp.dreamteam.dreamdiary.community.model.DiaryUi
-import com.boostcamp.dreamteam.dreamdiary.community.model.diariesUiPreview
+import com.boostcamp.dreamteam.dreamdiary.community.model.PostUi
+import com.boostcamp.dreamteam.dreamdiary.community.model.pagedPostPreview
 import com.boostcamp.dreamteam.dreamdiary.designsystem.theme.DreamdiaryTheme
 import com.boostcamp.dreamteam.dreamdiary.ui.HomeBottomNavItem
 import com.boostcamp.dreamteam.dreamdiary.ui.HomeBottomNavigation
+import com.boostcamp.dreamteam.dreamdiary.ui.PagingIndexKey
 import com.boostcamp.dreamteam.dreamdiary.ui.toNavigationItem
 
 @Composable
@@ -43,13 +46,15 @@ fun CommunityListScreen(
     viewModel: CommunityListViewModel = hiltViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val diaries = viewModel.posts.collectAsLazyPagingItems()
 
     CommunityListScreenContent(
         onClickFab = onClickFab,
         onNavigateToDiary = onNavigateToDiary,
         onNavigateToSetting = onNavigateToSetting,
-        diaries = state.diaries,
+        diaries = diaries,
         onDiaryClick = { diary -> onDiaryClick(diary.id) },
+        onSaveClick = viewModel::addCommunityPost,
     )
 }
 
@@ -59,8 +64,9 @@ private fun CommunityListScreenContent(
     onClickFab: () -> Unit,
     onNavigateToDiary: () -> Unit,
     onNavigateToSetting: () -> Unit,
-    diaries: List<DiaryUi>,
-    onDiaryClick: (DiaryUi) -> Unit,
+    diaries: LazyPagingItems<PostUi>,
+    onDiaryClick: (PostUi) -> Unit,
+    onSaveClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val navigationItems = listOf(
@@ -100,24 +106,41 @@ private fun CommunityListScreenContent(
             }
         },
     ) { innerPadding ->
+
         LazyColumn(
-            modifier = Modifier
+            modifier = modifier
                 .fillMaxSize()
                 .padding(innerPadding),
-            contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp),
+            contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
         ) {
-            items(items = diaries, key = { it.id }) { diary ->
-                CommunityDiaryCard(
-                    diary = diary,
-                    onClickMenu = { /* TODO: 메뉴 눌렀을 때 기능 추가하기 */ },
-                    onClickLike = { /* TODO: 좋아요 눌렀을 때 기능 추가하기 */ },
-                    modifier = Modifier
-                        .clickable(onClick = { onDiaryClick(diary) })
-                        .animateItem(),
-                )
+            items(
+                count = diaries.itemCount,
+                key = { diaries.peek(it)?.id ?: PagingIndexKey(it) },
+            ) { diaryIndex ->
+                val diary = diaries[diaryIndex]
+                if (diary != null) {
+                    CommunityDiaryCard(
+                        diary = diary,
+                        onClickMenu = { /* TODO: 메뉴 눌렀을 때 기능 추가하기 */ },
+                        onClickLike = { /* TODO: 좋아요 눌렀을 때 기능 추가하기 */ },
+                        modifier = Modifier
+                            .clickable(onClick = { onDiaryClick(diary) })
+                            .animateItem(),
+                    )
+                }
             }
         }
+
+//        Button(
+//            modifier = modifier.padding(innerPadding),
+//            onClick = {
+//                onSaveClick()
+//                Timber.d(diaries.toString())
+//            },
+//        ) {
+//            Text(text = "저장")
+//        }
     }
 }
 
@@ -130,7 +153,8 @@ private fun CommunityListScreenContentPreview() {
             onNavigateToDiary = { },
             onNavigateToSetting = { },
             onDiaryClick = { },
-            diaries = diariesUiPreview,
+            onSaveClick = { },
+            diaries = pagedPostPreview.collectAsLazyPagingItems(),
         )
     }
 }

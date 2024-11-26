@@ -1,11 +1,14 @@
 package com.boostcamp.dreamteam.dreamdiary.community.model
 
+import androidx.paging.PagingData
 import com.boostcamp.dreamteam.dreamdiary.community.model.vo.DisplayableDateTime
 import com.boostcamp.dreamteam.dreamdiary.community.model.vo.toDisplayableDateTime
+import com.boostcamp.dreamteam.dreamdiary.core.model.CommunityDreamPost
+import kotlinx.coroutines.flow.flowOf
 import java.time.Instant
 import java.time.ZoneId
 
-data class DiaryUi(
+data class PostUi(
     val id: String,
     val thumbnail: String? = null,
     val title: String,
@@ -16,7 +19,25 @@ data class DiaryUi(
     val author: UserUi,
 )
 
-internal val diaryUiPreview1 = DiaryUi(
+fun CommunityDreamPost.toPostUi(): PostUi {
+    return PostUi(
+        id = this.id,
+        thumbnail = null,
+        title = this.title,
+        previewText = this.content.take(50),
+        sharedAt = Instant.ofEpochMilli(this.createdAt).toDisplayableDateTime(),
+        commentCount = this.comments.size.toLong(),
+        isLiked = this.likes > 0,
+        author = UserUi(
+            id = this.author,
+            username = this.author,
+            // Todo
+            profileImageUrl = "https://picsum.photos/200/300",
+        ),
+    )
+}
+
+internal val postUiPreview1 = PostUi(
     id = "1",
     title = "Diary 1",
     previewText = "This is a preview text for Diary 1",
@@ -26,7 +47,7 @@ internal val diaryUiPreview1 = DiaryUi(
     author = userUiPreview1,
 )
 
-internal val diaryUiPreview2 = DiaryUi(
+internal val postUiPreview2 = PostUi(
     id = "2",
     thumbnail = "https://picsum.photos/200/300",
     title = "Diary 2",
@@ -37,7 +58,7 @@ internal val diaryUiPreview2 = DiaryUi(
     author = userUiPreview2,
 )
 
-private val diaryUiPreview3 = DiaryUi(
+private val postUiPreview3 = PostUi(
     id = "3",
     title = "Diary 3",
     previewText = "This is a preview text for Diary 3",
@@ -48,7 +69,9 @@ private val diaryUiPreview3 = DiaryUi(
 )
 
 internal val diariesUiPreview = listOf(
-    diaryUiPreview1,
-    diaryUiPreview2,
-    diaryUiPreview3,
+    postUiPreview1,
+    postUiPreview2,
+    postUiPreview3,
 )
+
+internal val pagedPostPreview = flowOf(PagingData.from(diariesUiPreview))
