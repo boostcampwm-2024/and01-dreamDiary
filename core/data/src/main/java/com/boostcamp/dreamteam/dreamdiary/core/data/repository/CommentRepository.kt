@@ -20,4 +20,8 @@ class CommentRepository @Inject constructor(
             pagingSourceFactory = { commentDataSource.getCommentsForPostPagingSource(postId) },
         ).flow
     }
+
+    suspend fun addComment(postId: String, comment: Comment): Boolean {
+        return commentDataSource.addComment(postId, comment)
+    }
 }
