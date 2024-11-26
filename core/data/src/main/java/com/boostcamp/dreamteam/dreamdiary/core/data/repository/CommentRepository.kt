@@ -3,9 +3,13 @@ package com.boostcamp.dreamteam.dreamdiary.core.data.repository
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
+import androidx.paging.map
 import com.boostcamp.dreamteam.dreamdiary.core.data.database.CommentDataSource
+import com.boostcamp.dreamteam.dreamdiary.core.data.dto.CommentRequest
+import com.boostcamp.dreamteam.dreamdiary.core.data.dto.toDomain
 import com.boostcamp.dreamteam.dreamdiary.core.model.Comment
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class CommentRepository @Inject constructor(
@@ -18,13 +22,15 @@ class CommentRepository @Inject constructor(
                 enablePlaceholders = false,
             ),
             pagingSourceFactory = { commentDataSource.getCommentsForPostPagingSource(postId) },
-        ).flow
+        ).flow.map { pagingData ->
+            pagingData.map { it.toDomain() }
+        }
     }
 
     suspend fun addComment(
         postId: String,
-        comment: Comment,
+        commentRequest: CommentRequest,
     ): Boolean {
-        return commentDataSource.addComment(postId, comment)
+        return commentDataSource.addComment(postId, commentRequest)
     }
 }

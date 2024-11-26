@@ -2,7 +2,9 @@ package com.boostcamp.dreamteam.dreamdiary.core.data.database
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import com.boostcamp.dreamteam.dreamdiary.core.model.CommunityDreamPost
+import com.boostcamp.dreamteam.dreamdiary.core.data.dto.CommunityPostRequest
+import com.boostcamp.dreamteam.dreamdiary.core.data.dto.CommunityPostResponse
+import com.boostcamp.dreamteam.dreamdiary.core.data.dto.toDomain
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import kotlinx.coroutines.tasks.await
@@ -15,13 +17,14 @@ import kotlin.coroutines.suspendCoroutine
 class CommunityRemoteDataSource @Inject constructor() {
     private val db = FirebaseFirestore.getInstance()
 
-    suspend fun addCommunityPost(communityDreamPost: CommunityDreamPost): Boolean {
+    suspend fun addCommunityPost(request: CommunityPostRequest): Boolean {
         return suspendCoroutine { continuation ->
+            val newPost = request.toDomain()
             db.collection("community")
-                .add(communityDreamPost)
+                .add(newPost)
                 .addOnSuccessListener { documentReference ->
                     Timber.d("DocumentSnapshot added with ID: ${documentReference.id}")
-                    val updatedPost = communityDreamPost.copy(id = documentReference.id)
+                    val updatedPost = newPost.copy(id = documentReference.id)
                     documentReference.set(updatedPost)
                     continuation.resume(true)
                 }
@@ -32,9 +35,9 @@ class CommunityRemoteDataSource @Inject constructor() {
         }
     }
 
-    fun getCommunityPostsPagingSource(): PagingSource<Query, CommunityDreamPost> {
-        return object : PagingSource<Query, CommunityDreamPost>() {
-            override suspend fun load(params: LoadParams<Query>): LoadResult<Query, CommunityDreamPost> {
+    fun getCommunityPostsPagingSource(): PagingSource<Query, CommunityPostResponse> {
+        return object : PagingSource<Query, CommunityPostResponse>() {
+            override suspend fun load(params: LoadParams<Query>): LoadResult<Query, CommunityPostResponse> {
                 return try {
                     val query = params.key ?: db.collection("community")
                         .orderBy("createdAt", Query.Direction.DESCENDING)
@@ -42,7 +45,7 @@ class CommunityRemoteDataSource @Inject constructor() {
 
                     val querySnapshot = query.get().await()
                     val documents = querySnapshot.documents
-                    val posts = documents.map { it.toObject(CommunityDreamPost::class.java)!! }
+                    val posts = documents.map { it.toObject(CommunityPostResponse::class.java)!! }
 
                     val nextQuery = if (documents.isNotEmpty()) {
                         query.startAfter(documents.last())
@@ -61,7 +64,7 @@ class CommunityRemoteDataSource @Inject constructor() {
                 }
             }
 
-            override fun getRefreshKey(state: PagingState<Query, CommunityDreamPost>): Query? {
+            override fun getRefreshKey(state: PagingState<Query, CommunityPostResponse>): Query? {
                 return null
             }
         }
