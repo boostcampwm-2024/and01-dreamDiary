@@ -13,6 +13,7 @@ import androidx.work.WorkerParameters
 import com.boostcamp.dreamteam.dreamdiary.core.data.database.dao.DreamDiaryDao
 import com.boostcamp.dreamteam.dreamdiary.core.data.repository.FunctionRepository
 import com.boostcamp.dreamteam.dreamdiary.core.model.synchronization.SyncVersionRequest
+import com.boostcamp.dreamteam.dreamdiary.core.model.synchronization.SynchronizeDreamDiaryRequest
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import dagger.hilt.EntryPoint
@@ -36,6 +37,7 @@ class SynchronizationWorker @AssistedInject constructor(
             try {
                 synchronizeVersion()
                 synchronizeDreamDiaries()
+                uploadContents()
                 Result.success()
             } catch (e: Exception) {
                 Timber.e(e, "SynchronizationWorker")
@@ -79,6 +81,17 @@ class SynchronizationWorker @AssistedInject constructor(
             synchronizingDreamDiaryNeedData.map { it.toRequest() } + dreamDiaryNeedSync.map { it.toRequest() }
 
         for (dreamDiary in synchronizeDreamDiaries) {
+            for (diaryContent in dreamDiary.diaryContents) {
+                when (diaryContent) {
+                    is SynchronizeDreamDiaryRequest.ContentId.Image -> {
+                        dreamDiaryDao.insertSynchronizingContentWhenNotDone(diaryContent.id, dreamDiary.id, "image")
+                    }
+                    is SynchronizeDreamDiaryRequest.ContentId.Text -> {
+                        dreamDiaryDao.insertSynchronizingContentWhenNotDone(diaryContent.id, dreamDiary.id, "text")
+                    }
+                }
+            }
+
             val response = functionRepository.synchronizeDreamDiary(dreamDiary)
 
             if (response != null) {
@@ -118,6 +131,25 @@ class SynchronizationWorker @AssistedInject constructor(
                     )
                 } else {
                     dreamDiaryDao.updateDreamDiarySyncVersionAndCurrentVersion(dreamDiary.id, response.currentVersion)
+                }
+            }
+        }
+    }
+
+    private suspend fun uploadContents() {
+        val needUploadContents = dreamDiaryDao.getNeedSynchronizingContents()
+        for (content in needUploadContents) {
+            if (content.type == "text") {
+                val text = dreamDiaryDao.getText(content.id)
+                if (text != null) {
+                    functionRepository.uploadText(text.id, text.text)
+                    dreamDiaryDao.setSynchronizingContentDone(content.id)
+                }
+            } else if (content.type == "image") {
+                val image = dreamDiaryDao.getImage(content.id)
+                if (image != null) {
+                    functionRepository.uploadImage(image.id, image.path)
+                    dreamDiaryDao.setSynchronizingContentDone(content.id)
                 }
             }
         }

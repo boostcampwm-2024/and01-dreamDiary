@@ -37,6 +37,7 @@ import com.boostcamp.dreamteam.dreamdiary.designsystem.component.DdAsyncImage
 import com.boostcamp.dreamteam.dreamdiary.designsystem.theme.DreamdiaryTheme
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.R
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.DiaryContentUi
+import java.io.File
 
 @Composable
 internal fun DiaryContentEditor(
@@ -131,8 +132,11 @@ private fun BodyImage(
     modifier: Modifier = Modifier,
 ) {
     Box(modifier = modifier) {
+        val context = LocalContext.current
         DdAsyncImage(
-            model = ImageRequest.Builder(LocalContext.current).data(diaryContent.path).build(),
+            model = ImageRequest.Builder(context)
+                .data(File(context.filesDir, diaryContent.path).path)
+                .build(),
             contentDescription = stringResource(R.string.write_content_image),
             modifier = Modifier
                 .fillMaxWidth()
