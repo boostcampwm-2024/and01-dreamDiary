@@ -124,7 +124,7 @@ private fun InputBody(
                 )
             }
         }
-        items(count = postContents.size, key = { postContents.getOrNull(it)?.id ?: it }) { index ->
+        items(count = postContents.size) { index ->
             when (val content = postContents[index]) {
                 is PostContentUi.Text -> BodyText(
                     textContent = content,
