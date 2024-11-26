@@ -2,9 +2,9 @@ package com.boostcamp.dreamteam.dreamdiary
 
 import android.app.Application
 import android.content.SharedPreferences
+import com.boostcamp.dreamteam.dreamdiary.core.synchronization.SynchronizationWorker
 import com.boostcamp.dreamteam.dreamdiary.notification.createNotificationChannel
 import com.boostcamp.dreamteam.dreamdiary.notification.startTrackingService
-import com.boostcamp.dreamteam.dreamdiary.core.synchronization.SynchronizationWorker
 import dagger.hilt.android.HiltAndroidApp
 import timber.log.Timber
 import javax.inject.Inject
