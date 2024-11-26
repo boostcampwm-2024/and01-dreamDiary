@@ -8,9 +8,29 @@ import com.google.firebase.firestore.Query
 import kotlinx.coroutines.tasks.await
 import timber.log.Timber
 import javax.inject.Inject
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 
 class CommentDataSource @Inject constructor() {
     private val db = FirebaseFirestore.getInstance()
+
+    suspend fun addComment(postId: String, comment: Comment): Boolean {
+        return suspendCoroutine { continuation ->
+            db.collection("community")
+                .add(comment)
+                .addOnSuccessListener { documentReference ->
+                    Timber.d("DocumentSnapshot added with ID: ${documentReference.id}")
+                    val updatedComment = comment.copy(id = documentReference.id)
+                    documentReference.set(updatedComment)
+                    continuation.resume(true)
+                }
+                .addOnFailureListener { exception ->
+                    Timber.w(exception, "Error adding document")
+                    continuation.resume(false)
+                }
+        }
+    }
+
 
     fun getCommentsForPostPagingSource(postId: String): PagingSource<Query, Comment> {
         return object : PagingSource<Query, Comment>() {
