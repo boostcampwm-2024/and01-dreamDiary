@@ -12,6 +12,7 @@ import com.boostcamp.dreamteam.dreamdiary.core.data.database.model.DreamDiaryWit
 import com.boostcamp.dreamteam.dreamdiary.core.data.database.model.ImageEntity
 import com.boostcamp.dreamteam.dreamdiary.core.data.database.model.InsertSynchronizingLabel
 import com.boostcamp.dreamteam.dreamdiary.core.data.database.model.LabelEntity
+import com.boostcamp.dreamteam.dreamdiary.core.data.database.model.SynchronizingContentEntity
 import com.boostcamp.dreamteam.dreamdiary.core.data.database.model.SynchronizingDreamDiaryEntity
 import com.boostcamp.dreamteam.dreamdiary.core.data.database.model.SynchronizingLabelEntity
 import com.boostcamp.dreamteam.dreamdiary.core.data.database.model.TextEntity
@@ -342,4 +343,36 @@ interface DreamDiaryDao {
         }
         updateDreamDiarySyncVersionAndCurrentVersion(id, version)
     }
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertSynchronizingContent(content: SynchronizingContentEntity)
+
+    @Query("select * from synchronizing_content where id = :id")
+    suspend fun getSynchronizingContent(id: String): SynchronizingContentEntity?
+
+    @Transaction
+    suspend fun insertSynchronizingContentWhenNotDone(
+        contentId: String,
+        diaryId: String,
+        type: String,
+    ) {
+        val synchronizingContent = getSynchronizingContent(contentId)
+        if (synchronizingContent == null || !synchronizingContent.isDone) {
+            insertSynchronizingContent(
+                SynchronizingContentEntity(
+                    id = contentId,
+                    diaryId = diaryId,
+                    needUpload = true,
+                    isDone = false,
+                    type = type,
+                ),
+            )
+        }
+    }
+
+    @Query("select * from synchronizing_content where needUpload = 1 and isDone = 0")
+    suspend fun getNeedSynchronizingContents(): List<SynchronizingContentEntity>
+
+    @Query("update synchronizing_content set isDone = 1 where id = :id")
+    suspend fun setSynchronizingContentDone(id: String)
 }

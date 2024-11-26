@@ -40,7 +40,9 @@ import com.boostcamp.dreamteam.dreamdiary.feature.diary.detail.model.DiaryDetail
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.DiaryContentUi
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.LabelUi
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.filteredLabelsPreview
+import com.boostcamp.dreamteam.dreamdiary.feature.widget.util.updateWidget
 import timber.log.Timber
+import java.io.File
 import java.time.ZonedDateTime
 
 @Composable
@@ -55,6 +57,7 @@ fun DiaryDetailScreen(
             Timber.d("DiaryDetailScreen event: $event")
             when (event) {
                 is DiaryDetailEvent.DeleteDiary.Success -> {
+                    updateWidget(context)
                     Toast.makeText(context, "삭제 성공", Toast.LENGTH_SHORT).show()
                 }
 
@@ -201,10 +204,11 @@ internal fun DiaryDetailContent(
                 }
 
                 is DiaryContentUi.Image -> {
+                    val context = LocalContext.current
                     AsyncImage(
                         model = ImageRequest
-                            .Builder(LocalContext.current)
-                            .data(diaryContent.path)
+                            .Builder(context)
+                            .data(File(context.filesDir, diaryContent.path).path)
                             .build(),
                         contentDescription = "aaaa",
                         modifier = Modifier

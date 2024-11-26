@@ -1,7 +1,9 @@
 package com.boostcamp.dreamteam.dreamdiary.feature.widget
 
 import android.appwidget.AppWidgetManager
+import android.appwidget.AppWidgetManager.ACTION_APPWIDGET_UPDATE
 import android.content.Context
+import android.content.Intent
 import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.GlanceAppWidgetManager
 import androidx.glance.appwidget.GlanceAppWidgetReceiver
@@ -20,7 +22,7 @@ import java.time.temporal.ChronoUnit
 import javax.inject.Inject
 
 @AndroidEntryPoint
-internal class WidgetReceiver : GlanceAppWidgetReceiver() {
+internal class DiaryWriteWidgetReceiver : GlanceAppWidgetReceiver() {
     override val glanceAppWidget: GlanceAppWidget = DiaryWriteWidget()
 
     @Inject
@@ -35,16 +37,26 @@ internal class WidgetReceiver : GlanceAppWidgetReceiver() {
         collectData(context = context)
     }
 
+    override fun onReceive(
+        context: Context,
+        intent: Intent,
+    ) {
+        super.onReceive(context = context, intent = intent)
+        if (intent.action == ACTION_APPWIDGET_UPDATE || intent.action == "android.appwidget.action.APPWIDGET_UPDATE_OPTIONS") {
+            collectData(context = context)
+        }
+    }
+
     private fun collectData(context: Context) {
+        Timber.d("updateWidget")
         goAsync {
-            GlanceAppWidgetManager(context).getGlanceIds(DiaryWriteWidget::class.java).firstOrNull()?.let { glanceId ->
-                val start = ZonedDateTime.now().truncatedTo(ChronoUnit.DAYS).toInstant()
-                val end = start.plusSeconds(24 * 60 * 60 - 1)
-                getDreamDiariesForTodayUseCase(
-                    start = start,
-                    end = end,
-                ).let { diaries ->
-                    Timber.d("Diaries: $diaries")
+            val start = ZonedDateTime.now().truncatedTo(ChronoUnit.DAYS).toInstant()
+            val end = start.plusSeconds(24 * 60 * 60 - 1)
+            getDreamDiariesForTodayUseCase(
+                start = start,
+                end = end,
+            ).let { diaries ->
+                GlanceAppWidgetManager(context).getGlanceIds(DiaryWriteWidget::class.java).forEach { glanceId ->
                     updateAppWidgetState(
                         context = context,
                         definition = PreferencesGlanceStateDefinition,
@@ -54,9 +66,9 @@ internal class WidgetReceiver : GlanceAppWidgetReceiver() {
                             this[DiaryWritePreferencesKey.encodedDiaries] = Json.encodeToString(diaries.map { it.toDiaryUi() })
                         }
                     }
-                }
 
-                glanceAppWidget.update(context, glanceId)
+                    glanceAppWidget.update(context, glanceId)
+                }
             }
         }
     }

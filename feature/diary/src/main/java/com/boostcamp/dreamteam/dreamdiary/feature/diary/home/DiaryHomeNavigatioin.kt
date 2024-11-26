@@ -19,6 +19,7 @@ data object DiaryGraph {
     @Serializable
     data class DiaryWriteRoute(
         val diaryId: String? = null,
+        val sleepTime: String? = null,
     )
 
     @Serializable
@@ -75,7 +76,13 @@ fun NavGraphBuilder.diaryGraph(
             )
         }
 
-        composable<DiaryGraph.DiaryDetailRoute> {
+        composable<DiaryGraph.DiaryDetailRoute>(
+            deepLinks = listOf(
+                navDeepLink<DiaryGraph.DiaryDetailRoute>(
+                    basePath = "dreamdiary://diary/detail",
+                ),
+            ),
+        ) {
             DiaryDetailScreen(
                 onBackClick = navController::navigateUp,
                 onEditDiary = { diaryId -> navController.navigateToWriteScreen(diaryId = diaryId) },
