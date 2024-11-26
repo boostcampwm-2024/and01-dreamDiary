@@ -59,6 +59,11 @@ interface DreamDiaryRepository {
         labels: List<String>,
     )
 
+    suspend fun getDreamDiariesForToday(
+        start: Instant,
+        end: Instant,
+    ): List<Diary>
+
     fun getDreamDiariesBySleepEndInRange(
         start: Instant,
         end: Instant,

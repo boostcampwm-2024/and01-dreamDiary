@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.outlined.Comment
 import androidx.compose.material.icons.automirrored.outlined.Logout
 import androidx.compose.material.icons.outlined.AccountBox
 import androidx.compose.material.icons.outlined.Alarm
@@ -48,6 +47,8 @@ import com.boostcamp.dreamteam.dreamdiary.ui.toNavigationItem
 internal fun SettingScreen(
     onNavigateToDiary: () -> Unit,
     onNavigateToCommunity: () -> Unit,
+    onNavigateToSettingNotification: () -> Unit,
+    onNavigateToSettingBackup: () -> Unit,
     onLogoutClick: () -> Unit,
     modifier: Modifier = Modifier,
     settingViewModel: SettingViewModel = hiltViewModel(),
@@ -68,6 +69,8 @@ internal fun SettingScreen(
     SettingScreenContent(
         navigationItems = navigationItems,
         onLogoutClick = onLogoutClick,
+        onNavigateToSettingNotification = onNavigateToSettingNotification,
+        onNavigateToSettingBackup = onNavigateToSettingBackup,
         modifier = modifier,
         signInProvider = settingViewModel.getSignInProvider(),
         userEmail = settingViewModel.getUserEmail(),
@@ -81,6 +84,8 @@ internal fun SettingScreen(
 private fun SettingScreenContent(
     navigationItems: List<NavigationItem>,
     onLogoutClick: () -> Unit,
+    onNavigateToSettingNotification: () -> Unit,
+    onNavigateToSettingBackup: () -> Unit,
     signInProvider: String?,
     onSignOut: () -> Unit,
     onNonPasswordSignIn: () -> Unit,
@@ -105,6 +110,8 @@ private fun SettingScreenContent(
             userEmail = userEmail,
             onNonPasswordSignIn = onNonPasswordSignIn,
             onLogoutClick = onLogoutClick,
+            onNavigateToSettingNotification = onNavigateToSettingNotification,
+            onNavigateToSettingBackup = onNavigateToSettingBackup,
             onSignOut = onSignOut,
             modifier = Modifier.padding(innerPadding),
         )
@@ -117,6 +124,8 @@ private fun SettingScreenBody(
     userEmail: String?,
     onNonPasswordSignIn: () -> Unit,
     onLogoutClick: () -> Unit,
+    onNavigateToSettingNotification: () -> Unit,
+    onNavigateToSettingBackup: () -> Unit,
     onSignOut: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -142,17 +151,14 @@ private fun SettingScreenBody(
         SettingCategory(text = stringResource(R.string.setting_alarm_setting))
         SettingOption(
             icon = Icons.Outlined.Alarm,
-            text = stringResource(R.string.setting_schedule_alarm),
+            text = stringResource(R.string.setting_alarm_setting),
+            onClick = onNavigateToSettingNotification,
         )
-        SettingOption(
-            icon = Icons.AutoMirrored.Outlined.Comment,
-            text = stringResource(R.string.setting_comment_alarm),
-        )
-
         SettingCategory(text = stringResource(R.string.setting_data_restore))
         SettingOption(
             icon = Icons.Outlined.CloudUpload,
             text = stringResource(R.string.setting_data_restore),
+            onClick = onNavigateToSettingBackup,
         )
         SettingOption(
             icon = Icons.Outlined.ResetTv,
@@ -236,6 +242,8 @@ private fun SettingScreenPreview() {
         SettingScreenContent(
             navigationItems = navigationItems,
             onLogoutClick = {},
+            onNavigateToSettingNotification = {},
+            onNavigateToSettingBackup = {},
             signInProvider = "Google",
             onSignOut = {},
             onNonPasswordSignIn = {},

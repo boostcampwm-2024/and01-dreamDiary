@@ -45,11 +45,13 @@ android {
 
 dependencies {
     implementation(projects.core.designsystem)
+    implementation(projects.core.notification)
     implementation(projects.feature.auth)
     implementation(projects.feature.diary)
     implementation(projects.feature.community)
     implementation(projects.feature.setting)
     implementation(projects.feature.widget)
+    implementation(projects.core.synchronization)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)

@@ -8,13 +8,10 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.Comment
-import androidx.compose.material.icons.filled.AccessTime
-import androidx.compose.material.icons.filled.CalendarToday
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.outlined.MoreVert
@@ -70,6 +67,7 @@ internal fun CommunityDiaryCard(
                     author = diary.author,
                     onMenuClick = { onClickMenu(diary) },
                     modifier = Modifier.fillMaxWidth(),
+                    sharedAt = diary.sharedAt.formatted,
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 diary.thumbnail?.let { thumbnail ->
@@ -82,32 +80,6 @@ internal fun CommunityDiaryCard(
                             .aspectRatio(16 / 9f),
                     )
                 }
-            }
-        },
-        underline = {
-            Row(verticalAlignment = Alignment.Bottom) {
-                Icon(
-                    imageVector = Icons.Default.CalendarToday,
-                    contentDescription = stringResource(id = R.string.community_list_card_create_date),
-                    modifier = Modifier
-                        .height(16.dp)
-                        .padding(2.dp),
-                )
-                Spacer(modifier = Modifier.width(2.dp))
-                Text(text = diary.sharedAt.formattedDate)
-
-                Spacer(modifier = Modifier.width(4.dp))
-
-                Icon(
-                    imageVector = Icons.Default.AccessTime,
-                    contentDescription = stringResource(id = R.string.community_list_card_create_at),
-                    modifier = Modifier
-                        .height(16.dp)
-                        .padding(2.dp),
-                )
-                Spacer(modifier = Modifier.width(2.dp))
-
-                Text(text = diary.sharedAt.formattedTime)
             }
         },
         tail = {
@@ -150,6 +122,7 @@ internal fun CommunityDiaryCard(
 @Composable
 private fun AuthorHeader(
     author: UserUi,
+    sharedAt: String,
     onMenuClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -172,7 +145,7 @@ private fun AuthorHeader(
                 style = MaterialTheme.typography.titleMedium,
             )
             Text(
-                text = "3분전",
+                text = sharedAt,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
                 style = MaterialTheme.typography.bodySmall.copy(

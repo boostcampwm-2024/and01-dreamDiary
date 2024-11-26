@@ -83,6 +83,7 @@ fun DreamDiaryNavHost(
         )
 
         settingGraph(
+            navController = navController,
             onDiaryClick = {
                 val options = NavOptions.Builder()
                     .setPopUpTo(SettingGraph, inclusive = false, saveState = true)
@@ -106,8 +107,5 @@ fun DreamDiaryNavHost(
                 navController.navigate(SignInRoute, options)
             },
         )
-//        composable<MainRoute> {
-//            MainScreen()
-//        }
     }
 }

@@ -8,10 +8,20 @@ import com.boostcamp.dreamteam.dreamdiary.core.data.database.model.DreamDiaryEnt
 import com.boostcamp.dreamteam.dreamdiary.core.data.database.model.DreamDiaryLabelEntity
 import com.boostcamp.dreamteam.dreamdiary.core.data.database.model.ImageEntity
 import com.boostcamp.dreamteam.dreamdiary.core.data.database.model.LabelEntity
+import com.boostcamp.dreamteam.dreamdiary.core.data.database.model.SynchronizingDreamDiaryEntity
+import com.boostcamp.dreamteam.dreamdiary.core.data.database.model.SynchronizingLabelEntity
 import com.boostcamp.dreamteam.dreamdiary.core.data.database.model.TextEntity
 
 @Database(
-    entities = [DreamDiaryEntity::class, LabelEntity::class, DreamDiaryLabelEntity::class, TextEntity::class, ImageEntity::class],
+    entities = [
+        DreamDiaryEntity::class,
+        LabelEntity::class,
+        DreamDiaryLabelEntity::class,
+        TextEntity::class,
+        ImageEntity::class,
+        SynchronizingDreamDiaryEntity::class,
+        SynchronizingLabelEntity::class,
+    ],
     version = 1,
 )
 @TypeConverters(value = [InstantTypeConverter::class])

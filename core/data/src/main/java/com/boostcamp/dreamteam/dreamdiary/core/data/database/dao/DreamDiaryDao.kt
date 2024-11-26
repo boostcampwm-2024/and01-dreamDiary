@@ -10,8 +10,12 @@ import com.boostcamp.dreamteam.dreamdiary.core.data.database.model.DreamDiaryEnt
 import com.boostcamp.dreamteam.dreamdiary.core.data.database.model.DreamDiaryLabelEntity
 import com.boostcamp.dreamteam.dreamdiary.core.data.database.model.DreamDiaryWithLabels
 import com.boostcamp.dreamteam.dreamdiary.core.data.database.model.ImageEntity
+import com.boostcamp.dreamteam.dreamdiary.core.data.database.model.InsertSynchronizingLabel
 import com.boostcamp.dreamteam.dreamdiary.core.data.database.model.LabelEntity
+import com.boostcamp.dreamteam.dreamdiary.core.data.database.model.SynchronizingDreamDiaryEntity
+import com.boostcamp.dreamteam.dreamdiary.core.data.database.model.SynchronizingLabelEntity
 import com.boostcamp.dreamteam.dreamdiary.core.data.database.model.TextEntity
+import com.boostcamp.dreamteam.dreamdiary.core.data.database.model.synchronization.DreamDiaryOnlyVersion
 import kotlinx.coroutines.flow.Flow
 import java.time.Instant
 import java.util.UUID
@@ -39,6 +43,9 @@ interface DreamDiaryDao {
                 updatedAt = Instant.now(),
                 sleepStartAt = sleepStartAt,
                 sleepEndAt = sleepEndAt,
+                needSync = true,
+                lastSyncVersion = "init",
+                currentVersion = UUID.randomUUID().toString(),
             ),
         )
         setLabelsToDreamDiary(dreamDiaryId, labels)
@@ -49,7 +56,7 @@ interface DreamDiaryDao {
     @Query(
         """
             update diary
-            set title = :title, body = :body, sleepStartAt = :sleepStartAt, sleepEndAt = :sleepEndAt, updatedAt = :updatedAt
+            set title = :title, body = :body, sleepStartAt = :sleepStartAt, sleepEndAt = :sleepEndAt, updatedAt = :updatedAt, currentVersion = :currentVersion
             where id = :diaryId
         """,
     )
@@ -60,6 +67,7 @@ interface DreamDiaryDao {
         sleepStartAt: Instant,
         sleepEndAt: Instant,
         updatedAt: Instant = Instant.now(),
+        currentVersion: String = UUID.randomUUID().toString(),
     )
 
     @Transaction
@@ -93,10 +101,11 @@ interface DreamDiaryDao {
         privateDeleteDreamDiary(diaryId = diaryId)
     }
 
-    @Query("update diary set deletedAt = :deletedAt where id = :diaryId")
+    @Query("update diary set deletedAt = :deletedAt, currentVersion = :currentVersion where id = :diaryId")
     suspend fun privateDeleteDreamDiary(
         diaryId: String,
         deletedAt: Instant = Instant.now(),
+        currentVersion: String = UUID.randomUUID().toString(),
     )
 
     @Insert
@@ -156,6 +165,19 @@ interface DreamDiaryDao {
         """,
     )
     fun getDreamDiariesByLabels(labels: List<String>): PagingSource<Int, DreamDiaryWithLabels>
+
+    @Query(
+        """
+            SELECT *
+            FROM diary
+            WHERE createdAt BETWEEN :start AND :end
+                AND deletedAt IS NULL
+        """,
+    )
+    suspend fun getDreamDiariesForToday(
+        start: Instant,
+        end: Instant,
+    ): List<DreamDiaryEntity>
 
     @Query(
         """
@@ -219,4 +241,105 @@ interface DreamDiaryDao {
     @Transaction
     @Query("select * from diary where id = :id and deletedAt is null")
     fun getDreamDiaryAsFlow(id: String): Flow<DreamDiaryWithLabels>
+
+    @Query("select id, currentVersion from diary")
+    suspend fun getDreamDiaryVersion(): List<DreamDiaryOnlyVersion>
+
+    @Query("select id, version as currentVersion from synchronizing_diary")
+    suspend fun getDreamDiaryVersionInSynchronizing(): List<DreamDiaryOnlyVersion>
+
+    @Query("update diary set needSync = 1 where id = :id")
+    suspend fun setNeedSync(id: String): Int
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertSynchronizingDreamDiary(synchronizingDreamDiaryEntity: SynchronizingDreamDiaryEntity)
+
+    suspend fun insertSynchronizingDreamDiary(
+        id: String,
+        version: String,
+    ) {
+        insertSynchronizingDreamDiary(
+            SynchronizingDreamDiaryEntity(
+                id = id,
+                title = "",
+                body = "",
+                createdAt = Instant.ofEpochMilli(0),
+                updatedAt = Instant.ofEpochMilli(0),
+                sleepStartAt = Instant.ofEpochMilli(0),
+                sleepEndAt = Instant.ofEpochMilli(0),
+                version = version,
+                needData = true,
+            ),
+        )
+    }
+
+    @Transaction
+    @Query("select * from diary where needSync = 1 or lastSyncVersion != currentVersion")
+    suspend fun getDreamDiaryNeedSync(): List<DreamDiaryWithLabels>
+
+    @Transaction
+    @Query("select * from synchronizing_diary where needData = 1")
+    suspend fun getSynchronizingDreamDiaryNeedData(): List<SynchronizingDreamDiaryEntity>
+
+    @Query("delete from synchronizing_diary where id = :id")
+    suspend fun deleteSynchronizingDreamDiary(id: String): Int
+
+    @Transaction
+    suspend fun deleteDreamDiaryHard(diaryId: String) {
+        deleteDreamDiaryLabels(diaryId = diaryId)
+        privateDeleteDreamDiaryHard(diaryId)
+        deleteSynchronizingDreamDiary(diaryId)
+    }
+
+    @Query("delete from diary where id = :id")
+    suspend fun privateDeleteDreamDiaryHard(id: String)
+
+    @Insert(entity = SynchronizingLabelEntity::class, onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertSynchronizingLabel(insertLabel: InsertSynchronizingLabel)
+
+    @Query("delete from synchronizing_label where diaryId = :diaryId")
+    suspend fun deleteSynchronizingLabelOfDiaryId(diaryId: String)
+
+    @Query("update diary set lastSyncVersion = :version, currentVersion = :version, needSync = 0 where id = :id")
+    suspend fun updateDreamDiarySyncVersionAndCurrentVersion(
+        id: String,
+        version: String,
+    )
+
+    @Transaction
+    suspend fun insertSynchronizingDreamDiaryAndUpdateVersion(
+        id: String,
+        title: String,
+        body: String,
+        labels: List<String>,
+        createdAt: Instant,
+        updatedAt: Instant,
+        sleepStartAt: Instant,
+        sleepEndAt: Instant,
+        version: String,
+    ) {
+        insertSynchronizingDreamDiary(
+            SynchronizingDreamDiaryEntity(
+                id = id,
+                title = title,
+                body = body,
+                createdAt = createdAt,
+                updatedAt = updatedAt,
+                sleepStartAt = sleepStartAt,
+                sleepEndAt = sleepEndAt,
+                version = version,
+                needData = false,
+            ),
+        )
+        deleteSynchronizingLabelOfDiaryId(diaryId = id)
+        for (label in labels) {
+            insertSynchronizingLabel(
+                InsertSynchronizingLabel(
+                    name = label,
+                    diaryId = id,
+                ),
+            )
+        }
+        updateDreamDiarySyncVersionAndCurrentVersion(id, version)
+    }
 }
