@@ -6,12 +6,12 @@ import androidx.core.net.toUri
 import com.boostcamp.dreamteam.dreamdiary.core.data.convertToFirebaseData
 import com.boostcamp.dreamteam.dreamdiary.core.data.firebase.functions.model.FunctionsDownloadImageContentRequest
 import com.boostcamp.dreamteam.dreamdiary.core.data.firebase.functions.model.FunctionsDownloadTextContentRequest
-import com.boostcamp.dreamteam.dreamdiary.core.model.synchronization.DownloadTextResponse
 import com.boostcamp.dreamteam.dreamdiary.core.data.firebase.functions.model.FunctionsSyncVersionRequest
 import com.boostcamp.dreamteam.dreamdiary.core.data.firebase.functions.model.FunctionsUploadImageContentRequest
 import com.boostcamp.dreamteam.dreamdiary.core.data.firebase.functions.model.FunctionsUploadTextContentRequest
 import com.boostcamp.dreamteam.dreamdiary.core.data.firebase.functions.model.toFunctionsRequest
 import com.boostcamp.dreamteam.dreamdiary.core.model.synchronization.DownloadImageResponse
+import com.boostcamp.dreamteam.dreamdiary.core.model.synchronization.DownloadTextResponse
 import com.boostcamp.dreamteam.dreamdiary.core.model.synchronization.SyncVersionRequest
 import com.boostcamp.dreamteam.dreamdiary.core.model.synchronization.SyncVersionResponse
 import com.boostcamp.dreamteam.dreamdiary.core.model.synchronization.SynchronizeDreamDiaryRequest
@@ -199,7 +199,6 @@ class FunctionRepository @Inject constructor(
         return false
     }
 
-
     suspend fun downloadText(id: String): DownloadTextResponse? {
         val jsonData =
             Json.encodeToJsonElement(FunctionsDownloadTextContentRequest(id)).jsonObject.convertToFirebaseData()
@@ -223,7 +222,6 @@ class FunctionRepository @Inject constructor(
         }
         return null
     }
-
 
     suspend fun downloadImage(id: String): DownloadImageResponse? {
         val jsonData =
@@ -254,7 +252,7 @@ class FunctionRepository @Inject constructor(
 
                     return DownloadImageResponse(
                         contentId = id,
-                        path = path
+                        path = path,
                     )
                 }
             }

@@ -185,7 +185,7 @@ class SynchronizationWorker @AssistedInject constructor(
                             imageEntity = ImageEntity(
                                 id = content.id,
                                 path = image.path,
-                            )
+                            ),
                         )
                         dreamDiaryDao.moveToDreamDiaryIfSynced(content.diaryId)
                     }
@@ -196,8 +196,8 @@ class SynchronizationWorker @AssistedInject constructor(
                         dreamDiaryDao.insertText(
                             textEntity = TextEntity(
                                 id = content.id,
-                                text = text.text
-                            )
+                                text = text.text,
+                            ),
                         )
                         dreamDiaryDao.moveToDreamDiaryIfSynced(content.diaryId)
                     }
@@ -220,7 +220,7 @@ class SynchronizationWorker @AssistedInject constructor(
                 val textEntity = dreamDiaryDao.getText(id)
                 if (textEntity == null) {
                     diaryContents.add(
-                        NotDownloadedContent.Text(id, synchronizingDreamDiaryEntity.id)
+                        NotDownloadedContent.Text(id, synchronizingDreamDiaryEntity.id),
                     )
                 }
             } else if (parsingDiaryContent[index] == "image") {
@@ -229,7 +229,7 @@ class SynchronizationWorker @AssistedInject constructor(
                 val imageEntity = dreamDiaryDao.getImage(id)
                 if (imageEntity == null) {
                     diaryContents.add(
-                        NotDownloadedContent.Image(id, synchronizingDreamDiaryEntity.id)
+                        NotDownloadedContent.Image(id, synchronizingDreamDiaryEntity.id),
                     )
                 }
             } else {

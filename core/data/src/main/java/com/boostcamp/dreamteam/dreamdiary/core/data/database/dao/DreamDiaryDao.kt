@@ -431,7 +431,7 @@ interface DreamDiaryDao {
                 needSync = false,
                 lastSyncVersion = synchronizingDreamDiary.version,
                 currentVersion = synchronizingDreamDiary.version,
-            )
+            ),
         )
         deleteDreamDiaryLabels(synchronizingDreamDiary.id)
         setLabelsToDreamDiary(
