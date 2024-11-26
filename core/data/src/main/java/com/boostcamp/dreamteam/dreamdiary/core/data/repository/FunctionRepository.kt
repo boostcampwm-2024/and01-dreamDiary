@@ -1,6 +1,7 @@
 package com.boostcamp.dreamteam.dreamdiary.core.data.repository
 
 import android.content.Context
+import android.content.SharedPreferences
 import androidx.core.net.toUri
 import com.boostcamp.dreamteam.dreamdiary.core.data.convertToFirebaseData
 import com.boostcamp.dreamteam.dreamdiary.core.data.firebase.functions.model.FunctionsDownloadImageContentRequest
@@ -31,8 +32,19 @@ class FunctionRepository @Inject constructor(
     private val functions: FirebaseFunctions,
     private val storage: FirebaseStorage,
     @ApplicationContext private val applicationContext: Context,
+    private val sharedPreferences: SharedPreferences,
 ) {
     private val firebaseAuth: FirebaseAuth = FirebaseAuth.getInstance()
+
+    fun updateCurrentUID(): Boolean {
+        val lastSyncUID = sharedPreferences.getString("last_sync_UID", null)
+        if (lastSyncUID != firebaseAuth.uid) {
+            sharedPreferences.edit().putString("last_sync_UID", firebaseAuth.uid).apply()
+            return true
+        } else {
+            return false
+        }
+    }
 
     suspend fun syncVersion(syncVersions: List<SyncVersionRequest>): SyncVersionResponse? {
         val data = FunctionsSyncVersionRequest(

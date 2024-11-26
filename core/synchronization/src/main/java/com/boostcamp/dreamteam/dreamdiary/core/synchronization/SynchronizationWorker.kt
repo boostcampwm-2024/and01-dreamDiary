@@ -38,6 +38,11 @@ class SynchronizationWorker @AssistedInject constructor(
     override suspend fun doWork(): Result {
         return withContext(Dispatchers.IO) {
             try {
+                if (functionRepository.updateCurrentUID()) {
+                    Timber.d("remove all sync data")
+                    removeAllSyncData()
+                }
+
                 synchronizeVersion()
                 synchronizeDreamDiaries()
                 uploadContents()
@@ -232,6 +237,10 @@ class SynchronizationWorker @AssistedInject constructor(
             }
         }
         return diaryContents
+    }
+
+    private suspend fun removeAllSyncData() {
+        dreamDiaryDao.removeSyncData()
     }
 
     companion object {
