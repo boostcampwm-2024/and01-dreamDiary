@@ -10,8 +10,10 @@ import com.boostcamp.dreamteam.dreamdiary.core.data.database.model.DreamDiaryEnt
 import com.boostcamp.dreamteam.dreamdiary.core.data.database.model.DreamDiaryLabelEntity
 import com.boostcamp.dreamteam.dreamdiary.core.data.database.model.DreamDiaryWithLabels
 import com.boostcamp.dreamteam.dreamdiary.core.data.database.model.ImageEntity
+import com.boostcamp.dreamteam.dreamdiary.core.data.database.model.InsertSynchronizingLabel
 import com.boostcamp.dreamteam.dreamdiary.core.data.database.model.LabelEntity
 import com.boostcamp.dreamteam.dreamdiary.core.data.database.model.SynchronizingDreamDiaryEntity
+import com.boostcamp.dreamteam.dreamdiary.core.data.database.model.SynchronizingLabelEntity
 import com.boostcamp.dreamteam.dreamdiary.core.data.database.model.TextEntity
 import com.boostcamp.dreamteam.dreamdiary.core.data.database.model.synchronization.DreamDiaryOnlyVersion
 import kotlinx.coroutines.flow.Flow
@@ -269,5 +271,75 @@ interface DreamDiaryDao {
                 needData = true,
             ),
         )
+    }
+
+    @Transaction
+    @Query("select * from diary where needSync = 1 or lastSyncVersion != currentVersion")
+    suspend fun getDreamDiaryNeedSync(): List<DreamDiaryWithLabels>
+
+    @Transaction
+    @Query("select * from synchronizing_diary where needData = 1")
+    suspend fun getSynchronizingDreamDiaryNeedData(): List<SynchronizingDreamDiaryEntity>
+
+    @Query("delete from synchronizing_diary where id = :id")
+    suspend fun deleteSynchronizingDreamDiary(id: String): Int
+
+    @Transaction
+    suspend fun deleteDreamDiaryHard(diaryId: String) {
+        deleteDreamDiaryLabels(diaryId = diaryId)
+        privateDeleteDreamDiaryHard(diaryId)
+        deleteSynchronizingDreamDiary(diaryId)
+    }
+
+    @Query("delete from diary where id = :id")
+    suspend fun privateDeleteDreamDiaryHard(id: String)
+
+    @Insert(entity = SynchronizingLabelEntity::class, onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertSynchronizingLabel(insertLabel: InsertSynchronizingLabel)
+
+    @Query("delete from synchronizing_label where diaryId = :diaryId")
+    suspend fun deleteSynchronizingLabelOfDiaryId(diaryId: String)
+
+    @Query("update diary set lastSyncVersion = :version, currentVersion = :version, needSync = 0 where id = :id")
+    suspend fun updateDreamDiarySyncVersionAndCurrentVersion(
+        id: String,
+        version: String,
+    )
+
+    @Transaction
+    suspend fun insertSynchronizingDreamDiaryAndUpdateVersion(
+        id: String,
+        title: String,
+        body: String,
+        labels: List<String>,
+        createdAt: Instant,
+        updatedAt: Instant,
+        sleepStartAt: Instant,
+        sleepEndAt: Instant,
+        version: String,
+    ) {
+        insertSynchronizingDreamDiary(
+            SynchronizingDreamDiaryEntity(
+                id = id,
+                title = title,
+                body = body,
+                createdAt = createdAt,
+                updatedAt = updatedAt,
+                sleepStartAt = sleepStartAt,
+                sleepEndAt = sleepEndAt,
+                version = version,
+                needData = false,
+            ),
+        )
+        deleteSynchronizingLabelOfDiaryId(diaryId = id)
+        for (label in labels) {
+            insertSynchronizingLabel(
+                InsertSynchronizingLabel(
+                    name = label,
+                    diaryId = id,
+                ),
+            )
+        }
+        updateDreamDiarySyncVersionAndCurrentVersion(id, version)
     }
 }

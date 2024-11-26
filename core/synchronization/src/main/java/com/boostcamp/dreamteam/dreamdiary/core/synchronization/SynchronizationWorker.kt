@@ -22,6 +22,7 @@ import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import timber.log.Timber
+import java.time.Instant
 
 @HiltWorker
 class SynchronizationWorker @AssistedInject constructor(
@@ -34,6 +35,7 @@ class SynchronizationWorker @AssistedInject constructor(
         return withContext(Dispatchers.IO) {
             try {
                 synchronizeVersion()
+                synchronizeDreamDiaries()
                 Result.success()
             } catch (e: Exception) {
                 Timber.e(e, "SynchronizationWorker")
@@ -65,6 +67,58 @@ class SynchronizationWorker @AssistedInject constructor(
 
             for (i in syncResponse.serverOnlyDiaries) {
                 dreamDiaryDao.insertSynchronizingDreamDiary(i.diaryId, "init")
+            }
+        }
+    }
+
+    private suspend fun synchronizeDreamDiaries() {
+        val synchronizingDreamDiaryNeedData = dreamDiaryDao.getSynchronizingDreamDiaryNeedData()
+        val dreamDiaryNeedSync = dreamDiaryDao.getDreamDiaryNeedSync()
+
+        val synchronizeDreamDiaries =
+            synchronizingDreamDiaryNeedData.map { it.toRequest() } + dreamDiaryNeedSync.map { it.toRequest() }
+
+        for (dreamDiary in synchronizeDreamDiaries) {
+            val response = functionRepository.synchronizeDreamDiary(dreamDiary)
+
+            if (response != null) {
+                val newDiary = response.newDiary
+                val updateDiary = response.updateDiary
+                val deletedDiary = response.deletedDiary
+                if (deletedDiary != null) {
+                    if (deletedDiary.deleted) {
+                        dreamDiaryDao.deleteDreamDiaryHard(dreamDiary.id)
+                        continue
+                    }
+                }
+
+                if (newDiary != null) {
+                    dreamDiaryDao.insertSynchronizingDreamDiaryAndUpdateVersion(
+                        id = dreamDiary.id,
+                        title = newDiary.title,
+                        body = newDiary.content,
+                        labels = newDiary.labels,
+                        createdAt = Instant.ofEpochMilli(newDiary.createdAt),
+                        updatedAt = Instant.ofEpochMilli(newDiary.updatedAt),
+                        sleepStartAt = Instant.ofEpochMilli(newDiary.sleepStartAt),
+                        sleepEndAt = Instant.ofEpochMilli(newDiary.sleepEndAt),
+                        version = response.currentVersion,
+                    )
+                } else if (updateDiary != null) {
+                    dreamDiaryDao.insertSynchronizingDreamDiaryAndUpdateVersion(
+                        id = dreamDiary.id,
+                        title = updateDiary.title,
+                        body = updateDiary.content,
+                        labels = updateDiary.labels,
+                        createdAt = Instant.ofEpochMilli(updateDiary.createdAt),
+                        updatedAt = Instant.ofEpochMilli(updateDiary.updatedAt),
+                        sleepStartAt = Instant.ofEpochMilli(updateDiary.sleepStartAt),
+                        sleepEndAt = Instant.ofEpochMilli(updateDiary.sleepEndAt),
+                        version = response.currentVersion,
+                    )
+                } else {
+                    dreamDiaryDao.updateDreamDiarySyncVersionAndCurrentVersion(dreamDiary.id, response.currentVersion)
+                }
             }
         }
     }
