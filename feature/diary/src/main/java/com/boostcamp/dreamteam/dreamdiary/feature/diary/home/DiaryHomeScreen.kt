@@ -131,7 +131,7 @@ private fun DiaryHomeScreenContent(
     )
 
     Scaffold(
-        modifier = modifier,
+        modifier = modifier.fillMaxSize(),
         topBar = {
             DiaryHomeScreenTopAppBar(
                 onNotificationClick = { /* 알림 클릭 시 동작 */ },
