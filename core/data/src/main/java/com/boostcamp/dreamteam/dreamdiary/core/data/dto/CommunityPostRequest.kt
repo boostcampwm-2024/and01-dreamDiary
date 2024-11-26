@@ -2,6 +2,7 @@ package com.boostcamp.dreamteam.dreamdiary.core.data.dto
 
 import com.boostcamp.dreamteam.dreamdiary.core.model.CommunityDreamPost
 import com.boostcamp.dreamteam.dreamdiary.core.model.Label
+import java.time.Instant
 
 data class CommunityPostRequest(
     val author: String,
@@ -26,6 +27,6 @@ fun CommunityPostRequest.toDomain(): CommunityDreamPost {
         sleepStartAt = this.sleepStartAt,
         sleepEndAt = this.sleepEndAt,
         images = this.images,
-        createdAt = System.currentTimeMillis(),
+        createdAt = Instant.now().toEpochMilli(),
     )
 }
