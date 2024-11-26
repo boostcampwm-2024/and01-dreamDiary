@@ -1,6 +1,8 @@
 plugins {
     alias(libs.plugins.dreamdiary.android.feature)
     alias(libs.plugins.dreamdiary.android.library.compose)
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.hilt)
 }
 
 android {
@@ -23,6 +25,8 @@ android {
 }
 
 dependencies {
+    implementation(projects.core.domain)
+    implementation(projects.core.model)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
@@ -30,4 +34,8 @@ dependencies {
 
     // Glance
     implementation(libs.bundles.glance)
+
+    // Hilt
+    implementation(libs.hilt.android)
+    ksp(libs.hilt.compiler)
 }

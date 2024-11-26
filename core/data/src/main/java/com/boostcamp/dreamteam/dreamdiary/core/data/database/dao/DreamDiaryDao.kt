@@ -166,6 +166,19 @@ interface DreamDiaryDao {
 
     @Query(
         """
+            SELECT *
+            FROM diary
+            WHERE createdAt BETWEEN :start AND :end
+                AND deletedAt IS NULL
+        """,
+    )
+    suspend fun getDreamDiariesForToday(
+        start: Instant,
+        end: Instant,
+    ): List<DreamDiaryEntity>
+
+    @Query(
+        """
             select *
             from diary
             where deletedAt is null
