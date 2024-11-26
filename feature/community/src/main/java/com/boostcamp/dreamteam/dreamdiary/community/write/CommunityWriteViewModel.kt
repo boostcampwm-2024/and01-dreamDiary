@@ -10,7 +10,9 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class CommunityWriteViewModel @Inject constructor() : ViewModel() {
-    private val _uiState: MutableStateFlow<CommunityWriteScreenState> = MutableStateFlow(CommunityWriteScreenState())
+    private val _uiState: MutableStateFlow<CommunityWriteScreenState> = MutableStateFlow(
+        CommunityWriteScreenState(),
+    )
     val uiState = _uiState.asStateFlow()
 
     fun writePost() {
@@ -48,8 +50,8 @@ class CommunityWriteViewModel @Inject constructor() : ViewModel() {
         _uiState.update { state ->
             val diaryContents = state.editorState.contents.toMutableList()
 
-            val saveContentIndex = minOf(contentIndex, diaryContents.size - 1)
-            val currentContent = diaryContents[saveContentIndex]
+            val safeContentIndex = minOf(contentIndex, diaryContents.size - 1)
+            val currentContent = diaryContents[safeContentIndex]
             val newContents = mutableListOf<PostContentUi>()
             if (currentContent is PostContentUi.Text) {
                 val endIndex = minOf(textPosition, currentContent.text.length)
@@ -59,10 +61,10 @@ class CommunityWriteViewModel @Inject constructor() : ViewModel() {
                 }
                 newContents.add(PostContentUi.Image(imagePath))
                 newContents.add(PostContentUi.Text(currentContent.text.substring(endIndex)))
-                diaryContents.removeAt(saveContentIndex)
-                diaryContents.addAll(saveContentIndex, newContents)
+                diaryContents.removeAt(safeContentIndex)
+                diaryContents.addAll(safeContentIndex, newContents)
             } else {
-                diaryContents.add(saveContentIndex + 1, PostContentUi.Image(imagePath))
+                diaryContents.add(safeContentIndex + 1, PostContentUi.Image(imagePath))
             }
 
             state.copy(
