@@ -3,10 +3,14 @@ package com.boostcamp.dreamteam.dreamdiary.core.data.repository
 import android.content.Context
 import androidx.core.net.toUri
 import com.boostcamp.dreamteam.dreamdiary.core.data.convertToFirebaseData
+import com.boostcamp.dreamteam.dreamdiary.core.data.firebase.functions.model.FunctionsDownloadImageContentRequest
+import com.boostcamp.dreamteam.dreamdiary.core.data.firebase.functions.model.FunctionsDownloadTextContentRequest
+import com.boostcamp.dreamteam.dreamdiary.core.model.synchronization.DownloadTextResponse
 import com.boostcamp.dreamteam.dreamdiary.core.data.firebase.functions.model.FunctionsSyncVersionRequest
 import com.boostcamp.dreamteam.dreamdiary.core.data.firebase.functions.model.FunctionsUploadImageContentRequest
 import com.boostcamp.dreamteam.dreamdiary.core.data.firebase.functions.model.FunctionsUploadTextContentRequest
 import com.boostcamp.dreamteam.dreamdiary.core.data.firebase.functions.model.toFunctionsRequest
+import com.boostcamp.dreamteam.dreamdiary.core.model.synchronization.DownloadImageResponse
 import com.boostcamp.dreamteam.dreamdiary.core.model.synchronization.SyncVersionRequest
 import com.boostcamp.dreamteam.dreamdiary.core.model.synchronization.SyncVersionResponse
 import com.boostcamp.dreamteam.dreamdiary.core.model.synchronization.SynchronizeDreamDiaryRequest
@@ -181,5 +185,68 @@ class FunctionRepository @Inject constructor(
             }
         }
         return false
+    }
+
+
+    suspend fun downloadText(id: String): DownloadTextResponse? {
+        val jsonData =
+            Json.encodeToJsonElement(FunctionsDownloadTextContentRequest(id)).jsonObject.convertToFirebaseData()
+
+        val response = functions
+            .getHttpsCallable("downloadText")
+            .call(jsonData)
+            .await()
+            .data
+
+        if (response != null) {
+            val response = response as Map<String, Any>
+            if (response["isSuccess"] == true) {
+                if ("text" in response) {
+                    return DownloadTextResponse(
+                        contentId = id,
+                        text = response["text"] as String,
+                    )
+                }
+            }
+        }
+        return null
+    }
+
+
+    suspend fun downloadImage(id: String): DownloadImageResponse? {
+        val jsonData =
+            Json.encodeToJsonElement(FunctionsDownloadImageContentRequest(id)).jsonObject.convertToFirebaseData()
+
+        val response = functions
+            .getHttpsCallable("downloadImage")
+            .call(jsonData)
+            .await()
+            .data
+
+        if (response != null) {
+            val response = response as Map<String, Any>
+            if (response["isSuccess"] == true) {
+                if ("path" in response) {
+                    val path = response["path"] as String
+
+                    val auth: FirebaseAuth = FirebaseAuth.getInstance()
+                    val uid = auth.uid
+                    if (uid != null) {
+                        val userDirectory = storage.reference.child("images").child(uid)
+                        val file = File(applicationContext.filesDir, path)
+                        userDirectory
+                            .child(path)
+                            .getFile(file.toUri())
+                            .await()
+                    }
+
+                    return DownloadImageResponse(
+                        contentId = id,
+                        path = path
+                    )
+                }
+            }
+        }
+        return null
     }
 }
