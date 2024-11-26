@@ -9,5 +9,5 @@ data class CommunityWriteScreenState(
 
 data class EditorState(
     val title: String = "",
-    val contents: List<PostContentUi> = emptyList(),
+    val contents: List<PostContentUi> = listOf(PostContentUi.Text("")),
 )

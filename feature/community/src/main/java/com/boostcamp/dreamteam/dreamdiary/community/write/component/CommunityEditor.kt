@@ -16,7 +16,6 @@ import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ProvideTextStyle
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -81,30 +80,31 @@ private fun InputTitle(
     modifier: Modifier = Modifier,
     readOnly: Boolean = false,
 ) {
-    ProvideTextStyle(
-        value = MaterialTheme.typography.titleLarge.copy(
+    var isTitleFocused by remember { mutableStateOf(false) }
+
+    BasicTextField(
+        value = title,
+        onValueChange = onTitleChange,
+        modifier = modifier.onFocusChanged { isTitleFocused = it.isFocused },
+        readOnly = readOnly,
+        textStyle = MaterialTheme.typography.titleLarge.copy(
             color = MaterialTheme.colorScheme.onSurface,
         ),
-    ) {
-        BasicTextField(
-            value = title,
-            onValueChange = onTitleChange,
-            modifier = modifier,
-            readOnly = readOnly,
-            singleLine = true,
-            cursorBrush = SolidColor(MaterialTheme.colorScheme.tertiary),
-            decorationBox = { innerTextField ->
-                if (title.isEmpty()) {
-                    Text(
-                        text = stringResource(R.string.community_write_editor_title_placeholder),
-                        color = MaterialTheme.colorScheme.secondary,
-                    )
-                } else {
-                    innerTextField()
-                }
-            },
-        )
-    }
+        singleLine = true,
+        cursorBrush = SolidColor(MaterialTheme.colorScheme.tertiary),
+        decorationBox = { innerTextField ->
+            if (title.isEmpty() && !isTitleFocused) {
+                Text(
+                    text = stringResource(R.string.community_write_editor_title_placeholder),
+                    style = MaterialTheme.typography.titleLarge.copy(
+                        color = MaterialTheme.colorScheme.secondary.copy(alpha = 0.6f),
+                    ),
+                )
+            } else {
+                innerTextField()
+            }
+        },
+    )
 }
 
 @Composable
@@ -118,23 +118,14 @@ private fun InputBody(
     readOnly: Boolean = false,
 ) {
     LazyColumn(modifier = modifier) {
-        if (postContents.isEmpty()) {
-            item {
-                Text(
-                    text = stringResource(R.string.community_write_editor_body_placeholder),
-                    color = MaterialTheme.colorScheme.secondary,
-                )
-            }
-        }
         items(count = postContents.size) { index ->
             when (val content = postContents[index]) {
                 is PostContentUi.Text -> BodyText(
                     textContent = content,
                     onContentTextPositionChange = onContentTextPositionChange,
                     onContentTextChange = { onContentTextChange(index, it) },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .onFocusChanged { if (it.isFocused) onContentFocusChange(index) },
+                    onFocusChange = { if (it) onContentFocusChange(index) },
+                    modifier = Modifier.fillMaxWidth(),
                     readOnly = readOnly,
                 )
 
@@ -154,42 +145,46 @@ private fun BodyText(
     textContent: PostContentUi.Text,
     onContentTextPositionChange: (textPosition: Int) -> Unit,
     onContentTextChange: (String) -> Unit,
+    onFocusChange: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
     readOnly: Boolean = false,
 ) {
+    var isFocused by remember { mutableStateOf(false) }
     var textFieldValueState by remember {
         mutableStateOf(TextFieldValue(textContent.text))
     }
 
     val textFieldValue = textFieldValueState.copy(text = textContent.text)
 
-    ProvideTextStyle(
-        value = MaterialTheme.typography.bodyLarge.copy(
+    BasicTextField(
+        value = textFieldValue,
+        onValueChange = {
+            textFieldValueState = it
+            onContentTextPositionChange(it.selection.end)
+            onContentTextChange(it.text)
+        },
+        modifier = modifier.onFocusChanged {
+            isFocused = it.isFocused
+            onFocusChange(it.isFocused)
+        },
+        readOnly = readOnly,
+        textStyle = MaterialTheme.typography.bodyLarge.copy(
             color = MaterialTheme.colorScheme.onSurface,
         ),
-    ) {
-        BasicTextField(
-            value = textFieldValue,
-            onValueChange = {
-                textFieldValueState = it
-                onContentTextPositionChange(it.selection.end)
-                onContentTextChange(it.text)
-            },
-            modifier = modifier,
-            readOnly = readOnly,
-            cursorBrush = SolidColor(MaterialTheme.colorScheme.tertiary),
-            decorationBox = { innerTextField ->
-                if (textFieldValue.text.isEmpty()) {
-                    Text(
-                        text = stringResource(R.string.community_write_editor_body_placeholder),
-                        color = MaterialTheme.colorScheme.secondary,
-                    )
-                } else {
-                    innerTextField()
-                }
-            },
-        )
-    }
+        cursorBrush = SolidColor(MaterialTheme.colorScheme.tertiary),
+        decorationBox = { innerTextField ->
+            if (textFieldValue.text.isEmpty() && !isFocused) {
+                Text(
+                    text = stringResource(R.string.community_write_editor_body_placeholder),
+                    style = MaterialTheme.typography.bodyLarge.copy(
+                        color = MaterialTheme.colorScheme.secondary.copy(alpha = 0.6f),
+                    ),
+                )
+            } else {
+                innerTextField()
+            }
+        },
+    )
 }
 
 @Composable
