@@ -16,9 +16,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.boostcamp.dreamteam.dreamdiary.community.R
 import com.boostcamp.dreamteam.dreamdiary.community.model.PostUi
-import com.boostcamp.dreamteam.dreamdiary.community.model.diariesUiPreview
+import com.boostcamp.dreamteam.dreamdiary.community.model.pagedPostPreview
 import com.boostcamp.dreamteam.dreamdiary.designsystem.theme.DreamdiaryTheme
 import com.boostcamp.dreamteam.dreamdiary.ui.HomeBottomNavItem
 import com.boostcamp.dreamteam.dreamdiary.ui.HomeBottomNavigation
@@ -33,11 +35,12 @@ fun CommunityListScreen(
     viewModel: CommunityListViewModel = hiltViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val diaries = viewModel.posts.collectAsLazyPagingItems()
 
     CommunityListScreenContent(
         onNavigateToDiary = onNavigateToDiary,
         onNavigateToSetting = onNavigateToSetting,
-        diaries = state.diaries,
+        diaries = diaries,
         onDiaryClick = { diary -> onDiaryClick(diary.id) },
         onSaveClick = viewModel::addCommunityPost,
     )
@@ -48,7 +51,7 @@ fun CommunityListScreen(
 private fun CommunityListScreenContent(
     onNavigateToDiary: () -> Unit,
     onNavigateToSetting: () -> Unit,
-    diaries: List<PostUi>,
+    diaries: LazyPagingItems<PostUi>,
     onDiaryClick: (PostUi) -> Unit,
     onSaveClick: () -> Unit,
     modifier: Modifier = Modifier,
@@ -124,7 +127,7 @@ private fun CommunityListScreenContentPreview() {
             onNavigateToSetting = { },
             onDiaryClick = { },
             onSaveClick = { },
-            diaries = diariesUiPreview,
+            diaries = pagedPostPreview.collectAsLazyPagingItems(),
         )
     }
 }

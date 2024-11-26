@@ -22,7 +22,6 @@ class CommunityListViewModel @Inject constructor(
     private val _state = MutableStateFlow(CommunityListUiState())
     val state = _state.asStateFlow()
 
-
     fun addCommunityPost() {
         // TODO
         viewModelScope.launch {
@@ -39,7 +38,6 @@ class CommunityListViewModel @Inject constructor(
             pagingData.map { it.toPostUi() } // CommunityDreamPost -> PostUi 변환
         }
         .cachedIn(viewModelScope)
-
 
 //    fun getPosts() {
 //        viewModelScope.launch {

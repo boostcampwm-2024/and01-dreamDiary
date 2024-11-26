@@ -1,8 +1,10 @@
 package com.boostcamp.dreamteam.dreamdiary.community.model
 
+import androidx.paging.PagingData
 import com.boostcamp.dreamteam.dreamdiary.community.model.vo.DisplayableDateTime
 import com.boostcamp.dreamteam.dreamdiary.community.model.vo.toDisplayableDateTime
 import com.boostcamp.dreamteam.dreamdiary.core.model.CommunityDreamPost
+import kotlinx.coroutines.flow.flowOf
 import java.time.Instant
 import java.time.ZoneId
 
@@ -23,7 +25,7 @@ fun CommunityDreamPost.toPostUi(): PostUi {
         thumbnail = null,
         title = this.title,
         previewText = this.content.take(50),
-        sharedAt = DisplayableDateTime(this.createdAt, ":)", ":)"),
+        sharedAt = DisplayableDateTime(this.createdAt, ":)"),
         commentCount = this.comments.size.toLong(),
         isLiked = this.likes > 0,
         author = UserUi(
@@ -71,3 +73,5 @@ internal val diariesUiPreview = listOf(
     postUiPreview2,
     postUiPreview3,
 )
+
+internal val pagedPostPreview = flowOf(PagingData.from(diariesUiPreview))
