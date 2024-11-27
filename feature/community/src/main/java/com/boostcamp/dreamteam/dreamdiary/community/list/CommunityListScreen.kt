@@ -1,6 +1,5 @@
 package com.boostcamp.dreamteam.dreamdiary.community.list
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -61,7 +60,7 @@ fun CommunityListScreen(
         onNavigateToDiary = onNavigateToDiary,
         onNavigateToSetting = onNavigateToSetting,
         diaries = diaries,
-        onDiaryClick = { diary -> onDiaryClick(diary.id) },
+        onPostClick = { diary -> onDiaryClick(diary.id) },
         onSaveClick = viewModel::addCommunityPost,
     )
 }
@@ -73,7 +72,7 @@ private fun CommunityListScreenContent(
     onNavigateToDiary: () -> Unit,
     onNavigateToSetting: () -> Unit,
     diaries: LazyPagingItems<PostUi>,
-    onDiaryClick: (PostUi) -> Unit,
+    onPostClick: (PostUi) -> Unit,
     onSaveClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -146,12 +145,9 @@ private fun CommunityListScreenContent(
                     if (diary != null) {
                         CommunityDiaryCard(
                             diary = diary,
-                            onPostClick = { /* Todo: 게시글 클릭 시 동작 추가하기 */ },
+                            onPostClick = onPostClick,
                             onClickMenu = { /* TODO: 메뉴 눌렀을 때 기능 추가하기 */ },
                             onClickLike = { /* TODO: 좋아요 눌렀을 때 기능 추가하기 */ },
-                            modifier = Modifier
-                                .clickable(onClick = { onDiaryClick(diary) })
-                                .animateItem(),
                         )
                     }
                 }
@@ -178,7 +174,7 @@ private fun CommunityListScreenContentPreview() {
             onClickFab = { },
             onNavigateToDiary = { },
             onNavigateToSetting = { },
-            onDiaryClick = { },
+            onPostClick = { },
             onSaveClick = { },
             diaries = pagedPostPreview.collectAsLazyPagingItems(),
         )
