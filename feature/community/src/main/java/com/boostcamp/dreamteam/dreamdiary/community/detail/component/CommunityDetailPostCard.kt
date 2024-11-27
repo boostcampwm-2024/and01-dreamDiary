@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material3.Icon
@@ -57,6 +58,7 @@ internal fun CommunityDetailPostCard(
                 Icon(imageVector = Icons.Outlined.FavoriteBorder, contentDescription = "좋아요")
             }
         },
+        shape = RoundedCornerShape(0.dp),
     )
 }
 
