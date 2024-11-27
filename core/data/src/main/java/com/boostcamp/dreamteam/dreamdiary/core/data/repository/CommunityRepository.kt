@@ -23,6 +23,10 @@ class CommunityRepository @Inject constructor(
         return communityRemoteDataSource.addCommunityPost(request)
     }
 
+    suspend fun getCommunityPost(postId: String): CommunityDreamPost {
+        return communityRemoteDataSource.getCommunityPostById(postId).toDomain()
+    }
+
     fun getCommunityPosts(): Flow<PagingData<CommunityDreamPost>> {
         return Pager(
             config = PagingConfig(

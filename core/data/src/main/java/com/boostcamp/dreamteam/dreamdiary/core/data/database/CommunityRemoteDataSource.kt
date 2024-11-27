@@ -35,6 +35,24 @@ class CommunityRemoteDataSource @Inject constructor(
         }
     }
 
+    suspend fun getCommunityPostById(postId: String): CommunityPostResponse {
+        return try {
+            val documentSnapshot = db.collection("community")
+                .document(postId)
+                .get()
+                .await()
+
+            if (documentSnapshot.exists()) {
+                documentSnapshot.toObject(CommunityPostResponse::class.java)
+            } else {
+                null
+            } ?: throw Exception("Community post with ID $postId not found")
+        } catch (e: Exception) {
+            Timber.e(e, "Error fetching community post with ID $postId")
+            throw e
+        }
+    }
+
     fun getCommunityPostsPagingSource(): PagingSource<Query, CommunityPostResponse> {
         return object : PagingSource<Query, CommunityPostResponse>() {
             override suspend fun load(params: LoadParams<Query>): LoadResult<Query, CommunityPostResponse> {
