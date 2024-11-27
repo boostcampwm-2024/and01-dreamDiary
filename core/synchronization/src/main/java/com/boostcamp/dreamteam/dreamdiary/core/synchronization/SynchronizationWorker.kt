@@ -11,6 +11,9 @@ import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
 import com.boostcamp.dreamteam.dreamdiary.core.data.database.dao.DreamDiaryDao
+import com.boostcamp.dreamteam.dreamdiary.core.data.database.model.ImageEntity
+import com.boostcamp.dreamteam.dreamdiary.core.data.database.model.SynchronizingDreamDiaryEntity
+import com.boostcamp.dreamteam.dreamdiary.core.data.database.model.TextEntity
 import com.boostcamp.dreamteam.dreamdiary.core.data.repository.FunctionRepository
 import com.boostcamp.dreamteam.dreamdiary.core.model.synchronization.SyncVersionRequest
 import com.boostcamp.dreamteam.dreamdiary.core.model.synchronization.SynchronizeDreamDiaryRequest
@@ -35,9 +38,15 @@ class SynchronizationWorker @AssistedInject constructor(
     override suspend fun doWork(): Result {
         return withContext(Dispatchers.IO) {
             try {
+                if (functionRepository.updateCurrentUID()) {
+                    Timber.d("remove all sync data")
+                    removeAllSyncData()
+                }
+
                 synchronizeVersion()
                 synchronizeDreamDiaries()
                 uploadContents()
+                downloadContents()
                 Result.success()
             } catch (e: Exception) {
                 Timber.e(e, "SynchronizationWorker")
@@ -153,6 +162,85 @@ class SynchronizationWorker @AssistedInject constructor(
                 }
             }
         }
+    }
+
+    private suspend fun downloadContents() {
+        dreamDiaryDao.removeSynchronizingDreamDiaryIfVersionNotEquals()
+
+        val ids = dreamDiaryDao.getSynchronizingDreamDiaryIds()
+        for (id in ids) {
+            dreamDiaryDao.moveToDreamDiaryIfSynced(id)
+        }
+
+        val notDownloadedContents = dreamDiaryDao.getSynchronizingDreamDiaries().flatMap { diary ->
+            parseNeedDownloadContent(diary)
+        }
+
+        for (content in notDownloadedContents) {
+            when (content) {
+                is NotDownloadedContent.Image -> {
+                    val image = functionRepository.downloadImage(content.id)
+                    if (image != null) {
+                        dreamDiaryDao.insertImage(
+                            imageEntity = ImageEntity(
+                                id = content.id,
+                                path = image.path,
+                            ),
+                        )
+                        dreamDiaryDao.moveToDreamDiaryIfSynced(content.diaryId)
+                    }
+                }
+                is NotDownloadedContent.Text -> {
+                    val text = functionRepository.downloadText(content.id)
+                    if (text != null) {
+                        dreamDiaryDao.insertText(
+                            textEntity = TextEntity(
+                                id = content.id,
+                                text = text.text,
+                            ),
+                        )
+                        dreamDiaryDao.moveToDreamDiaryIfSynced(content.diaryId)
+                    }
+                }
+            }
+        }
+    }
+
+    private suspend fun parseNeedDownloadContent(synchronizingDreamDiaryEntity: SynchronizingDreamDiaryEntity): List<NotDownloadedContent> {
+        val body = synchronizingDreamDiaryEntity.body
+        val diaryContents = mutableListOf<NotDownloadedContent>()
+
+        val parsingDiaryContent = body.split(":")
+        var index = 0
+
+        while (index < parsingDiaryContent.size) {
+            if (parsingDiaryContent[index] == "text") {
+                index += 1
+                val id = parsingDiaryContent[index]
+                val textEntity = dreamDiaryDao.getText(id)
+                if (textEntity == null) {
+                    diaryContents.add(
+                        NotDownloadedContent.Text(id, synchronizingDreamDiaryEntity.id),
+                    )
+                }
+            } else if (parsingDiaryContent[index] == "image") {
+                index += 1
+                val id = parsingDiaryContent[index]
+                val imageEntity = dreamDiaryDao.getImage(id)
+                if (imageEntity == null) {
+                    diaryContents.add(
+                        NotDownloadedContent.Image(id, synchronizingDreamDiaryEntity.id),
+                    )
+                }
+            } else {
+                index += 1
+            }
+        }
+        return diaryContents
+    }
+
+    private suspend fun removeAllSyncData() {
+        dreamDiaryDao.removeSyncData()
     }
 
     companion object {
