@@ -9,7 +9,6 @@ import androidx.paging.map
 import com.boostcamp.dreamteam.dreamdiary.core.data.convertToFirebaseData
 import com.boostcamp.dreamteam.dreamdiary.core.data.firebase.FirebaseCommunityPostPagingSource
 import com.boostcamp.dreamteam.dreamdiary.core.data.firebase.firestore.model.FirestoreAddCommunityPostRequest
-import com.boostcamp.dreamteam.dreamdiary.core.data.firebase.firestore.model.FirestoreGetCommunityPostResponse
 import com.boostcamp.dreamteam.dreamdiary.core.model.DiaryContent
 import com.boostcamp.dreamteam.dreamdiary.core.model.community.CommunityPostList
 import com.google.firebase.firestore.DocumentReference
@@ -115,7 +114,8 @@ class CommunityRepository @Inject constructor(
             pagingSourceFactory = { FirebaseCommunityPostPagingSource(communityCollection) },
         ).flow.map { postResponses ->
             postResponses.map { postResponse ->
-                val diaryContents = parseListPostContent(content = postResponse.content, postId = postResponse.id, postUID = postResponse.uid)
+                val diaryContents =
+                    parseListPostContent(content = postResponse.content, postId = postResponse.id, postUID = postResponse.uid)
                 CommunityPostList(
                     id = postResponse.id,
                     author = postResponse.author,
@@ -127,7 +127,11 @@ class CommunityRepository @Inject constructor(
         }
     }
 
-    private suspend fun parseListPostContent(content: String, postId: String, postUID: String): List<DiaryContent> {
+    private suspend fun parseListPostContent(
+        content: String,
+        postId: String,
+        postUID: String,
+    ): List<DiaryContent> {
         val textReference = communityCollection.document(postId).collection("text")
         val imageReference = communityCollection.document(postId).collection("images")
 
@@ -176,7 +180,7 @@ class CommunityRepository @Inject constructor(
                             .downloadUrl
                             .await()
                             .toString(),
-                    )
+                    ),
                 )
             } else {
                 index += 1
