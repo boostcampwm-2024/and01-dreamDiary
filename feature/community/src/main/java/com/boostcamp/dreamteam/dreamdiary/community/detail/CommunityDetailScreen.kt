@@ -129,7 +129,7 @@ private fun CommunityDetailScreenContent(
                 item {
                     CommunityDetailPostCard(
                         post = post,
-                        onClickLike = { onClickLikePost(post) },
+                        onClickLikePost = { onClickLikePost(post) },
                         modifier = Modifier.fillMaxWidth(),
                     )
                 }

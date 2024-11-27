@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Favorite
 import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -18,9 +19,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.boostcamp.dreamteam.dreamdiary.community.R
 import com.boostcamp.dreamteam.dreamdiary.community.model.PostDetailUi
 import com.boostcamp.dreamteam.dreamdiary.community.model.UserUi
 import com.boostcamp.dreamteam.dreamdiary.community.model.postDetailUiPreview
@@ -32,7 +35,7 @@ import com.boostcamp.dreamteam.dreamdiary.designsystem.theme.DreamdiaryTheme
 @Composable
 internal fun CommunityDetailPostCard(
     post: PostDetailUi,
-    onClickLike: () -> Unit,
+    onClickLikePost: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     DdCard(
@@ -54,8 +57,19 @@ internal fun CommunityDetailPostCard(
             )
         },
         tail = {
-            IconButton(onClick = onClickLike) {
-                Icon(imageVector = Icons.Outlined.FavoriteBorder, contentDescription = "좋아요")
+            IconButton(onClick = onClickLikePost) {
+                if (post.isLiked) {
+                    Icon(
+                        imageVector = Icons.Outlined.Favorite,
+                        contentDescription = stringResource(R.string.community_detail_post_dislike),
+                        tint = MaterialTheme.colorScheme.error,
+                    )
+                } else {
+                    Icon(
+                        imageVector = Icons.Outlined.FavoriteBorder,
+                        contentDescription = stringResource(R.string.community_detail_post_like),
+                    )
+                }
             }
         },
         shape = RoundedCornerShape(0.dp),
@@ -93,7 +107,7 @@ private fun CommunityDetailPostCardPreview() {
     DreamdiaryTheme {
         CommunityDetailPostCard(
             post = postDetailUiPreview,
-            onClickLike = { },
+            onClickLikePost = { },
         )
     }
 }

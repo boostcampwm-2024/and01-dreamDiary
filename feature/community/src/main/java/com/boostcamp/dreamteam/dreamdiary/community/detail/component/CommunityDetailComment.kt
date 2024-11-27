@@ -64,6 +64,7 @@ internal fun CommunityDetailComment(
                         Icon(
                             imageVector = Icons.Filled.Favorite,
                             contentDescription = stringResource(R.string.community_detail_comment_dislike),
+                            tint = MaterialTheme.colorScheme.error,
                         )
                     } else {
                         Icon(

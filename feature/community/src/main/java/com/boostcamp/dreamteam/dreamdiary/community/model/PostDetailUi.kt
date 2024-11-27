@@ -11,6 +11,7 @@ data class PostDetailUi(
     val contents: List<PostContentUi>,
     val author: UserUi,
     val sharedAt: DisplayableDateTime,
+    val isLiked: Boolean,
 ) {
     companion object {
         val EMPTY = PostDetailUi(
@@ -19,6 +20,7 @@ data class PostDetailUi(
             contents = emptyList(),
             author = UserUi.EMPTY,
             sharedAt = DisplayableDateTime.EMPTY,
+            isLiked = false,
         )
     }
 }
@@ -29,4 +31,5 @@ internal val postDetailUiPreview = PostDetailUi(
     contents = listOf(PostContentUi.Text("내용")),
     author = userUiPreview1,
     sharedAt = Instant.now().toDisplayableDateTime(),
+    isLiked = false,
 )
