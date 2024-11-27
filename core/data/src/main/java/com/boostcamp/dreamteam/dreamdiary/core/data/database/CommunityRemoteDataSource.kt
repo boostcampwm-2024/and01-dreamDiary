@@ -17,7 +17,6 @@ import kotlin.coroutines.suspendCoroutine
 class CommunityRemoteDataSource @Inject constructor(
     private val db: FirebaseFirestore,
 ) {
-
     suspend fun addCommunityPost(request: CommunityPostRequest): Boolean {
         return suspendCoroutine { continuation ->
             val newPost = request.toDomain()

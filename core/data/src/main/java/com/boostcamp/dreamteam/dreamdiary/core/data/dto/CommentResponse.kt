@@ -18,6 +18,6 @@ fun CommentResponse.toDomain(): Comment {
         author = this.author,
         content = this.content,
         likes = this.likes,
-        createdAt = this.createdAt
+        createdAt = this.createdAt,
     )
 }

@@ -16,6 +16,6 @@ fun CommentRequest.toDomain(author: Author): Comment {
         author = author,
         content = this.content,
         likes = 0,
-        createdAt = this.createdAt
+        createdAt = this.createdAt,
     )
 }
