@@ -4,7 +4,15 @@ data class UserUi(
     val id: String,
     val username: String,
     val profileImageUrl: String,
-)
+) {
+    companion object {
+        val EMPTY: UserUi = UserUi(
+            id = "",
+            username = "",
+            profileImageUrl = "",
+        )
+    }
+}
 
 internal val userUiPreview1 = UserUi(
     id = "1",

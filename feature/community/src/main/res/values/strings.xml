@@ -14,4 +14,8 @@
     <string name="community_write_title">공유 일기 작성</string>
     <string name="community_write_toppappbar_action_save">공유하기</string>
     <string name="community_write_toppappbar_navigate_back">뒤로 가기</string>
+    <string name="community_detail_toppappbar_navigate_back">뒤로 가기</string>
+    <string name="community_detail_bottombar_input_comment_hint">댓글을 남겨보세요 :)</string>
+    <string name="community_detail_bottombar_input_comment_icon">새 댓글 작성</string>
+    <string name="community_detail_bottombar_input_comment_submit">댓글 등록</string>
 </resources>
