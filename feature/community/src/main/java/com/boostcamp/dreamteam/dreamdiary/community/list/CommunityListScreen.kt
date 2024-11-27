@@ -29,7 +29,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.boostcamp.dreamteam.dreamdiary.community.R
@@ -53,7 +52,6 @@ fun CommunityListScreen(
     onDiaryClick: (diaryId: String) -> Unit,
     viewModel: CommunityListViewModel = hiltViewModel(),
 ) {
-    val state by viewModel.state.collectAsStateWithLifecycle()
     val diaries = viewModel.posts.collectAsLazyPagingItems()
 
     CommunityListScreenContent(
@@ -127,13 +125,13 @@ private fun CommunityListScreenContent(
                     isRefreshing = false
                 }
             },
-            modifier = Modifier
+            modifier = modifier
                 .fillMaxSize()
                 .padding(innerPadding),
             state = refreshState,
         ) {
             LazyColumn(
-                modifier = modifier
+                modifier = Modifier
                     .fillMaxSize(),
                 verticalArrangement = Arrangement.spacedBy(16.dp),
                 contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
