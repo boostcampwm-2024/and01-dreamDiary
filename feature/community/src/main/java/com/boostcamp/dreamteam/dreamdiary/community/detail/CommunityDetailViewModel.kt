@@ -18,11 +18,11 @@ class CommunityDetailViewModel @Inject constructor() : ViewModel() {
     // TODO: 댓글 가져오는 로직 추가
     val comments: Flow<PagingData<CommentUi>> = flowOf(PagingData.empty())
 
-    fun onLikeClick(postId: String) {
+    fun toggleLikePost(postId: String) {
         // TODO: 포스트 좋아요 로직 추가
     }
 
-    fun onLikeComment(commentId: String) {
+    fun toggleLikeComment(commentId: String) {
         // TODO: 댓글 좋아요 로직 추가
     }
 }

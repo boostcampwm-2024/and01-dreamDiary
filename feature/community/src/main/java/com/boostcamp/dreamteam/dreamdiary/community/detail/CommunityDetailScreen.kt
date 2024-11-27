@@ -62,18 +62,18 @@ fun CommunityDetailScreen(
 
     CommunityDetailScreenContent(
         onClickBack = onClickBack,
-        onClickLike = { post -> viewModel.onLikeClick(post.id) },
         post = state.post,
+        onClickLikePost = { post -> viewModel.toggleLikePost(post.id) },
         comments = comments,
-        onClickLikeComment = { comment -> viewModel.onLikeComment(comment.id) },
+        onClickLikeComment = { comment -> viewModel.toggleLikeComment(comment.id) },
     )
 }
 
 @Composable
 private fun CommunityDetailScreenContent(
     onClickBack: () -> Unit,
-    onClickLike: (PostDetailUi) -> Unit,
     post: PostDetailUi,
+    onClickLikePost: (PostDetailUi) -> Unit,
     comments: LazyPagingItems<CommentUi>,
     onClickLikeComment: (CommentUi) -> Unit,
     modifier: Modifier = Modifier,
@@ -129,7 +129,7 @@ private fun CommunityDetailScreenContent(
                 item {
                     CommunityDetailPostCard(
                         post = post,
-                        onClickLike = { onClickLike(post) },
+                        onClickLike = { onClickLikePost(post) },
                         modifier = Modifier.fillMaxWidth(),
                     )
                 }
@@ -235,7 +235,7 @@ private fun CommunityDetailScreenContentPreview() {
     DreamdiaryTheme {
         CommunityDetailScreenContent(
             onClickBack = { },
-            onClickLike = { },
+            onClickLikePost = { },
             post = postDetailUiPreview,
             comments = pagingCommentsUiPreview.collectAsLazyPagingItems(),
             onClickLikeComment = { },
