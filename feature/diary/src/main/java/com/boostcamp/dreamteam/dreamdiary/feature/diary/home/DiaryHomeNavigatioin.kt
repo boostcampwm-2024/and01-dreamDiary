@@ -31,6 +31,7 @@ data object DiaryGraph {
 fun NavGraphBuilder.diaryGraph(
     onCommunityClick: () -> Unit,
     onSettingClick: () -> Unit,
+    onShareDiary: (diaryId: String) -> Unit,
     navController: NavController,
 ) {
     navigation<DiaryGraph>(
@@ -47,6 +48,7 @@ fun NavGraphBuilder.diaryGraph(
                     )
                 },
                 onDiaryEdit = { navController.navigateToWriteScreen(diaryId = it.id) },
+                onShareDiary = onShareDiary,
                 onNavigateToCommunity = onCommunityClick,
                 onNavigateToSetting = onSettingClick,
                 onNavigateToWriteScreen = { navController.navigate(DiaryGraph.DiaryWriteRoute()) },
@@ -86,6 +88,7 @@ fun NavGraphBuilder.diaryGraph(
             DiaryDetailScreen(
                 onBackClick = navController::navigateUp,
                 onEditDiary = { diaryId -> navController.navigateToWriteScreen(diaryId = diaryId) },
+                onShareDiary = onShareDiary,
             )
         }
     }

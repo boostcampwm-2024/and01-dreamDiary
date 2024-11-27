@@ -6,6 +6,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.Edit
+import androidx.compose.material.icons.outlined.Share
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
@@ -25,6 +26,7 @@ internal fun DiaryMenuButton(
     onVisibleChange: (Boolean) -> Unit,
     onDeleteDiary: () -> Unit,
     onDiaryEdit: () -> Unit,
+    onShareDiary: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Box(modifier = modifier) {
@@ -57,6 +59,14 @@ internal fun DiaryMenuButton(
                 },
                 leadingIcon = { Icon(imageVector = Icons.Outlined.Delete, contentDescription = null) },
             )
+            DropdownMenuItem(
+                text = { Text(text = stringResource(R.string.home_list_card_menu_share)) },
+                onClick = {
+                    onShareDiary()
+                    onVisibleChange(false)
+                },
+                leadingIcon = { Icon(imageVector = Icons.Outlined.Share, contentDescription = null) },
+            )
         }
     }
 }
@@ -70,6 +80,7 @@ private fun DiaryEditDropDownMenuPreview() {
             onVisibleChange = { },
             onDeleteDiary = { },
             onDiaryEdit = { },
+            onShareDiary = { },
         )
     }
 }
