@@ -28,16 +28,6 @@ class SignInViewModel @Inject constructor(
     private val _event = Channel<SignInEvent>(64)
     val event = _event.receiveAsFlow()
 
-    init {
-        Timber.d("${authRepository.getUserEmail()}")
-
-        if (authRepository.getUserEmail() != null) {
-            _signInState.value = SignInState.Success
-        } else if (sharedPreferences.getBoolean("onPass", false)) {
-            _signInState.value = SignInState.OnPass
-        }
-    }
-
     fun signInWithGoogle(idToken: String) {
         viewModelScope.launch {
             try {
@@ -66,11 +56,5 @@ class SignInViewModel @Inject constructor(
                 )
             }
         }
-    }
-
-    fun onPass() {
-        sharedPreferences.edit().putBoolean("onPass", true).apply()
-        _signInState.value = SignInState.OnPass
-        _event.trySend(SignInEvent.OnPass)
     }
 }

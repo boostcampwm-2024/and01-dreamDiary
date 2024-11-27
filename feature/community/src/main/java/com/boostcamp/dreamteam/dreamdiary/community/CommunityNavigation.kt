@@ -35,6 +35,7 @@ fun NavGraphBuilder.communityGraph(
     navController: NavHostController,
     onDiaryClick: () -> Unit,
     onSettingClick: () -> Unit,
+    onGoToSignInClick: () -> Unit,
 ) {
     navigation<CommunityGraph>(
         startDestination = CommunityGraph.CommunityListRoute,
@@ -50,6 +51,7 @@ fun NavGraphBuilder.communityGraph(
                         navOptions = navOptions { launchSingleTop = true },
                     )
                 },
+                goToSignInClick = onGoToSignInClick
             )
         }
         composable<CommunityGraph.CommunityDetailRoute> { backStackEntry ->

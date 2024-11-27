@@ -46,7 +46,7 @@ import timber.log.Timber
 @Composable
 fun SignInScreen(
     onSignInSuccess: () -> Unit,
-    onPassClick: () -> Unit,
+    onNotSignInClick: () -> Unit,
     viewModel: SignInViewModel = hiltViewModel(),
 ) {
     val signInState by viewModel.signInState.collectAsStateWithLifecycle()
@@ -64,10 +64,6 @@ fun SignInScreen(
 
                 is SignInEvent.GitHubSignInSuccess -> {
                     Toast.makeText(context, context.getString(R.string.signIn_github_success), Toast.LENGTH_SHORT).show()
-                }
-
-                is SignInEvent.OnPass -> {
-                    Toast.makeText(context, context.getString(R.string.signIn_onPass_success), Toast.LENGTH_SHORT).show()
                 }
 
                 is SignInEvent.SignInFailure -> {
@@ -94,10 +90,6 @@ fun SignInScreen(
             onSignInSuccess()
         }
 
-        is SignInState.OnPass -> {
-            onPassClick()
-        }
-
         is SignInState.NotSignIn -> {
             SignInScreenContent(
                 onGitHubSignInClick = {
@@ -113,9 +105,7 @@ fun SignInScreen(
                         }
                     }
                 },
-                onNotSignInClick = {
-                    viewModel.onPass()
-                },
+                onNotSignInClick = onNotSignInClick,
             )
         }
     }

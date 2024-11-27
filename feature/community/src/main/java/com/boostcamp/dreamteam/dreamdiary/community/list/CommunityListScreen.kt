@@ -7,12 +7,12 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -21,6 +21,8 @@ import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
@@ -52,7 +54,6 @@ import com.boostcamp.dreamteam.dreamdiary.designsystem.theme.DreamdiaryTheme
 import com.boostcamp.dreamteam.dreamdiary.ui.HomeBottomNavItem
 import com.boostcamp.dreamteam.dreamdiary.ui.HomeBottomNavigation
 import com.boostcamp.dreamteam.dreamdiary.ui.PagingIndexKey
-import com.boostcamp.dreamteam.dreamdiary.ui.component.OutlineSignInButton
 import com.boostcamp.dreamteam.dreamdiary.ui.toNavigationItem
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -64,6 +65,7 @@ fun CommunityListScreen(
     onNavigateToDiary: () -> Unit,
     onNavigateToSetting: () -> Unit,
     onDiaryClick: (diaryId: String) -> Unit,
+    goToSignInClick: () -> Unit,
     viewModel: CommunityListViewModel = hiltViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -75,8 +77,9 @@ fun CommunityListScreen(
             onNavigateToDiary = onNavigateToDiary,
             onNavigateToSetting = onNavigateToSetting,
             diaries = diaries,
-            onGitHubSignInClick = {},
-            onGoogleSignInClick = {},
+            goToSignInClick = {
+                goToSignInClick()
+            },
             modifier = modifier,
         )
     } else {
@@ -98,8 +101,7 @@ private fun NotSignInCommunityContent(
     onNavigateToDiary: () -> Unit,
     onNavigateToSetting: () -> Unit,
     diaries: LazyPagingItems<PostUi>,
-    onGitHubSignInClick: () -> Unit,
-    onGoogleSignInClick: () -> Unit,
+    goToSignInClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val navigationItems = listOf(
@@ -173,20 +175,16 @@ private fun NotSignInCommunityContent(
                 Spacer(modifier = Modifier.height(10.dp))
                 Text("로그인을 하셔야 사용 가능한 기능입니다.")
                 Spacer(modifier = Modifier.height(20.dp))
-                OutlineSignInButton(
-                    onGitHubSignInClick,
-                    R.drawable.github_icon,
-                    R.string.signIn_github_icon,
-                    R.string.signIn_github_login,
-                    Modifier.fillMaxWidth().padding(horizontal = 20.dp, vertical = 10.dp),
-                )
-                OutlineSignInButton(
-                    onGoogleSignInClick,
-                    R.drawable.google_icon,
-                    R.string.signIn_google_icon,
-                    R.string.signIn_google_login,
-                    Modifier.fillMaxWidth().padding(horizontal = 20.dp, vertical = 10.dp),
-                )
+                OutlinedButton(
+                    modifier = modifier,
+                    onClick = goToSignInClick
+                    ,
+                    shape = MaterialTheme.shapes.small,
+                ) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Text(stringResource(R.string.community_go_to_signin))
+                    }
+                }
                 Spacer(modifier = Modifier.height(20.dp))
             }
         }

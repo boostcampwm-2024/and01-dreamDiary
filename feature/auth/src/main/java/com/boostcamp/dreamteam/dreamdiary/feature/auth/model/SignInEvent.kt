@@ -5,8 +5,6 @@ sealed class SignInEvent {
 
     data object GitHubSignInSuccess : SignInEvent()
 
-    data object OnPass : SignInEvent()
-
     data class SignInFailure(val signInErrorMessage: SignInErrorMessage) : SignInEvent()
 }
 
