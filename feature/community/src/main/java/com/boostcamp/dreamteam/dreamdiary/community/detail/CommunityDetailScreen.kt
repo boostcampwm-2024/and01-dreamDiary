@@ -78,8 +78,6 @@ private fun CommunityDetailScreenContent(
     onClickLikeComment: (CommentUi) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val coroutineScope = rememberCoroutineScope()
-
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
     val refreshState = rememberPullToRefreshState()
     var isRefreshing by remember { mutableStateOf(false) }
@@ -111,11 +109,7 @@ private fun CommunityDetailScreenContent(
         PullToRefreshBox(
             isRefreshing = isRefreshing,
             onRefresh = {
-                coroutineScope.launch {
-                    isRefreshing = true
-                    // TODO: 새로고침 로직 추가
-                    isRefreshing = false
-                }
+                // TODO: 새로고침 로직 추가
             },
             modifier = Modifier
                 .fillMaxSize()
