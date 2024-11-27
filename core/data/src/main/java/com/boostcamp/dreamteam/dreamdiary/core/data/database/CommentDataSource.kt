@@ -30,13 +30,13 @@ class CommentDataSource @Inject constructor(
                 .collection("comments")
                 .add(request)
                 .addOnSuccessListener { documentReference ->
-                    Timber.d("DocumentSnapshot added with ID: ${documentReference.id}")
+                    Timber.d("Comment added with ID: ${documentReference.id}")
                     val updatedComment = newComment.copy(id = documentReference.id)
                     documentReference.set(updatedComment)
                     continuation.resume(true)
                 }
                 .addOnFailureListener { exception ->
-                    Timber.w(exception, "Error adding document")
+                    Timber.w(exception, "Error adding comment")
                     continuation.resumeWithException(exception)
                 }
         }

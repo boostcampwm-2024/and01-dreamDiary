@@ -23,13 +23,13 @@ class CommunityRemoteDataSource @Inject constructor(
             db.collection("community")
                 .add(newPost)
                 .addOnSuccessListener { documentReference ->
-                    Timber.d("DocumentSnapshot added with ID: ${documentReference.id}")
+                    Timber.d("Community post added with ID: ${documentReference.id}")
                     val updatedPost = newPost.copy(id = documentReference.id)
                     documentReference.set(updatedPost)
                     continuation.resume(true)
                 }
                 .addOnFailureListener { exception ->
-                    Timber.w(exception, "Error adding document")
+                    Timber.w(exception, "Error adding community post")
                     continuation.resumeWithException(exception)
                 }
         }
