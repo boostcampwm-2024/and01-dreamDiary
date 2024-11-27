@@ -10,8 +10,8 @@ import java.time.ZoneId
 
 data class PostUi(
     val id: String,
-    val thumbnail: String? = null,
     val title: String,
+    val images: List<String>,
     val previewText: String,
     val sharedAt: DisplayableDateTime,
     val commentCount: Long,
@@ -22,11 +22,11 @@ data class PostUi(
 fun CommunityDreamPost.toPostUi(): PostUi {
     return PostUi(
         id = this.id,
-        thumbnail = null,
         title = this.title,
         previewText = this.content.take(50),
+        images = images,
         sharedAt = Instant.ofEpochMilli(this.createdAt).toDisplayableDateTime(),
-        commentCount = this.comments.size.toLong(),
+        commentCount = this.commentCount.toLong(),
         isLiked = this.likes > 0,
         author = UserUi(
             id = this.author,
@@ -44,17 +44,18 @@ internal val postUiPreview1 = PostUi(
     sharedAt = Instant.now().toDisplayableDateTime(zoneId = ZoneId.systemDefault()),
     commentCount = 10,
     isLiked = false,
+    images = emptyList(),
     author = userUiPreview1,
 )
 
 internal val postUiPreview2 = PostUi(
     id = "2",
-    thumbnail = "https://picsum.photos/200/300",
     title = "Diary 2",
     previewText = "This is a preview text for Diary 2",
     sharedAt = Instant.now().toDisplayableDateTime(zoneId = ZoneId.systemDefault()),
     commentCount = 2147483647,
     isLiked = true,
+    images = listOf("https://picsum.photos/200/300"),
     author = userUiPreview2,
 )
 
@@ -65,6 +66,7 @@ private val postUiPreview3 = PostUi(
     sharedAt = Instant.now().toDisplayableDateTime(zoneId = ZoneId.systemDefault()),
     commentCount = 0,
     isLiked = false,
+    images = listOf("https://picsum.photos/200/300", "https://picsum.photos/300/400"),
     author = userUiPreview3,
 )
 

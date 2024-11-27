@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -134,9 +133,10 @@ private fun CommunityListScreenContent(
             state = refreshState,
         ) {
             LazyColumn(
-                modifier = Modifier.fillMaxSize(),
+                modifier = modifier
+                    .fillMaxSize(),
+                verticalArrangement = Arrangement.spacedBy(16.dp),
                 contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp),
             ) {
                 items(
                     count = diaries.itemCount,
@@ -146,6 +146,7 @@ private fun CommunityListScreenContent(
                     if (diary != null) {
                         CommunityDiaryCard(
                             diary = diary,
+                            onPostClick = { /* Todo: 게시글 클릭 시 동작 추가하기 */ },
                             onClickMenu = { /* TODO: 메뉴 눌렀을 때 기능 추가하기 */ },
                             onClickLike = { /* TODO: 좋아요 눌렀을 때 기능 추가하기 */ },
                             modifier = Modifier

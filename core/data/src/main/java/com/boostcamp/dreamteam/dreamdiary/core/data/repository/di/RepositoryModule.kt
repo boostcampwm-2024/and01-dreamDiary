@@ -2,6 +2,7 @@ package com.boostcamp.dreamteam.dreamdiary.core.data.repository.di
 
 import com.boostcamp.dreamteam.dreamdiary.core.data.repository.DefaultDreamDiaryRepository
 import com.boostcamp.dreamteam.dreamdiary.core.data.repository.DreamDiaryRepository
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.functions.FirebaseFunctions
 import com.google.firebase.storage.FirebaseStorage
 import dagger.Binds
@@ -32,6 +33,14 @@ internal abstract class RepositoryModule {
             val storage = FirebaseStorage.getInstance()
 
             return storage
+        }
+
+        @Provides
+        @Singleton
+        fun provideFirebaseFirestore(): FirebaseFirestore {
+            val firestore = FirebaseFirestore.getInstance()
+
+            return firestore
         }
     }
 }
