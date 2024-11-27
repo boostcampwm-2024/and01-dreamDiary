@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.dp
 import com.boostcamp.dreamteam.dreamdiary.community.R
 import com.boostcamp.dreamteam.dreamdiary.community.model.CommentUi
 import com.boostcamp.dreamteam.dreamdiary.community.model.commentUiPreview1
+import com.boostcamp.dreamteam.dreamdiary.community.model.commentUiPreview2
 import com.boostcamp.dreamteam.dreamdiary.designsystem.component.DdAsyncImage
 import com.boostcamp.dreamteam.dreamdiary.designsystem.theme.DreamdiaryTheme
 
@@ -80,10 +81,21 @@ internal fun CommunityDetailComment(
 
 @Preview
 @Composable
-private fun CommunityDetailCommentPreview() {
+private fun CommunityDetailCommentPreview1() {
     DreamdiaryTheme {
         CommunityDetailComment(
             comment = commentUiPreview1,
+            onClickLikeComment = { },
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun CommunityDetailCommentPreview2() {
+    DreamdiaryTheme {
+        CommunityDetailComment(
+            comment = commentUiPreview2,
             onClickLikeComment = { },
         )
     }

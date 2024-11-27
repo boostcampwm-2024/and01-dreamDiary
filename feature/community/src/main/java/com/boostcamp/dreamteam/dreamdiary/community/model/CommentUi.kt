@@ -17,7 +17,7 @@ internal val commentUiPreview1 = CommentUi(
     isLiked = true,
 )
 
-private val commentUiPreview2 = CommentUi(
+internal val commentUiPreview2 = CommentUi(
     id = "2",
     author = userUiPreview2,
     contents = "댓글 내용",
