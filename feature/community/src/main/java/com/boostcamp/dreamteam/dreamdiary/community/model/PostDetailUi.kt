@@ -22,3 +22,11 @@ data class PostDetailUi(
         )
     }
 }
+
+internal val postDetailUiPreview = PostDetailUi(
+    id = "1",
+    title = "제목",
+    contents = listOf(PostContentUi.Text("내용")),
+    author = userUiPreview1,
+    sharedAt = Instant.now().toDisplayableDateTime(),
+)

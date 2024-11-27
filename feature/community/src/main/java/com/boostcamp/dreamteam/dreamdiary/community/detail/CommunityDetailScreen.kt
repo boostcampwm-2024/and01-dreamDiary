@@ -1,12 +1,14 @@
+@file:OptIn(ExperimentalMaterial3Api::class)
+
 package com.boostcamp.dreamteam.dreamdiary.community.detail
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.outlined.Send
@@ -20,9 +22,18 @@ import androidx.compose.material3.MediumTopAppBar
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.TopAppBarScrollBehavior
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -30,7 +41,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.boostcamp.dreamteam.dreamdiary.community.R
 import com.boostcamp.dreamteam.dreamdiary.community.model.PostDetailUi
+import com.boostcamp.dreamteam.dreamdiary.community.model.postDetailUiPreview
 import com.boostcamp.dreamteam.dreamdiary.designsystem.theme.DreamdiaryTheme
+import kotlinx.coroutines.launch
 
 @Composable
 fun CommunityDetailScreen(
@@ -51,11 +64,20 @@ private fun CommunityDetailScreenContent(
     post: PostDetailUi,
     modifier: Modifier = Modifier,
 ) {
+    val coroutineScope = rememberCoroutineScope()
+
+    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
+    val refreshState = rememberPullToRefreshState()
+    var isRefreshing by remember { mutableStateOf(false) }
+
     Scaffold(
-        modifier = modifier.fillMaxSize(),
+        modifier = modifier
+            .fillMaxSize()
+            .nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             CommunityDetailTopAppBar(
                 state = CommunityDetailTopAppbarState(
+                    scrollBehavior = scrollBehavior,
                     onClickBack = onClickBack,
                     title = post.title,
                 ),
@@ -72,20 +94,34 @@ private fun CommunityDetailScreenContent(
             )
         },
     ) { innerPadding ->
-        Column(
+        PullToRefreshBox(
+            isRefreshing = isRefreshing,
+            onRefresh = {
+                coroutineScope.launch {
+                    isRefreshing = true
+                    // TODO: 새로고침 로직 추가
+                    isRefreshing = false
+                }
+            },
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding),
-        ) {}
+            state = refreshState,
+        ) {
+            LazyColumn(
+                modifier = Modifier.fillMaxSize(),
+                contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
+            ) {}
+        }
     }
 }
 
 private data class CommunityDetailTopAppbarState(
+    val scrollBehavior: TopAppBarScrollBehavior,
     val onClickBack: () -> Unit,
     val title: String,
 )
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun CommunityDetailTopAppBar(
     state: CommunityDetailTopAppbarState,
@@ -164,7 +200,7 @@ private fun CommunityDetailScreenContentPreview() {
     DreamdiaryTheme {
         CommunityDetailScreenContent(
             onClickBack = { },
-            post = PostDetailUi.EMPTY,
+            post = postDetailUiPreview,
         )
     }
 }
