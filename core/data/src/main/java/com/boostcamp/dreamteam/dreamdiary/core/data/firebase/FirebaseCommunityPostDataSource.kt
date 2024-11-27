@@ -8,7 +8,7 @@ import com.google.firebase.firestore.Query
 import kotlinx.coroutines.tasks.await
 import timber.log.Timber
 
-class FirebaseCommunityPostSataSource(
+class FirebaseCommunityPostDataSource(
     private val communityCollection: CollectionReference,
 ) : PagingSource<Query, FirestoreGetCommunityPostResponse>() {
     override suspend fun load(params: LoadParams<Query>): LoadResult<Query, FirestoreGetCommunityPostResponse> {
