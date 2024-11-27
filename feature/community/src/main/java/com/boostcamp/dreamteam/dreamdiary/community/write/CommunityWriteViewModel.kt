@@ -5,7 +5,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.boostcamp.dreamteam.dreamdiary.community.CommunityGraph
 import com.boostcamp.dreamteam.dreamdiary.community.model.vo.PostContentUi
+import com.boostcamp.dreamteam.dreamdiary.community.model.vo.toDomain
 import com.boostcamp.dreamteam.dreamdiary.core.domain.usecase.GetDreamDiaryUseCase
+import com.boostcamp.dreamteam.dreamdiary.core.domain.usecase.community.AddCommunityPostUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -17,6 +19,7 @@ import javax.inject.Inject
 class CommunityWriteViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val getDreamDiaryUseCase: GetDreamDiaryUseCase,
+    private val addCommunityPostUseCase: AddCommunityPostUseCase,
 ) : ViewModel() {
     private val id: String? = savedStateHandle[CommunityGraph.CommunityWriteRoute::diaryId.name]
 
@@ -30,7 +33,10 @@ class CommunityWriteViewModel @Inject constructor(
     fun writePost() {
         viewModelScope.launch {
             setIsLoading(true)
-            // TODO: Save the post
+            addCommunityPostUseCase(
+                title = uiState.value.editorState.title,
+                diaryContents = uiState.value.editorState.contents.map { it.toDomain() },
+            )
             setIsLoading(false)
         }
     }
