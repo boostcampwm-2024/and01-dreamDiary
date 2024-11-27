@@ -6,8 +6,13 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
@@ -34,6 +39,7 @@ import com.boostcamp.dreamteam.dreamdiary.ui.toNavigationItem
 
 @Composable
 fun CommunityListScreen(
+    onClickFab: () -> Unit,
     onNavigateToDiary: () -> Unit,
     onNavigateToSetting: () -> Unit,
     onDiaryClick: (diaryId: String) -> Unit,
@@ -43,6 +49,7 @@ fun CommunityListScreen(
     val diaries = viewModel.posts.collectAsLazyPagingItems()
 
     CommunityListScreenContent(
+        onClickFab = onClickFab,
         onNavigateToDiary = onNavigateToDiary,
         onNavigateToSetting = onNavigateToSetting,
         diaries = diaries,
@@ -54,6 +61,7 @@ fun CommunityListScreen(
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
 private fun CommunityListScreenContent(
+    onClickFab: () -> Unit,
     onNavigateToDiary: () -> Unit,
     onNavigateToSetting: () -> Unit,
     diaries: LazyPagingItems<PostUi>,
@@ -86,6 +94,16 @@ private fun CommunityListScreenContent(
         },
         bottomBar = {
             HomeBottomNavigation(items = navigationItems)
+        },
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = onClickFab,
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Add,
+                    contentDescription = stringResource(R.string.community_list_fab_add_diary_description),
+                )
+            }
         },
     ) { innerPadding ->
 
@@ -132,6 +150,7 @@ private fun CommunityListScreenContent(
 private fun CommunityListScreenContentPreview() {
     DreamdiaryTheme {
         CommunityListScreenContent(
+            onClickFab = { },
             onNavigateToDiary = { },
             onNavigateToSetting = { },
             onDiaryClick = { },
