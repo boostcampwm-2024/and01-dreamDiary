@@ -14,4 +14,9 @@
     <string name="community_write_title">공유 일기 작성</string>
     <string name="community_write_toppappbar_action_save">공유하기</string>
     <string name="community_write_toppappbar_navigate_back">뒤로 가기</string>
+    <string name="community_not_signin">로그인을 해야 이용할 수 있는 기능입니다.</string>
+    <string name="signIn_github_icon">깃허브 아이콘</string>
+    <string name="signIn_github_login">깃허브 로그인</string>
+    <string name="signIn_google_icon">구글 아이콘</string>
+    <string name="signIn_google_login">구글 로그인</string>
 </resources>

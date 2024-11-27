@@ -1,5 +1,6 @@
 package com.boostcamp.dreamteam.dreamdiary.community.list
 
+import android.content.SharedPreferences
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
@@ -18,6 +19,7 @@ import javax.inject.Inject
 class CommunityListViewModel @Inject constructor(
     private val addCommunityPostUseCase: AddCommunityPostUseCase,
     private val getCommunityPostUseCase: GetCommunityPostUseCase,
+    private val sharedPreferences: SharedPreferences,
 ) : ViewModel() {
     private val _state = MutableStateFlow(CommunityListUiState())
     val state = _state.asStateFlow()
@@ -38,4 +40,8 @@ class CommunityListViewModel @Inject constructor(
             pagingData.map { it.toPostUi() } // CommunityDreamPost -> PostUi 변환
         }
         .cachedIn(viewModelScope)
+
+    fun notSignIn(): Boolean {
+        return sharedPreferences.getBoolean("onPass", false)
+    }
 }

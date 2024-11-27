@@ -1,24 +1,18 @@
 package com.boostcamp.dreamteam.dreamdiary.feature.auth
 
 import android.widget.Toast
-import androidx.annotation.DrawableRes
-import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -44,6 +38,7 @@ import com.boostcamp.dreamteam.dreamdiary.feature.auth.model.SignInErrorMessage
 import com.boostcamp.dreamteam.dreamdiary.feature.auth.model.SignInEvent
 import com.boostcamp.dreamteam.dreamdiary.feature.auth.model.SignInState
 import com.boostcamp.dreamteam.dreamdiary.feature.auth.sns.Google
+import com.boostcamp.dreamteam.dreamdiary.ui.component.OutlineSignInButton
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -199,32 +194,6 @@ private fun SignInScreenContent(
                     },
                 )
             }
-        }
-    }
-}
-
-@Composable
-private fun OutlineSignInButton(
-    onSignInClick: () -> Unit,
-    @DrawableRes icon: Int,
-    @StringRes iconDescription: Int,
-    @StringRes signInText: Int,
-    modifier: Modifier = Modifier,
-) {
-    OutlinedButton(
-        modifier = modifier,
-        onClick = onSignInClick,
-        shape = MaterialTheme.shapes.small,
-    ) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Icon(
-                painter = painterResource(icon),
-                contentDescription = stringResource(iconDescription),
-                modifier = Modifier.size(24.dp),
-                tint = Color.Unspecified,
-            )
-            Spacer(modifier = Modifier.width(8.dp))
-            Text(stringResource(signInText))
         }
     }
 }
