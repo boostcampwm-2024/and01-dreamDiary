@@ -50,6 +50,7 @@ internal fun DiaryCard(
     onDiaryClick: (DiaryUi) -> Unit,
     onDiaryEdit: (DiaryUi) -> Unit,
     onDeleteDiary: (DiaryUi) -> Unit,
+    onShareDiary: (DiaryUi) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     DdCard(
@@ -58,6 +59,7 @@ internal fun DiaryCard(
                 diary = diary,
                 onDeleteDiary = onDeleteDiary,
                 onDiaryEdit = onDiaryEdit,
+                onShareDiary = onShareDiary,
                 modifier = Modifier.fillMaxWidth(),
             )
         },
@@ -118,6 +120,7 @@ private fun CardHeadline(
     diary: DiaryUi,
     onDeleteDiary: (DiaryUi) -> Unit,
     onDiaryEdit: (DiaryUi) -> Unit,
+    onShareDiary: (DiaryUi) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     var isMenuVisible by remember { mutableStateOf(false) }
@@ -137,6 +140,7 @@ private fun CardHeadline(
             onVisibleChange = { isMenuVisible = it },
             onDeleteDiary = { onDeleteDiary(diary) },
             onDiaryEdit = { onDiaryEdit(diary) },
+            onShareDiary = { onShareDiary(diary) },
         )
     }
 }
@@ -237,6 +241,7 @@ private fun DiaryCardPreview() {
             onDiaryClick = { },
             onDiaryEdit = { },
             onDeleteDiary = { },
+            onShareDiary = { },
             modifier = Modifier.fillMaxWidth(),
         )
     }

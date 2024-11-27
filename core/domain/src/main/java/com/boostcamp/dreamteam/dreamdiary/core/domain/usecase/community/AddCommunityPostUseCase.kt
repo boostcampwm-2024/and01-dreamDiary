@@ -1,7 +1,7 @@
 package com.boostcamp.dreamteam.dreamdiary.core.domain.usecase.community
 
+import com.boostcamp.dreamteam.dreamdiary.core.data.dto.CommunityPostRequest
 import com.boostcamp.dreamteam.dreamdiary.core.data.repository.CommunityRepository
-import com.boostcamp.dreamteam.dreamdiary.core.model.CommunityDreamPost
 import java.time.Instant
 import javax.inject.Inject
 
@@ -14,15 +14,12 @@ class AddCommunityPostUseCase @Inject constructor(
         content: String,
     ): Boolean {
         return communityRepository.saveCommunityPost(
-            CommunityDreamPost(
+            CommunityPostRequest(
                 author = author,
                 title = title,
                 content = content,
-                // todo: sleepStartAt 수정하기
-                sleepStartAt = 0L,
+                sleepStartAt = Instant.now().toEpochMilli(),
                 sleepEndAt = Instant.now().toEpochMilli(),
-                createdAt = Instant.now().toEpochMilli(),
-                labels = emptyList(),
             ),
         )
     }

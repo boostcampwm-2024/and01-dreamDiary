@@ -6,6 +6,7 @@ import androidx.navigation.NavOptions
 import androidx.navigation.compose.NavHost
 import com.boostcamp.dreamteam.dreamdiary.community.CommunityGraph
 import com.boostcamp.dreamteam.dreamdiary.community.communityGraph
+import com.boostcamp.dreamteam.dreamdiary.community.navigateToCommunityWrite
 import com.boostcamp.dreamteam.dreamdiary.feature.auth.SignInRoute
 import com.boostcamp.dreamteam.dreamdiary.feature.auth.signInScreen
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.DiaryGraph
@@ -43,6 +44,7 @@ fun DreamDiaryNavHost(
         )
 
         diaryGraph(
+            onShareDiary = { navController.navigateToCommunityWrite(it) },
             onCommunityClick = {
                 val options = NavOptions.Builder()
                     .setPopUpTo(DiaryGraph, inclusive = false, saveState = true)
