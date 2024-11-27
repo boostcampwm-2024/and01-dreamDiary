@@ -55,4 +55,12 @@ class AuthRepository @Inject constructor(
         }
         return null
     }
+
+    fun getUserUID(): String? {
+        return auth.currentUser?.uid
+    }
+
+    fun getUserName(): String? {
+        return auth.currentUser?.displayName
+    }
 }
