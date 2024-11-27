@@ -9,7 +9,7 @@ import kotlinx.coroutines.tasks.await
 import timber.log.Timber
 
 class FirebaseCommentPagingSource(
-    private val commentReference: CollectionReference
+    private val commentReference: CollectionReference,
 ) : PagingSource<Query, CommentResponse>() {
     override suspend fun load(params: LoadParams<Query>): LoadResult<Query, CommentResponse> {
         return try {
@@ -41,5 +41,4 @@ class FirebaseCommentPagingSource(
     override fun getRefreshKey(state: PagingState<Query, CommentResponse>): Query? {
         return null
     }
-
 }

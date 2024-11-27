@@ -48,9 +48,9 @@ class CommentRepository @Inject constructor(
             pagingSourceFactory = {
                 FirebaseCommentPagingSource(
                     commentReference = firebaseFirestore.collection("community")
-                        .document(postId).collection("comments")
+                        .document(postId).collection("comments"),
                 )
-            }
+            },
         ).flow.map {
             it.map { commentResponse ->
                 Comment(
@@ -58,10 +58,9 @@ class CommentRepository @Inject constructor(
                     content = commentResponse.content,
                     author = commentResponse.author,
                     likes = commentResponse.likes,
-                    createdAt = commentResponse.createdAt
+                    createdAt = commentResponse.createdAt,
                 )
             }
         }
     }
-
 }

@@ -18,6 +18,6 @@ fun CommentRequest.toDomain(): Comment {
         author = this.author,
         content = this.content,
         likes = 0,
-        createdAt = Instant.now().toEpochMilli()
+        createdAt = Instant.now().toEpochMilli(),
     )
 }

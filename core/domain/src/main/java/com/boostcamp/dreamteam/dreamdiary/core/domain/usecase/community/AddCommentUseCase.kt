@@ -7,7 +7,7 @@ import javax.inject.Inject
 
 class AddCommentUseCase @Inject constructor(
     private val commentRepository: CommentRepository,
-    private val authRepository: AuthRepository
+    private val authRepository: AuthRepository,
 ) {
     suspend operator fun invoke(
         postId: String,
@@ -23,8 +23,8 @@ class AddCommentUseCase @Inject constructor(
             author = Author(
                 id = uid,
                 userName = userName,
-                profileImageUrl = profileImageUrl.toString()
-            )
+                profileImageUrl = profileImageUrl.toString(),
+            ),
         )
     }
 }

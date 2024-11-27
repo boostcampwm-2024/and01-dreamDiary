@@ -123,5 +123,4 @@ class CommunityRepository @Inject constructor(
             }
         }
     }
-
 }
