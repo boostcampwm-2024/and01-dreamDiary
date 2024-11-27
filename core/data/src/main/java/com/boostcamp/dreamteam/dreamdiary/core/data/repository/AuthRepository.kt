@@ -2,6 +2,7 @@ package com.boostcamp.dreamteam.dreamdiary.core.data.repository
 
 import android.app.Activity
 import android.content.Context
+import android.net.Uri
 import androidx.credentials.ClearCredentialStateRequest
 import androidx.credentials.CredentialManager
 import com.google.firebase.auth.FirebaseAuth
@@ -62,5 +63,9 @@ class AuthRepository @Inject constructor(
 
     fun getUserName(): String? {
         return auth.currentUser?.displayName
+    }
+
+    fun getUserPhotoUrl(): Uri? {
+        return auth.currentUser?.photoUrl
     }
 }

@@ -10,6 +10,6 @@ class GetCommentUseCase @Inject constructor(
     private val commentRepository: CommentRepository,
 ) {
     operator fun invoke(postId: String): Flow<PagingData<Comment>> {
-        return commentRepository.getCommentsForPostPagingSource(postId)
+        return commentRepository.getComments(postId)
     }
 }
