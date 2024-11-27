@@ -42,6 +42,7 @@ import coil3.request.ImageRequest
 import com.boostcamp.dreamteam.dreamdiary.community.R
 import com.boostcamp.dreamteam.dreamdiary.community.model.vo.PostContentUi
 import com.boostcamp.dreamteam.dreamdiary.designsystem.component.DdAsyncImage
+import com.boostcamp.dreamteam.dreamdiary.designsystem.theme.DreamdiaryTheme
 import com.boostcamp.dreamteam.dreamdiary.ui.util.conditional
 import java.io.File
 
@@ -265,7 +266,7 @@ private fun BodyImage(
 @Preview(showBackground = true)
 @Composable
 private fun CommunityEditorPreview() {
-    MaterialTheme {
+    DreamdiaryTheme {
         CommunityEditor(
             setCurrentFocusContent = { },
             setCurrentTextCursorPosition = { },
