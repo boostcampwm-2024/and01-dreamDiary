@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.outlined.Send
@@ -33,17 +34,24 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.boostcamp.dreamteam.dreamdiary.community.R
+import com.boostcamp.dreamteam.dreamdiary.community.detail.component.CommunityDetailComment
 import com.boostcamp.dreamteam.dreamdiary.community.detail.component.CommunityDetailPostCard
+import com.boostcamp.dreamteam.dreamdiary.community.model.CommentUi
 import com.boostcamp.dreamteam.dreamdiary.community.model.PostDetailUi
+import com.boostcamp.dreamteam.dreamdiary.community.model.pagingCommentsUiPreview
 import com.boostcamp.dreamteam.dreamdiary.community.model.postDetailUiPreview
 import com.boostcamp.dreamteam.dreamdiary.designsystem.theme.DreamdiaryTheme
+import com.boostcamp.dreamteam.dreamdiary.ui.PagingIndexKey
 import kotlinx.coroutines.launch
 
 @Composable
@@ -52,11 +60,14 @@ fun CommunityDetailScreen(
     viewModel: CommunityDetailViewModel = hiltViewModel(),
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
+    val comments = viewModel.comments.collectAsLazyPagingItems()
 
     CommunityDetailScreenContent(
         onClickBack = onClickBack,
         onClickLike = { post -> viewModel.onLikeClick(post.id) },
         post = state.post,
+        comments = comments,
+        onClickLikeComment = { comment -> viewModel.onLikeComment(comment.id) },
     )
 }
 
@@ -65,6 +76,8 @@ private fun CommunityDetailScreenContent(
     onClickBack: () -> Unit,
     onClickLike: (PostDetailUi) -> Unit,
     post: PostDetailUi,
+    comments: LazyPagingItems<CommentUi>,
+    onClickLikeComment: (CommentUi) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val coroutineScope = rememberCoroutineScope()
@@ -113,7 +126,7 @@ private fun CommunityDetailScreenContent(
         ) {
             LazyColumn(
                 modifier = Modifier.fillMaxSize(),
-                contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
+                contentPadding = PaddingValues(vertical = 8.dp),
             ) {
                 item {
                     CommunityDetailPostCard(
@@ -121,6 +134,19 @@ private fun CommunityDetailScreenContent(
                         onClickLike = { onClickLike(post) },
                         modifier = Modifier.fillMaxWidth(),
                     )
+                }
+
+                items(
+                    count = comments.itemCount,
+                    key = { comments.peek(it)?.id ?: PagingIndexKey(it) },
+                ) { index ->
+                    val comment = comments[index]
+                    if (comment != null) {
+                        CommunityDetailComment(
+                            comment = comment,
+                            onClickLikeComment = { onClickLikeComment(comment) },
+                        )
+                    }
                 }
             }
         }
@@ -213,6 +239,8 @@ private fun CommunityDetailScreenContentPreview() {
             onClickBack = { },
             onClickLike = { },
             post = postDetailUiPreview,
+            comments = pagingCommentsUiPreview.collectAsLazyPagingItems(),
+            onClickLikeComment = { },
         )
     }
 }
