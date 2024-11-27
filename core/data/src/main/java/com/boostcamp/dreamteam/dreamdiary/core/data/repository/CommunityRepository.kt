@@ -9,6 +9,7 @@ import androidx.paging.map
 import com.boostcamp.dreamteam.dreamdiary.core.data.convertToFirebaseData
 import com.boostcamp.dreamteam.dreamdiary.core.data.firebase.FirebaseCommunityPostPagingSource
 import com.boostcamp.dreamteam.dreamdiary.core.data.firebase.firestore.model.FirestoreAddCommunityPostRequest
+import com.boostcamp.dreamteam.dreamdiary.core.data.firebase.firestore.model.FirestoreGetCommunityPostResponse
 import com.boostcamp.dreamteam.dreamdiary.core.model.DiaryContent
 import com.boostcamp.dreamteam.dreamdiary.core.model.community.CommunityPostList
 import com.google.firebase.firestore.DocumentReference
@@ -112,15 +113,15 @@ class CommunityRepository @Inject constructor(
                 enablePlaceholders = false,
             ),
             pagingSourceFactory = { FirebaseCommunityPostPagingSource(communityCollection) },
-        ).flow.map {
-            it.map {
-                val diaryContents = parseListPostContent(it.content, it.id, it.uid)
+        ).flow.map { postResponses ->
+            postResponses.map { postResponse ->
+                val diaryContents = parseListPostContent(content = postResponse.content, postId = postResponse.id, postUID = postResponse.uid)
                 CommunityPostList(
-                    id = it.id,
-                    author = it.author,
-                    title = it.title,
+                    id = postResponse.id,
+                    author = postResponse.author,
+                    title = postResponse.title,
                     diaryContents = diaryContents,
-                    createdAt = Instant.ofEpochSecond(it.createdAt.seconds, it.createdAt.nanoseconds.toLong()),
+                    createdAt = Instant.ofEpochSecond(postResponse.createdAt.seconds, postResponse.createdAt.nanoseconds.toLong()),
                 )
             }
         }
