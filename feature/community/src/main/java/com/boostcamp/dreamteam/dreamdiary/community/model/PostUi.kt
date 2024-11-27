@@ -42,8 +42,8 @@ fun CommunityDreamPost.toPostUi(): PostUi {
 fun CommunityPostList.toPostUi(): PostUi {
     return PostUi(
         id = this.id,
-        thumbnail = null,
         title = this.title,
+        images = emptyList(),
         previewText = "",
         sharedAt = this.createdAt.toDisplayableDateTime(),
         commentCount = 123,
