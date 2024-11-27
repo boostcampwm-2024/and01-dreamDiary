@@ -30,7 +30,7 @@ class CommentRepository @Inject constructor(
             id = commentRef.id,
             content = content,
             author = author,
-            likes = 0,
+            likeCount = 0,
             createdAt = FieldValue.serverTimestamp(),
         )
 
@@ -57,7 +57,7 @@ class CommentRepository @Inject constructor(
                     id = commentResponse.id,
                     content = commentResponse.content,
                     author = commentResponse.author,
-                    likes = commentResponse.likes,
+                    likeCount = commentResponse.likeCount,
                     createdAt = commentResponse.createdAt,
                 )
             }

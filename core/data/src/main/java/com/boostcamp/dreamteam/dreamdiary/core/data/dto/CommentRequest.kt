@@ -8,7 +8,7 @@ data class CommentRequest(
     val id: String,
     val content: String,
     val author: Author,
-    val likes: Int,
+    val likeCount: Int,
     val createdAt: Any,
 )
 
@@ -17,7 +17,7 @@ fun CommentRequest.toDomain(): Comment {
         id = "",
         author = this.author,
         content = this.content,
-        likes = 0,
+        likeCount = 0,
         createdAt = Instant.now().toEpochMilli(),
     )
 }
