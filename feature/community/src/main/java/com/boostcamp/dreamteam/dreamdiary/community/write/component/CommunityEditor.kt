@@ -42,6 +42,7 @@ import com.boostcamp.dreamteam.dreamdiary.community.R
 import com.boostcamp.dreamteam.dreamdiary.community.model.vo.PostContentUi
 import com.boostcamp.dreamteam.dreamdiary.designsystem.component.DdAsyncImage
 import com.boostcamp.dreamteam.dreamdiary.ui.util.conditional
+import java.io.File
 
 internal data class CommunityEditorState(
     val title: String,
@@ -218,9 +219,13 @@ private fun BodyImage(
     modifier: Modifier = Modifier,
     readOnly: Boolean = false,
 ) {
+    val context = LocalContext.current
     Box(modifier = modifier) {
         DdAsyncImage(
-            model = ImageRequest.Builder(LocalContext.current).data(imageContent.path).build(),
+            model = ImageRequest
+                .Builder(context)
+                .data(File(context.filesDir, imageContent.path))
+                .build(),
             contentDescription = stringResource(R.string.community_write_editor_image_description),
             modifier = Modifier
                 .fillMaxWidth()
