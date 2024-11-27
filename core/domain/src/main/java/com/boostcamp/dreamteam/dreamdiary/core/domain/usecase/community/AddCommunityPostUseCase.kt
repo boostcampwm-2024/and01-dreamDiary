@@ -1,29 +1,26 @@
 package com.boostcamp.dreamteam.dreamdiary.core.domain.usecase.community
 
+import com.boostcamp.dreamteam.dreamdiary.core.data.repository.AuthRepository
 import com.boostcamp.dreamteam.dreamdiary.core.data.repository.CommunityRepository
-import com.boostcamp.dreamteam.dreamdiary.core.model.CommunityDreamPost
-import java.time.Instant
+import com.boostcamp.dreamteam.dreamdiary.core.model.DiaryContent
 import javax.inject.Inject
 
 class AddCommunityPostUseCase @Inject constructor(
     private val communityRepository: CommunityRepository,
+    private val authRepository: AuthRepository,
 ) {
     suspend operator fun invoke(
-        author: String,
         title: String,
-        content: String,
-    ): Boolean {
+        diaryContents: List<DiaryContent>,
+    ): String {
+        val uid = authRepository.getUserUID() ?: throw Exception()
+        val userName = authRepository.getUserName() ?: throw Exception()
+
         return communityRepository.saveCommunityPost(
-            CommunityDreamPost(
-                author = author,
-                title = title,
-                content = content,
-                // todo: sleepStartAt 수정하기
-                sleepStartAt = 0L,
-                sleepEndAt = Instant.now().toEpochMilli(),
-                createdAt = Instant.now().toEpochMilli(),
-                labels = emptyList(),
-            ),
+            title = title,
+            diaryContents = diaryContents,
+            uid = uid,
+            name = userName,
         )
     }
 }
