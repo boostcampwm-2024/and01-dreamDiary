@@ -7,7 +7,7 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.map
 import com.boostcamp.dreamteam.dreamdiary.core.data.convertToFirebaseData
-import com.boostcamp.dreamteam.dreamdiary.core.data.firebase.FirebaseCommunityPostSataSource
+import com.boostcamp.dreamteam.dreamdiary.core.data.firebase.FirebaseCommunityPostPagingSource
 import com.boostcamp.dreamteam.dreamdiary.core.data.firebase.firestore.model.FirestoreAddCommunityPostRequest
 import com.boostcamp.dreamteam.dreamdiary.core.model.DiaryContent
 import com.boostcamp.dreamteam.dreamdiary.core.model.community.CommunityPostList
@@ -111,7 +111,7 @@ class CommunityRepository @Inject constructor(
                 pageSize = 10,
                 enablePlaceholders = false,
             ),
-            pagingSourceFactory = { FirebaseCommunityPostSataSource(communityCollection) },
+            pagingSourceFactory = { FirebaseCommunityPostPagingSource(communityCollection) },
         ).flow.map {
             it.map {
                 val diaryContents = parseListPostContent(it.content, it.id, it.uid)

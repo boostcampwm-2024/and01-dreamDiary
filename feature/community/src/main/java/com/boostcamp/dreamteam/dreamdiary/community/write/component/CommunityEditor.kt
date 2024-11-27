@@ -1,5 +1,6 @@
 package com.boostcamp.dreamteam.dreamdiary.community.write.component
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -7,7 +8,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActionScope
 import androidx.compose.foundation.text.KeyboardActions
@@ -36,11 +36,13 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil3.request.ImageRequest
 import com.boostcamp.dreamteam.dreamdiary.community.R
 import com.boostcamp.dreamteam.dreamdiary.community.model.vo.PostContentUi
 import com.boostcamp.dreamteam.dreamdiary.designsystem.component.DdAsyncImage
+import com.boostcamp.dreamteam.dreamdiary.designsystem.theme.DreamdiaryTheme
 import com.boostcamp.dreamteam.dreamdiary.ui.util.conditional
 import java.io.File
 
@@ -123,7 +125,7 @@ private fun InputTitle(
 }
 
 @Composable
-private fun InputBody(
+internal fun InputBody(
     postContents: List<PostContentUi>,
     onContentTextPositionChange: (textPosition: Int) -> Unit,
     onContentTextChange: (contentIndex: Int, String) -> Unit,
@@ -135,9 +137,12 @@ private fun InputBody(
 ) {
     val firstTextFieldIndex = remember { derivedStateOf { postContents.indexOfFirst { it is PostContentUi.Text } } }
 
-    LazyColumn(modifier = modifier) {
-        items(count = postContents.size) { index ->
-            when (val content = postContents[index]) {
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy(4.dp),
+    ) {
+        postContents.forEachIndexed { index, content ->
+            when (content) {
                 is PostContentUi.Text -> BodyText(
                     textContent = content,
                     onContentTextPositionChange = onContentTextPositionChange,
@@ -192,7 +197,8 @@ private fun BodyText(
                         focusRequester(focusRequester)
                     }
                 },
-            ).onFocusChanged { onFocusChange(it.isFocused) },
+            )
+            .onFocusChanged { onFocusChange(it.isFocused) },
         readOnly = readOnly,
         textStyle = MaterialTheme.typography.bodyLarge.copy(
             color = MaterialTheme.colorScheme.onSurface,
@@ -254,5 +260,26 @@ private fun BodyImage(
                 )
             }
         }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun CommunityEditorPreview() {
+    DreamdiaryTheme {
+        CommunityEditor(
+            setCurrentFocusContent = { },
+            setCurrentTextCursorPosition = { },
+            state = CommunityEditorState(
+                title = "제목",
+                onTitleChange = {},
+                postContents = listOf(
+                    PostContentUi.Text("내용"),
+                    PostContentUi.Image("https://example.com/image.jpg"),
+                ),
+                onContentTextChange = { _, _ -> },
+                onContentImageDelete = { },
+            ),
+        )
     }
 }
