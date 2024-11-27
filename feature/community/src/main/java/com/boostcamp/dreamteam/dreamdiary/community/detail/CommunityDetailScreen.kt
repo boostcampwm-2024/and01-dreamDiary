@@ -40,6 +40,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.boostcamp.dreamteam.dreamdiary.community.R
+import com.boostcamp.dreamteam.dreamdiary.community.detail.component.CommunityDetailPostCard
 import com.boostcamp.dreamteam.dreamdiary.community.model.PostDetailUi
 import com.boostcamp.dreamteam.dreamdiary.community.model.postDetailUiPreview
 import com.boostcamp.dreamteam.dreamdiary.designsystem.theme.DreamdiaryTheme
@@ -54,6 +55,7 @@ fun CommunityDetailScreen(
 
     CommunityDetailScreenContent(
         onClickBack = onClickBack,
+        onClickLike = { post -> viewModel.onLikeClick(post.id) },
         post = state.post,
     )
 }
@@ -61,6 +63,7 @@ fun CommunityDetailScreen(
 @Composable
 private fun CommunityDetailScreenContent(
     onClickBack: () -> Unit,
+    onClickLike: (PostDetailUi) -> Unit,
     post: PostDetailUi,
     modifier: Modifier = Modifier,
 ) {
@@ -111,7 +114,15 @@ private fun CommunityDetailScreenContent(
             LazyColumn(
                 modifier = Modifier.fillMaxSize(),
                 contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
-            ) {}
+            ) {
+                item {
+                    CommunityDetailPostCard(
+                        post = post,
+                        onClickLike = { onClickLike(post) },
+                        modifier = Modifier.fillMaxWidth(),
+                    )
+                }
+            }
         }
     }
 }
@@ -200,6 +211,7 @@ private fun CommunityDetailScreenContentPreview() {
     DreamdiaryTheme {
         CommunityDetailScreenContent(
             onClickBack = { },
+            onClickLike = { },
             post = postDetailUiPreview,
         )
     }
