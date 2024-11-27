@@ -5,7 +5,7 @@ import com.boostcamp.dreamteam.dreamdiary.core.model.CommunityDreamPost
 import javax.inject.Inject
 
 class GetCommunityPostUseCase @Inject constructor(
-    private val communityRepository: CommunityRepository
+    private val communityRepository: CommunityRepository,
 ) {
     suspend operator fun invoke(postId: String): CommunityDreamPost {
         return communityRepository.getCommunityPost(postId)

@@ -7,7 +7,5 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CommunityDetailViewModel @Inject constructor(
-    private val getCommunityPostUseCase: GetCommunityPostUseCase
-) : ViewModel() {
-
-}
+    private val getCommunityPostUseCase: GetCommunityPostUseCase,
+) : ViewModel()
