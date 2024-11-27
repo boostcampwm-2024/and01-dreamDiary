@@ -30,7 +30,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -50,7 +49,6 @@ import com.boostcamp.dreamteam.dreamdiary.community.model.pagingCommentsUiPrevie
 import com.boostcamp.dreamteam.dreamdiary.community.model.postDetailUiPreview
 import com.boostcamp.dreamteam.dreamdiary.designsystem.theme.DreamdiaryTheme
 import com.boostcamp.dreamteam.dreamdiary.ui.PagingIndexKey
-import kotlinx.coroutines.launch
 
 @Composable
 fun CommunityDetailScreen(
