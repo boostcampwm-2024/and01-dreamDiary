@@ -196,7 +196,8 @@ private fun BodyText(
                         focusRequester(focusRequester)
                     }
                 },
-            ).onFocusChanged { onFocusChange(it.isFocused) },
+            )
+            .onFocusChanged { onFocusChange(it.isFocused) },
         readOnly = readOnly,
         textStyle = MaterialTheme.typography.bodyLarge.copy(
             color = MaterialTheme.colorScheme.onSurface,
@@ -266,6 +267,8 @@ private fun BodyImage(
 private fun CommunityEditorPreview() {
     MaterialTheme {
         CommunityEditor(
+            setCurrentFocusContent = { },
+            setCurrentTextCursorPosition = { },
             state = CommunityEditorState(
                 title = "제목",
                 onTitleChange = {},
