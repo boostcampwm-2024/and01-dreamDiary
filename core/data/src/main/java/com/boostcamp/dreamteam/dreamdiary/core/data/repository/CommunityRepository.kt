@@ -7,8 +7,10 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.map
 import com.boostcamp.dreamteam.dreamdiary.core.data.convertToFirebaseData
+import com.boostcamp.dreamteam.dreamdiary.core.data.dto.CommunityPostResponse
 import com.boostcamp.dreamteam.dreamdiary.core.data.firebase.FirebaseCommunityPostPagingSource
 import com.boostcamp.dreamteam.dreamdiary.core.data.firebase.firestore.model.FirestoreAddCommunityPostRequest
+import com.boostcamp.dreamteam.dreamdiary.core.model.CommunityPostDetail
 import com.boostcamp.dreamteam.dreamdiary.core.model.DiaryContent
 import com.boostcamp.dreamteam.dreamdiary.core.model.community.CommunityPostList
 import com.google.firebase.firestore.DocumentReference
@@ -22,6 +24,7 @@ import kotlinx.coroutines.tasks.await
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.encodeToJsonElement
 import kotlinx.serialization.json.jsonObject
+import timber.log.Timber
 import java.io.File
 import java.time.Instant
 import java.util.UUID
@@ -121,6 +124,117 @@ class CommunityRepository @Inject constructor(
                     createdAt = Instant.ofEpochSecond(it.createdAt.seconds, it.createdAt.nanoseconds.toLong()),
                 )
             }
+        }
+    }
+
+    suspend fun getCommunityPostById(postId: String): CommunityPostDetail {
+        return try {
+            val documentSnapshot =
+                communityCollection.document(postId)
+                    .get()
+                    .await()
+
+            if (!documentSnapshot.exists()) {
+                throw Exception("Community post with ID $postId not found")
+            }
+
+            val communityPostResponse = documentSnapshot.toObject(CommunityPostResponse::class.java)
+                ?: throw Exception("Failed to parse CommunityPostResponse for ID $postId")
+
+            Timber.d("communityPostResponse: ${communityPostResponse.content}")
+            val contents = parseBody(postId, communityPostResponse.content)
+            Timber.d("contents: $contents")
+
+            CommunityPostDetail(
+                id = communityPostResponse.id,
+                author = communityPostResponse.author,
+                profileImageUrl = communityPostResponse.profileImageUrl,
+                title = communityPostResponse.title,
+                content = communityPostResponse.content,
+                likes = communityPostResponse.likes,
+                commentCount = communityPostResponse.commentCount,
+                postContents = contents,
+                createdAt = communityPostResponse.createdAt.seconds,
+            )
+        } catch (e: Exception) {
+            Timber.e(e, "Error fetching community post with ID $postId")
+            throw e
+        }
+    }
+
+    private suspend fun parseBody(
+        postId: String,
+        body: String,
+    ): List<DiaryContent> {
+        val diaryContents = mutableListOf<DiaryContent>()
+
+        val parsingDiaryContent = body.split(":")
+        var index = 0
+
+        while (index < parsingDiaryContent.size) {
+            if (parsingDiaryContent[index] == "text") {
+                index += 1
+                val id = parsingDiaryContent[index]
+                getTextContent(postId, id)?.let { diaryContents.add(it) }
+            } else if (parsingDiaryContent[index] == "image") {
+                index += 1
+                val id = parsingDiaryContent[index]
+                getImageContent(postId, id)?.let {
+                    diaryContents.add(it)
+                    Timber.d("image: $it")
+                }
+            } else {
+                index += 1
+                continue
+            }
+        }
+        return diaryContents
+    }
+
+    private suspend fun getImageContent(
+        postId: String,
+        imageId: String,
+    ): DiaryContent? {
+        return try {
+            val imageSnapshot = communityCollection.document(postId)
+                .collection("images").document(imageId).get().await()
+
+            val imagePath = imageSnapshot.getString("name")
+            if (imagePath != null) {
+                // todo 사진이 안올라감
+                // todo bucketImagePath 예쁘게 가져오기
+                val bucketImagePath = """
+                    https://firebasestorage.googleapis.com/v0/b/dream-diary-bc8d7.firebasestorage.app/o/community%2Fimages%2F$imageId%2F$imagePath?alt=media
+                """.trimIndent()
+
+                Timber.d("imagePath: $bucketImagePath")
+                DiaryContent.Image(bucketImagePath)
+            } else {
+                null
+            }
+        } catch (e: Exception) {
+            Timber.e(e, "Error fetching image with ID $imageId for post $postId")
+            null
+        }
+    }
+
+    private suspend fun getTextContent(
+        postId: String,
+        textId: String,
+    ): DiaryContent? {
+        return try {
+            val textSnapshot = communityCollection.document(postId)
+                .collection("text").document(textId).get().await()
+
+            val text = textSnapshot.getString("text")
+            if (text != null) {
+                DiaryContent.Text(text)
+            } else {
+                null
+            }
+        } catch (e: Exception) {
+            Timber.e(e, "Error fetching text with ID $textId for post $postId")
+            null
         }
     }
 }
