@@ -8,5 +8,6 @@ data class CommunityPostDetail(
     val content: String,
     val likes: Int,
     val commentCount: Int,
+    val postContents: List<DiaryContent>,
     val createdAt: Long,
 )

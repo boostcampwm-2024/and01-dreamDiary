@@ -3,7 +3,6 @@ package com.boostcamp.dreamteam.dreamdiary.community.model
 import androidx.paging.PagingData
 import com.boostcamp.dreamteam.dreamdiary.community.model.vo.DisplayableDateTime
 import com.boostcamp.dreamteam.dreamdiary.community.model.vo.toDisplayableDateTime
-import com.boostcamp.dreamteam.dreamdiary.core.model.CommunityDreamPost
 import com.boostcamp.dreamteam.dreamdiary.core.model.community.CommunityPostList
 import kotlinx.coroutines.flow.flowOf
 import java.time.Instant
@@ -20,24 +19,6 @@ data class PostUi(
     val author: UserUi,
 )
 
-fun CommunityDreamPost.toPostUi(): PostUi {
-    return PostUi(
-        id = this.id,
-        title = this.title,
-        previewText = this.content.take(50),
-        images = images,
-        sharedAt = Instant.ofEpochMilli(this.createdAt).toDisplayableDateTime(),
-        commentCount = this.commentCount.toLong(),
-        isLiked = this.likes > 0,
-        author = UserUi(
-            id = this.author,
-            username = this.author,
-            // Todo
-            profileImageUrl = "https://picsum.photos/200/300",
-        ),
-    )
-}
-
 // TODO CommunityPostList 마저 만들기
 fun CommunityPostList.toPostUi(): PostUi {
     return PostUi(
@@ -49,7 +30,7 @@ fun CommunityPostList.toPostUi(): PostUi {
         commentCount = 123,
         isLiked = true,
         author = UserUi(
-            id = this.author,
+            uid = this.author,
             username = this.author,
             profileImageUrl = "https://picsum.photos/200/300",
         ),
