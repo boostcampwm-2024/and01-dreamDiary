@@ -23,7 +23,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -43,6 +42,7 @@ import com.boostcamp.dreamteam.dreamdiary.community.R
 import com.boostcamp.dreamteam.dreamdiary.community.model.vo.PostContentUi
 import com.boostcamp.dreamteam.dreamdiary.designsystem.component.DdAsyncImage
 import com.boostcamp.dreamteam.dreamdiary.ui.util.conditional
+import java.io.File
 
 internal data class CommunityEditorState(
     val title: String,
@@ -55,11 +55,11 @@ internal data class CommunityEditorState(
 
 @Composable
 internal fun CommunityEditor(
+    setCurrentFocusContent: (Int) -> Unit,
+    setCurrentTextCursorPosition: (Int) -> Unit,
     state: CommunityEditorState,
     modifier: Modifier = Modifier,
 ) {
-    var currentFocusContent by remember { mutableIntStateOf(0) }
-    var currentTextCursorPosition by remember { mutableIntStateOf(0) }
     val firstTextFieldFocusRequester = remember { FocusRequester() }
 
     Column(modifier = modifier) {
@@ -73,9 +73,9 @@ internal fun CommunityEditor(
         Spacer(modifier = Modifier.height(24.dp))
         InputBody(
             postContents = state.postContents,
-            onContentTextPositionChange = { currentTextCursorPosition = it },
+            onContentTextPositionChange = setCurrentFocusContent,
             onContentTextChange = state.onContentTextChange,
-            onContentFocusChange = { currentFocusContent = it },
+            onContentFocusChange = setCurrentTextCursorPosition,
             onContentImageDelete = state.onContentImageDelete,
             modifier = Modifier.fillMaxWidth(),
             firstTextFieldFocusRequester = firstTextFieldFocusRequester,
@@ -219,9 +219,13 @@ private fun BodyImage(
     modifier: Modifier = Modifier,
     readOnly: Boolean = false,
 ) {
+    val context = LocalContext.current
     Box(modifier = modifier) {
         DdAsyncImage(
-            model = ImageRequest.Builder(LocalContext.current).data(imageContent.path).build(),
+            model = ImageRequest
+                .Builder(context)
+                .data(File(context.filesDir, imageContent.path))
+                .build(),
             contentDescription = stringResource(R.string.community_write_editor_image_description),
             modifier = Modifier
                 .fillMaxWidth()

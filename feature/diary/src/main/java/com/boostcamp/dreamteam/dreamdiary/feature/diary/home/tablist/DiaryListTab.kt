@@ -78,6 +78,7 @@ internal fun DiaryListTab(
     onDiaryClick: (DiaryUi) -> Unit,
     onDiaryEdit: (DiaryUi) -> Unit,
     onDeleteDiary: (DiaryUi) -> Unit,
+    onShareDiary: (DiaryUi) -> Unit,
     sortOption: DiarySort,
     onChangeSort: (DiarySort) -> Unit,
     modifier: Modifier = Modifier,
@@ -107,6 +108,7 @@ internal fun DiaryListTab(
                 onDiaryClick = onDiaryClick,
                 onDiaryEdit = onDiaryEdit,
                 onDeleteDiary = onDeleteDiary,
+                onShareDiary = onShareDiary,
                 modifier = contentModifier,
             )
         }
@@ -144,6 +146,7 @@ private fun DiaryListTabContent(
     onDiaryClick: (DiaryUi) -> Unit,
     onDiaryEdit: (DiaryUi) -> Unit,
     onDeleteDiary: (DiaryUi) -> Unit,
+    onShareDiary: (DiaryUi) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     LazyColumn(
@@ -161,6 +164,7 @@ private fun DiaryListTabContent(
                     diary = diary,
                     onDiaryClick = { onDiaryClick(diary) },
                     onDiaryEdit = { onDiaryEdit(diary) },
+                    onShareDiary = { onShareDiary(diary) },
                     onDeleteDiary = onDeleteDiary,
                     modifier = Modifier
                         .fillMaxWidth()
@@ -250,6 +254,7 @@ private fun DiaryListTabPreviewEmpty() {
                 onDiaryClick = { },
                 onDiaryEdit = { },
                 onDeleteDiary = { },
+                onShareDiary = { },
                 onChangeSort = { },
                 sortOption = DiarySort(UPDATED, DESC),
             )
@@ -403,6 +408,7 @@ private fun DiaryListTabPreview() {
                 onDiaryClick = { },
                 onDiaryEdit = { },
                 onDeleteDiary = { },
+                onShareDiary = { },
                 onChangeSort = { },
                 sortOption = DiarySort(
                     UPDATED,
