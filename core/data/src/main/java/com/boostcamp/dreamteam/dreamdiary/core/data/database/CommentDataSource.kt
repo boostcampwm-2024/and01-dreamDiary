@@ -15,8 +15,9 @@ import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 
-class CommentDataSource @Inject constructor() {
-    private val db = FirebaseFirestore.getInstance()
+class CommentDataSource @Inject constructor(
+    private val db: FirebaseFirestore
+) {
 
     suspend fun addComment(
         postId: String,
