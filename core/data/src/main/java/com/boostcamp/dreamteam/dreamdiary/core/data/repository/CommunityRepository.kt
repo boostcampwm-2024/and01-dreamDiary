@@ -62,7 +62,7 @@ class CommunityRepository @Inject constructor(
                         imageReference to mapOf(
                             "id" to imageReference.id,
                             "name" to imageNameForStorage,
-                        )
+                        ),
                     )
 
                     content += "image:${imageReference.id}:"
@@ -75,7 +75,7 @@ class CommunityRepository @Inject constructor(
                         textReference to mapOf(
                             "id" to textReference.id,
                             "text" to diaryContent.text,
-                        )
+                        ),
                     )
                     content += "text:${textReference.id}:"
                 }
@@ -118,7 +118,7 @@ class CommunityRepository @Inject constructor(
                     id = it.id,
                     author = it.author,
                     title = it.title,
-                    createdAt = Instant.ofEpochSecond(it.createdAt.seconds, it.createdAt.nanoseconds.toLong())
+                    createdAt = Instant.ofEpochSecond(it.createdAt.seconds, it.createdAt.nanoseconds.toLong()),
                 )
             }
         }
