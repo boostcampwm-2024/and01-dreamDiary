@@ -4,6 +4,7 @@ import androidx.paging.PagingData
 import com.boostcamp.dreamteam.dreamdiary.community.model.vo.DisplayableDateTime
 import com.boostcamp.dreamteam.dreamdiary.community.model.vo.toDisplayableDateTime
 import com.boostcamp.dreamteam.dreamdiary.core.model.CommunityDreamPost
+import com.boostcamp.dreamteam.dreamdiary.core.model.community.CommunityPostList
 import kotlinx.coroutines.flow.flowOf
 import java.time.Instant
 import java.time.ZoneId
@@ -32,6 +33,24 @@ fun CommunityDreamPost.toPostUi(): PostUi {
             id = this.author,
             username = this.author,
             // Todo
+            profileImageUrl = "https://picsum.photos/200/300",
+        ),
+    )
+}
+
+// TODO CommunityPostList 마저 만들기
+fun CommunityPostList.toPostUi(): PostUi {
+    return PostUi(
+        id = this.id,
+        thumbnail = null,
+        title = this.title,
+        previewText = "",
+        sharedAt = this.createdAt.toDisplayableDateTime(),
+        commentCount = 123,
+        isLiked = true,
+        author = UserUi(
+            id = this.author,
+            username = this.author,
             profileImageUrl = "https://picsum.photos/200/300",
         ),
     )
