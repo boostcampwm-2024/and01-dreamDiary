@@ -56,6 +56,7 @@ class CommentRepository @Inject constructor(
                 Comment(
                     id = commentResponse.id,
                     content = commentResponse.content,
+                    uid = commentResponse.uid,
                     author = commentResponse.author,
                     profileImageUrl = commentResponse.profileImageUrl,
                     likeCount = commentResponse.likeCount,

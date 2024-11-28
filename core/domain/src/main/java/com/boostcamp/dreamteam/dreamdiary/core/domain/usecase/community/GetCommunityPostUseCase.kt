@@ -10,7 +10,7 @@ class GetCommunityPostUseCase @Inject constructor(
     private val authRepository: AuthRepository
 ) {
     suspend operator fun invoke(postId: String): CommunityPostDetail {
-        val uid = authRepository.getUserUID() ?: throw IllegalStateException("User is not signed in")
+        val uid = authRepository.getUserUID() ?: throw IllegalArgumentException("User is not signed in")
         return communityRepository.getCommunityPostById(uid, postId)
     }
 }
