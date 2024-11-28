@@ -4,6 +4,7 @@ import com.google.firebase.Timestamp
 
 data class CommunityPostResponse(
     val id: String = "",
+    val uid: String = "",
     val author: String = "",
     val profileImageUrl: String = "",
     val title: String = "",

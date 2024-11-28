@@ -117,7 +117,9 @@ class CommunityRepository @Inject constructor(
         ).flow.map { postResponses ->
             postResponses.map { postResponse ->
                 val diaryContents =
-                    parseListPostContent(content = postResponse.content, postId = postResponse.id, postUID = postResponse.uid)
+                    parseListPostContent(
+                        content = postResponse.content, postId = postResponse.id, postUID = postResponse.uid
+                    )
                 CommunityPostList(
                     id = postResponse.id,
                     author = postResponse.author,
@@ -203,7 +205,6 @@ class CommunityRepository @Inject constructor(
     }
 
     suspend fun getCommunityPostById(
-        uid: String,
         postId: String,
     ): CommunityPostDetail {
         return try {
@@ -220,7 +221,7 @@ class CommunityRepository @Inject constructor(
                 ?: throw Exception("Failed to parse CommunityPostResponse for ID $postId")
 
             Timber.d("communityPostResponse: ${communityPostResponse.content}")
-            val contents = parseBody(uid, postId, communityPostResponse.content)
+            val contents = parseBody(communityPostResponse.uid, postId, communityPostResponse.content)
             Timber.d("contents: $contents")
 
             CommunityPostDetail(
