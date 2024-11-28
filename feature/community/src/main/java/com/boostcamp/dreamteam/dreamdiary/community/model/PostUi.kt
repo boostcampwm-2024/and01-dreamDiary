@@ -31,9 +31,9 @@ fun CommunityPostList.toPostUi(): PostUi {
         commentCount = this.commentCount,
         isLiked = true,
         author = UserUi(
-            uid = this.author,
+            uid = this.uid,
             username = this.author,
-            profileImageUrl = "https://picsum.photos/200/300",
+            profileImageUrl = this.profileImageUrl,
         ),
     )
 }

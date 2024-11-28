@@ -121,9 +121,12 @@ class CommunityRepository @Inject constructor(
                 CommunityPostList(
                     id = postResponse.id,
                     author = postResponse.author,
+                    profileImageUrl = postResponse.profileImageUrl,
+                    uid = postResponse.uid,
                     title = postResponse.title,
                     diaryContents = diaryContents,
                     commentCount = postResponse.commentCount,
+                    likeCount = postResponse.likeCount,
                     createdAt = Instant.ofEpochSecond(postResponse.createdAt.seconds, postResponse.createdAt.nanoseconds.toLong()),
                 )
             }
