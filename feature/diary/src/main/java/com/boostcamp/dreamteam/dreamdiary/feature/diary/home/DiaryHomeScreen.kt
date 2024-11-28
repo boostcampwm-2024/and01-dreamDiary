@@ -22,7 +22,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -117,8 +116,7 @@ private fun DiaryHomeScreenContent(
     onSearchClick: () -> Unit = {},
     onNotificationClick: () -> Unit = {},
 ) {
-    var selectedTabIndex by rememberSaveable { mutableIntStateOf(0) }
-    val tabs = listOf(stringResource(R.string.home_tab_dream), stringResource(R.string.home_tab_calendar))
+    val (currentTabIndex, setCurrentTabIndex) = rememberSaveable { mutableIntStateOf(0) }
 
     val navigationItems = listOf(
         HomeBottomNavItem.MyDream.toNavigationItem(
@@ -139,6 +137,8 @@ private fun DiaryHomeScreenContent(
             DiaryHomeScreenTopAppBar(
                 onNotificationClick = { /* 알림 클릭 시 동작 */ },
                 onSearchClick = { /* 검색 클릭 시 동작 */ },
+                currentTabIndex = currentTabIndex,
+                onClickTab = setCurrentTabIndex,
             )
         },
         bottomBar = {
@@ -160,27 +160,8 @@ private fun DiaryHomeScreenContent(
                 .padding(innerPadding)
                 .fillMaxSize(),
         ) {
-            PrimaryTabRow(
-                selectedTabIndex = selectedTabIndex,
-                indicator = {
-                    TabRowDefaults.SecondaryIndicator(
-                        modifier = Modifier.tabIndicatorOffset(
-                            selectedTabIndex = selectedTabIndex,
-                        ),
-                    )
-                },
-            ) {
-                tabs.forEachIndexed { index, title ->
-                    Tab(
-                        selected = selectedTabIndex == index,
-                        onClick = { selectedTabIndex = index },
-                        text = { Text(title) },
-                    )
-                }
-            }
-
             val tabModifier = Modifier.fillMaxSize()
-            when (selectedTabIndex) {
+            when (currentTabIndex) {
                 0 -> DiaryListTab(
                     diaries = diaries,
                     labels = labels,
@@ -211,30 +192,49 @@ private fun DiaryHomeScreenContent(
 private fun DiaryHomeScreenTopAppBar(
     onNotificationClick: () -> Unit,
     onSearchClick: () -> Unit,
+    currentTabIndex: Int,
+    onClickTab: (Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    CenterAlignedTopAppBar(
-        title = { Text(stringResource(R.string.home_my_dream)) },
-        modifier = modifier,
-        actions = {
-            IconButton(
-                onClick = onNotificationClick,
-            ) {
-                Icon(
-                    imageVector = Icons.Outlined.Notifications,
-                    contentDescription = stringResource(R.string.home_alarm_description),
+    val tabs = listOf(stringResource(R.string.home_tab_dream), stringResource(R.string.home_tab_calendar))
+
+    Column(modifier = modifier) {
+        CenterAlignedTopAppBar(
+            title = { Text(stringResource(R.string.home_my_dream)) },
+            actions = {
+                IconButton(onClick = onNotificationClick) {
+                    Icon(
+                        imageVector = Icons.Outlined.Notifications,
+                        contentDescription = stringResource(R.string.home_alarm_description),
+                    )
+                }
+                IconButton(onClick = onSearchClick) {
+                    Icon(
+                        imageVector = Icons.Outlined.Search,
+                        contentDescription = stringResource(R.string.home_search_description),
+                    )
+                }
+            },
+        )
+        PrimaryTabRow(
+            selectedTabIndex = currentTabIndex,
+            indicator = {
+                TabRowDefaults.SecondaryIndicator(
+                    modifier = Modifier.tabIndicatorOffset(
+                        selectedTabIndex = currentTabIndex,
+                    ),
+                )
+            },
+        ) {
+            tabs.forEachIndexed { index, title ->
+                Tab(
+                    selected = currentTabIndex == index,
+                    onClick = { onClickTab(index) },
+                    text = { Text(title) },
                 )
             }
-            IconButton(
-                onClick = onSearchClick,
-            ) {
-                Icon(
-                    imageVector = Icons.Outlined.Search,
-                    contentDescription = stringResource(R.string.home_search_description),
-                )
-            }
-        },
-    )
+        }
+    }
 }
 
 @Preview
