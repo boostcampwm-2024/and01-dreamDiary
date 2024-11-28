@@ -28,11 +28,6 @@ class CommunityListViewModel @Inject constructor(
     fun addCommunityPost() {
         // TODO
         viewModelScope.launch {
-            addCommunityPostUseCase(
-                author = "author",
-                title = "title",
-                content = "content",
-            )
         }
     }
 

@@ -13,6 +13,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.boostcamp.dreamteam.dreamdiary.designsystem.theme.DreamdiaryTheme
@@ -25,6 +26,7 @@ fun DdCard(
     underline: @Composable (() -> Unit)? = null,
     tail: (@Composable () -> Unit)? = null,
     containerColor: Color = MaterialTheme.colorScheme.surfaceContainerLowest,
+    shape: Shape = CardDefaults.shape,
     content: @Composable (() -> Unit)? = null,
 ) {
     val decoratedOverlineContent: @Composable () -> Unit = overline?.let {
@@ -77,6 +79,7 @@ fun DdCard(
 
     Card(
         modifier = modifier,
+        shape = shape,
         colors = CardDefaults.cardColors().copy(containerColor = containerColor),
         elevation = CardDefaults.elevatedCardElevation(),
     ) {

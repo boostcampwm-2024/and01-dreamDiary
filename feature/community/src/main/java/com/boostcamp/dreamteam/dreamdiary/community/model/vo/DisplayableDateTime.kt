@@ -9,6 +9,10 @@ data class DisplayableDateTime(
     val formatted: String,
 ) {
     companion object {
+        val EMPTY: DisplayableDateTime = DisplayableDateTime(
+            value = Instant.EPOCH,
+            formatted = "",
+        )
         val localedFormatter: Map<Locale, DisplayableDateTimeFormatter> = emptyMap()
     }
 }

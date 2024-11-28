@@ -1,24 +1,42 @@
 package com.boostcamp.dreamteam.dreamdiary.community.write
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.boostcamp.dreamteam.dreamdiary.community.CommunityGraph
 import com.boostcamp.dreamteam.dreamdiary.community.model.vo.PostContentUi
+import com.boostcamp.dreamteam.dreamdiary.community.model.vo.toDomain
+import com.boostcamp.dreamteam.dreamdiary.core.domain.usecase.GetDreamDiaryUseCase
+import com.boostcamp.dreamteam.dreamdiary.core.domain.usecase.community.AddCommunityPostUseCase
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class CommunityWriteViewModel @Inject constructor() : ViewModel() {
-    private val _uiState: MutableStateFlow<CommunityWriteScreenState> = MutableStateFlow(
-        CommunityWriteScreenState(),
-    )
+@HiltViewModel
+class CommunityWriteViewModel @Inject constructor(
+    savedStateHandle: SavedStateHandle,
+    private val getDreamDiaryUseCase: GetDreamDiaryUseCase,
+    private val addCommunityPostUseCase: AddCommunityPostUseCase,
+) : ViewModel() {
+    private val id: String? = savedStateHandle[CommunityGraph.CommunityWriteRoute::diaryId.name]
+
+    private val _uiState = MutableStateFlow(CommunityWriteScreenState())
     val uiState = _uiState.asStateFlow()
+
+    init {
+        initState()
+    }
 
     fun writePost() {
         viewModelScope.launch {
             setIsLoading(true)
-            // TODO: Save the post
+            addCommunityPostUseCase(
+                title = uiState.value.editorState.title,
+                diaryContents = uiState.value.editorState.contents.map { it.toDomain() },
+            )
             setIsLoading(false)
         }
     }
@@ -105,6 +123,21 @@ class CommunityWriteViewModel @Inject constructor() : ViewModel() {
     fun setTitle(newTitle: String) {
         _uiState.update { state ->
             state.copy(editorState = state.editorState.copy(title = newTitle))
+        }
+    }
+
+    private fun initState() {
+        if (id != null) {
+            viewModelScope.launch {
+                getDreamDiaryUseCase(id).let { diary ->
+                    _uiState.update { state ->
+                        state.copy(
+                            editorState = diary.toEditorState(),
+                            isLoading = false,
+                        )
+                    }
+                }
+            }
         }
     }
 

@@ -1,37 +1,198 @@
 package com.boostcamp.dreamteam.dreamdiary.core.data.repository
 
+import android.content.Context
+import androidx.core.net.toUri
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.map
-import com.boostcamp.dreamteam.dreamdiary.core.data.database.CommunityRemoteDataSource
-import com.boostcamp.dreamteam.dreamdiary.core.data.dto.CommunityPostRequest
-import com.boostcamp.dreamteam.dreamdiary.core.data.dto.toDomain
-import com.boostcamp.dreamteam.dreamdiary.core.model.CommunityDreamPost
+import com.boostcamp.dreamteam.dreamdiary.core.data.convertToFirebaseData
+import com.boostcamp.dreamteam.dreamdiary.core.data.firebase.FirebaseCommunityPostPagingSource
+import com.boostcamp.dreamteam.dreamdiary.core.data.firebase.firestore.model.FirestoreAddCommunityPostRequest
+import com.boostcamp.dreamteam.dreamdiary.core.model.DiaryContent
+import com.boostcamp.dreamteam.dreamdiary.core.model.community.CommunityPostList
+import com.google.firebase.firestore.DocumentReference
+import com.google.firebase.firestore.FieldValue
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.storage.FirebaseStorage
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.tasks.await
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.encodeToJsonElement
+import kotlinx.serialization.json.jsonObject
+import java.io.File
+import java.time.Instant
+import java.util.UUID
 import javax.inject.Inject
 
 class CommunityRepository @Inject constructor(
-    private val communityRemoteDataSource: CommunityRemoteDataSource,
+    private val firebaseFirestore: FirebaseFirestore,
+    private val firebaseStorage: FirebaseStorage,
+    @ApplicationContext private val context: Context,
 ) {
-    /**
-     * save community post
-     * @return true when success, false when fail
-     */
-    suspend fun saveCommunityPost(request: CommunityPostRequest): Boolean {
-        return communityRemoteDataSource.addCommunityPost(request)
+    private val communityCollection = firebaseFirestore.collection("community")
+    private val imageStorage = firebaseStorage.reference.child("community").child("images")
+
+    suspend fun saveCommunityPost(
+        title: String,
+        diaryContents: List<DiaryContent>,
+        uid: String,
+        name: String,
+    ): String {
+        val postReference = communityCollection.document()
+
+        val referenceToData = mutableListOf<Pair<DocumentReference, Map<String, Any?>>>()
+
+        var content = ""
+        for (diaryContent in diaryContents) {
+            when (diaryContent) {
+                is DiaryContent.Image -> {
+                    val imageReference = postReference.collection("images").document()
+                    val imageNameForStorage = UUID.randomUUID().toString()
+
+                    imageStorage
+                        .child(uid)
+                        .child(imageNameForStorage)
+                        .putFile(File(context.filesDir, diaryContent.path).toUri())
+                        .await()
+
+                    referenceToData.add(
+                        imageReference to mapOf(
+                            "id" to imageReference.id,
+                            "name" to imageNameForStorage,
+                        ),
+                    )
+
+                    content += "image:${imageReference.id}:"
+                }
+
+                is DiaryContent.Text -> {
+                    val textReference = postReference.collection("text").document()
+
+                    referenceToData.add(
+                        textReference to mapOf(
+                            "id" to textReference.id,
+                            "text" to diaryContent.text,
+                        ),
+                    )
+                    content += "text:${textReference.id}:"
+                }
+            }
+        }
+
+        val id = postReference.id
+        val request = FirestoreAddCommunityPostRequest(
+            id = id,
+            uid = uid,
+            author = name,
+            title = title,
+            content = content,
+            likeCount = 0,
+        )
+
+        val requestMap = (Json.encodeToJsonElement(request).jsonObject.convertToFirebaseData() as Map<String, Any>).toMutableMap()
+        requestMap["createdAt"] = FieldValue.serverTimestamp()
+
+        firebaseFirestore.runBatch { batch ->
+            batch.set(postReference, requestMap)
+            for ((reference, data) in referenceToData) {
+                batch.set(reference, data)
+            }
+        }.await()
+
+        return id
     }
 
-    fun getCommunityPosts(): Flow<PagingData<CommunityDreamPost>> {
+    fun getCommunityPosts(): Flow<PagingData<CommunityPostList>> {
         return Pager(
             config = PagingConfig(
                 pageSize = 10,
                 enablePlaceholders = false,
             ),
-            pagingSourceFactory = { communityRemoteDataSource.getCommunityPostsPagingSource() },
-        ).flow.map { pagingData ->
-            pagingData.map { it.toDomain() }
+            pagingSourceFactory = { FirebaseCommunityPostPagingSource(communityCollection) },
+        ).flow.map { postResponses ->
+            postResponses.map { postResponse ->
+                val diaryContents =
+                    parseListPostContent(content = postResponse.content, postId = postResponse.id, postUID = postResponse.uid)
+                CommunityPostList(
+                    id = postResponse.id,
+                    author = postResponse.author,
+                    title = postResponse.title,
+                    diaryContents = diaryContents,
+                    createdAt = Instant.ofEpochSecond(postResponse.createdAt.seconds, postResponse.createdAt.nanoseconds.toLong()),
+                )
+            }
         }
+    }
+
+    private suspend fun parseListPostContent(
+        content: String,
+        postId: String,
+        postUID: String,
+    ): List<DiaryContent> {
+        val textReference = communityCollection.document(postId).collection("text")
+        val imageReference = communityCollection.document(postId).collection("images")
+
+        val text = textReference.get()
+            .await()
+            .associate {
+                it.id to it.get("text") as String
+            }
+
+        val images = imageReference.get()
+            .await()
+            .associate {
+                it.id to it.get("name") as String
+            }
+
+        val diaryContents = mutableListOf<DiaryContent>()
+
+        val parsingDiaryContent = content.split(DELIMITER)
+        var index = 0
+        var imageAdded = false
+
+        while (index < parsingDiaryContent.size) {
+            if (parsingDiaryContent[index] == TEXT) {
+                index += 1
+
+                val id = parsingDiaryContent[index]
+                val textContent = text[id] ?: continue
+                diaryContents.add(
+                    DiaryContent.Text(
+                        text = textContent,
+                    ),
+                )
+            } else if (parsingDiaryContent[index] == IMAGE) {
+                index += 1
+                if (imageAdded) continue
+                imageAdded = true
+
+                val id = parsingDiaryContent[index]
+                val imageName = images[id] ?: continue
+
+                diaryContents.add(
+                    DiaryContent.Image(
+                        path = imageStorage
+                            .child(postUID)
+                            .child(imageName)
+                            .downloadUrl
+                            .await()
+                            .toString(),
+                    ),
+                )
+            } else {
+                index += 1
+                continue
+            }
+        }
+        return diaryContents
+    }
+
+    private companion object BodyToken {
+        const val TEXT = "text"
+        const val IMAGE = "image"
+        const val DELIMITER = ":"
     }
 }

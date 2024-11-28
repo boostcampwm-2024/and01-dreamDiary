@@ -4,6 +4,6 @@ data class Comment(
     val id: String,
     val author: Author,
     val content: String,
-    val likes: Int,
+    val likeCount: Int,
     val createdAt: Long,
 )

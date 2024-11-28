@@ -5,17 +5,19 @@ import com.boostcamp.dreamteam.dreamdiary.core.model.Comment
 import java.time.Instant
 
 data class CommentRequest(
+    val id: String,
     val content: String,
     val author: Author,
-    val createdAt: Long = Instant.now().toEpochMilli(),
+    val likeCount: Int,
+    val createdAt: Any,
 )
 
-fun CommentRequest.toDomain(author: Author): Comment {
+fun CommentRequest.toDomain(): Comment {
     return Comment(
         id = "",
-        author = author,
+        author = this.author,
         content = this.content,
-        likes = 0,
-        createdAt = this.createdAt,
+        likeCount = 0,
+        createdAt = Instant.now().toEpochMilli(),
     )
 }
