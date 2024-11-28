@@ -26,6 +26,8 @@ class CommunityDetailViewModel @Inject constructor(
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(CommunityDetailUiState())
     val uiState = _uiState.asStateFlow()
+    private val _commentContent = MutableStateFlow("")
+    val commentContent = _commentContent.asStateFlow()
 
     private val id: String? = savedStateHandle.get<String>("id")
 
@@ -60,24 +62,24 @@ class CommunityDetailViewModel @Inject constructor(
         }
     }
 
-    fun getComments() {
-        viewModelScope.launch {
-
-        }
-    }
-
     val comments = getCommentsUseCase(id!!)
         .map { pagingData ->
             pagingData.map { it.toUIState() }
         }
         .cachedIn(viewModelScope)
 
-    fun addComment(content: String) {
-        viewModelScope.launch {
-            try {
-                addCommentUseCase(id!!, content)
-            } catch (e: Exception) {
-                Timber.e(e)
+    fun changeCommentContent(content: String) {
+        _commentContent.value = content
+    }
+
+    fun addComment() {
+        if (id != null) {
+            viewModelScope.launch {
+                try {
+                    addCommentUseCase(id, commentContent.value)
+                } catch (e: Exception) {
+                    Timber.e(e)
+                }
             }
         }
     }

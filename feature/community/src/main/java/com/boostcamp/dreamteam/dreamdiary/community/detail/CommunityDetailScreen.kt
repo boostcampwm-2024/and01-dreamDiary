@@ -57,12 +57,15 @@ fun CommunityDetailScreen(
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val comments = viewModel.comments.collectAsLazyPagingItems()
-
+    val commentContent = viewModel.commentContent.collectAsStateWithLifecycle()
     CommunityDetailScreenContent(
         onClickBack = onClickBack,
         post = state.post,
         onClickLikePost = { post -> viewModel.toggleLikePost(post.id) },
         comments = comments,
+        commentContent = commentContent.value,
+        onChangeCommentContent = viewModel::changeCommentContent,
+        onSubmitComment = viewModel::addComment,
         onClickLikeComment = { comment -> viewModel.toggleLikeComment(comment.id) },
     )
 }
@@ -73,6 +76,9 @@ private fun CommunityDetailScreenContent(
     post: PostDetailUi,
     onClickLikePost: (PostDetailUi) -> Unit,
     comments: LazyPagingItems<CommentUi>,
+    commentContent: String,
+    onSubmitComment: () -> Unit,
+    onChangeCommentContent: (String) -> Unit,
     onClickLikeComment: (CommentUi) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -97,9 +103,9 @@ private fun CommunityDetailScreenContent(
             // TODO
             NewCommentBottomBar(
                 state = CommunityDetailBottomBarState(
-                    inputComment = "",
-                    onInputCommentChange = { },
-                    onSubmitComment = { },
+                    inputComment = commentContent,
+                    onInputCommentChange = onChangeCommentContent,
+                    onSubmitComment = onSubmitComment,
                 ),
             )
         },
@@ -109,7 +115,7 @@ private fun CommunityDetailScreenContent(
             onRefresh = {
                 // TODO: 새로고침 로직 추가
             },
-            modifier = Modifier
+            modifier = modifier
                 .fillMaxSize()
                 .padding(innerPadding),
             state = refreshState,
@@ -228,7 +234,10 @@ private fun CommunityDetailScreenContentPreview() {
         CommunityDetailScreenContent(
             onClickBack = { },
             onClickLikePost = { },
+            onSubmitComment = { },
             post = postDetailUiPreview,
+            commentContent = "",
+            onChangeCommentContent = { },
             comments = pagingCommentsUiPreview.collectAsLazyPagingItems(),
             onClickLikeComment = { },
         )
