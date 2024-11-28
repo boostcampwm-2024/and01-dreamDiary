@@ -77,9 +77,9 @@ internal fun CommunityEditor(
         Spacer(modifier = Modifier.height(24.dp))
         InputBody(
             postContents = state.postContents,
-            onContentTextPositionChange = setCurrentFocusContent,
+            onContentTextPositionChange = setCurrentTextCursorPosition,
             onContentTextChange = state.onContentTextChange,
-            onContentFocusChange = setCurrentTextCursorPosition,
+            onContentFocusChange = setCurrentFocusContent,
             onContentImageDelete = state.onContentImageDelete,
             modifier = Modifier.fillMaxWidth(),
             firstTextFieldFocusRequester = firstTextFieldFocusRequester,
@@ -199,8 +199,7 @@ private fun BodyText(
                         focusRequester(focusRequester)
                     }
                 },
-            )
-            .onFocusChanged { onFocusChange(it.isFocused) },
+            ).onFocusChanged { onFocusChange(it.isFocused) },
         readOnly = readOnly,
         textStyle = MaterialTheme.typography.bodyLarge.copy(
             color = MaterialTheme.colorScheme.onSurface,
