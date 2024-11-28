@@ -248,15 +248,15 @@ class CommunityRepository @Inject constructor(
     ): List<DiaryContent> {
         val diaryContents = mutableListOf<DiaryContent>()
 
-        val parsingDiaryContent = body.split(":")
+        val parsingDiaryContent = body.split(DELIMITER)
         var index = 0
 
         while (index < parsingDiaryContent.size) {
-            if (parsingDiaryContent[index] == "text") {
+            if (parsingDiaryContent[index] == TEXT) {
                 index += 1
                 val id = parsingDiaryContent[index]
                 getTextContent(postId, id)?.let { diaryContents.add(it) }
-            } else if (parsingDiaryContent[index] == "image") {
+            } else if (parsingDiaryContent[index] == IMAGE) {
                 index += 1
                 val id = parsingDiaryContent[index]
                 getImageContent(uid, postId, id)?.let {
