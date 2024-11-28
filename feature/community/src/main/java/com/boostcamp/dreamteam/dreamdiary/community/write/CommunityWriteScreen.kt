@@ -8,6 +8,7 @@ import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
@@ -61,7 +62,9 @@ fun CommunityWriteScreen(
             onContentTextChange = viewModel::setContentText,
             onContentImageDelete = viewModel::deleteContentImage,
         ),
-        modifier = modifier,
+        modifier = modifier
+            .fillMaxSize()
+            .imePadding(),
     )
 }
 
@@ -94,14 +97,12 @@ private fun CommunityWriteScreenContent(
     )
 
     Scaffold(
-        modifier = modifier.imePadding(),
+        modifier = modifier,
         topBar = {
             CommunityWriteTopAppbar(params = topAppbarState)
         },
         bottomBar = {
-            CommunityWriteBottomBar(
-                singleImagePicker = singleImagePicker,
-            )
+            CommunityWriteBottomBar(singleImagePicker = singleImagePicker)
         },
     ) { paddingValues ->
         CommunityEditor(
@@ -111,6 +112,7 @@ private fun CommunityWriteScreenContent(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
+                .consumeWindowInsets(paddingValues)
                 .padding(horizontal = 16.dp, vertical = 8.dp),
         )
     }

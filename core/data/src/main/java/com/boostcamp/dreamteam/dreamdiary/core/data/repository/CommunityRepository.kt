@@ -111,16 +111,88 @@ class CommunityRepository @Inject constructor(
                 enablePlaceholders = false,
             ),
             pagingSourceFactory = { FirebaseCommunityPostPagingSource(communityCollection) },
-        ).flow.map {
-            it.map {
+        ).flow.map { postResponses ->
+            postResponses.map { postResponse ->
+                val diaryContents =
+                    parseListPostContent(content = postResponse.content, postId = postResponse.id, postUID = postResponse.uid)
                 CommunityPostList(
-                    id = it.id,
-                    author = it.author,
-                    title = it.title,
-                    createdAt = Instant.ofEpochSecond(it.createdAt.seconds, it.createdAt.nanoseconds.toLong()),
+                    id = postResponse.id,
+                    author = postResponse.author,
+                    title = postResponse.title,
+                    diaryContents = diaryContents,
+                    createdAt = Instant.ofEpochSecond(postResponse.createdAt.seconds, postResponse.createdAt.nanoseconds.toLong()),
                 )
             }
         }
+    }
+
+    private suspend fun parseListPostContent(
+        content: String,
+        postId: String,
+        postUID: String,
+    ): List<DiaryContent> {
+        val textReference = communityCollection.document(postId).collection("text")
+        val imageReference = communityCollection.document(postId).collection("images")
+
+        val text = textReference.get()
+            .await()
+            .associate {
+                it.id to it.get("text") as String
+            }
+
+        val images = imageReference.get()
+            .await()
+            .associate {
+                it.id to it.get("name") as String
+            }
+
+        val diaryContents = mutableListOf<DiaryContent>()
+
+        val parsingDiaryContent = content.split(DELIMITER)
+        var index = 0
+        var imageAdded = false
+
+        while (index < parsingDiaryContent.size) {
+            if (parsingDiaryContent[index] == TEXT) {
+                index += 1
+
+                val id = parsingDiaryContent[index]
+                val textContent = text[id] ?: continue
+                diaryContents.add(
+                    DiaryContent.Text(
+                        text = textContent,
+                    ),
+                )
+            } else if (parsingDiaryContent[index] == IMAGE) {
+                index += 1
+                if (imageAdded) continue
+                imageAdded = true
+
+                val id = parsingDiaryContent[index]
+                val imageName = images[id] ?: continue
+
+                diaryContents.add(
+                    DiaryContent.Image(
+                        path = imageStorage
+                            .child(postUID)
+                            .child(imageName)
+                            .downloadUrl
+                            .await()
+                            .toString(),
+                    ),
+                )
+            } else {
+                index += 1
+                continue
+            }
+        }
+        return diaryContents
+    }
+
+    private companion object BodyToken {
+        const val TEXT = "text"
+        const val IMAGE = "image"
+        const val DELIMITER = ":"
     }
 
     suspend fun getCommunityPostById(uid: String, postId: String): CommunityPostDetail {
