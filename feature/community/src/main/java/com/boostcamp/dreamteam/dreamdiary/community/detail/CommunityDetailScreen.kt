@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
@@ -58,6 +59,7 @@ fun CommunityDetailScreen(
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val comments = viewModel.comments.collectAsLazyPagingItems()
     val commentContent = viewModel.commentContent.collectAsStateWithLifecycle()
+
     CommunityDetailScreenContent(
         onClickBack = onClickBack,
         post = state.post,
@@ -89,6 +91,7 @@ private fun CommunityDetailScreenContent(
     Scaffold(
         modifier = modifier
             .fillMaxSize()
+            .imePadding()
             .nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             CommunityDetailTopAppBar(

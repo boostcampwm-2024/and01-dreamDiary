@@ -62,7 +62,7 @@ class CommentRepository @Inject constructor(
                     author = commentResponse.author,
                     profileImageUrl = commentResponse.profileImageUrl,
                     likeCount = commentResponse.likeCount,
-                    createdAt = commentResponse.createdAt,
+                    createdAt = commentResponse.createdAt.seconds,
                 )
             }
         }

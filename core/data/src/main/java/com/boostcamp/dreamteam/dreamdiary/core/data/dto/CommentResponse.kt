@@ -1,15 +1,16 @@
 package com.boostcamp.dreamteam.dreamdiary.core.data.dto
 
 import com.boostcamp.dreamteam.dreamdiary.core.model.Comment
+import com.google.firebase.Timestamp
 
 data class CommentResponse(
     val id: String = "",
-    val uid: String,
-    val author: String,
-    val profileImageUrl: String,
+    val uid: String = "",
+    val author: String = "",
+    val profileImageUrl: String = "",
     val content: String = "",
     val likeCount: Int = 0,
-    val createdAt: Long = 0L,
+    val createdAt: Timestamp = Timestamp.now(),
 )
 
 fun CommentResponse.toDomain(): Comment {
@@ -20,6 +21,6 @@ fun CommentResponse.toDomain(): Comment {
         profileImageUrl = this.profileImageUrl,
         content = this.content,
         likeCount = this.likeCount,
-        createdAt = this.createdAt,
+        createdAt = this.createdAt.seconds,
     )
 }
