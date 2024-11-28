@@ -36,6 +36,10 @@ class CommentRepository @Inject constructor(
             createdAt = FieldValue.serverTimestamp(),
         )
 
+        // comment 증가
+        val postRef = firebaseFirestore.collection("community").document(postId)
+        postRef.update("commentCount", FieldValue.increment(1)).await()
+
         commentRef.set(newComment).await()
 
         return commentRef.id
