@@ -55,7 +55,6 @@ internal fun SettingScreen(
     settingViewModel: SettingViewModel = hiltViewModel(),
 ) {
     val email by settingViewModel.email.collectAsStateWithLifecycle()
-    Timber.tag("123").d("$email")
     val navigationItems = listOf(
         HomeBottomNavItem.MyDream.toNavigationItem(
             onClick = onNavigateToDiary,

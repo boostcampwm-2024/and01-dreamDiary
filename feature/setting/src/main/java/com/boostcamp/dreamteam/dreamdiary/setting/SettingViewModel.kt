@@ -3,10 +3,12 @@ package com.boostcamp.dreamteam.dreamdiary.setting
 import android.content.SharedPreferences
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.boostcamp.dreamteam.dreamdiary.core.data.repository.AuthRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
@@ -19,7 +21,11 @@ class SettingViewModel @Inject constructor(
     val email = _email.asStateFlow()
 
     init {
-        Timber.tag("123").d("hi")
+        viewModelScope.launch {
+            authRepository.emailFlow.collect{ newEmail ->
+                _email.value = newEmail
+            }
+        }
     }
     fun signOut() {
         authRepository.firebaseSignOut()
