@@ -64,6 +64,44 @@
 
 <!-- ## 🏛️ 아키텍쳐 & 디자인 패턴 -->
 
+## 🪛주요 기술
+
+**🖌️ UI/UX**
+- Compose
+- Material Design 3
+- Glance
+- Compose Navigation
+- Coil
+
+**📊 데이터 관리**
+- Room DB
+- Firebase Firestore Database
+- Paging3
+
+**🛠️ 의존성 주입**
+- Hilt
+
+**☁️ 백엔드 및 클라우드 기술**
+- Autentication
+- Cloud Functions
+- Crashlytics
+
+**🔔 알림**
+- Local Notifications
+- Firebase Cloud Messaging
+
+**📦 데이터 직렬화**
+- Kotlin Serialization: 데이터 직렬화 및 역직렬화
+
+**🤝 협업**
+- Git
+- Github
+- Github Actions
+- Ktlint
+- Slack
+- ZEP
+
+
 
 </br>
 
