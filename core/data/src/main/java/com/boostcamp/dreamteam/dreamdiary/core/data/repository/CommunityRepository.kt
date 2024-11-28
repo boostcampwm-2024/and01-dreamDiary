@@ -127,7 +127,7 @@ class CommunityRepository @Inject constructor(
         }
     }
 
-    suspend fun getCommunityPostById(postId: String): CommunityPostDetail {
+    suspend fun getCommunityPostById(uid: String, postId: String): CommunityPostDetail {
         return try {
             val documentSnapshot =
                 communityCollection.document(postId)
@@ -142,7 +142,7 @@ class CommunityRepository @Inject constructor(
                 ?: throw Exception("Failed to parse CommunityPostResponse for ID $postId")
 
             Timber.d("communityPostResponse: ${communityPostResponse.content}")
-            val contents = parseBody(postId, communityPostResponse.content)
+            val contents = parseBody(uid, postId, communityPostResponse.content)
             Timber.d("contents: $contents")
 
             CommunityPostDetail(
@@ -163,6 +163,7 @@ class CommunityRepository @Inject constructor(
     }
 
     private suspend fun parseBody(
+        uid: String,
         postId: String,
         body: String,
     ): List<DiaryContent> {
@@ -179,7 +180,7 @@ class CommunityRepository @Inject constructor(
             } else if (parsingDiaryContent[index] == "image") {
                 index += 1
                 val id = parsingDiaryContent[index]
-                getImageContent(postId, id)?.let {
+                getImageContent(uid, postId, id)?.let {
                     diaryContents.add(it)
                     Timber.d("image: $it")
                 }
@@ -192,6 +193,7 @@ class CommunityRepository @Inject constructor(
     }
 
     private suspend fun getImageContent(
+        uid: String,
         postId: String,
         imageId: String,
     ): DiaryContent? {
@@ -201,14 +203,12 @@ class CommunityRepository @Inject constructor(
 
             val imagePath = imageSnapshot.getString("name")
             if (imagePath != null) {
-                // todo 사진이 안올라감
-                // todo bucketImagePath 예쁘게 가져오기
-                val bucketImagePath = """
-                    https://firebasestorage.googleapis.com/v0/b/dream-diary-bc8d7.firebasestorage.app/o/community%2Fimages%2F$imageId%2F$imagePath?alt=media
-                """.trimIndent()
+                Timber.d("imageId: $uid")
+                Timber.d("imagePath: $imagePath")
+                val path = imageStorage.child(uid).child(imagePath).downloadUrl.await()
+                Timber.d(path.toString())
 
-                Timber.d("imagePath: $bucketImagePath")
-                DiaryContent.Image(bucketImagePath)
+                DiaryContent.Image(path.toString())
             } else {
                 null
             }
