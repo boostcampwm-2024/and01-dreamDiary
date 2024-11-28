@@ -173,7 +173,7 @@ private fun NotSignInCommunityContent(
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 Spacer(modifier = Modifier.height(10.dp))
-                Text("로그인을 하셔야 사용 가능한 기능입니다.")
+                Text(stringResource(R.string.community_list_not_signin))
                 Spacer(modifier = Modifier.height(20.dp))
                 OutlinedButton(
                     modifier = modifier,
@@ -182,7 +182,7 @@ private fun NotSignInCommunityContent(
                     shape = MaterialTheme.shapes.small,
                 ) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
-                        Text(stringResource(R.string.community_go_to_signin))
+                        Text(stringResource(R.string.community_list_go_to_signin))
                     }
                 }
                 Spacer(modifier = Modifier.height(20.dp))
