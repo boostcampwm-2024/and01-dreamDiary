@@ -39,6 +39,7 @@ class CommunityRepository @Inject constructor(
         diaryContents: List<DiaryContent>,
         uid: String,
         name: String,
+        profileImageUrl: String,
     ): String {
         val postReference = communityCollection.document()
 
@@ -88,7 +89,9 @@ class CommunityRepository @Inject constructor(
             author = name,
             title = title,
             content = content,
+            profileImageUrl = profileImageUrl,
             likeCount = 0,
+            commentCount = 0,
         )
 
         val requestMap = (Json.encodeToJsonElement(request).jsonObject.convertToFirebaseData() as Map<String, Any>).toMutableMap()
@@ -120,6 +123,7 @@ class CommunityRepository @Inject constructor(
                     author = postResponse.author,
                     title = postResponse.title,
                     diaryContents = diaryContents,
+                    commentCount = postResponse.commentCount,
                     createdAt = Instant.ofEpochSecond(postResponse.createdAt.seconds, postResponse.createdAt.nanoseconds.toLong()),
                 )
             }

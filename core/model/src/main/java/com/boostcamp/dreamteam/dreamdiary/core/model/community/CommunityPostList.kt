@@ -7,6 +7,7 @@ data class CommunityPostList(
     val id: String,
     val author: String,
     val title: String,
+    val commentCount: Long,
     val diaryContents: List<DiaryContent>,
     val createdAt: Instant,
 )

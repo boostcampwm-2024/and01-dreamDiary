@@ -28,7 +28,7 @@ fun CommunityPostList.toPostUi(): PostUi {
         images = this.diaryContents.filterIsInstance<DiaryContent.Image>().map { it.path },
         previewText = this.diaryContents.filterIsInstance<DiaryContent.Text>().joinToString("\n") { it.text },
         sharedAt = this.createdAt.toDisplayableDateTime(),
-        commentCount = 123,
+        commentCount = this.commentCount,
         isLiked = true,
         author = UserUi(
             uid = this.author,
