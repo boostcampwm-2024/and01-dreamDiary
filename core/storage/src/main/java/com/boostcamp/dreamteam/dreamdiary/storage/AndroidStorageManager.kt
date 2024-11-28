@@ -8,7 +8,6 @@ import javax.inject.Inject
 internal class AndroidStorageManager @Inject constructor(
     @ApplicationContext private val context: Context,
 ) : StorageManager {
-
     override fun getFullPath(path: String): String {
         return File(context.filesDir, path).path
     }
