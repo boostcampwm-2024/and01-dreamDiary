@@ -1,6 +1,5 @@
 package com.boostcamp.dreamteam.dreamdiary.core.data.repository
 
-import android.content.Context
 import androidx.core.net.toUri
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
@@ -17,7 +16,6 @@ import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.tasks.await
@@ -25,7 +23,6 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.encodeToJsonElement
 import kotlinx.serialization.json.jsonObject
 import timber.log.Timber
-import java.io.File
 import java.time.Instant
 import java.util.UUID
 import javax.inject.Inject
@@ -33,7 +30,6 @@ import javax.inject.Inject
 class CommunityRepository @Inject constructor(
     private val firebaseFirestore: FirebaseFirestore,
     private val firebaseStorage: FirebaseStorage,
-    @ApplicationContext private val context: Context,
 ) {
     private val communityCollection = firebaseFirestore.collection("community")
     private val imageStorage = firebaseStorage.reference.child("community").child("images")
@@ -58,7 +54,7 @@ class CommunityRepository @Inject constructor(
                     imageStorage
                         .child(uid)
                         .child(imageNameForStorage)
-                        .putFile(File(context.filesDir, diaryContent.path).toUri())
+                        .putFile(diaryContent.path.toUri())
                         .await()
 
                     referenceToData.add(
