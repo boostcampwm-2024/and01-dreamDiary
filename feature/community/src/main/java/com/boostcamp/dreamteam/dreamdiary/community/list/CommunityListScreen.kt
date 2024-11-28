@@ -177,8 +177,7 @@ private fun NotSignInCommunityContent(
                 Spacer(modifier = Modifier.height(20.dp))
                 OutlinedButton(
                     modifier = modifier,
-                    onClick = goToSignInClick
-                    ,
+                    onClick = goToSignInClick,
                     shape = MaterialTheme.shapes.small,
                 ) {
                     Row(verticalAlignment = Alignment.CenterVertically) {

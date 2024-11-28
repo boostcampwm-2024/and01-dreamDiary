@@ -48,7 +48,7 @@ fun NavGraphBuilder.communityGraph(
                         navOptions = navOptions { launchSingleTop = true },
                     )
                 },
-                goToSignInClick = onGoToSignInClick
+                goToSignInClick = onGoToSignInClick,
             )
         }
         composable<CommunityGraph.CommunityDetailRoute> {

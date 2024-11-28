@@ -40,7 +40,7 @@ fun DreamDiaryNavHost(
                     .setLaunchSingleTop(true)
                     .build()
                 navController.navigate(DiaryGraph, options)
-            }
+            },
         )
 
         diaryGraph(
@@ -62,6 +62,12 @@ fun DreamDiaryNavHost(
                 navController.navigate(SettingGraph, options)
             },
             navController = navController,
+            onDialogConfirmClick = {
+                val options = NavOptions.Builder()
+                    .setPopUpTo(DiaryGraph, inclusive = true)
+                    .build()
+                navController.navigate(SignInRoute, options)
+            },
         )
 
         communityGraph(

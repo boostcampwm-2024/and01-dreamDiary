@@ -33,6 +33,7 @@ fun NavGraphBuilder.diaryGraph(
     onSettingClick: () -> Unit,
     onShareDiary: (diaryId: String) -> Unit,
     navController: NavController,
+    onDialogConfirmClick: () -> Unit,
 ) {
     navigation<DiaryGraph>(
         startDestination = DiaryGraph.DiaryHomeRoute,
@@ -52,6 +53,7 @@ fun NavGraphBuilder.diaryGraph(
                 onNavigateToCommunity = onCommunityClick,
                 onNavigateToSetting = onSettingClick,
                 onNavigateToWriteScreen = { navController.navigate(DiaryGraph.DiaryWriteRoute()) },
+                onDialogConfirmClick = onDialogConfirmClick,
             )
         }
 
@@ -89,6 +91,7 @@ fun NavGraphBuilder.diaryGraph(
                 onBackClick = navController::navigateUp,
                 onEditDiary = { diaryId -> navController.navigateToWriteScreen(diaryId = diaryId) },
                 onShareDiary = onShareDiary,
+                onDialogConfirmClick = onDialogConfirmClick,
             )
         }
     }

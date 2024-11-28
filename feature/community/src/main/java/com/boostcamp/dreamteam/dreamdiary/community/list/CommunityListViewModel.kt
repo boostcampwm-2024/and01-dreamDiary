@@ -1,6 +1,5 @@
 package com.boostcamp.dreamteam.dreamdiary.community.list
 
-import android.content.SharedPreferences
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn

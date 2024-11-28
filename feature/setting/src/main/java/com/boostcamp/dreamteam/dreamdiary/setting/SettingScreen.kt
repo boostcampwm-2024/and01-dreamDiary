@@ -42,7 +42,6 @@ import com.boostcamp.dreamteam.dreamdiary.ui.HomeBottomNavItem
 import com.boostcamp.dreamteam.dreamdiary.ui.HomeBottomNavigation
 import com.boostcamp.dreamteam.dreamdiary.ui.NavigationItem
 import com.boostcamp.dreamteam.dreamdiary.ui.toNavigationItem
-import timber.log.Timber
 
 @Composable
 internal fun SettingScreen(
