@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -62,6 +63,7 @@ import java.util.UUID
 fun DiaryWriteScreen(
     onBackClick: () -> Unit,
     onWriteSuccess: (diaryId: String) -> Unit,
+    modifier: Modifier = Modifier,
     viewModel: DiaryWriteViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -146,9 +148,7 @@ fun DiaryWriteScreen(
         onContentImageDelete = viewModel::deleteContentImage,
         onEditLabel = viewModel::updateLabel,
         onDeleteLabel = viewModel::deleteLabel,
-        modifier = Modifier
-            .fillMaxSize()
-            .imePadding(),
+        modifier = Modifier,
     )
 }
 
@@ -213,7 +213,7 @@ private fun DiaryWriteScreenContent(
     )
 
     Scaffold(
-        modifier = modifier,
+        modifier = modifier.fillMaxSize(),
         topBar = {
             DiaryWriteTopBar(
                 onBackClick = onBackClick,
@@ -250,10 +250,7 @@ private fun DiaryWriteScreenContent(
                 onContentTextPositionChange = { currentTextCursorPosition = it },
                 onContentImageDelete = onContentImageDelete,
             ),
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding)
-                .consumeWindowInsets(innerPadding),
+            modifier = Modifier.fillMaxSize().padding(innerPadding).consumeWindowInsets(innerPadding),
         )
     }
 }
@@ -263,9 +260,11 @@ private fun DiaryWriteScreenContent(
 private fun DiaryWriteTopBar(
     onBackClick: () -> Unit,
     onClickSave: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     TopAppBar(
         title = { },
+        modifier = modifier,
         navigationIcon = {
             IconButton(onClick = { onBackClick() }) {
                 Icon(
@@ -293,7 +292,9 @@ private fun DiaryWriteBottomBar(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .background(MaterialTheme.colorScheme.surfaceVariant),
+            .background(MaterialTheme.colorScheme.surfaceVariant)
+            .imePadding()
+            .navigationBarsPadding(),
     ) {
         IconButton(
             onClick = {
