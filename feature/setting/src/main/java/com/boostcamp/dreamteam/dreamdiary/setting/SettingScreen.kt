@@ -34,6 +34,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.boostcamp.dreamteam.dreamdiary.designsystem.theme.DreamdiaryTheme
 import com.boostcamp.dreamteam.dreamdiary.setting.component.SettingCategory
 import com.boostcamp.dreamteam.dreamdiary.setting.component.SettingOption
@@ -48,10 +49,11 @@ internal fun SettingScreen(
     onNavigateToCommunity: () -> Unit,
     onNavigateToSettingNotification: () -> Unit,
     onNavigateToSettingBackup: () -> Unit,
-    onLogoutClick: () -> Unit,
+    onGoToSignInClick: () -> Unit,
     modifier: Modifier = Modifier,
     settingViewModel: SettingViewModel = hiltViewModel(),
 ) {
+    val email by settingViewModel.email.collectAsStateWithLifecycle()
     val navigationItems = listOf(
         HomeBottomNavItem.MyDream.toNavigationItem(
             onClick = onNavigateToDiary,
@@ -67,14 +69,13 @@ internal fun SettingScreen(
 
     SettingScreenContent(
         navigationItems = navigationItems,
-        onLogoutClick = onLogoutClick,
+        onGoToSignInClick = onGoToSignInClick,
         onNavigateToSettingNotification = onNavigateToSettingNotification,
         onNavigateToSettingBackup = onNavigateToSettingBackup,
         modifier = modifier,
         signInProvider = settingViewModel.getSignInProvider(),
-        userEmail = settingViewModel.getUserEmail(),
+        userEmail = email,
         onSignOut = settingViewModel::signOut,
-        onNonPasswordSignIn = settingViewModel::nonPasswordSignIn,
     )
 }
 
@@ -82,12 +83,11 @@ internal fun SettingScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 private fun SettingScreenContent(
     navigationItems: List<NavigationItem>,
-    onLogoutClick: () -> Unit,
+    onGoToSignInClick: () -> Unit,
     onNavigateToSettingNotification: () -> Unit,
     onNavigateToSettingBackup: () -> Unit,
     signInProvider: String?,
     onSignOut: () -> Unit,
-    onNonPasswordSignIn: () -> Unit,
     userEmail: String?,
     modifier: Modifier = Modifier,
 ) {
@@ -107,8 +107,7 @@ private fun SettingScreenContent(
         SettingScreenBody(
             signInProvider = signInProvider,
             userEmail = userEmail,
-            onNonPasswordSignIn = onNonPasswordSignIn,
-            onLogoutClick = onLogoutClick,
+            onGoToSignInClick = onGoToSignInClick,
             onNavigateToSettingNotification = onNavigateToSettingNotification,
             onNavigateToSettingBackup = onNavigateToSettingBackup,
             onSignOut = onSignOut,
@@ -121,8 +120,7 @@ private fun SettingScreenContent(
 private fun SettingScreenBody(
     signInProvider: String?,
     userEmail: String?,
-    onNonPasswordSignIn: () -> Unit,
-    onLogoutClick: () -> Unit,
+    onGoToSignInClick: () -> Unit,
     onNavigateToSettingNotification: () -> Unit,
     onNavigateToSettingBackup: () -> Unit,
     onSignOut: () -> Unit,
@@ -193,8 +191,7 @@ private fun SettingScreenBody(
                 icon = Icons.AutoMirrored.Outlined.Logout,
                 text = stringResource(R.string.setting_login_go),
                 onClick = {
-                    onNonPasswordSignIn()
-                    onLogoutClick()
+                    onGoToSignInClick()
                 },
             )
         } else {
@@ -208,10 +205,7 @@ private fun SettingScreenBody(
             SettingOption(
                 icon = Icons.AutoMirrored.Outlined.Logout,
                 text = stringResource(R.string.setting_logout),
-                onClick = {
-                    onSignOut()
-                    onLogoutClick()
-                },
+                onClick = onSignOut,
             )
         }
 
@@ -240,12 +234,11 @@ private fun SettingScreenPreview() {
     DreamdiaryTheme {
         SettingScreenContent(
             navigationItems = navigationItems,
-            onLogoutClick = {},
+            onGoToSignInClick = {},
             onNavigateToSettingNotification = {},
             onNavigateToSettingBackup = {},
             signInProvider = "Google",
             onSignOut = {},
-            onNonPasswordSignIn = {},
             userEmail = "someone@example.com",
         )
     }

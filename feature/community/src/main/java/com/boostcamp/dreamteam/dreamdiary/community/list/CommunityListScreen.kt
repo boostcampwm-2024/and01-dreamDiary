@@ -1,17 +1,28 @@
 package com.boostcamp.dreamteam.dreamdiary.community.list
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
@@ -23,7 +34,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -51,19 +65,129 @@ fun CommunityListScreen(
     onNavigateToDiary: () -> Unit,
     onNavigateToSetting: () -> Unit,
     onDiaryClick: (diaryId: String) -> Unit,
+    goToSignInClick: () -> Unit,
     viewModel: CommunityListViewModel = hiltViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val diaries = viewModel.posts.collectAsLazyPagingItems()
 
-    CommunityListScreenContent(
-        onClickFab = onClickFab,
-        onNavigateToDiary = onNavigateToDiary,
-        onNavigateToSetting = onNavigateToSetting,
-        diaries = diaries,
-        onDiaryClick = { diary -> onDiaryClick(diary.id) },
-        onSaveClick = viewModel::addCommunityPost,
+    val modifier = Modifier
+    if (viewModel.notSignIn()) {
+        NotSignInCommunityContent(
+            onNavigateToDiary = onNavigateToDiary,
+            onNavigateToSetting = onNavigateToSetting,
+            diaries = diaries,
+            goToSignInClick = {
+                goToSignInClick()
+            },
+            modifier = modifier,
+        )
+    } else {
+        CommunityListScreenContent(
+            onClickFab = onClickFab,
+            onNavigateToDiary = onNavigateToDiary,
+            onNavigateToSetting = onNavigateToSetting,
+            diaries = diaries,
+            onDiaryClick = { diary -> onDiaryClick(diary.id) },
+            onSaveClick = viewModel::addCommunityPost,
+            modifier = modifier,
+        )
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun NotSignInCommunityContent(
+    onNavigateToDiary: () -> Unit,
+    onNavigateToSetting: () -> Unit,
+    diaries: LazyPagingItems<PostUi>,
+    goToSignInClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    val navigationItems = listOf(
+        HomeBottomNavItem.MyDream.toNavigationItem(
+            onClick = onNavigateToDiary,
+        ),
+        HomeBottomNavItem.Community.toNavigationItem(
+            onClick = { /* no-op */ },
+            isSelected = true,
+        ),
+        HomeBottomNavItem.Setting.toNavigationItem(
+            onClick = onNavigateToSetting,
+        ),
     )
+
+    Scaffold(
+        modifier = modifier,
+        topBar = {
+            CenterAlignedTopAppBar(
+                title = { Text(text = stringResource(R.string.community_title)) },
+            )
+        },
+        bottomBar = {
+            HomeBottomNavigation(items = navigationItems)
+        },
+    ) { innerPadding ->
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding),
+        ) {
+            LazyColumn(
+                modifier = modifier
+                    .fillMaxSize(),
+                verticalArrangement = Arrangement.spacedBy(16.dp),
+                contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
+            ) {
+                items(
+                    count = diaries.itemCount,
+                    key = { diaries.peek(it)?.id ?: PagingIndexKey(it) },
+                ) { diaryIndex ->
+                    val diary = diaries[diaryIndex]
+                    if (diary != null) {
+                        CommunityDiaryCard(
+                            diary = diary,
+                            onPostClick = { /* Todo: 게시글 클릭 시 동작 추가하기 */ },
+                            onClickMenu = { /* TODO: 메뉴 눌렀을 때 기능 추가하기 */ },
+                            onClickLike = { /* TODO: 좋아요 눌렀을 때 기능 추가하기 */ },
+                            modifier = Modifier
+                                .alpha(1.0f - diaryIndex * 0.3f),
+                        )
+                    }
+                }
+            }
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .align(Alignment.Center)
+                    .padding(30.dp)
+                    .border(
+                        width = 1.dp,
+                        color = Color.Gray,
+                        shape = RoundedCornerShape(16.dp),
+                    )
+                    .background(
+                        color = Color.White,
+                        shape = RoundedCornerShape(16.dp),
+                    ),
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                Spacer(modifier = Modifier.height(10.dp))
+                Text(stringResource(R.string.community_list_not_signin))
+                Spacer(modifier = Modifier.height(20.dp))
+                OutlinedButton(
+                    modifier = modifier,
+                    onClick = goToSignInClick,
+                    shape = MaterialTheme.shapes.small,
+                ) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Text(stringResource(R.string.community_list_go_to_signin))
+                    }
+                }
+                Spacer(modifier = Modifier.height(20.dp))
+            }
+        }
+    }
 }
 
 @Composable

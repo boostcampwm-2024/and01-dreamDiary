@@ -23,7 +23,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
@@ -48,6 +51,7 @@ import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.LabelUi
 import com.boostcamp.dreamteam.dreamdiary.feature.widget.util.updateWidget
 import com.boostcamp.dreamteam.dreamdiary.ui.HomeBottomNavItem
 import com.boostcamp.dreamteam.dreamdiary.ui.HomeBottomNavigation
+import com.boostcamp.dreamteam.dreamdiary.ui.component.GoToSignInDialog
 import com.boostcamp.dreamteam.dreamdiary.ui.toNavigationItem
 import java.time.YearMonth
 
@@ -58,6 +62,7 @@ fun DiaryHomeScreen(
     onShareDiary: (diaryId: String) -> Unit,
     onNavigateToCommunity: () -> Unit,
     onNavigateToSetting: () -> Unit,
+    onDialogConfirmClick: () -> Unit,
     viewModel: DiaryHomeViewModel = hiltViewModel(),
     onNavigateToWriteScreen: () -> Unit,
 ) {
@@ -66,6 +71,8 @@ fun DiaryHomeScreen(
     val labels by viewModel.dreamLabels.collectAsStateWithLifecycle()
     val labelOptions by viewModel.labelOptions.collectAsStateWithLifecycle()
     val sortOption by viewModel.sortOption.collectAsStateWithLifecycle()
+    val email by viewModel.email.collectAsStateWithLifecycle()
+    var showDialog by remember { mutableStateOf(false) }
 
     val context = LocalContext.current
     LaunchedEffect(Unit) {
@@ -77,7 +84,14 @@ fun DiaryHomeScreen(
             }
         }
     }
-
+    GoToSignInDialog(
+        showDialog = showDialog,
+        onDismiss = { showDialog = false },
+        onConfirm = {
+            onDialogConfirmClick()
+            showDialog = false
+        },
+    )
     DiaryHomeScreenContent(
         diaries = diaries,
         labels = labels,
@@ -91,7 +105,13 @@ fun DiaryHomeScreen(
         onDiaryClick = onDiaryClick,
         onDiaryEdit = onDiaryEdit,
         onDeleteDiary = { viewModel.deleteDiary(it.id) },
-        onShareDiary = { onShareDiary(it.id) },
+        onShareDiary = {
+            if (email == null) {
+                showDialog = true
+            } else {
+                onShareDiary(it.id)
+            }
+        },
         onChangeSort = viewModel::setSort,
         sortOption = sortOption,
     )

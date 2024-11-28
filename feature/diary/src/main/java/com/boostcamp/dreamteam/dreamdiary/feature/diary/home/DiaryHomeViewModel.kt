@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
 import androidx.paging.map
+import com.boostcamp.dreamteam.dreamdiary.core.data.repository.AuthRepository
 import com.boostcamp.dreamteam.dreamdiary.core.domain.usecase.DeleteDreamDiariesUseCase
 import com.boostcamp.dreamteam.dreamdiary.core.domain.usecase.DiarySort
 import com.boostcamp.dreamteam.dreamdiary.core.domain.usecase.DiarySortOrder.DESC
@@ -39,6 +40,7 @@ class DiaryHomeViewModel @Inject constructor(
     getDreamDiariesByFilterUseCase: GetDreamDiariesByFilterUseCase,
     getDreamDiariesInRangeByUseCase: GetDreamDiariesInRangeByUseCase,
     private val deleteDreamDiariesUseCase: DeleteDreamDiariesUseCase,
+    private val authRepository: AuthRepository,
     getLabelsUseCase: GetLabelsUseCase,
 ) : ViewModel() {
     private val _event = Channel<DiaryHomeEvent>(64)
@@ -58,6 +60,9 @@ class DiaryHomeViewModel @Inject constructor(
     private val _sortOption = MutableStateFlow(DiarySort(CREATED, DESC))
     val sortOption = _sortOption.asStateFlow()
 
+    private val _email = MutableStateFlow<String?>(authRepository.getUserEmail())
+    val email = _email.asStateFlow()
+
     val dreamDiaries = combine(_labelOptions, _sortOption) { labels, sortOption ->
         labels to sortOption
     }.flatMapLatest { (labels, sortOption) ->
@@ -68,6 +73,14 @@ class DiaryHomeViewModel @Inject constructor(
             pagingData.map { it.toDiaryUi() }
         }
     }.cachedIn(viewModelScope)
+
+    init {
+        viewModelScope.launch {
+            authRepository.emailFlow.collect { newEmail ->
+                _email.value = newEmail
+            }
+        }
+    }
 
     fun setSort(diarySort: DiarySort) {
         _sortOption.update { diarySort }

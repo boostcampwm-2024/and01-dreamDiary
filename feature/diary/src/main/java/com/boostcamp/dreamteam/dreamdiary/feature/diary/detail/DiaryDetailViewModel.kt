@@ -3,6 +3,7 @@ package com.boostcamp.dreamteam.dreamdiary.feature.diary.detail
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.boostcamp.dreamteam.dreamdiary.core.data.repository.AuthRepository
 import com.boostcamp.dreamteam.dreamdiary.core.domain.usecase.DeleteDreamDiariesUseCase
 import com.boostcamp.dreamteam.dreamdiary.core.domain.usecase.GetDreamDiaryAsFlowUseCase
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.detail.model.DiaryDetailEvent
@@ -27,6 +28,7 @@ class DiaryDetailViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
     private val getDreamDiaryAsFlowUseCase: GetDreamDiaryAsFlowUseCase,
     private val deleteDreamDiaryUseCase: DeleteDreamDiariesUseCase,
+    private val authRepository: AuthRepository,
 ) : ViewModel() {
     private val id: String? = savedStateHandle.get<String>("id")
 
@@ -36,8 +38,16 @@ class DiaryDetailViewModel @Inject constructor(
     private val _event = Channel<DiaryDetailEvent>(64)
     val event = _event.receiveAsFlow()
 
+    private val _email = MutableStateFlow<String?>(authRepository.getUserEmail())
+    val email = _email.asStateFlow()
+
     init {
         collectDiary()
+        viewModelScope.launch {
+            authRepository.emailFlow.collect { newEmail ->
+                _email.value = newEmail
+            }
+        }
     }
 
     fun deleteDiary() {

@@ -23,7 +23,7 @@ fun DreamDiaryNavHost(
     val navController = appState.navController
     NavHost(
         navController = navController,
-        startDestination = SignInRoute,
+        startDestination = DiaryGraph,
         modifier = modifier,
     ) {
         signInScreen(
@@ -34,7 +34,7 @@ fun DreamDiaryNavHost(
                     .build()
                 navController.navigate(DiaryGraph, options)
             },
-            onPassClick = {
+            onNotSignInClick = {
                 val options = NavOptions.Builder()
                     .setPopUpTo(SignInRoute, inclusive = true)
                     .setLaunchSingleTop(true)
@@ -62,6 +62,12 @@ fun DreamDiaryNavHost(
                 navController.navigate(SettingGraph, options)
             },
             navController = navController,
+            onDialogConfirmClick = {
+                val options = NavOptions.Builder()
+                    .setPopUpTo(DiaryGraph, inclusive = true)
+                    .build()
+                navController.navigate(SignInRoute, options)
+            },
         )
 
         communityGraph(
@@ -81,6 +87,12 @@ fun DreamDiaryNavHost(
                     .setRestoreState(true)
                     .build()
                 navController.navigate(SettingGraph, options)
+            },
+            onGoToSignInClick = {
+                val options = NavOptions.Builder()
+                    .setPopUpTo(CommunityGraph, inclusive = true)
+                    .build()
+                navController.navigate(SignInRoute, options)
             },
         )
 
@@ -102,7 +114,7 @@ fun DreamDiaryNavHost(
                     .build()
                 navController.navigate(CommunityGraph, options)
             },
-            onLogoutClick = {
+            onGoToSignInClick = {
                 val options = NavOptions.Builder()
                     .setPopUpTo(SettingGraph, inclusive = true)
                     .build()
