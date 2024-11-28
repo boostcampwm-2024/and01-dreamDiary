@@ -225,12 +225,11 @@ private fun BodyImage(
     modifier: Modifier = Modifier,
     readOnly: Boolean = false,
 ) {
-    val context = LocalContext.current
     Box(modifier = modifier) {
         DdAsyncImage(
             model = ImageRequest
-                .Builder(context)
-                .data(File(context.filesDir, imageContent.path))
+                .Builder(LocalContext.current)
+                .data(imageContent.path)
                 .build(),
             contentDescription = stringResource(R.string.community_write_editor_image_description),
             modifier = Modifier
