@@ -53,13 +53,13 @@ fun CommunityListScreen(
     viewModel: CommunityListViewModel = hiltViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
-    val diaries = viewModel.posts.collectAsLazyPagingItems()
+    val posts = viewModel.posts.collectAsLazyPagingItems()
 
     CommunityListScreenContent(
         onClickFab = onClickFab,
         onNavigateToDiary = onNavigateToDiary,
         onNavigateToSetting = onNavigateToSetting,
-        diaries = diaries,
+        posts = posts,
         onPostClick = { diary -> onDiaryClick(diary.id) },
         onSaveClick = viewModel::addCommunityPost,
     )
@@ -71,7 +71,7 @@ private fun CommunityListScreenContent(
     onClickFab: () -> Unit,
     onNavigateToDiary: () -> Unit,
     onNavigateToSetting: () -> Unit,
-    diaries: LazyPagingItems<PostUi>,
+    posts: LazyPagingItems<PostUi>,
     onPostClick: (PostUi) -> Unit,
     onSaveClick: () -> Unit,
     modifier: Modifier = Modifier,
@@ -138,10 +138,10 @@ private fun CommunityListScreenContent(
                 contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
             ) {
                 items(
-                    count = diaries.itemCount,
-                    key = { diaries.peek(it)?.id ?: PagingIndexKey(it) },
+                    count = posts.itemCount,
+                    key = { posts.peek(it)?.id ?: PagingIndexKey(it) },
                 ) { diaryIndex ->
-                    val diary = diaries[diaryIndex]
+                    val diary = posts[diaryIndex]
                     if (diary != null) {
                         CommunityDiaryCard(
                             diary = diary,
@@ -176,7 +176,7 @@ private fun CommunityListScreenContentPreview() {
             onNavigateToSetting = { },
             onPostClick = { },
             onSaveClick = { },
-            diaries = pagedPostPreview.collectAsLazyPagingItems(),
+            posts = pagedPostPreview.collectAsLazyPagingItems(),
         )
     }
 }
