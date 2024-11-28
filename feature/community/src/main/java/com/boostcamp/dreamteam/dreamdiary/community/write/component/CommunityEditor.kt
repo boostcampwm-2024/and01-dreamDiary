@@ -112,7 +112,7 @@ private fun InputTitle(
         singleLine = true,
         cursorBrush = SolidColor(MaterialTheme.colorScheme.tertiary),
         decorationBox = { innerTextField ->
-            if (title.isEmpty()) {
+            if (title.isEmpty() && !readOnly) {
                 Text(
                     text = stringResource(R.string.community_write_editor_title_placeholder),
                     style = MaterialTheme.typography.titleLarge.copy(
@@ -206,7 +206,7 @@ private fun BodyText(
         ),
         cursorBrush = SolidColor(MaterialTheme.colorScheme.tertiary),
         decorationBox = { innerTextField ->
-            if (textFieldValue.text.isEmpty()) {
+            if (textFieldValue.text.isEmpty() && !readOnly) {
                 Text(
                     text = stringResource(R.string.community_write_editor_body_placeholder),
                     style = MaterialTheme.typography.bodyLarge.copy(

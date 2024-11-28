@@ -62,9 +62,6 @@ fun CommunityWriteScreen(
             onContentTextChange = viewModel::setContentText,
             onContentImageDelete = viewModel::deleteContentImage,
         ),
-        modifier = modifier
-            .fillMaxSize()
-            .imePadding(),
     )
 }
 
@@ -97,7 +94,7 @@ private fun CommunityWriteScreenContent(
     )
 
     Scaffold(
-        modifier = modifier,
+        modifier = modifier.fillMaxSize(),
         topBar = {
             CommunityWriteTopAppbar(params = topAppbarState)
         },
@@ -164,6 +161,7 @@ private fun CommunityWriteBottomBar(
         modifier = modifier
             .fillMaxWidth()
             .background(MaterialTheme.colorScheme.surfaceVariant)
+            .imePadding()
             .navigationBarsPadding(),
     ) {
         IconButton(
