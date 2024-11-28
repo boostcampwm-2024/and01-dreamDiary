@@ -7,7 +7,7 @@ import javax.inject.Inject
 
 class GetCommunityPostUseCase @Inject constructor(
     private val communityRepository: CommunityRepository,
-    private val authRepository: AuthRepository
+    private val authRepository: AuthRepository,
 ) {
     suspend operator fun invoke(postId: String): CommunityPostDetail {
         val uid = authRepository.getUserUID() ?: throw IllegalArgumentException("User is not signed in")

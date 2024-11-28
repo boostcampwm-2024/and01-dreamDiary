@@ -90,7 +90,7 @@ private fun CommunityWriteScreenContent(
                 onContentImageAdd(
                     currentFocusContent,
                     currentTextCursorPosition,
-                    uri.toString()
+                    uri.toString(),
                 )
             }
         },

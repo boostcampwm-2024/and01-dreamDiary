@@ -199,7 +199,10 @@ class CommunityRepository @Inject constructor(
         const val DELIMITER = ":"
     }
 
-    suspend fun getCommunityPostById(uid: String, postId: String): CommunityPostDetail {
+    suspend fun getCommunityPostById(
+        uid: String,
+        postId: String,
+    ): CommunityPostDetail {
         return try {
             val documentSnapshot =
                 communityCollection.document(postId)

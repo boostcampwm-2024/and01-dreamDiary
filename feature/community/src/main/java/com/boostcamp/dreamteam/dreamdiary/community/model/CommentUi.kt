@@ -23,7 +23,6 @@ fun Comment.toUIState(): CommentUi =
         isLiked = true,
     )
 
-
 internal val commentUiPreview1 = CommentUi(
     id = "1",
     author = userUiPreview1,
