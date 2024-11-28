@@ -29,7 +29,9 @@ class CommentRepository @Inject constructor(
         val newComment = CommentRequest(
             id = commentRef.id,
             content = content,
-            author = author,
+            author = author.userName,
+            uid = author.id,
+            profileImageUrl = author.profileImageUrl,
             likeCount = 0,
             createdAt = FieldValue.serverTimestamp(),
         )
