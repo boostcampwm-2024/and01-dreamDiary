@@ -23,6 +23,7 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.encodeToJsonElement
 import kotlinx.serialization.json.jsonObject
 import timber.log.Timber
+import java.io.File
 import java.time.Instant
 import java.util.UUID
 import javax.inject.Inject
@@ -52,10 +53,17 @@ class CommunityRepository @Inject constructor(
                     val imageReference = postReference.collection("images").document()
                     val imageNameForStorage = UUID.randomUUID().toString()
 
+                    val imageFile = File(diaryContent.path)
+                    val imageUri = if (imageFile.exists()) {
+                        imageFile.toUri()
+                    } else {
+                        diaryContent.path.toUri()
+                    }
+
                     imageStorage
                         .child(uid)
                         .child(imageNameForStorage)
-                        .putFile(diaryContent.path.toUri())
+                        .putFile(imageUri)
                         .await()
 
                     referenceToData.add(
