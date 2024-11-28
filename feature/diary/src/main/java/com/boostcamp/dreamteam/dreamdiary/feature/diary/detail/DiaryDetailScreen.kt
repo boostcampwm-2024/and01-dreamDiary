@@ -41,6 +41,7 @@ import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.DiaryContentUi
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.LabelUi
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.filteredLabelsPreview
 import com.boostcamp.dreamteam.dreamdiary.feature.widget.util.updateWidget
+import com.boostcamp.dreamteam.dreamdiary.ui.component.GoToSignInDialog
 import timber.log.Timber
 import java.io.File
 import java.time.ZonedDateTime
@@ -50,9 +51,13 @@ fun DiaryDetailScreen(
     onBackClick: () -> Unit,
     onEditDiary: (diaryId: String) -> Unit,
     onShareDiary: (diaryId: String) -> Unit,
+    onDialogConfirmClick: () -> Unit,
     viewModel: DiaryDetailViewModel = hiltViewModel(),
 ) {
     val context = LocalContext.current
+    val email by viewModel.email.collectAsStateWithLifecycle()
+    var showDialog by remember { mutableStateOf(false) }
+
     LaunchedEffect(onBackClick, context) {
         viewModel.event.collect { event ->
             Timber.d("DiaryDetailScreen event: $event")
@@ -80,6 +85,14 @@ fun DiaryDetailScreen(
     val diaryUiState = uiState.diaryUIState
     val loading = uiState.loading
     if (!loading) {
+        GoToSignInDialog(
+            showDialog = showDialog,
+            onDismiss = { showDialog = false },
+            onConfirm = {
+                onDialogConfirmClick()
+                showDialog = false
+            },
+        )
         DiaryDetailScreen(
             title = diaryUiState.title,
             sleepStartAt = diaryUiState.sleepStartAt,
@@ -89,7 +102,13 @@ fun DiaryDetailScreen(
             onBackClick = onBackClick,
             onEditDiary = { onEditDiary(diaryUiState.id) },
             onDeleteDiary = { viewModel.deleteDiary() },
-            onShareDiary = { onShareDiary(diaryUiState.id) },
+            onShareDiary = {
+                if (email == null) {
+                    showDialog = true
+                } else {
+                    onShareDiary(diaryUiState.id)
+                }
+            },
         )
     }
 }

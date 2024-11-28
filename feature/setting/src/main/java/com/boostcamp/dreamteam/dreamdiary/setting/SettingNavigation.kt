@@ -26,7 +26,7 @@ fun NavGraphBuilder.settingGraph(
     navController: NavHostController,
     onDiaryClick: () -> Unit,
     onCommunityClick: () -> Unit,
-    onLogoutClick: () -> Unit,
+    onGoToSignInClick: () -> Unit,
 ) {
     navigation<SettingGraph>(
         startDestination = SettingGraph.SettingRoute,
@@ -51,7 +51,7 @@ fun NavGraphBuilder.settingGraph(
                         },
                     )
                 },
-                onLogoutClick = onLogoutClick,
+                onGoToSignInClick = onGoToSignInClick,
             )
         }
         composable<SettingGraph.SettingNotificationRoute> {

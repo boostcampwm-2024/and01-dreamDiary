@@ -9,6 +9,8 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.OAuthProvider
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -20,6 +22,15 @@ class AuthRepository @Inject constructor(
     private val auth: FirebaseAuth = FirebaseAuth.getInstance()
 
     private val provider = OAuthProvider.newBuilder("github.com")
+
+    private val _emailFlow = MutableSharedFlow<String?>(replay = 1)
+    val emailFlow: SharedFlow<String?> = _emailFlow
+
+    init {
+        auth.addAuthStateListener { firebaseAuth ->
+            _emailFlow.tryEmit(firebaseAuth.currentUser?.email)
+        }
+    }
 
     fun firebaseSignOut() {
         auth.signOut()

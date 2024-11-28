@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
 import androidx.paging.map
 import com.boostcamp.dreamteam.dreamdiary.community.model.toPostUi
+import com.boostcamp.dreamteam.dreamdiary.core.data.repository.AuthRepository
 import com.boostcamp.dreamteam.dreamdiary.core.domain.usecase.community.AddCommunityPostUseCase
 import com.boostcamp.dreamteam.dreamdiary.core.domain.usecase.community.GetCommunityPostsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -18,6 +19,7 @@ import javax.inject.Inject
 class CommunityListViewModel @Inject constructor(
     private val addCommunityPostUseCase: AddCommunityPostUseCase,
     private val getCommunityPostsUseCase: GetCommunityPostsUseCase,
+    private val authRepository: AuthRepository,
 ) : ViewModel() {
     private val _state = MutableStateFlow(CommunityListUiState())
     val state = _state.asStateFlow()
@@ -33,4 +35,8 @@ class CommunityListViewModel @Inject constructor(
             pagingData.map { it.toPostUi() } // CommunityDreamPost -> PostUi 변환
         }
         .cachedIn(viewModelScope)
+
+    fun notSignIn(): Boolean {
+        return authRepository.getUserEmail() == null
+    }
 }

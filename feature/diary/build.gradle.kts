@@ -27,10 +27,12 @@ dependencies {
     implementation(projects.core.domain)
     implementation(projects.core.model)
     implementation(projects.core.ui)
+    implementation(projects.core.data)
     implementation(projects.feature.widget)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
+    implementation(project(":core:data"))
     androidTestImplementation(libs.androidx.espresso.core)
 
     // Coil
