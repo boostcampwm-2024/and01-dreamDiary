@@ -38,7 +38,11 @@ class CommentRepository @Inject constructor(
 
         // comment 증가
         val postRef = firebaseFirestore.collection("community").document(postId)
-        postRef.update("commentCount", FieldValue.increment(1)).await()
+
+        firebaseFirestore.runBatch { batch ->
+            batch.set(commentRef, newComment)
+            batch.update(postRef, "commentCount", FieldValue.increment(1))
+        }.await()
 
         commentRef.set(newComment).await()
 
