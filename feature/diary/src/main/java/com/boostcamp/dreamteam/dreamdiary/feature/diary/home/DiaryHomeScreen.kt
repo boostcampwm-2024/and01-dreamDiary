@@ -17,12 +17,15 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRowDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -131,12 +134,17 @@ private fun DiaryHomeScreenContent(
         ),
     )
 
+    val topAppBarScrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
+
     Scaffold(
-        modifier = modifier.fillMaxSize(),
+        modifier = modifier
+            .nestedScroll(topAppBarScrollBehavior.nestedScrollConnection)
+            .fillMaxSize(),
         topBar = {
             DiaryHomeScreenTopAppBar(
                 onNotificationClick = { /* 알림 클릭 시 동작 */ },
                 onSearchClick = { /* 검색 클릭 시 동작 */ },
+                scrollBehavior = topAppBarScrollBehavior,
                 currentTabIndex = currentTabIndex,
                 onClickTab = setCurrentTabIndex,
             )
@@ -192,6 +200,7 @@ private fun DiaryHomeScreenContent(
 private fun DiaryHomeScreenTopAppBar(
     onNotificationClick: () -> Unit,
     onSearchClick: () -> Unit,
+    scrollBehavior: TopAppBarScrollBehavior,
     currentTabIndex: Int,
     onClickTab: (Int) -> Unit,
     modifier: Modifier = Modifier,
@@ -215,6 +224,7 @@ private fun DiaryHomeScreenTopAppBar(
                     )
                 }
             },
+            scrollBehavior = scrollBehavior,
         )
         PrimaryTabRow(
             selectedTabIndex = currentTabIndex,
