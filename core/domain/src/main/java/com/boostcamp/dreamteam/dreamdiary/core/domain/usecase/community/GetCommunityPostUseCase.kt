@@ -1,15 +1,13 @@
 package com.boostcamp.dreamteam.dreamdiary.core.domain.usecase.community
 
-import androidx.paging.PagingData
 import com.boostcamp.dreamteam.dreamdiary.core.data.repository.CommunityRepository
-import com.boostcamp.dreamteam.dreamdiary.core.model.community.CommunityPostList
-import kotlinx.coroutines.flow.Flow
+import com.boostcamp.dreamteam.dreamdiary.core.model.CommunityPostDetail
 import javax.inject.Inject
 
 class GetCommunityPostUseCase @Inject constructor(
     private val communityRepository: CommunityRepository,
 ) {
-    operator fun invoke(): Flow<PagingData<CommunityPostList>> {
-        return communityRepository.getCommunityPosts()
+    suspend operator fun invoke(postId: String): CommunityPostDetail {
+        return communityRepository.getCommunityPostById(postId)
     }
 }

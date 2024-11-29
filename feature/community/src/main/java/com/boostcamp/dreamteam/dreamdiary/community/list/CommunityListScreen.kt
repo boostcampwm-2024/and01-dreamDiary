@@ -2,7 +2,6 @@ package com.boostcamp.dreamteam.dreamdiary.community.list
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -43,7 +42,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.boostcamp.dreamteam.dreamdiary.community.R
@@ -68,15 +66,15 @@ fun CommunityListScreen(
     goToSignInClick: () -> Unit,
     viewModel: CommunityListViewModel = hiltViewModel(),
 ) {
-    val state by viewModel.state.collectAsStateWithLifecycle()
-    val diaries = viewModel.posts.collectAsLazyPagingItems()
+    val posts = viewModel.posts.collectAsLazyPagingItems()
 
     val modifier = Modifier
+
     if (viewModel.notSignIn()) {
         NotSignInCommunityContent(
             onNavigateToDiary = onNavigateToDiary,
             onNavigateToSetting = onNavigateToSetting,
-            diaries = diaries,
+            posts = posts,
             goToSignInClick = {
                 goToSignInClick()
             },
@@ -87,8 +85,8 @@ fun CommunityListScreen(
             onClickFab = onClickFab,
             onNavigateToDiary = onNavigateToDiary,
             onNavigateToSetting = onNavigateToSetting,
-            diaries = diaries,
-            onDiaryClick = { diary -> onDiaryClick(diary.id) },
+            posts = posts,
+            onPostClick = { diary -> onDiaryClick(diary.id) },
             onSaveClick = viewModel::addCommunityPost,
             modifier = modifier,
         )
@@ -100,7 +98,7 @@ fun CommunityListScreen(
 private fun NotSignInCommunityContent(
     onNavigateToDiary: () -> Unit,
     onNavigateToSetting: () -> Unit,
-    diaries: LazyPagingItems<PostUi>,
+    posts: LazyPagingItems<PostUi>,
     goToSignInClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -140,10 +138,10 @@ private fun NotSignInCommunityContent(
                 contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
             ) {
                 items(
-                    count = diaries.itemCount,
-                    key = { diaries.peek(it)?.id ?: PagingIndexKey(it) },
+                    count = posts.itemCount,
+                    key = { posts.peek(it)?.id ?: PagingIndexKey(it) },
                 ) { diaryIndex ->
-                    val diary = diaries[diaryIndex]
+                    val diary = posts[diaryIndex]
                     if (diary != null) {
                         CommunityDiaryCard(
                             diary = diary,
@@ -196,8 +194,8 @@ private fun CommunityListScreenContent(
     onClickFab: () -> Unit,
     onNavigateToDiary: () -> Unit,
     onNavigateToSetting: () -> Unit,
-    diaries: LazyPagingItems<PostUi>,
-    onDiaryClick: (PostUi) -> Unit,
+    posts: LazyPagingItems<PostUi>,
+    onPostClick: (PostUi) -> Unit,
     onSaveClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -251,46 +249,33 @@ private fun CommunityListScreenContent(
                     isRefreshing = false
                 }
             },
-            modifier = Modifier
+            modifier = modifier
                 .fillMaxSize()
                 .padding(innerPadding),
             state = refreshState,
         ) {
             LazyColumn(
-                modifier = modifier
+                modifier = Modifier
                     .fillMaxSize(),
                 verticalArrangement = Arrangement.spacedBy(16.dp),
                 contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
             ) {
                 items(
-                    count = diaries.itemCount,
-                    key = { diaries.peek(it)?.id ?: PagingIndexKey(it) },
+                    count = posts.itemCount,
+                    key = { posts.peek(it)?.id ?: PagingIndexKey(it) },
                 ) { diaryIndex ->
-                    val diary = diaries[diaryIndex]
+                    val diary = posts[diaryIndex]
                     if (diary != null) {
                         CommunityDiaryCard(
                             diary = diary,
-                            onPostClick = { /* Todo: 게시글 클릭 시 동작 추가하기 */ },
+                            onPostClick = onPostClick,
                             onClickMenu = { /* TODO: 메뉴 눌렀을 때 기능 추가하기 */ },
                             onClickLike = { /* TODO: 좋아요 눌렀을 때 기능 추가하기 */ },
-                            modifier = Modifier
-                                .clickable(onClick = { onDiaryClick(diary) })
-                                .animateItem(),
                         )
                     }
                 }
             }
         }
-
-//        Button(
-//            modifier = modifier.padding(innerPadding),
-//            onClick = {
-//                onSaveClick()
-//                Timber.d(diaries.toString())
-//            },
-//        ) {
-//            Text(text = "저장")
-//        }
     }
 }
 
@@ -302,9 +287,9 @@ private fun CommunityListScreenContentPreview() {
             onClickFab = { },
             onNavigateToDiary = { },
             onNavigateToSetting = { },
-            onDiaryClick = { },
+            onPostClick = { },
             onSaveClick = { },
-            diaries = pagedPostPreview.collectAsLazyPagingItems(),
+            posts = pagedPostPreview.collectAsLazyPagingItems(),
         )
     }
 }

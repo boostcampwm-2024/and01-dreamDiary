@@ -29,7 +29,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -41,12 +40,6 @@ import com.boostcamp.dreamteam.dreamdiary.community.R
 import com.boostcamp.dreamteam.dreamdiary.community.write.component.CommunityEditor
 import com.boostcamp.dreamteam.dreamdiary.community.write.component.CommunityEditorState
 import com.boostcamp.dreamteam.dreamdiary.designsystem.theme.DreamdiaryTheme
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.yield
-import java.io.File
-import java.io.FileOutputStream
-import java.util.UUID
 
 @Composable
 fun CommunityWriteScreen(
@@ -79,8 +72,6 @@ private fun CommunityWriteScreenContent(
     editorState: CommunityEditorState,
     modifier: Modifier = Modifier,
 ) {
-    val coroutineScope = rememberCoroutineScope()
-
     val (currentFocusContent, setCurrentFocusContent) = remember { mutableIntStateOf(0) }
     val (currentTextCursorPosition, setCurrentTextCursorPosition) = remember { mutableIntStateOf(0) }
 
@@ -93,26 +84,11 @@ private fun CommunityWriteScreenContent(
                     uri,
                     Intent.FLAG_GRANT_READ_URI_PERMISSION,
                 )
-                coroutineScope.launch(Dispatchers.IO) {
-                    val fileName = UUID.randomUUID().toString()
-                    val inputStream = context.contentResolver.openInputStream(uri)
-                    val outputFile = File(context.filesDir, fileName)
-                    val outputStream = FileOutputStream(outputFile)
-
-                    inputStream?.use { input ->
-                        outputStream.use { output ->
-                            input.copyTo(output)
-                        }
-                    }
-                    yield()
-                    launch(Dispatchers.Main) {
-                        onContentImageAdd(
-                            currentFocusContent,
-                            currentTextCursorPosition,
-                            fileName,
-                        )
-                    }
-                }
+                onContentImageAdd(
+                    currentFocusContent,
+                    currentTextCursorPosition,
+                    uri.toString(),
+                )
             }
         },
     )

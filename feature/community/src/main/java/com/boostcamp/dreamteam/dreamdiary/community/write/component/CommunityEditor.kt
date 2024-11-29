@@ -46,7 +46,6 @@ import com.boostcamp.dreamteam.dreamdiary.community.model.vo.PostContentUi
 import com.boostcamp.dreamteam.dreamdiary.designsystem.component.DdAsyncImage
 import com.boostcamp.dreamteam.dreamdiary.designsystem.theme.DreamdiaryTheme
 import com.boostcamp.dreamteam.dreamdiary.ui.util.conditional
-import java.io.File
 
 internal data class CommunityEditorState(
     val title: String,
@@ -199,7 +198,8 @@ private fun BodyText(
                         focusRequester(focusRequester)
                     }
                 },
-            ).onFocusChanged { onFocusChange(it.isFocused) },
+            )
+            .onFocusChanged { onFocusChange(it.isFocused) },
         readOnly = readOnly,
         textStyle = MaterialTheme.typography.bodyLarge.copy(
             color = MaterialTheme.colorScheme.onSurface,
@@ -226,12 +226,11 @@ private fun BodyImage(
     modifier: Modifier = Modifier,
     readOnly: Boolean = false,
 ) {
-    val context = LocalContext.current
     Box(modifier = modifier) {
         DdAsyncImage(
             model = ImageRequest
-                .Builder(context)
-                .data(File(context.filesDir, imageContent.path))
+                .Builder(LocalContext.current)
+                .data(imageContent.path)
                 .build(),
             contentDescription = stringResource(R.string.community_write_editor_image_description),
             modifier = Modifier

@@ -29,10 +29,20 @@ class CommentRepository @Inject constructor(
         val newComment = CommentRequest(
             id = commentRef.id,
             content = content,
-            author = author,
+            author = author.userName,
+            uid = author.id,
+            profileImageUrl = author.profileImageUrl,
             likeCount = 0,
             createdAt = FieldValue.serverTimestamp(),
         )
+
+        // comment 증가
+        val postRef = firebaseFirestore.collection("community").document(postId)
+
+        firebaseFirestore.runBatch { batch ->
+            batch.set(commentRef, newComment)
+            batch.update(postRef, "commentCount", FieldValue.increment(1))
+        }.await()
 
         commentRef.set(newComment).await()
 
@@ -56,9 +66,11 @@ class CommentRepository @Inject constructor(
                 Comment(
                     id = commentResponse.id,
                     content = commentResponse.content,
+                    uid = commentResponse.uid,
                     author = commentResponse.author,
+                    profileImageUrl = commentResponse.profileImageUrl,
                     likeCount = commentResponse.likeCount,
-                    createdAt = commentResponse.createdAt,
+                    createdAt = commentResponse.createdAt.seconds,
                 )
             }
         }

@@ -1,13 +1,13 @@
 package com.boostcamp.dreamteam.dreamdiary.community.model
 
 data class UserUi(
-    val id: String,
+    val uid: String,
     val username: String,
     val profileImageUrl: String,
 ) {
     companion object {
         val EMPTY: UserUi = UserUi(
-            id = "",
+            uid = "",
             username = "",
             profileImageUrl = "",
         )
@@ -15,19 +15,19 @@ data class UserUi(
 }
 
 internal val userUiPreview1 = UserUi(
-    id = "1",
+    uid = "1",
     username = "User 1",
     profileImageUrl = "https://picsum.photos/200/300",
 )
 
 internal val userUiPreview2 = UserUi(
-    id = "2",
+    uid = "2",
     username = "User 2",
     profileImageUrl = "https://picsum.photos/200/300",
 )
 
 internal val userUiPreview3 = UserUi(
-    id = "3",
+    uid = "3",
     username = "User 3",
     profileImageUrl = "https://picsum.photos/200/300",
 )

@@ -39,7 +39,7 @@ internal fun CommunityDetailComment(
         ),
     ) {
         ListItem(
-            headlineContent = { Text(text = comment.contents) },
+            headlineContent = { Text(text = comment.content) },
             modifier = modifier,
             overlineContent = {
                 Text(

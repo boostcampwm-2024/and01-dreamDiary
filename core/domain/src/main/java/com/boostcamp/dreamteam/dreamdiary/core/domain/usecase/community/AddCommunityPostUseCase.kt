@@ -15,12 +15,14 @@ class AddCommunityPostUseCase @Inject constructor(
     ): String {
         val uid = authRepository.getUserUID() ?: throw Exception()
         val userName = authRepository.getUserName() ?: throw Exception()
-
+        // Todo 없으면 기본 이미지 넣기
+        val profileImageUrl = authRepository.getUserPhotoUrl() ?: throw Exception()
         return communityRepository.saveCommunityPost(
             title = title,
             diaryContents = diaryContents,
             uid = uid,
             name = userName,
+            profileImageUrl = profileImageUrl.toString(),
         )
     }
 }

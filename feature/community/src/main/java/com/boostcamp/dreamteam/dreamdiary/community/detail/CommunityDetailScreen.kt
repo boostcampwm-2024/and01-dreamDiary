@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
@@ -22,17 +24,9 @@ import androidx.compose.material3.MediumTopAppBar
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.TopAppBarScrollBehavior
-import androidx.compose.material3.pulltorefresh.PullToRefreshBox
-import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -57,12 +51,16 @@ fun CommunityDetailScreen(
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val comments = viewModel.comments.collectAsLazyPagingItems()
+    val commentContent = viewModel.commentContent.collectAsStateWithLifecycle()
 
     CommunityDetailScreenContent(
         onClickBack = onClickBack,
         post = state.post,
         onClickLikePost = { post -> viewModel.toggleLikePost(post.id) },
         comments = comments,
+        commentContent = commentContent.value,
+        onChangeCommentContent = viewModel::changeCommentContent,
+        onSubmitComment = viewModel::addComment,
         onClickLikeComment = { comment -> viewModel.toggleLikeComment(comment.id) },
     )
 }
@@ -73,21 +71,18 @@ private fun CommunityDetailScreenContent(
     post: PostDetailUi,
     onClickLikePost: (PostDetailUi) -> Unit,
     comments: LazyPagingItems<CommentUi>,
+    commentContent: String,
+    onSubmitComment: () -> Unit,
+    onChangeCommentContent: (String) -> Unit,
     onClickLikeComment: (CommentUi) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
-    val refreshState = rememberPullToRefreshState()
-    var isRefreshing by remember { mutableStateOf(false) }
-
     Scaffold(
         modifier = modifier
-            .fillMaxSize()
-            .nestedScroll(scrollBehavior.nestedScrollConnection),
+            .fillMaxSize(),
         topBar = {
             CommunityDetailTopAppBar(
                 state = CommunityDetailTopAppbarState(
-                    scrollBehavior = scrollBehavior,
                     onClickBack = onClickBack,
                     title = post.title,
                 ),
@@ -97,46 +92,37 @@ private fun CommunityDetailScreenContent(
             // TODO
             NewCommentBottomBar(
                 state = CommunityDetailBottomBarState(
-                    inputComment = "",
-                    onInputCommentChange = { },
-                    onSubmitComment = { },
+                    inputComment = commentContent,
+                    onInputCommentChange = onChangeCommentContent,
+                    onSubmitComment = onSubmitComment,
                 ),
             )
         },
     ) { innerPadding ->
-        PullToRefreshBox(
-            isRefreshing = isRefreshing,
-            onRefresh = {
-                // TODO: 새로고침 로직 추가
-            },
+        LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding),
-            state = refreshState,
+            contentPadding = PaddingValues(vertical = 8.dp),
         ) {
-            LazyColumn(
-                modifier = Modifier.fillMaxSize(),
-                contentPadding = PaddingValues(vertical = 8.dp),
-            ) {
-                item {
-                    CommunityDetailPostCard(
-                        post = post,
-                        onClickLikePost = { onClickLikePost(post) },
-                        modifier = Modifier.fillMaxWidth(),
-                    )
-                }
+            item {
+                CommunityDetailPostCard(
+                    post = post,
+                    onClickLikePost = { onClickLikePost(post) },
+                    modifier = Modifier.fillMaxWidth(),
+                )
+            }
 
-                items(
-                    count = comments.itemCount,
-                    key = { comments.peek(it)?.id ?: PagingIndexKey(it) },
-                ) { index ->
-                    val comment = comments[index]
-                    if (comment != null) {
-                        CommunityDetailComment(
-                            comment = comment,
-                            onClickLikeComment = { onClickLikeComment(comment) },
-                        )
-                    }
+            items(
+                count = comments.itemCount,
+                key = { comments.peek(it)?.id ?: PagingIndexKey(it) },
+            ) { index ->
+                val comment = comments[index]
+                if (comment != null) {
+                    CommunityDetailComment(
+                        comment = comment,
+                        onClickLikeComment = { onClickLikeComment(comment) },
+                    )
                 }
             }
         }
@@ -144,7 +130,6 @@ private fun CommunityDetailScreenContent(
 }
 
 private data class CommunityDetailTopAppbarState(
-    val scrollBehavior: TopAppBarScrollBehavior,
     val onClickBack: () -> Unit,
     val title: String,
 )
@@ -184,7 +169,9 @@ private fun NewCommentBottomBar(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .background(color = BottomAppBarDefaults.containerColor),
+            .background(color = BottomAppBarDefaults.containerColor)
+            .imePadding()
+            .navigationBarsPadding(),
     ) {
         OutlinedTextField(
             value = state.inputComment,
@@ -228,7 +215,10 @@ private fun CommunityDetailScreenContentPreview() {
         CommunityDetailScreenContent(
             onClickBack = { },
             onClickLikePost = { },
+            onSubmitComment = { },
             post = postDetailUiPreview,
+            commentContent = "",
+            onChangeCommentContent = { },
             comments = pagingCommentsUiPreview.collectAsLazyPagingItems(),
             onClickLikeComment = { },
         )

@@ -8,6 +8,9 @@ import com.boostcamp.dreamteam.dreamdiary.community.model.vo.PostContentUi
 import com.boostcamp.dreamteam.dreamdiary.community.model.vo.toDomain
 import com.boostcamp.dreamteam.dreamdiary.core.domain.usecase.GetDreamDiaryUseCase
 import com.boostcamp.dreamteam.dreamdiary.core.domain.usecase.community.AddCommunityPostUseCase
+import com.boostcamp.dreamteam.dreamdiary.core.model.Diary
+import com.boostcamp.dreamteam.dreamdiary.core.model.DiaryContent
+import com.boostcamp.dreamteam.dreamdiary.storage.StorageManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -20,6 +23,7 @@ class CommunityWriteViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val getDreamDiaryUseCase: GetDreamDiaryUseCase,
     private val addCommunityPostUseCase: AddCommunityPostUseCase,
+    private val storageManager: StorageManager,
 ) : ViewModel() {
     private val id: String? = savedStateHandle[CommunityGraph.CommunityWriteRoute::diaryId.name]
 
@@ -132,13 +136,30 @@ class CommunityWriteViewModel @Inject constructor(
                 getDreamDiaryUseCase(id).let { diary ->
                     _uiState.update { state ->
                         state.copy(
-                            editorState = diary.toEditorState(),
+                            editorState = toEditorState(diary),
                             isLoading = false,
                         )
                     }
                 }
             }
         }
+    }
+
+    private fun toEditorState(diary: Diary): EditorState {
+        return EditorState(
+            title = diary.title,
+            contents = diary.diaryContents.map {
+                when (it) {
+                    is DiaryContent.Image -> PostContentUi.Image(
+                        path = storageManager.getFullPath(it.path),
+                    )
+
+                    is DiaryContent.Text -> PostContentUi.Text(
+                        text = it.text,
+                    )
+                }
+            },
+        )
     }
 
     private fun setIsLoading(isLoading: Boolean) {

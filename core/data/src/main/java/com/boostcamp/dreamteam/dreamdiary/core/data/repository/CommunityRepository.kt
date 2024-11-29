@@ -1,27 +1,28 @@
 package com.boostcamp.dreamteam.dreamdiary.core.data.repository
 
-import android.content.Context
 import androidx.core.net.toUri
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.map
 import com.boostcamp.dreamteam.dreamdiary.core.data.convertToFirebaseData
+import com.boostcamp.dreamteam.dreamdiary.core.data.dto.CommunityPostResponse
 import com.boostcamp.dreamteam.dreamdiary.core.data.firebase.FirebaseCommunityPostPagingSource
 import com.boostcamp.dreamteam.dreamdiary.core.data.firebase.firestore.model.FirestoreAddCommunityPostRequest
+import com.boostcamp.dreamteam.dreamdiary.core.model.CommunityPostDetail
 import com.boostcamp.dreamteam.dreamdiary.core.model.DiaryContent
 import com.boostcamp.dreamteam.dreamdiary.core.model.community.CommunityPostList
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.tasks.await
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.encodeToJsonElement
 import kotlinx.serialization.json.jsonObject
+import timber.log.Timber
 import java.io.File
 import java.time.Instant
 import java.util.UUID
@@ -30,7 +31,6 @@ import javax.inject.Inject
 class CommunityRepository @Inject constructor(
     private val firebaseFirestore: FirebaseFirestore,
     private val firebaseStorage: FirebaseStorage,
-    @ApplicationContext private val context: Context,
 ) {
     private val communityCollection = firebaseFirestore.collection("community")
     private val imageStorage = firebaseStorage.reference.child("community").child("images")
@@ -40,6 +40,7 @@ class CommunityRepository @Inject constructor(
         diaryContents: List<DiaryContent>,
         uid: String,
         name: String,
+        profileImageUrl: String,
     ): String {
         val postReference = communityCollection.document()
 
@@ -52,10 +53,17 @@ class CommunityRepository @Inject constructor(
                     val imageReference = postReference.collection("images").document()
                     val imageNameForStorage = UUID.randomUUID().toString()
 
+                    val imageFile = File(diaryContent.path)
+                    val imageUri = if (imageFile.exists()) {
+                        imageFile.toUri()
+                    } else {
+                        diaryContent.path.toUri()
+                    }
+
                     imageStorage
                         .child(uid)
                         .child(imageNameForStorage)
-                        .putFile(File(context.filesDir, diaryContent.path).toUri())
+                        .putFile(imageUri)
                         .await()
 
                     referenceToData.add(
@@ -89,7 +97,9 @@ class CommunityRepository @Inject constructor(
             author = name,
             title = title,
             content = content,
+            profileImageUrl = profileImageUrl,
             likeCount = 0,
+            commentCount = 0,
         )
 
         val requestMap = (Json.encodeToJsonElement(request).jsonObject.convertToFirebaseData() as Map<String, Any>).toMutableMap()
@@ -115,12 +125,20 @@ class CommunityRepository @Inject constructor(
         ).flow.map { postResponses ->
             postResponses.map { postResponse ->
                 val diaryContents =
-                    parseListPostContent(content = postResponse.content, postId = postResponse.id, postUID = postResponse.uid)
+                    parseListPostContent(
+                        content = postResponse.content,
+                        postId = postResponse.id,
+                        postUID = postResponse.uid,
+                    )
                 CommunityPostList(
                     id = postResponse.id,
                     author = postResponse.author,
+                    profileImageUrl = postResponse.profileImageUrl,
+                    uid = postResponse.uid,
                     title = postResponse.title,
                     diaryContents = diaryContents,
+                    commentCount = postResponse.commentCount,
+                    likeCount = postResponse.likeCount,
                     createdAt = Instant.ofEpochSecond(postResponse.createdAt.seconds, postResponse.createdAt.nanoseconds.toLong()),
                 )
             }
@@ -194,5 +212,116 @@ class CommunityRepository @Inject constructor(
         const val TEXT = "text"
         const val IMAGE = "image"
         const val DELIMITER = ":"
+    }
+
+    suspend fun getCommunityPostById(postId: String): CommunityPostDetail {
+        return try {
+            val documentSnapshot =
+                communityCollection.document(postId)
+                    .get()
+                    .await()
+
+            if (!documentSnapshot.exists()) {
+                throw Exception("Community post with ID $postId not found")
+            }
+
+            val communityPostResponse = documentSnapshot.toObject(CommunityPostResponse::class.java)
+                ?: throw Exception("Failed to parse CommunityPostResponse for ID $postId")
+
+            Timber.d("communityPostResponse: ${communityPostResponse.content}")
+            val contents = parseBody(communityPostResponse.uid, postId, communityPostResponse.content)
+            Timber.d("contents: $contents")
+
+            CommunityPostDetail(
+                id = communityPostResponse.id,
+                author = communityPostResponse.author,
+                profileImageUrl = communityPostResponse.profileImageUrl,
+                title = communityPostResponse.title,
+                content = communityPostResponse.content,
+                likes = communityPostResponse.likes,
+                commentCount = communityPostResponse.commentCount,
+                postContents = contents,
+                createdAt = communityPostResponse.createdAt.seconds,
+            )
+        } catch (e: Exception) {
+            Timber.e(e, "Error fetching community post with ID $postId")
+            throw e
+        }
+    }
+
+    private suspend fun parseBody(
+        uid: String,
+        postId: String,
+        body: String,
+    ): List<DiaryContent> {
+        val diaryContents = mutableListOf<DiaryContent>()
+
+        val parsingDiaryContent = body.split(DELIMITER)
+        var index = 0
+
+        while (index < parsingDiaryContent.size) {
+            if (parsingDiaryContent[index] == TEXT) {
+                index += 1
+                val id = parsingDiaryContent[index]
+                getTextContent(postId, id)?.let { diaryContents.add(it) }
+            } else if (parsingDiaryContent[index] == IMAGE) {
+                index += 1
+                val id = parsingDiaryContent[index]
+                getImageContent(uid, postId, id)?.let {
+                    diaryContents.add(it)
+                    Timber.d("image: $it")
+                }
+            } else {
+                index += 1
+                continue
+            }
+        }
+        return diaryContents
+    }
+
+    private suspend fun getImageContent(
+        uid: String,
+        postId: String,
+        imageId: String,
+    ): DiaryContent? {
+        return try {
+            val imageSnapshot = communityCollection.document(postId)
+                .collection("images").document(imageId).get().await()
+
+            val imagePath = imageSnapshot.getString("name")
+            if (imagePath != null) {
+                Timber.d("imageId: $uid")
+                Timber.d("imagePath: $imagePath")
+                val path = imageStorage.child(uid).child(imagePath).downloadUrl.await()
+                Timber.d(path.toString())
+
+                DiaryContent.Image(path.toString())
+            } else {
+                null
+            }
+        } catch (e: Exception) {
+            Timber.e(e, "Error fetching image with ID $imageId for post $postId")
+            null
+        }
+    }
+
+    private suspend fun getTextContent(
+        postId: String,
+        textId: String,
+    ): DiaryContent? {
+        return try {
+            val textSnapshot = communityCollection.document(postId)
+                .collection("text").document(textId).get().await()
+
+            val text = textSnapshot.getString("text")
+            if (text != null) {
+                DiaryContent.Text(text)
+            } else {
+                null
+            }
+        } catch (e: Exception) {
+            Timber.e(e, "Error fetching text with ID $textId for post $postId")
+            null
+        }
     }
 }

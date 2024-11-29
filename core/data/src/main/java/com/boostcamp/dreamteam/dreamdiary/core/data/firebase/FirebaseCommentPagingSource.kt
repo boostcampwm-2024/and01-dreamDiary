@@ -14,7 +14,7 @@ class FirebaseCommentPagingSource(
     override suspend fun load(params: LoadParams<Query>): LoadResult<Query, CommentResponse> {
         return try {
             val query = params.key ?: commentReference
-                .orderBy("createdAt", com.google.firebase.firestore.Query.Direction.DESCENDING)
+                .orderBy("createdAt", com.google.firebase.firestore.Query.Direction.ASCENDING)
                 .limit(params.loadSize.toLong())
 
             val querySnapshot = query.get().await()
