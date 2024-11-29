@@ -25,6 +25,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -51,16 +52,27 @@ fun CommunityDetailScreen(
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val comments = viewModel.comments.collectAsLazyPagingItems()
-    val commentContent = viewModel.commentContent.collectAsStateWithLifecycle()
+
+    LaunchedEffect(Unit) {
+        viewModel.event.collect { event ->
+            when (event) {
+                is CommunityDetailEvent.CommentAdd.Success -> {
+                    comments.refresh()
+                }
+            }
+        }
+    }
 
     CommunityDetailScreenContent(
         onClickBack = onClickBack,
         post = state.post,
         onClickLikePost = { post -> viewModel.toggleLikePost(post.id) },
         comments = comments,
-        commentContent = commentContent.value,
+        commentContent = state.commentContent,
         onChangeCommentContent = viewModel::changeCommentContent,
-        onSubmitComment = viewModel::addComment,
+        onSubmitComment = {
+            viewModel.addComment()
+        },
         onClickLikeComment = { comment -> viewModel.toggleLikeComment(comment.id) },
     )
 }
@@ -89,7 +101,6 @@ private fun CommunityDetailScreenContent(
             )
         },
         bottomBar = {
-            // TODO
             NewCommentBottomBar(
                 state = CommunityDetailBottomBarState(
                     inputComment = commentContent,
