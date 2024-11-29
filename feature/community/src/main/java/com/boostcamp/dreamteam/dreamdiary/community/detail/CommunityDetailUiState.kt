@@ -6,5 +6,5 @@ data class CommunityDetailUiState(
     val post: PostDetailUi = PostDetailUi.EMPTY,
     val isLoading: Boolean = true,
     val commentContent: String = "",
-    val commentAddLoading: Boolean = false
+    val commentAddLoading: Boolean = false,
 )
