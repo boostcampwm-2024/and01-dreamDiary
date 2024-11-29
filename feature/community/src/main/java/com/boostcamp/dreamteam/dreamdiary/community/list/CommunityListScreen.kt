@@ -132,8 +132,7 @@ private fun NotSignInCommunityContent(
                 .padding(innerPadding),
         ) {
             LazyColumn(
-                modifier = modifier
-                    .fillMaxSize(),
+                modifier = Modifier.fillMaxSize(),
                 verticalArrangement = Arrangement.spacedBy(16.dp),
                 contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
             ) {
@@ -148,8 +147,7 @@ private fun NotSignInCommunityContent(
                             onPostClick = { /* Todo: 게시글 클릭 시 동작 추가하기 */ },
                             onClickMenu = { /* TODO: 메뉴 눌렀을 때 기능 추가하기 */ },
                             onClickLike = { /* TODO: 좋아요 눌렀을 때 기능 추가하기 */ },
-                            modifier = Modifier
-                                .alpha(1.0f - diaryIndex * 0.3f),
+                            modifier = Modifier.alpha(1.0f - diaryIndex * 0.3f),
                         )
                     }
                 }
@@ -174,7 +172,7 @@ private fun NotSignInCommunityContent(
                 Text(stringResource(R.string.community_list_not_signin))
                 Spacer(modifier = Modifier.height(20.dp))
                 OutlinedButton(
-                    modifier = modifier,
+                    modifier = Modifier,
                     onClick = goToSignInClick,
                     shape = MaterialTheme.shapes.small,
                 ) {
@@ -249,14 +247,13 @@ private fun CommunityListScreenContent(
                     isRefreshing = false
                 }
             },
-            modifier = modifier
+            modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding),
             state = refreshState,
         ) {
             LazyColumn(
-                modifier = Modifier
-                    .fillMaxSize(),
+                modifier = Modifier.fillMaxSize(),
                 verticalArrangement = Arrangement.spacedBy(16.dp),
                 contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
             ) {
