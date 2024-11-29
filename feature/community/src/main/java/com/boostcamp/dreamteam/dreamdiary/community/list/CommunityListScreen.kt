@@ -69,15 +69,14 @@ fun CommunityListScreen(
 ) {
     val posts = viewModel.posts.collectAsLazyPagingItems()
 
-    val modifier = Modifier
-
+    val contentModifier = Modifier
     if (viewModel.notSignIn()) {
         NotSignInCommunityContent(
             onNavigateToDiary = onNavigateToDiary,
             onNavigateToSetting = onNavigateToSetting,
             posts = posts,
             goToSignInClick = goToSignInClick,
-            modifier = modifier,
+            modifier = contentModifier,
         )
     } else {
         CommunityListScreenContent(
@@ -86,7 +85,7 @@ fun CommunityListScreen(
             onNavigateToSetting = onNavigateToSetting,
             posts = posts,
             onPostClick = { diary -> onDiaryClick(diary.id) },
-            modifier = modifier,
+            modifier = contentModifier,
         )
     }
 }
