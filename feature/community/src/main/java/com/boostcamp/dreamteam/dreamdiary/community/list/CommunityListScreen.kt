@@ -64,6 +64,7 @@ fun CommunityListScreen(
     onNavigateToSetting: () -> Unit,
     onDiaryClick: (diaryId: String) -> Unit,
     goToSignInClick: () -> Unit,
+    modifier: Modifier = Modifier,
     viewModel: CommunityListViewModel = hiltViewModel(),
 ) {
     val posts = viewModel.posts.collectAsLazyPagingItems()
@@ -75,9 +76,7 @@ fun CommunityListScreen(
             onNavigateToDiary = onNavigateToDiary,
             onNavigateToSetting = onNavigateToSetting,
             posts = posts,
-            goToSignInClick = {
-                goToSignInClick()
-            },
+            goToSignInClick = goToSignInClick,
             modifier = modifier,
         )
     } else {
@@ -87,7 +86,6 @@ fun CommunityListScreen(
             onNavigateToSetting = onNavigateToSetting,
             posts = posts,
             onPostClick = { diary -> onDiaryClick(diary.id) },
-            onSaveClick = viewModel::addCommunityPost,
             modifier = modifier,
         )
     }
@@ -194,7 +192,6 @@ private fun CommunityListScreenContent(
     onNavigateToSetting: () -> Unit,
     posts: LazyPagingItems<PostUi>,
     onPostClick: (PostUi) -> Unit,
-    onSaveClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val navigationItems = listOf(
@@ -285,7 +282,6 @@ private fun CommunityListScreenContentPreview() {
             onNavigateToDiary = { },
             onNavigateToSetting = { },
             onPostClick = { },
-            onSaveClick = { },
             posts = pagedPostPreview.collectAsLazyPagingItems(),
         )
     }
