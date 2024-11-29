@@ -81,15 +81,24 @@ class CommunityDetailViewModel @Inject constructor(
     }
 
     fun addComment() {
+        val commentAddLoading = _uiState.value.commentAddLoading
         val commentContent = _uiState.value.commentContent
+        if (commentAddLoading) return
         if (postId != null && commentContent.isNotBlank()) {
             viewModelScope.launch {
+                _uiState.update {
+                    it.copy(commentAddLoading = true)
+                }
                 try {
                     addCommentUseCase(postId, commentContent)
                     changeCommentContent("")
                     _event.trySend(CommunityDetailEvent.CommentAdd.Success)
                 } catch (e: Exception) {
                     Timber.e(e)
+                } finally {
+                    _uiState.update {
+                        it.copy(commentAddLoading = false)
+                    }
                 }
             }
         }
