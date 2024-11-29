@@ -26,13 +26,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
-import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -42,6 +36,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.boostcamp.dreamteam.dreamdiary.community.R
@@ -53,9 +48,6 @@ import com.boostcamp.dreamteam.dreamdiary.ui.HomeBottomNavItem
 import com.boostcamp.dreamteam.dreamdiary.ui.HomeBottomNavigation
 import com.boostcamp.dreamteam.dreamdiary.ui.PagingIndexKey
 import com.boostcamp.dreamteam.dreamdiary.ui.toNavigationItem
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import kotlin.time.Duration.Companion.seconds
 
 @Composable
 fun CommunityListScreen(
@@ -207,9 +199,6 @@ private fun CommunityListScreenContent(
     )
 
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
-    val refreshState = rememberPullToRefreshState()
-    var isRefreshing by remember { mutableStateOf(false) }
-    val coroutineScope = rememberCoroutineScope()
 
     Scaffold(
         modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
@@ -223,9 +212,7 @@ private fun CommunityListScreenContent(
             HomeBottomNavigation(items = navigationItems)
         },
         floatingActionButton = {
-            FloatingActionButton(
-                onClick = onClickFab,
-            ) {
+            FloatingActionButton(onClick = onClickFab) {
                 Icon(
                     imageVector = Icons.Default.Add,
                     contentDescription = stringResource(R.string.community_list_fab_add_diary_description),
@@ -234,19 +221,11 @@ private fun CommunityListScreenContent(
         },
     ) { innerPadding ->
         PullToRefreshBox(
-            isRefreshing = isRefreshing,
-            onRefresh = {
-                coroutineScope.launch {
-                    isRefreshing = true
-                    delay(1.seconds)
-                    // TODO: 새로고침 로직 추가
-                    isRefreshing = false
-                }
-            },
+            isRefreshing = posts.loadState.refresh is LoadState.Loading,
+            onRefresh = { posts.refresh() },
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding),
-            state = refreshState,
         ) {
             LazyColumn(
                 modifier = Modifier.fillMaxSize(),
@@ -280,8 +259,8 @@ private fun CommunityListScreenContentPreview() {
             onClickFab = { },
             onNavigateToDiary = { },
             onNavigateToSetting = { },
-            onPostClick = { },
             posts = pagedPostPreview.collectAsLazyPagingItems(),
+            onPostClick = { },
         )
     }
 }
