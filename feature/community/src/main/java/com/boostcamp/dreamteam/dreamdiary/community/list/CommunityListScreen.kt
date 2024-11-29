@@ -26,13 +26,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
-import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -42,6 +36,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.boostcamp.dreamteam.dreamdiary.community.R
@@ -53,9 +48,6 @@ import com.boostcamp.dreamteam.dreamdiary.ui.HomeBottomNavItem
 import com.boostcamp.dreamteam.dreamdiary.ui.HomeBottomNavigation
 import com.boostcamp.dreamteam.dreamdiary.ui.PagingIndexKey
 import com.boostcamp.dreamteam.dreamdiary.ui.toNavigationItem
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import kotlin.time.Duration.Companion.seconds
 
 @Composable
 fun CommunityListScreen(
@@ -64,21 +56,19 @@ fun CommunityListScreen(
     onNavigateToSetting: () -> Unit,
     onDiaryClick: (diaryId: String) -> Unit,
     goToSignInClick: () -> Unit,
+    modifier: Modifier = Modifier,
     viewModel: CommunityListViewModel = hiltViewModel(),
 ) {
     val posts = viewModel.posts.collectAsLazyPagingItems()
 
-    val modifier = Modifier
-
+    val contentModifier = Modifier
     if (viewModel.notSignIn()) {
         NotSignInCommunityContent(
             onNavigateToDiary = onNavigateToDiary,
             onNavigateToSetting = onNavigateToSetting,
             posts = posts,
-            goToSignInClick = {
-                goToSignInClick()
-            },
-            modifier = modifier,
+            goToSignInClick = goToSignInClick,
+            modifier = contentModifier,
         )
     } else {
         CommunityListScreenContent(
@@ -87,8 +77,7 @@ fun CommunityListScreen(
             onNavigateToSetting = onNavigateToSetting,
             posts = posts,
             onPostClick = { diary -> onDiaryClick(diary.id) },
-            onSaveClick = viewModel::addCommunityPost,
-            modifier = modifier,
+            modifier = contentModifier,
         )
     }
 }
@@ -132,8 +121,7 @@ private fun NotSignInCommunityContent(
                 .padding(innerPadding),
         ) {
             LazyColumn(
-                modifier = modifier
-                    .fillMaxSize(),
+                modifier = Modifier.fillMaxSize(),
                 verticalArrangement = Arrangement.spacedBy(16.dp),
                 contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
             ) {
@@ -148,8 +136,7 @@ private fun NotSignInCommunityContent(
                             onPostClick = { /* Todo: 게시글 클릭 시 동작 추가하기 */ },
                             onClickMenu = { /* TODO: 메뉴 눌렀을 때 기능 추가하기 */ },
                             onClickLike = { /* TODO: 좋아요 눌렀을 때 기능 추가하기 */ },
-                            modifier = Modifier
-                                .alpha(1.0f - diaryIndex * 0.3f),
+                            modifier = Modifier.alpha(1.0f - diaryIndex * 0.3f),
                         )
                     }
                 }
@@ -174,7 +161,7 @@ private fun NotSignInCommunityContent(
                 Text(stringResource(R.string.community_list_not_signin))
                 Spacer(modifier = Modifier.height(20.dp))
                 OutlinedButton(
-                    modifier = modifier,
+                    modifier = Modifier,
                     onClick = goToSignInClick,
                     shape = MaterialTheme.shapes.small,
                 ) {
@@ -196,7 +183,6 @@ private fun CommunityListScreenContent(
     onNavigateToSetting: () -> Unit,
     posts: LazyPagingItems<PostUi>,
     onPostClick: (PostUi) -> Unit,
-    onSaveClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val navigationItems = listOf(
@@ -213,9 +199,6 @@ private fun CommunityListScreenContent(
     )
 
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
-    val refreshState = rememberPullToRefreshState()
-    var isRefreshing by remember { mutableStateOf(false) }
-    val coroutineScope = rememberCoroutineScope()
 
     Scaffold(
         modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
@@ -229,9 +212,7 @@ private fun CommunityListScreenContent(
             HomeBottomNavigation(items = navigationItems)
         },
         floatingActionButton = {
-            FloatingActionButton(
-                onClick = onClickFab,
-            ) {
+            FloatingActionButton(onClick = onClickFab) {
                 Icon(
                     imageVector = Icons.Default.Add,
                     contentDescription = stringResource(R.string.community_list_fab_add_diary_description),
@@ -240,23 +221,14 @@ private fun CommunityListScreenContent(
         },
     ) { innerPadding ->
         PullToRefreshBox(
-            isRefreshing = isRefreshing,
-            onRefresh = {
-                coroutineScope.launch {
-                    isRefreshing = true
-                    delay(1.seconds)
-                    // TODO: 새로고침 로직 추가
-                    isRefreshing = false
-                }
-            },
-            modifier = modifier
+            isRefreshing = posts.loadState.refresh is LoadState.Loading,
+            onRefresh = { posts.refresh() },
+            modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding),
-            state = refreshState,
         ) {
             LazyColumn(
-                modifier = Modifier
-                    .fillMaxSize(),
+                modifier = Modifier.fillMaxSize(),
                 verticalArrangement = Arrangement.spacedBy(16.dp),
                 contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
             ) {
@@ -287,9 +259,8 @@ private fun CommunityListScreenContentPreview() {
             onClickFab = { },
             onNavigateToDiary = { },
             onNavigateToSetting = { },
-            onPostClick = { },
-            onSaveClick = { },
             posts = pagedPostPreview.collectAsLazyPagingItems(),
+            onPostClick = { },
         )
     }
 }
