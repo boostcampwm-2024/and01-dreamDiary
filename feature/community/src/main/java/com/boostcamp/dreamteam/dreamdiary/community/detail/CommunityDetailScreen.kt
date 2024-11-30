@@ -2,6 +2,7 @@
 
 package com.boostcamp.dreamteam.dreamdiary.community.detail
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -28,6 +29,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -54,13 +56,21 @@ fun CommunityDetailScreen(
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val comments = viewModel.comments.collectAsLazyPagingItems()
     val focusManager = LocalFocusManager.current
-
+    val context = LocalContext.current
     LaunchedEffect(Unit) {
         viewModel.event.collect { event ->
             when (event) {
                 is CommunityDetailEvent.CommentAdd.Success -> {
                     comments.refresh()
                     focusManager.clearFocus()
+                }
+                is CommunityDetailEvent.LikePost.Success -> {}
+                is CommunityDetailEvent.LikePost.Fail -> {
+                    Toast.makeText(
+                        context,
+                        "좋아요 실패",
+                        Toast.LENGTH_SHORT,
+                    ).show()
                 }
             }
         }

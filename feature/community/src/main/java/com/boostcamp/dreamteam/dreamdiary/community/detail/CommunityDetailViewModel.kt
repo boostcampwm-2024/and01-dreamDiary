@@ -38,6 +38,7 @@ class CommunityDetailViewModel @Inject constructor(
 
     private val _event = Channel<CommunityDetailEvent>(64)
     val event = _event.receiveAsFlow()
+
     private val postId: String? = savedStateHandle.get<String>("id")
 
     init {
@@ -47,7 +48,14 @@ class CommunityDetailViewModel @Inject constructor(
     fun togglePostLike() {
         if (postId != null) {
             viewModelScope.launch {
-                togglePostLikeUseCase(postId)
+                try {
+                    togglePostLikeUseCase(postId)
+                    getPostDetail(postId)
+                    _event.trySend(CommunityDetailEvent.LikePost.Success)
+                } catch (e: Exception) {
+                    _event.trySend(CommunityDetailEvent.LikePost.Fail)
+                    Timber.e(e)
+                }
             }
         }
     }
