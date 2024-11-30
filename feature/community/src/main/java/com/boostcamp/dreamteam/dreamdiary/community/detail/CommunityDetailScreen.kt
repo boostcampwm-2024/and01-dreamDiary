@@ -86,7 +86,6 @@ fun CommunityDetailScreen(
         onSubmitComment = {
             viewModel.addComment()
         },
-        onClickLikeComment = { comment -> viewModel.toggleLikeComment(comment.id) },
     )
 }
 
@@ -99,7 +98,6 @@ private fun CommunityDetailScreenContent(
     commentContent: String,
     onSubmitComment: () -> Unit,
     onChangeCommentContent: (String) -> Unit,
-    onClickLikeComment: (CommentUi) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Scaffold(
@@ -145,7 +143,6 @@ private fun CommunityDetailScreenContent(
                 if (comment != null) {
                     CommunityDetailComment(
                         comment = comment,
-                        onClickLikeComment = { onClickLikeComment(comment) },
                     )
                 }
             }
@@ -158,6 +155,7 @@ private data class CommunityDetailTopAppbarState(
     val title: String,
 )
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun CommunityDetailTopAppBar(
     state: CommunityDetailTopAppbarState,
@@ -244,7 +242,6 @@ private fun CommunityDetailScreenContentPreview() {
             commentContent = "",
             onChangeCommentContent = { },
             comments = pagingCommentsUiPreview.collectAsLazyPagingItems(),
-            onClickLikeComment = { },
         )
     }
 }
