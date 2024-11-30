@@ -61,6 +61,7 @@ class CommunityListViewModel @Inject constructor(
                     }
                 }
             } catch (e: Exception) {
+                _event.trySend(CommunityListEvent.LikePost.Failure)
                 Timber.e(e, "Failed to toggle like for post ${postUi.id}")
             }
         }
