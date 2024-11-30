@@ -37,12 +37,13 @@ import com.boostcamp.dreamteam.dreamdiary.community.model.postUiPreview1
 import com.boostcamp.dreamteam.dreamdiary.community.model.postUiPreview2
 import com.boostcamp.dreamteam.dreamdiary.designsystem.component.DdAsyncImage
 import com.boostcamp.dreamteam.dreamdiary.designsystem.component.DdCard
+import com.boostcamp.dreamteam.dreamdiary.ui.util.conditional
 
 @Composable
 internal fun CommunityDiaryCard(
     diary: PostUi,
-    onPostClick: (PostUi) -> Unit,
-    onClickLike: (diary: PostUi) -> Unit,
+    onPostClick: ((PostUi) -> Unit)?,
+    onClickLike: ((diary: PostUi) -> Unit)?,
     modifier: Modifier = Modifier,
 ) {
     DdCard(
@@ -60,7 +61,11 @@ internal fun CommunityDiaryCard(
                 )
             }
         },
-        modifier = modifier.clickable(onClick = { onPostClick(diary) }),
+        modifier = modifier
+            .conditional(
+                condition = onPostClick != null,
+                ifTrue = { clickable { onPostClick?.invoke(diary) } },
+            ),
         overline = {
             Column(modifier = Modifier.fillMaxWidth()) {
                 AuthorHeader(
@@ -98,7 +103,8 @@ internal fun CommunityDiaryCard(
                     Text(text = diary.commentCount.toString())
                 }
                 IconButton(
-                    onClick = { onClickLike(diary) },
+                    enabled = onClickLike != null,
+                    onClick = { onClickLike?.invoke(diary) },
                 ) {
                     Icon(
                         imageVector = if (diary.isLiked) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
