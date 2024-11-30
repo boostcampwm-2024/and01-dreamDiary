@@ -18,14 +18,6 @@ sealed class DiaryWriteEvent {
             val labelAddFailureReason: LabelAddFailureReason,
         ) : Label()
 
-        /* TODO: 업데이트 성공시 이벤트
-        data class LabelUpdateSuccess(
-            val labelId: String,
-        ) : Label()
-         */
-
-        data object UpdateFailure : Label()
-
         /* TODO: 삭제 성공시 이벤트
         data object LabelDeleteSuccess : Label()
          */

@@ -146,14 +146,6 @@ class DiaryWriteViewModel @Inject constructor(
         }
     }
 
-    fun updateLabel(
-        labelUi: LabelUi,
-        newValue: String,
-    ) {
-        // TODO: 라벨 업데이트 기능 추가
-        _event.trySend(DiaryWriteEvent.Label.UpdateFailure)
-    }
-
     fun deleteLabel(labelUi: LabelUi) {
         // TODO: 라벨 삭제 기능 추가
         _event.trySend(DiaryWriteEvent.Label.DeleteFailure)
