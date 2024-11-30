@@ -8,6 +8,7 @@ import androidx.work.Configuration
 import androidx.work.CoroutineWorker
 import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
 import com.boostcamp.dreamteam.dreamdiary.core.data.database.dao.DreamDiaryDao
@@ -24,6 +25,9 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.EntryPointAccessors
 import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.transform
 import kotlinx.coroutines.withContext
 import timber.log.Timber
 import java.time.Instant
@@ -268,6 +272,23 @@ class SynchronizationWorker @AssistedInject constructor(
 
             workManager
                 .enqueueUniqueWork(UNIQUE_WORK_NAME, ExistingWorkPolicy.KEEP, request)
+        }
+
+        fun getWorkInfo(context: Context): Flow<SyncWorkState> {
+            val workManager = WorkManager.getInstance(context.applicationContext)
+
+            return workManager.getWorkInfosForUniqueWorkFlow(UNIQUE_WORK_NAME)
+                .transform {
+                    if (it.size > 0) {
+                        emit(it.last())
+                    }
+                }.map {
+                    if (it.state == WorkInfo.State.RUNNING) {
+                        SyncWorkState.RUNNING
+                    } else {
+                        SyncWorkState.IDLE
+                    }
+                }
         }
     }
 }
