@@ -313,7 +313,7 @@ private fun DiarySyncIconButton(
         } else {
             tween(durationMillis = 500, easing = LinearEasing)
         },
-        label = "rotation",
+        label = "SyncButtonRotation",
     )
 
     IconButton(
