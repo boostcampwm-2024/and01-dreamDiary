@@ -17,8 +17,6 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.outlined.Send
-import androidx.compose.material3.BottomAppBarDefaults
-import androidx.compose.material3.BottomAppBarScrollBehavior
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -106,13 +104,11 @@ private fun CommunityDetailScreenContent(
     modifier: Modifier = Modifier,
 ) {
     val topAppBarScrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
-    val bottomBarScrollBehavior = BottomAppBarDefaults.exitAlwaysScrollBehavior()
 
     Scaffold(
         modifier = modifier
             .fillMaxSize()
-            .nestedScroll(topAppBarScrollBehavior.nestedScrollConnection)
-            .nestedScroll(bottomBarScrollBehavior.nestedScrollConnection),
+            .nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
         topBar = {
             CommunityDetailTopAppBar(
                 state = CommunityDetailTopAppbarState(
@@ -125,7 +121,6 @@ private fun CommunityDetailScreenContent(
         bottomBar = {
             NewCommentBottomBar(
                 state = CommunityDetailBottomBarState(
-                    scrollBehavior = bottomBarScrollBehavior,
                     inputComment = commentContent,
                     onInputCommentChange = onChangeCommentContent,
                     onSubmitComment = onSubmitComment,
@@ -192,7 +187,6 @@ private fun CommunityDetailTopAppBar(
 }
 
 private data class CommunityDetailBottomBarState(
-    val scrollBehavior: BottomAppBarScrollBehavior,
     val inputComment: String,
     val onInputCommentChange: (String) -> Unit,
     val onSubmitComment: () -> Unit,
