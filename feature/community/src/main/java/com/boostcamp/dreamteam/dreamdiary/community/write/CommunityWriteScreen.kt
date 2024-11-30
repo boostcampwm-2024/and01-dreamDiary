@@ -62,6 +62,7 @@ fun CommunityWriteScreen(
             onContentTextChange = viewModel::setContentText,
             onContentImageDelete = viewModel::deleteContentImage,
         ),
+        modifier = modifier,
     )
 }
 
