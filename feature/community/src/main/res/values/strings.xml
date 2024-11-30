@@ -8,6 +8,7 @@
     <string name="community_list_fab_add_diary_description">새로운 일기 공유</string>
     <string name="community_list_not_signin">로그인을 하셔야 사용 가능한 기능입니다.</string>
     <string name="community_list_go_to_signin">로그인 하러 가기</string>
+    <string name="community_write_event_add_failure">공유 실패</string>
     <string name="community_write_editor_body_placeholder">내용을 입력하세요.</string>
     <string name="community_write_editor_image_delete">이미지 삭제</string>
     <string name="community_write_editor_image_description">본문 이미지</string>
