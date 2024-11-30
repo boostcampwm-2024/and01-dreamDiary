@@ -38,13 +38,14 @@ import com.boostcamp.dreamteam.dreamdiary.community.model.postUiPreview1
 import com.boostcamp.dreamteam.dreamdiary.community.model.postUiPreview2
 import com.boostcamp.dreamteam.dreamdiary.designsystem.component.DdAsyncImage
 import com.boostcamp.dreamteam.dreamdiary.designsystem.component.DdCard
+import com.boostcamp.dreamteam.dreamdiary.ui.util.conditional
 
 @Composable
 internal fun CommunityDiaryCard(
     diary: PostUi,
-    onPostClick: (PostUi) -> Unit,
-    onClickMenu: (diary: PostUi) -> Unit,
-    onClickLike: (diary: PostUi) -> Unit,
+    onPostClick: ((PostUi) -> Unit)?,
+    onClickMenu: ((diary: PostUi) -> Unit)?,
+    onClickLike: ((diary: PostUi) -> Unit)?,
     modifier: Modifier = Modifier,
 ) {
     DdCard(
@@ -62,12 +63,16 @@ internal fun CommunityDiaryCard(
                 )
             }
         },
-        modifier = modifier.clickable(onClick = { onPostClick(diary) }),
+        modifier = modifier
+            .conditional(
+                condition = onPostClick != null,
+                ifTrue = { clickable { onPostClick?.invoke(diary) } },
+            ),
         overline = {
             Column(modifier = Modifier.fillMaxWidth()) {
                 AuthorHeader(
                     author = diary.author,
-                    onMenuClick = { onClickMenu(diary) },
+                    onMenuClick = onClickMenu?.let { { it(diary) } },
                     modifier = Modifier.fillMaxWidth(),
                     sharedAt = diary.sharedAt.formatted,
                 )
@@ -101,7 +106,8 @@ internal fun CommunityDiaryCard(
                     Text(text = diary.commentCount.toString())
                 }
                 IconButton(
-                    onClick = { onClickLike(diary) },
+                    enabled = onClickLike != null,
+                    onClick = { onClickLike?.invoke(diary) },
                 ) {
                     Icon(
                         imageVector = if (diary.isLiked) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
@@ -125,7 +131,7 @@ internal fun CommunityDiaryCard(
 private fun AuthorHeader(
     author: UserUi,
     sharedAt: String,
-    onMenuClick: () -> Unit,
+    onMenuClick: (() -> Unit)?,
     modifier: Modifier = Modifier,
 ) {
     Row(modifier = modifier, verticalAlignment = Alignment.CenterVertically) {
@@ -156,7 +162,8 @@ private fun AuthorHeader(
             )
         }
         IconButton(
-            onClick = onMenuClick,
+            enabled = onMenuClick != null,
+            onClick = onMenuClick?.let { { it() } } ?: { },
         ) {
             Icon(imageVector = Icons.Outlined.MoreVert, contentDescription = null)
         }
