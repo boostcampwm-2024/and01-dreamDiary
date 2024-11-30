@@ -85,14 +85,16 @@ fun DiaryHomeScreen(
     val sortOption by viewModel.sortOption.collectAsStateWithLifecycle()
     val email by viewModel.email.collectAsStateWithLifecycle()
     var showDialog by remember { mutableStateOf(false) }
-    val syncState by SynchronizationWorker.getWorkInfo(context).map {
-        when (it) {
-            SyncWorkState.RUNNING -> {
-                SyncStateUi.RUNNING
-            }
+    val syncState by remember(context) {
+        SynchronizationWorker.getWorkInfo(context).map {
+            when (it) {
+                SyncWorkState.RUNNING -> {
+                    SyncStateUi.RUNNING
+                }
 
-            SyncWorkState.IDLE -> {
-                SyncStateUi.IDLE
+                SyncWorkState.IDLE -> {
+                    SyncStateUi.IDLE
+                }
             }
         }
     }.collectAsStateWithLifecycle(SyncStateUi.IDLE)
