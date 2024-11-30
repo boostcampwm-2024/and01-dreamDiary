@@ -48,6 +48,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
@@ -68,6 +69,7 @@ import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.diaryPreview1
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.diaryPreview2
 import com.boostcamp.dreamteam.dreamdiary.ui.PagingIndexKey
 import kotlinx.coroutines.flow.flowOf
+import timber.log.Timber
 
 @Composable
 internal fun DiaryListTab(
@@ -100,17 +102,26 @@ internal fun DiaryListTab(
         }
 
         val contentModifier = Modifier.fillMaxSize()
-        if (diaries.itemCount == 0) {
-            EmptyDiaryListTabContent(modifier = contentModifier)
-        } else {
-            DiaryListTabContent(
-                diaries = diaries,
-                onDiaryClick = onDiaryClick,
-                onDiaryEdit = onDiaryEdit,
-                onDeleteDiary = onDeleteDiary,
-                onShareDiary = onShareDiary,
-                modifier = contentModifier,
-            )
+        Timber.d("diaries.loadState: ${diaries.loadState}")
+        when {
+            diaries.loadState.refresh is LoadState.Loading && diaries.itemCount < 1 -> {
+                /* LOADING중에는 아무것도 보여주지 않음 */
+            }
+
+            diaries.itemCount == 0 -> {
+                EmptyDiaryListTabContent(modifier = contentModifier)
+            }
+
+            else -> {
+                DiaryListTabContent(
+                    diaries = diaries,
+                    onDiaryClick = onDiaryClick,
+                    onDiaryEdit = onDiaryEdit,
+                    onDeleteDiary = onDeleteDiary,
+                    onShareDiary = onShareDiary,
+                    modifier = contentModifier,
+                )
+            }
         }
     }
 }
