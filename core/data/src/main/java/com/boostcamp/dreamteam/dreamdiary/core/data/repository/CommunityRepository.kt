@@ -281,7 +281,7 @@ class CommunityRepository @Inject constructor(
                 profileImageUrl = communityPostResponse.profileImageUrl,
                 title = communityPostResponse.title,
                 content = communityPostResponse.content,
-                likes = communityPostResponse.likeCount,
+                likeCount = communityPostResponse.likeCount,
                 commentCount = communityPostResponse.commentCount,
                 postContents = contents,
                 createdAt = communityPostResponse.createdAt.seconds,
