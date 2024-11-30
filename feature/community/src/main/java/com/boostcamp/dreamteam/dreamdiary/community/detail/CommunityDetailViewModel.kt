@@ -40,7 +40,6 @@ class CommunityDetailViewModel @Inject constructor(
     val event = _event.receiveAsFlow()
     private val postId: String? = savedStateHandle.get<String>("id")
 
-
     init {
         getPostDetail(postId)
     }

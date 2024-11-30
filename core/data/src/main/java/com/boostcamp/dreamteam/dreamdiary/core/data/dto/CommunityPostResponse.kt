@@ -9,7 +9,7 @@ data class CommunityPostResponse(
     val profileImageUrl: String = "",
     val title: String = "",
     val content: String = "",
-    val likes: Int = 0,
+    val likeCount: Int = 0,
     val commentCount: Int = 0,
     val createdAt: Timestamp = Timestamp.now(),
 )

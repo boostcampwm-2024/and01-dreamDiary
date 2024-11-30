@@ -146,12 +146,15 @@ class CommunityRepository @Inject constructor(
         }
     }
 
-    suspend fun togglePostLike(postId: String, userId: String): Boolean {
+    suspend fun togglePostLike(
+        postId: String,
+        userId: String,
+    ): Boolean {
         val postLikeCollection = communityCollection.document(postId).collection("likes")
         val userLikeReference = postLikeCollection.document(userId)
 
-        // 최상위 user collection -> 사용자가 좋아요한 것 저장
-//        val userReference = userCollection.document(userId)
+        val userLikeCollection = userCollection.document(userId).collection("likes")
+        val userReference = userLikeCollection.document(postId)
 
         return try {
             firebaseFirestore.runTransaction { transaction ->
@@ -159,15 +162,16 @@ class CommunityRepository @Inject constructor(
                 // 존재하면 마이너스
                 if (snapshot.exists()) {
                     transaction.delete(userLikeReference)
+                    transaction.delete(userReference)
                     transaction.update(communityCollection.document(postId), "likeCount", FieldValue.increment(-1))
                     false
                 } else {
-                    transaction.set(
-                        userLikeReference, mapOf(
-                            "liked" to true,
-                            "likedAt" to FieldValue.serverTimestamp()
-                        )
+                    val likeData = mapOf(
+                        "liked" to true,
+                        "likedAt" to FieldValue.serverTimestamp(),
                     )
+                    transaction.set(userLikeReference, likeData)
+                    transaction.set(userReference, likeData)
                     transaction.update(communityCollection.document(postId), "likeCount", FieldValue.increment(1))
                     true
                 }
@@ -176,9 +180,7 @@ class CommunityRepository @Inject constructor(
             Timber.e(e, "Error toggling like for post $postId by user $userId")
             throw e
         }
-
     }
-
 
     private suspend fun parseListPostContent(
         content: String,
@@ -249,12 +251,18 @@ class CommunityRepository @Inject constructor(
         const val DELIMITER = ":"
     }
 
-    suspend fun getCommunityPostById(postId: String): CommunityPostDetail {
+    suspend fun getCommunityPostById(
+        postId: String,
+        userId: String,
+    ): CommunityPostDetail {
         return try {
+            val postReference = communityCollection.document(postId)
+            val userReference = userCollection.document(userId).collection("likes").document(postId)
             val documentSnapshot =
-                communityCollection.document(postId)
+                postReference
                     .get()
                     .await()
+            val userLikeSnapshot = userReference.get().await()
 
             if (!documentSnapshot.exists()) {
                 throw Exception("Community post with ID $postId not found")
@@ -273,10 +281,11 @@ class CommunityRepository @Inject constructor(
                 profileImageUrl = communityPostResponse.profileImageUrl,
                 title = communityPostResponse.title,
                 content = communityPostResponse.content,
-                likes = communityPostResponse.likes,
+                likes = communityPostResponse.likeCount,
                 commentCount = communityPostResponse.commentCount,
                 postContents = contents,
                 createdAt = communityPostResponse.createdAt.seconds,
+                isLiked = userLikeSnapshot.exists(),
             )
         } catch (e: Exception) {
             Timber.e(e, "Error fetching community post with ID $postId")

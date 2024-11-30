@@ -42,7 +42,7 @@ fun CommunityPostDetail.toUIState(): PostDetailUi =
             profileImageUrl = this.profileImageUrl,
         ),
         sharedAt = Instant.ofEpochSecond(this.createdAt).toDisplayableDateTime(),
-        isLiked = false,
+        isLiked = this.isLiked,
     )
 
 internal val postDetailUiPreview = PostDetailUi(

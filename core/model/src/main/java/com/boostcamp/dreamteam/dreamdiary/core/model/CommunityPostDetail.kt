@@ -6,6 +6,7 @@ data class CommunityPostDetail(
     val profileImageUrl: String,
     val title: String,
     val content: String,
+    val isLiked: Boolean,
     val likes: Int,
     val commentCount: Int,
     val postContents: List<DiaryContent>,
