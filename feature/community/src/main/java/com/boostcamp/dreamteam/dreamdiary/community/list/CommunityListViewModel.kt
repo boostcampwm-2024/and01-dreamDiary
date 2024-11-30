@@ -9,8 +9,10 @@ import com.boostcamp.dreamteam.dreamdiary.community.model.toPostUi
 import com.boostcamp.dreamteam.dreamdiary.core.data.repository.AuthRepository
 import com.boostcamp.dreamteam.dreamdiary.core.domain.usecase.community.GetCommunityPostsUseCase
 import com.boostcamp.dreamteam.dreamdiary.core.domain.usecase.community.TogglePostLikeUseCase
+import com.boostcamp.dreamteam.dreamdiary.ui.util.throttleFirst
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
@@ -29,8 +31,18 @@ class CommunityListViewModel @Inject constructor(
     private val _event = Channel<CommunityListEvent>(64)
     val event = _event.receiveAsFlow()
 
-    // todo : uIstate에 넣기
     private val toggledLikes = MutableStateFlow<Set<String>>(emptySet())
+    private val likeClickEvents = MutableSharedFlow<PostUi>()
+
+    init {
+        viewModelScope.launch {
+            likeClickEvents
+                .throttleFirst(1000L)
+                .collect { postUi ->
+                    togglePostLikeInternal(postUi)
+                }
+        }
+    }
 
     val posts = getCommunityPostsUseCase()
         .map { pagingData ->
@@ -51,19 +63,32 @@ class CommunityListViewModel @Inject constructor(
 
     fun togglePostLike(postUi: PostUi) {
         viewModelScope.launch {
-            try {
-                togglePostLikeUseCase(postUi.id)
-                toggledLikes.update { currentSet ->
-                    if (currentSet.contains(postUi.id)) {
-                        currentSet - postUi.id
-                    } else {
-                        currentSet + postUi.id
-                    }
+            likeClickEvents.emit(postUi)
+        }
+    }
+
+    // 내부 함수: 실제로 좋아요 토글 처리
+    private suspend fun togglePostLikeInternal(postUi: PostUi) {
+        try {
+            togglePostLikeUseCase(postUi.id)
+            toggledLikes.update { currentSet ->
+                if (currentSet.contains(postUi.id)) {
+                    currentSet - postUi.id
+                } else {
+                    currentSet + postUi.id
                 }
-            } catch (e: Exception) {
-                _event.trySend(CommunityListEvent.LikePost.Failure)
-                Timber.e(e, "Failed to toggle like for post ${postUi.id}")
             }
+        } catch (e: Exception) {
+            // 실패하면 복원하기
+            toggledLikes.update { currentSet ->
+                if (currentSet.contains(postUi.id)) {
+                    currentSet + postUi.id
+                } else {
+                    currentSet - postUi.id
+                }
+            }
+            _event.trySend(CommunityListEvent.LikePost.Failure)
+            Timber.e(e, "Failed to toggle like for post ${postUi.id}")
         }
     }
 
