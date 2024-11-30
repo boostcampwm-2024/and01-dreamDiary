@@ -58,9 +58,9 @@ fun CommunityWriteScreen(
         viewModel.event.collect { event ->
             when (event) {
                 is CommunityWriteEvent.AddPost -> {
-                    when (val addPostEvent = event as CommunityWriteEvent.AddPost) {
+                    when (event) {
                         is CommunityWriteEvent.AddPost.Success -> {
-                            onAddPostSuccess(addPostEvent.postId)
+                            onAddPostSuccess(event.postId)
                         }
 
                         is CommunityWriteEvent.AddPost.Failure -> {
