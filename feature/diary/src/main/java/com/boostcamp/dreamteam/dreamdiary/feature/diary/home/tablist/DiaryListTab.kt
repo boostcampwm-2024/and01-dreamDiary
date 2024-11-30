@@ -69,7 +69,6 @@ import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.diaryPreview1
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.diaryPreview2
 import com.boostcamp.dreamteam.dreamdiary.ui.PagingIndexKey
 import kotlinx.coroutines.flow.flowOf
-import timber.log.Timber
 
 @Composable
 internal fun DiaryListTab(
@@ -102,10 +101,9 @@ internal fun DiaryListTab(
         }
 
         val contentModifier = Modifier.fillMaxSize()
-        Timber.d("diaries.loadState: ${diaries.loadState}")
         when {
             diaries.loadState.refresh is LoadState.Loading && diaries.itemCount < 1 -> {
-                /* LOADING중에는 아무것도 보여주지 않음 */
+                // LOADING중에는 아무것도 보여주지 않음
             }
 
             diaries.itemCount == 0 -> {
