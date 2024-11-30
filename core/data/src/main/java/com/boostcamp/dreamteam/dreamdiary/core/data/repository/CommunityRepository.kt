@@ -5,7 +5,6 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.map
-import com.boostcamp.dreamteam.dreamdiary.core.data.convertToFirebaseData
 import com.boostcamp.dreamteam.dreamdiary.core.data.dto.CommunityPostResponse
 import com.boostcamp.dreamteam.dreamdiary.core.data.firebase.FirebaseCommunityPostPagingSource
 import com.boostcamp.dreamteam.dreamdiary.core.data.firebase.firestore.model.FirestoreAddCommunityPostRequest
@@ -13,15 +12,11 @@ import com.boostcamp.dreamteam.dreamdiary.core.model.CommunityPostDetail
 import com.boostcamp.dreamteam.dreamdiary.core.model.DiaryContent
 import com.boostcamp.dreamteam.dreamdiary.core.model.community.CommunityPostList
 import com.google.firebase.firestore.DocumentReference
-import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.tasks.await
-import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.encodeToJsonElement
-import kotlinx.serialization.json.jsonObject
 import timber.log.Timber
 import java.io.File
 import java.time.Instant
@@ -102,11 +97,8 @@ class CommunityRepository @Inject constructor(
             commentCount = 0,
         )
 
-        val requestMap = (Json.encodeToJsonElement(request).jsonObject.convertToFirebaseData() as Map<String, Any>).toMutableMap()
-        requestMap["createdAt"] = FieldValue.serverTimestamp()
-
         firebaseFirestore.runBatch { batch ->
-            batch.set(postReference, requestMap)
+            batch.set(postReference, request)
             for ((reference, data) in referenceToData) {
                 batch.set(reference, data)
             }
