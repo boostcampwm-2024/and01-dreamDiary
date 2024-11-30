@@ -77,6 +77,7 @@ fun CommunityListScreen(
             onNavigateToSetting = onNavigateToSetting,
             posts = posts,
             onPostClick = { diary -> onDiaryClick(diary.id) },
+            onPostLikeClick = { viewModel.togglePostLike(it.id) },
             modifier = contentModifier,
         )
     }
@@ -183,6 +184,7 @@ private fun CommunityListScreenContent(
     onNavigateToSetting: () -> Unit,
     posts: LazyPagingItems<PostUi>,
     onPostClick: (PostUi) -> Unit,
+    onPostLikeClick: (PostUi) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val navigationItems = listOf(
@@ -242,7 +244,7 @@ private fun CommunityListScreenContent(
                             diary = diary,
                             onPostClick = onPostClick,
                             onClickMenu = { /* TODO: 메뉴 눌렀을 때 기능 추가하기 */ },
-                            onClickLike = { /* TODO: 좋아요 눌렀을 때 기능 추가하기 */ },
+                            onClickLike = { onPostLikeClick(diary) },
                         )
                     }
                 }
@@ -261,6 +263,7 @@ private fun CommunityListScreenContentPreview() {
             onNavigateToSetting = { },
             posts = pagedPostPreview.collectAsLazyPagingItems(),
             onPostClick = { },
+            onPostLikeClick = { },
         )
     }
 }
