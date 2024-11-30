@@ -37,6 +37,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalFocusManager
@@ -220,11 +221,15 @@ private fun NewCommentBottomBar(
                 value = state.inputComment,
                 onValueChange = {
                     state.onInputCommentChange(it)
-                    shouldShowSendButton = it.isNotBlank()
                 },
                 modifier = Modifier
                     .weight(1f)
                     .background(MaterialTheme.colorScheme.surfaceContainerHighest)
+                    .onFocusChanged { focusState ->
+                        if (focusState.isFocused) {
+                            shouldShowSendButton = true
+                        }
+                    }
                     .padding(8.dp),
                 textStyle = MaterialTheme.typography.bodyMedium.copy(
                     color = MaterialTheme.colorScheme.onSurface,
@@ -244,6 +249,7 @@ private fun NewCommentBottomBar(
             )
             if (shouldShowSendButton) {
                 IconButton(
+                    enabled = state.inputComment.isNotBlank(),
                     onClick = state.onSubmitComment,
                     modifier = Modifier.size(36.dp),
                 ) {
