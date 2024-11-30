@@ -61,11 +61,6 @@ class CommunityDetailViewModel @Inject constructor(
     }
 
     // TODO: 댓글 삭제 로직 추가
-
-    fun toggleLikeComment(commentId: String) {
-        // TODO: 댓글 좋아요 로직 추가
-    }
-
     private fun getPostDetail(postId: String?) {
         if (postId != null) {
             viewModelScope.launch {
