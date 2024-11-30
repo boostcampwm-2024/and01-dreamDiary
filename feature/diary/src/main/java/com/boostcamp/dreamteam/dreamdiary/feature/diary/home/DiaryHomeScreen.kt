@@ -1,12 +1,17 @@
 package com.boostcamp.dreamteam.dreamdiary.feature.diary.home
 
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Create
-import androidx.compose.material.icons.outlined.Notifications
 import androidx.compose.material.icons.outlined.Search
+import androidx.compose.material.icons.outlined.Sync
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
@@ -28,6 +33,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -39,9 +45,11 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import com.boostcamp.dreamteam.dreamdiary.core.domain.usecase.DiarySort
 import com.boostcamp.dreamteam.dreamdiary.core.domain.usecase.DiarySortOrder
 import com.boostcamp.dreamteam.dreamdiary.core.domain.usecase.DiarySortType
+import com.boostcamp.dreamteam.dreamdiary.core.synchronization.SyncWorkState
 import com.boostcamp.dreamteam.dreamdiary.core.synchronization.SynchronizationWorker
 import com.boostcamp.dreamteam.dreamdiary.designsystem.theme.DreamdiaryTheme
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.R
+import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.model.SyncStateUi
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.tabcalendar.DiaryCalendarTab
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.tabcalendar.DiaryHomeTabCalendarUIState
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.tabcalendar.diaryHomeTabCalendarUIStatePreview
@@ -54,6 +62,7 @@ import com.boostcamp.dreamteam.dreamdiary.ui.HomeBottomNavItem
 import com.boostcamp.dreamteam.dreamdiary.ui.HomeBottomNavigation
 import com.boostcamp.dreamteam.dreamdiary.ui.component.GoToSignInDialog
 import com.boostcamp.dreamteam.dreamdiary.ui.toNavigationItem
+import kotlinx.coroutines.flow.map
 import java.time.YearMonth
 
 @Composable
@@ -67,6 +76,8 @@ fun DiaryHomeScreen(
     viewModel: DiaryHomeViewModel = hiltViewModel(),
     onNavigateToWriteScreen: () -> Unit,
 ) {
+    val context = LocalContext.current
+
     val diaries = viewModel.dreamDiaries.collectAsLazyPagingItems()
     val calendarUIState by viewModel.tabCalendarUiState.collectAsStateWithLifecycle()
     val labels by viewModel.dreamLabels.collectAsStateWithLifecycle()
@@ -74,8 +85,18 @@ fun DiaryHomeScreen(
     val sortOption by viewModel.sortOption.collectAsStateWithLifecycle()
     val email by viewModel.email.collectAsStateWithLifecycle()
     var showDialog by remember { mutableStateOf(false) }
+    val syncState by SynchronizationWorker.getWorkInfo(context).map {
+        when (it) {
+            SyncWorkState.RUNNING -> {
+                SyncStateUi.RUNNING
+            }
 
-    val context = LocalContext.current
+            SyncWorkState.IDLE -> {
+                SyncStateUi.IDLE
+            }
+        }
+    }.collectAsStateWithLifecycle(SyncStateUi.IDLE)
+
     LaunchedEffect(Unit) {
         viewModel.event.collect {
             when (it) {
@@ -115,7 +136,8 @@ fun DiaryHomeScreen(
         },
         onChangeSort = viewModel::setSort,
         sortOption = sortOption,
-        onNotificationClick = { SynchronizationWorker.runSynchronizationWorker(context) }
+        syncState = syncState,
+        onSyncClick = { SynchronizationWorker.runSynchronizationWorker(context) },
     )
 }
 
@@ -137,9 +159,10 @@ private fun DiaryHomeScreenContent(
     onShareDiary: (DiaryUi) -> Unit,
     sortOption: DiarySort,
     onChangeSort: (DiarySort) -> Unit,
+    syncState: SyncStateUi,
+    onSyncClick: () -> Unit,
     modifier: Modifier = Modifier,
     onSearchClick: () -> Unit = {},
-    onNotificationClick: () -> Unit,
 ) {
     val (currentTabIndex, setCurrentTabIndex) = rememberSaveable { mutableIntStateOf(0) }
 
@@ -164,11 +187,12 @@ private fun DiaryHomeScreenContent(
             .fillMaxSize(),
         topBar = {
             DiaryHomeScreenTopAppBar(
-                onNotificationClick = onNotificationClick,
+                onSyncClick = onSyncClick,
                 onSearchClick = { /* 검색 클릭 시 동작 */ },
                 scrollBehavior = topAppBarScrollBehavior,
                 currentTabIndex = currentTabIndex,
                 onClickTab = setCurrentTabIndex,
+                syncState = syncState,
             )
         },
         bottomBar = {
@@ -220,7 +244,8 @@ private fun DiaryHomeScreenContent(
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
 private fun DiaryHomeScreenTopAppBar(
-    onNotificationClick: () -> Unit,
+    syncState: SyncStateUi,
+    onSyncClick: () -> Unit,
     onSearchClick: () -> Unit,
     scrollBehavior: TopAppBarScrollBehavior,
     currentTabIndex: Int,
@@ -233,12 +258,10 @@ private fun DiaryHomeScreenTopAppBar(
         CenterAlignedTopAppBar(
             title = { Text(stringResource(R.string.home_my_dream)) },
             actions = {
-                IconButton(onClick = onNotificationClick) {
-                    Icon(
-                        imageVector = Icons.Outlined.Notifications,
-                        contentDescription = stringResource(R.string.home_alarm_description),
-                    )
-                }
+                DiarySyncIconButton(
+                    syncState = syncState,
+                    onSyncClick = onSyncClick,
+                )
                 IconButton(onClick = onSearchClick) {
                     Icon(
                         imageVector = Icons.Outlined.Search,
@@ -269,6 +292,42 @@ private fun DiaryHomeScreenTopAppBar(
     }
 }
 
+@Composable
+private fun DiarySyncIconButton(
+    syncState: SyncStateUi,
+    onSyncClick: () -> Unit,
+) {
+    val rotationTarget = remember(syncState) {
+        if (syncState == SyncStateUi.RUNNING) 360f else 0f
+    }
+
+    val currentRotation by animateFloatAsState(
+        targetValue = rotationTarget,
+        animationSpec = if (syncState == SyncStateUi.RUNNING) {
+            infiniteRepeatable(
+                animation = tween(durationMillis = 500, easing = LinearEasing),
+                repeatMode = RepeatMode.Restart,
+            )
+        } else {
+            tween(durationMillis = 500, easing = LinearEasing)
+        },
+        label = "rotation",
+    )
+
+    IconButton(
+        onClick = onSyncClick,
+    ) {
+        Icon(
+            modifier = Modifier
+                .graphicsLayer {
+                    rotationZ = 360f - currentRotation
+                },
+            imageVector = Icons.Outlined.Sync,
+            contentDescription = stringResource(R.string.home_alarm_description),
+        )
+    }
+}
+
 @Preview
 @Composable
 private fun DiaryHomeScreenContentPreview() {
@@ -289,11 +348,12 @@ private fun DiaryHomeScreenContentPreview() {
             onShareDiary = {},
             onChangeSort = {},
             onSearchClick = {},
-            onNotificationClick = {},
             sortOption = DiarySort(
                 DiarySortType.UPDATED,
                 DiarySortOrder.DESC,
             ),
+            syncState = SyncStateUi.IDLE,
+            onSyncClick = {},
         )
     }
 }
