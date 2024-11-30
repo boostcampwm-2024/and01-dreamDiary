@@ -33,6 +33,7 @@ class CommunityRepository @Inject constructor(
     private val firebaseStorage: FirebaseStorage,
 ) {
     private val communityCollection = firebaseFirestore.collection("community")
+    private val userCollection = firebaseFirestore.collection("users")
     private val imageStorage = firebaseStorage.reference.child("community").child("images")
 
     suspend fun saveCommunityPost(
@@ -144,6 +145,40 @@ class CommunityRepository @Inject constructor(
             }
         }
     }
+
+    suspend fun togglePostLike(postId: String, userId: String): Boolean {
+        val postLikeCollection = communityCollection.document(postId).collection("likes")
+        val userLikeReference = postLikeCollection.document(userId)
+
+        // 최상위 user collection -> 사용자가 좋아요한 것 저장
+//        val userReference = userCollection.document(userId)
+
+        return try {
+            firebaseFirestore.runTransaction { transaction ->
+                val snapshot = transaction.get(userLikeReference)
+                // 존재하면 마이너스
+                if (snapshot.exists()) {
+                    transaction.delete(userLikeReference)
+                    transaction.update(communityCollection.document(postId), "likeCount", FieldValue.increment(-1))
+                    false
+                } else {
+                    transaction.set(
+                        userLikeReference, mapOf(
+                            "liked" to true,
+                            "likedAt" to FieldValue.serverTimestamp()
+                        )
+                    )
+                    transaction.update(communityCollection.document(postId), "likeCount", FieldValue.increment(1))
+                    true
+                }
+            }.await()
+        } catch (e: Exception) {
+            Timber.e(e, "Error toggling like for post $postId by user $userId")
+            throw e
+        }
+
+    }
+
 
     private suspend fun parseListPostContent(
         content: String,

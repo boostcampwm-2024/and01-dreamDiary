@@ -9,6 +9,7 @@ import com.boostcamp.dreamteam.dreamdiary.community.model.toUIState
 import com.boostcamp.dreamteam.dreamdiary.core.domain.usecase.community.AddCommentUseCase
 import com.boostcamp.dreamteam.dreamdiary.core.domain.usecase.community.GetCommentUseCase
 import com.boostcamp.dreamteam.dreamdiary.core.domain.usecase.community.GetCommunityPostUseCase
+import com.boostcamp.dreamteam.dreamdiary.core.domain.usecase.community.TogglePostLikeUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -23,23 +24,28 @@ class CommunityDetailViewModel @Inject constructor(
     private val getCommunityPostUseCase: GetCommunityPostUseCase,
     private val getCommentsUseCase: GetCommentUseCase,
     private val addCommentUseCase: AddCommentUseCase,
+    private val togglePostLikeUseCase: TogglePostLikeUseCase,
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(CommunityDetailUiState())
     val uiState = _uiState.asStateFlow()
     private val _commentContent = MutableStateFlow("")
     val commentContent = _commentContent.asStateFlow()
 
-    private val id: String? = savedStateHandle.get<String>("id")
+    private val postId: String? = savedStateHandle.get<String>("id")
 
     // TODO: 댓글 가져오는 로직 추가
 //    val comments: Flow<PagingData<CommentUi>> = flowOf(PagingData.empty())
 
     init {
-        getPostDetail(id)
+        getPostDetail(postId)
     }
 
-    fun toggleLikePost(postId: String) {
-        // TODO: 포스트 좋아요 로직 추가
+    fun togglePostLike() {
+        if (postId != null) {
+            viewModelScope.launch {
+                togglePostLikeUseCase(postId)
+            }
+        }
     }
 
     fun toggleLikeComment(commentId: String) {
@@ -62,7 +68,7 @@ class CommunityDetailViewModel @Inject constructor(
         }
     }
 
-    val comments = getCommentsUseCase(id!!)
+    val comments = getCommentsUseCase(postId!!)
         .map { pagingData ->
             pagingData.map { it.toUIState() }
         }
@@ -73,10 +79,10 @@ class CommunityDetailViewModel @Inject constructor(
     }
 
     fun addComment() {
-        if (id != null) {
+        if (postId != null) {
             viewModelScope.launch {
                 try {
-                    addCommentUseCase(id, commentContent.value)
+                    addCommentUseCase(postId, commentContent.value)
                 } catch (e: Exception) {
                     Timber.e(e)
                 }

@@ -56,7 +56,7 @@ fun CommunityDetailScreen(
     CommunityDetailScreenContent(
         onClickBack = onClickBack,
         post = state.post,
-        onClickLikePost = { post -> viewModel.toggleLikePost(post.id) },
+        onClickLikePost = viewModel::togglePostLike,
         comments = comments,
         commentContent = commentContent.value,
         onChangeCommentContent = viewModel::changeCommentContent,
@@ -69,7 +69,7 @@ fun CommunityDetailScreen(
 private fun CommunityDetailScreenContent(
     onClickBack: () -> Unit,
     post: PostDetailUi,
-    onClickLikePost: (PostDetailUi) -> Unit,
+    onClickLikePost: () -> Unit,
     comments: LazyPagingItems<CommentUi>,
     commentContent: String,
     onSubmitComment: () -> Unit,
@@ -108,7 +108,7 @@ private fun CommunityDetailScreenContent(
             item {
                 CommunityDetailPostCard(
                     post = post,
-                    onClickLikePost = { onClickLikePost(post) },
+                    onClickLikePost = { onClickLikePost() },
                     modifier = Modifier.fillMaxWidth(),
                 )
             }
