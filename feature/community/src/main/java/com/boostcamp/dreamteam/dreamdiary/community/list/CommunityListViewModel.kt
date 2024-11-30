@@ -9,13 +9,14 @@ import com.boostcamp.dreamteam.dreamdiary.community.model.toPostUi
 import com.boostcamp.dreamteam.dreamdiary.core.data.repository.AuthRepository
 import com.boostcamp.dreamteam.dreamdiary.core.domain.usecase.community.GetCommunityPostsUseCase
 import com.boostcamp.dreamteam.dreamdiary.core.domain.usecase.community.TogglePostLikeUseCase
-import com.boostcamp.dreamteam.dreamdiary.ui.util.throttleFirst
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.consumeAsFlow
+import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -32,17 +33,11 @@ class CommunityListViewModel @Inject constructor(
     val event = _event.receiveAsFlow()
 
     private val toggledLikes = MutableStateFlow<Set<String>>(emptySet())
-    private val likeClickEvents = MutableSharedFlow<PostUi>()
-
-    init {
-        viewModelScope.launch {
-            likeClickEvents
-                .throttleFirst(1000L)
-                .collect { postUi ->
-                    togglePostLikeInternal(postUi)
-                }
+    private val toggleLike = Channel<String>()
+    private val toggleLikeFlow = toggleLike.consumeAsFlow()
+        .onEach {
+            togglePostLikeInternal(it)
         }
-    }
 
     val posts = getCommunityPostsUseCase()
         .map { pagingData ->
@@ -61,38 +56,37 @@ class CommunityListViewModel @Inject constructor(
             }
         }
 
-    fun togglePostLike(postUi: PostUi) {
-        viewModelScope.launch {
-            likeClickEvents.emit(postUi)
-        }
+    init {
+        toggleLikeFlow.launchIn(viewModelScope)
     }
 
-    // 내부 함수: 실제로 좋아요 토글 처리
-    private suspend fun togglePostLikeInternal(postUi: PostUi) {
-        try {
-            togglePostLikeUseCase(postUi.id)
-            toggledLikes.update { currentSet ->
-                if (currentSet.contains(postUi.id)) {
-                    currentSet - postUi.id
-                } else {
-                    currentSet + postUi.id
-                }
-            }
-        } catch (e: Exception) {
-            // 실패하면 복원하기
-            toggledLikes.update { currentSet ->
-                if (currentSet.contains(postUi.id)) {
-                    currentSet + postUi.id
-                } else {
-                    currentSet - postUi.id
-                }
-            }
-            _event.trySend(CommunityListEvent.LikePost.Failure)
-            Timber.e(e, "Failed to toggle like for post ${postUi.id}")
+    fun togglePostLike(postUi: PostUi) {
+        viewModelScope.launch {
+            toggleLike.trySend(postUi.id)
         }
     }
 
     fun notSignIn(): Boolean {
         return authRepository.getUserEmail() == null
+    }
+
+    // 내부 함수: 실제로 좋아요 토글 처리
+    private suspend fun togglePostLikeInternal(postId: String) {
+        val copiedToggledLikes = toggledLikes.value.toSet()
+        try {
+            toggledLikes.update { currentSet ->
+                if (currentSet.contains(postId)) {
+                    currentSet - postId
+                } else {
+                    currentSet + postId
+                }
+            }
+            togglePostLikeUseCase(postId)
+        } catch (e: Exception) {
+            // 실패하면 복원하기
+            toggledLikes.value = copiedToggledLikes
+            _event.trySend(CommunityListEvent.LikePost.Failure)
+            Timber.e(e, "Failed to toggle like for post $postId")
+        }
     }
 }
