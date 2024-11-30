@@ -77,7 +77,7 @@ fun CommunityListScreen(
             onNavigateToSetting = onNavigateToSetting,
             posts = posts,
             onPostClick = { diary -> onDiaryClick(diary.id) },
-            onPostLikeClick = { viewModel.togglePostLike(it.id) },
+            onPostLikeClick = viewModel::togglePostLike,
             modifier = contentModifier,
         )
     }
