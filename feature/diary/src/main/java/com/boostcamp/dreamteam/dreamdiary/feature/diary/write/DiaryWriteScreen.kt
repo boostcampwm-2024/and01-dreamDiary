@@ -114,10 +114,6 @@ fun DiaryWriteScreen(
                             }
                         }
 
-                        is DiaryWriteEvent.Label.UpdateFailure -> {
-                            Toast.makeText(context, "아직 수정 기능 없지롱~", Toast.LENGTH_SHORT).show()
-                        }
-
                         is DiaryWriteEvent.Label.DeleteFailure -> {
                             Toast.makeText(context, "아직 삭제 기능 없지롱~", Toast.LENGTH_SHORT).show()
                         }
@@ -146,9 +142,8 @@ fun DiaryWriteScreen(
         onClickLabelSave = viewModel::addLabel,
         onContentTextChange = viewModel::setContentText,
         onContentImageDelete = viewModel::deleteContentImage,
-        onEditLabel = viewModel::updateLabel,
         onDeleteLabel = viewModel::deleteLabel,
-        modifier = Modifier,
+        modifier = modifier,
     )
 }
 
@@ -172,7 +167,6 @@ private fun DiaryWriteScreenContent(
     onClickLabelSave: () -> Unit,
     onContentTextChange: (Int, String) -> Unit,
     onContentImageDelete: (Int) -> Unit,
-    onEditLabel: (labelUi: LabelUi, newValue: String) -> Unit,
     onDeleteLabel: (labelUi: LabelUi) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -238,7 +232,6 @@ private fun DiaryWriteScreenContent(
                 onSleepEndAtChange = onSleepEndAtChange,
                 onCheckChange = onCheckChange,
                 onClickLabelSave = onClickLabelSave,
-                onEditLabel = onEditLabel,
                 onDeleteLabel = onDeleteLabel,
             ),
             diaryContentEditorParams = DiaryContentEditorParams(
@@ -332,7 +325,6 @@ private fun DiaryWriteScreenPreview() {
             onClickLabelSave = {},
             onContentTextChange = { _, _ -> },
             onContentImageDelete = { },
-            onEditLabel = { _, _ -> },
             onDeleteLabel = { },
         )
     }
