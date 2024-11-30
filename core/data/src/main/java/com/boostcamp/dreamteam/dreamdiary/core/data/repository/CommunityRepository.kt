@@ -116,7 +116,7 @@ class CommunityRepository @Inject constructor(
         return id
     }
 
-    fun getCommunityPosts(): Flow<PagingData<CommunityPostList>> {
+    fun getCommunityPosts(uid: String?): Flow<PagingData<CommunityPostList>> {
         return Pager(
             config = PagingConfig(
                 pageSize = 10,
@@ -125,6 +125,11 @@ class CommunityRepository @Inject constructor(
             pagingSourceFactory = { FirebaseCommunityPostPagingSource(communityCollection) },
         ).flow.map { postResponses ->
             postResponses.map { postResponse ->
+                val isLiked = if (uid == null) {
+                    false
+                } else {
+                    checkPostLike(postResponse.id, uid)
+                }
                 val diaryContents =
                     parseListPostContent(
                         content = postResponse.content,
@@ -140,9 +145,23 @@ class CommunityRepository @Inject constructor(
                     diaryContents = diaryContents,
                     commentCount = postResponse.commentCount,
                     likeCount = postResponse.likeCount,
+                    isLiked = isLiked,
                     createdAt = Instant.ofEpochSecond(postResponse.createdAt.seconds, postResponse.createdAt.nanoseconds.toLong()),
                 )
             }
+        }
+    }
+
+    private suspend fun checkPostLike(
+        postId: String,
+        userId: String,
+    ): Boolean {
+        val userLikeReference = userCollection.document(userId).collection("likes").document(postId)
+        return try {
+            userLikeReference.get().await().exists()
+        } catch (e: Exception) {
+            Timber.e(e, "Error checking like for post $postId by user $userId")
+            throw e
         }
     }
 
