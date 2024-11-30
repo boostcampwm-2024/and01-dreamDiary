@@ -15,7 +15,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.Comment
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
-import androidx.compose.material.icons.outlined.MoreVert
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -43,7 +42,6 @@ import com.boostcamp.dreamteam.dreamdiary.designsystem.component.DdCard
 internal fun CommunityDiaryCard(
     diary: PostUi,
     onPostClick: (PostUi) -> Unit,
-    onClickMenu: (diary: PostUi) -> Unit,
     onClickLike: (diary: PostUi) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -67,7 +65,6 @@ internal fun CommunityDiaryCard(
             Column(modifier = Modifier.fillMaxWidth()) {
                 AuthorHeader(
                     author = diary.author,
-                    onMenuClick = { onClickMenu(diary) },
                     modifier = Modifier.fillMaxWidth(),
                     sharedAt = diary.sharedAt.formatted,
                 )
@@ -129,7 +126,6 @@ internal fun CommunityDiaryCard(
 private fun AuthorHeader(
     author: UserUi,
     sharedAt: String,
-    onMenuClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Row(modifier = modifier, verticalAlignment = Alignment.CenterVertically) {
@@ -159,11 +155,6 @@ private fun AuthorHeader(
                 ),
             )
         }
-        IconButton(
-            onClick = onMenuClick,
-        ) {
-            Icon(imageVector = Icons.Outlined.MoreVert, contentDescription = null)
-        }
     }
 }
 
@@ -174,7 +165,6 @@ private fun CommunityDiaryCardPreviewWithoutImage() {
         CommunityDiaryCard(
             diary = postUiPreview1,
             onPostClick = { },
-            onClickMenu = { },
             onClickLike = { },
         )
     }
@@ -187,7 +177,6 @@ private fun CommunityDiaryCardPreviewWithImage() {
         CommunityDiaryCard(
             diary = postUiPreview2,
             onPostClick = {},
-            onClickMenu = { },
             onClickLike = { },
         )
     }

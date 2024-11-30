@@ -134,7 +134,6 @@ private fun NotSignInCommunityContent(
                         CommunityDiaryCard(
                             diary = diary,
                             onPostClick = { /* Todo: 게시글 클릭 시 동작 추가하기 */ },
-                            onClickMenu = { /* TODO: 메뉴 눌렀을 때 기능 추가하기 */ },
                             onClickLike = { /* TODO: 좋아요 눌렀을 때 기능 추가하기 */ },
                             modifier = Modifier.alpha(1.0f - diaryIndex * 0.3f),
                         )
@@ -241,8 +240,8 @@ private fun CommunityListScreenContent(
                         CommunityDiaryCard(
                             diary = diary,
                             onPostClick = onPostClick,
-                            onClickMenu = { /* TODO: 메뉴 눌렀을 때 기능 추가하기 */ },
                             onClickLike = { /* TODO: 좋아요 눌렀을 때 기능 추가하기 */ },
+                            modifier = Modifier.animateItem(),
                         )
                     }
                 }
