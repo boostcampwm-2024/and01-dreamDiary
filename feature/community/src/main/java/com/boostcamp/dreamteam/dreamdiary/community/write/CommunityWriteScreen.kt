@@ -37,6 +37,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.boostcamp.dreamteam.dreamdiary.community.R
+import com.boostcamp.dreamteam.dreamdiary.community.model.vo.PostContentUi
 import com.boostcamp.dreamteam.dreamdiary.community.write.component.CommunityEditor
 import com.boostcamp.dreamteam.dreamdiary.community.write.component.CommunityEditorState
 import com.boostcamp.dreamteam.dreamdiary.designsystem.theme.DreamdiaryTheme
@@ -191,7 +192,7 @@ private fun CommunityWriteScreenContentPreview() {
             editorState = CommunityEditorState(
                 title = "",
                 onTitleChange = { },
-                postContents = emptyList(),
+                postContents = listOf(PostContentUi.Text("")),
                 onContentTextChange = { _, _ -> },
                 onContentImageDelete = { },
             ),
