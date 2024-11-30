@@ -4,6 +4,7 @@ package com.boostcamp.dreamteam.dreamdiary.community.detail
 
 import android.widget.Toast
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -11,24 +12,35 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.outlined.Send
-import androidx.compose.material.icons.outlined.AddComment
 import androidx.compose.material3.BottomAppBarDefaults
+import androidx.compose.material3.BottomAppBarScrollBehavior
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.LocalContentColor
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MediumTopAppBar
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
@@ -100,12 +112,18 @@ private fun CommunityDetailScreenContent(
     onChangeCommentContent: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val topAppBarScrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
+    val bottomBarScrollBehavior = BottomAppBarDefaults.exitAlwaysScrollBehavior()
+
     Scaffold(
         modifier = modifier
-            .fillMaxSize(),
+            .fillMaxSize()
+            .nestedScroll(topAppBarScrollBehavior.nestedScrollConnection)
+            .nestedScroll(bottomBarScrollBehavior.nestedScrollConnection),
         topBar = {
             CommunityDetailTopAppBar(
                 state = CommunityDetailTopAppbarState(
+                    topAppBarScrollBehavior = topAppBarScrollBehavior,
                     onClickBack = onClickBack,
                     title = post.title,
                 ),
@@ -114,6 +132,7 @@ private fun CommunityDetailScreenContent(
         bottomBar = {
             NewCommentBottomBar(
                 state = CommunityDetailBottomBarState(
+                    scrollBehavior = bottomBarScrollBehavior,
                     inputComment = commentContent,
                     onInputCommentChange = onChangeCommentContent,
                     onSubmitComment = onSubmitComment,
@@ -151,6 +170,7 @@ private fun CommunityDetailScreenContent(
 }
 
 private data class CommunityDetailTopAppbarState(
+    val topAppBarScrollBehavior: TopAppBarScrollBehavior,
     val onClickBack: () -> Unit,
     val title: String,
 )
@@ -174,10 +194,12 @@ private fun CommunityDetailTopAppBar(
                 )
             }
         },
+        scrollBehavior = state.topAppBarScrollBehavior,
     )
 }
 
 private data class CommunityDetailBottomBarState(
+    val scrollBehavior: BottomAppBarScrollBehavior,
     val inputComment: String,
     val onInputCommentChange: (String) -> Unit,
     val onSubmitComment: () -> Unit,
@@ -188,45 +210,64 @@ private fun NewCommentBottomBar(
     state: CommunityDetailBottomBarState,
     modifier: Modifier = Modifier,
 ) {
-    Row(
+    var shouldShowSendButton by rememberSaveable { mutableStateOf(false) }
+
+    Column(
         modifier = modifier
             .fillMaxWidth()
-            .background(color = BottomAppBarDefaults.containerColor)
             .imePadding()
             .navigationBarsPadding(),
     ) {
-        OutlinedTextField(
-            value = state.inputComment,
-            onValueChange = state.onInputCommentChange,
-            placeholder = {
-                Text(
-                    text = stringResource(R.string.community_detail_bottombar_input_comment_hint),
-                    color = LocalContentColor.current.copy(alpha = 0.6f),
-                )
-            },
+        HorizontalDivider()
+        Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp),
-            leadingIcon = {
-                Icon(
-                    imageVector = Icons.Outlined.AddComment,
-                    contentDescription = stringResource(R.string.community_detail_bottombar_input_comment_icon),
-                    tint = LocalContentColor.current.copy(alpha = 0.6f),
-                )
-            },
-            trailingIcon = if (state.inputComment.isNotEmpty()) {
-                {
-                    IconButton(onClick = state.onSubmitComment) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Outlined.Send,
-                            contentDescription = stringResource(R.string.community_detail_bottombar_input_comment_submit),
+                .padding(8.dp),
+            verticalAlignment = Alignment.Bottom,
+        ) {
+            BasicTextField(
+                value = state.inputComment,
+                onValueChange = {
+                    state.onInputCommentChange(it)
+                },
+                modifier = Modifier
+                    .weight(1f)
+                    .background(MaterialTheme.colorScheme.surfaceContainerHighest)
+                    .onFocusChanged { focusState ->
+                        if (focusState.isFocused) {
+                            shouldShowSendButton = true
+                        }
+                    }
+                    .padding(8.dp),
+                textStyle = MaterialTheme.typography.bodyMedium.copy(
+                    color = MaterialTheme.colorScheme.onSurface,
+                ),
+                cursorBrush = SolidColor(MaterialTheme.colorScheme.tertiary),
+                decorationBox = { innerTextField ->
+                    if (state.inputComment.isEmpty()) {
+                        Text(
+                            text = stringResource(R.string.community_detail_bottombar_input_comment_hint),
+                            style = MaterialTheme.typography.bodyMedium.copy(
+                                color = MaterialTheme.colorScheme.secondary.copy(alpha = 0.6f),
+                            ),
                         )
                     }
+                    innerTextField()
+                },
+            )
+            if (shouldShowSendButton) {
+                IconButton(
+                    enabled = state.inputComment.isNotBlank(),
+                    onClick = state.onSubmitComment,
+                    modifier = Modifier.size(36.dp),
+                ) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Outlined.Send,
+                        contentDescription = stringResource(R.string.community_detail_bottombar_input_comment_submit),
+                    )
                 }
-            } else {
-                null
-            },
-        )
+            }
+        }
     }
 }
 

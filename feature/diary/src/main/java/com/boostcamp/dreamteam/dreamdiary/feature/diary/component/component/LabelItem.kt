@@ -39,7 +39,6 @@ internal fun LabelItem(
     isChecked: Boolean,
     onLabelClick: (LabelUi) -> Unit,
     onDeleteLabel: () -> Unit,
-    onEditLabel: (newValue: String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     var isEditMode by remember { mutableStateOf(false) }
@@ -63,7 +62,6 @@ internal fun LabelItem(
             trailingContent = {
                 IconButton(
                     onClick = {
-                        onEditLabel(textFieldValueState.text)
                         isEditMode = false
                     },
                     content = {
@@ -125,7 +123,6 @@ private fun LabelItemPreview() {
             isChecked = true,
             onLabelClick = {},
             onDeleteLabel = {},
-            onEditLabel = {},
         )
     }
 }

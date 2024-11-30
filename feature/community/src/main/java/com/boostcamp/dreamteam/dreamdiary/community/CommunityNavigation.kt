@@ -59,6 +59,17 @@ fun NavGraphBuilder.communityGraph(
         composable<CommunityGraph.CommunityWriteRoute> {
             CommunityWriteScreen(
                 onClickBack = { navController.popBackStack() },
+                onAddPostSuccess = { postId ->
+                    navController.navigateToCommunityDetail(
+                        diaryId = postId,
+                        navOptions = navOptions {
+                            popUpTo<CommunityGraph.CommunityWriteRoute> {
+                                inclusive = true
+                            }
+                            launchSingleTop = true
+                        },
+                    )
+                },
             )
         }
     }
