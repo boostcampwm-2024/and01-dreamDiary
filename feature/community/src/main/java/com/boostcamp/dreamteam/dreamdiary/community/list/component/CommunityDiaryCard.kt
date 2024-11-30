@@ -106,7 +106,11 @@ internal fun CommunityDiaryCard(
                     Icon(
                         imageVector = if (diary.isLiked) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
                         contentDescription = stringResource(R.string.community_list_diary_card_like),
-                        tint = if (diary.isLiked) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface,
+                        tint = if (diary.isLiked) {
+                            MaterialTheme.colorScheme.error
+                        } else {
+                            MaterialTheme.colorScheme.onSurface
+                        },
                     )
                 }
             }
