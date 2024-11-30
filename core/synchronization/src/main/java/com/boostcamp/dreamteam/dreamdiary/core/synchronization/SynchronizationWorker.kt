@@ -181,31 +181,36 @@ class SynchronizationWorker @AssistedInject constructor(
         }
 
         for (content in notDownloadedContents) {
-            when (content) {
-                is NotDownloadedContent.Image -> {
-                    val image = functionRepository.downloadImage(content.id)
-                    if (image != null) {
-                        dreamDiaryDao.insertImage(
-                            imageEntity = ImageEntity(
-                                id = content.id,
-                                path = image.path,
-                            ),
-                        )
-                        dreamDiaryDao.moveToDreamDiaryIfSynced(content.diaryId)
+            try {
+                when (content) {
+                    is NotDownloadedContent.Image -> {
+                        val image = functionRepository.downloadImage(content.id)
+                        if (image != null) {
+                            dreamDiaryDao.insertImage(
+                                imageEntity = ImageEntity(
+                                    id = content.id,
+                                    path = image.path,
+                                ),
+                            )
+                            dreamDiaryDao.moveToDreamDiaryIfSynced(content.diaryId)
+                        }
+                    }
+
+                    is NotDownloadedContent.Text -> {
+                        val text = functionRepository.downloadText(content.id)
+                        if (text != null) {
+                            dreamDiaryDao.insertText(
+                                textEntity = TextEntity(
+                                    id = content.id,
+                                    text = text.text,
+                                ),
+                            )
+                            dreamDiaryDao.moveToDreamDiaryIfSynced(content.diaryId)
+                        }
                     }
                 }
-                is NotDownloadedContent.Text -> {
-                    val text = functionRepository.downloadText(content.id)
-                    if (text != null) {
-                        dreamDiaryDao.insertText(
-                            textEntity = TextEntity(
-                                id = content.id,
-                                text = text.text,
-                            ),
-                        )
-                        dreamDiaryDao.moveToDreamDiaryIfSynced(content.diaryId)
-                    }
-                }
+            } catch (e: Exception) {
+                Timber.e(e, "$content 다운로드 중 에러")
             }
         }
     }
