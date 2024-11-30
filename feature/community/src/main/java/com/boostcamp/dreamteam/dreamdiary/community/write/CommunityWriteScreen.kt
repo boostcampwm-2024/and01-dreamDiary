@@ -2,6 +2,7 @@ package com.boostcamp.dreamteam.dreamdiary.community.write
 
 import android.content.Intent
 import android.net.Uri
+import android.widget.Toast
 import androidx.activity.compose.ManagedActivityResultLauncher
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
@@ -26,6 +27,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
@@ -45,10 +47,31 @@ import com.boostcamp.dreamteam.dreamdiary.designsystem.theme.DreamdiaryTheme
 @Composable
 fun CommunityWriteScreen(
     onClickBack: () -> Unit,
+    onAddPostSuccess: (postId: String) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: CommunityWriteViewModel = hiltViewModel(),
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
+
+    val context = LocalContext.current
+    LaunchedEffect(onAddPostSuccess) {
+        viewModel.event.collect { event ->
+            when (event) {
+                is CommunityWriteEvent.AddPost -> {
+                    when (val addPostEvent = event as CommunityWriteEvent.AddPost) {
+                        is CommunityWriteEvent.AddPost.Success -> {
+                            onAddPostSuccess(addPostEvent.postId)
+                        }
+
+                        is CommunityWriteEvent.AddPost.Failure -> {
+                            Toast.makeText(context, context.getString(R.string.community_write_event_add_failure), Toast.LENGTH_SHORT)
+                                .show()
+                        }
+                    }
+                }
+            }
+        }
+    }
 
     CommunityWriteScreenContent(
         onContentImageAdd = viewModel::addContentImage,

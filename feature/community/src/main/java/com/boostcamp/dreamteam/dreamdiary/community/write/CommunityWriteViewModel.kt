@@ -12,8 +12,10 @@ import com.boostcamp.dreamteam.dreamdiary.core.model.Diary
 import com.boostcamp.dreamteam.dreamdiary.core.model.DiaryContent
 import com.boostcamp.dreamteam.dreamdiary.storage.StorageManager
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -27,6 +29,9 @@ class CommunityWriteViewModel @Inject constructor(
 ) : ViewModel() {
     private val id: String? = savedStateHandle[CommunityGraph.CommunityWriteRoute::diaryId.name]
 
+    private val _event = Channel<CommunityWriteEvent>(Channel.BUFFERED)
+    val event = _event.receiveAsFlow()
+
     private val _uiState = MutableStateFlow(CommunityWriteScreenState())
     val uiState = _uiState.asStateFlow()
 
@@ -37,10 +42,11 @@ class CommunityWriteViewModel @Inject constructor(
     fun writePost() {
         viewModelScope.launch {
             setIsLoading(true)
-            addCommunityPostUseCase(
+            val newPostId = addCommunityPostUseCase(
                 title = uiState.value.editorState.title,
                 diaryContents = uiState.value.editorState.contents.map { it.toDomain() },
             )
+            _event.trySend(CommunityWriteEvent.AddPost.Success(postId = newPostId))
             setIsLoading(false)
         }
     }
