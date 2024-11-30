@@ -39,6 +39,7 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import com.boostcamp.dreamteam.dreamdiary.core.domain.usecase.DiarySort
 import com.boostcamp.dreamteam.dreamdiary.core.domain.usecase.DiarySortOrder
 import com.boostcamp.dreamteam.dreamdiary.core.domain.usecase.DiarySortType
+import com.boostcamp.dreamteam.dreamdiary.core.synchronization.SynchronizationWorker
 import com.boostcamp.dreamteam.dreamdiary.designsystem.theme.DreamdiaryTheme
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.R
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.tabcalendar.DiaryCalendarTab
@@ -114,6 +115,7 @@ fun DiaryHomeScreen(
         },
         onChangeSort = viewModel::setSort,
         sortOption = sortOption,
+        onNotificationClick = { SynchronizationWorker.runSynchronizationWorker(context) }
     )
 }
 
@@ -137,7 +139,7 @@ private fun DiaryHomeScreenContent(
     onChangeSort: (DiarySort) -> Unit,
     modifier: Modifier = Modifier,
     onSearchClick: () -> Unit = {},
-    onNotificationClick: () -> Unit = {},
+    onNotificationClick: () -> Unit,
 ) {
     val (currentTabIndex, setCurrentTabIndex) = rememberSaveable { mutableIntStateOf(0) }
 
@@ -162,7 +164,7 @@ private fun DiaryHomeScreenContent(
             .fillMaxSize(),
         topBar = {
             DiaryHomeScreenTopAppBar(
-                onNotificationClick = { /* 알림 클릭 시 동작 */ },
+                onNotificationClick = onNotificationClick,
                 onSearchClick = { /* 검색 클릭 시 동작 */ },
                 scrollBehavior = topAppBarScrollBehavior,
                 currentTabIndex = currentTabIndex,
