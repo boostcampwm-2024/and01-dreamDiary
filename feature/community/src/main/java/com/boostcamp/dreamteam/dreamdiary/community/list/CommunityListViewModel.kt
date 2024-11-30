@@ -20,7 +20,6 @@ class CommunityListViewModel @Inject constructor(
     private val toggleLikeUseCase: TogglePostLikeUseCase,
     private val authRepository: AuthRepository,
 ) : ViewModel() {
-
     val posts = getCommunityPostsUseCase()
         .map { pagingData ->
             pagingData.map { it.toPostUi() } // CommunityDreamPost -> PostUi 변환
@@ -36,8 +35,6 @@ class CommunityListViewModel @Inject constructor(
             }
         }
     }
-
-
 
     fun notSignIn(): Boolean {
         return authRepository.getUserEmail() == null
