@@ -21,6 +21,10 @@ import javax.inject.Inject
 internal class DefaultDreamDiaryRepository @Inject constructor(
     private val dreamDiaryDao: DreamDiaryDao,
 ) : DreamDiaryRepository {
+    override suspend fun getSearchSuggestion(query: String): List<String> {
+        return dreamDiaryDao.getSearchSuggestions("%$query%")
+    }
+
     override suspend fun addDreamDiary(
         title: String,
         body: String,
@@ -82,6 +86,19 @@ internal class DefaultDreamDiaryRepository @Inject constructor(
                 it.toDomain(parseBody(it.dreamDiary.body))
             }
         }
+
+    override fun getDreamDiariesByTitle(query: String): Flow<PagingData<Diary>> {
+        val formattedQuery = "%$query%"
+
+        return Pager(
+            config = PagingConfig(pageSize = 100),
+            pagingSourceFactory = { dreamDiaryDao.getDreamDiariesByTitle(formattedQuery) },
+        ).flow.map { pagingData ->
+            pagingData.map {
+                it.toDomain(parseBody(it.dreamDiary.body))
+            }
+        }
+    }
 
     override fun getDreamDiariesOrderBy(sort: DiarySort): Flow<PagingData<Diary>> =
         Pager(

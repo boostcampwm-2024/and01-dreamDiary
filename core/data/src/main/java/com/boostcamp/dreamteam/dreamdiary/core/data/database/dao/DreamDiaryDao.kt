@@ -24,6 +24,9 @@ import java.util.UUID
 
 @Dao
 interface DreamDiaryDao {
+    @Query("select distinct diary.title from diary where deletedAt is null and title like :query limit 10")
+    suspend fun getSearchSuggestions(query: String): List<String>
+
     @Insert
     suspend fun insertDreamDiary(dreamDiaryEntity: DreamDiaryEntity)
 
@@ -157,6 +160,9 @@ interface DreamDiaryDao {
 
     @Query("select * from diary where deletedAt is null order by updatedAt desc")
     fun getDreamDiaries(): PagingSource<Int, DreamDiaryWithLabels>
+
+    @Query("select * from diary where deletedAt is null and title like :query  order by updatedAt desc")
+    fun getDreamDiariesByTitle(query: String): PagingSource<Int, DreamDiaryWithLabels>
 
     @Query(
         """

@@ -2,6 +2,8 @@ package com.boostcamp.dreamteam.dreamdiary.ui
 
 import androidx.annotation.StringRes
 import androidx.compose.material3.BottomAppBar
+import androidx.compose.material3.BottomAppBarScrollBehavior
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
@@ -29,12 +31,17 @@ fun HomeBottomNavItem.toNavigationItem(
     isSelected = isSelected,
 )
 
+@ExperimentalMaterial3Api
 @Composable
 fun HomeBottomNavigation(
     items: List<NavigationItem>,
     modifier: Modifier = Modifier,
+    scrollBehavior: BottomAppBarScrollBehavior? = null,
 ) {
-    BottomAppBar(modifier = modifier) {
+    BottomAppBar(
+        modifier = modifier,
+        scrollBehavior = scrollBehavior,
+    ) {
         items.forEach { item ->
             NavigationBarItem(
                 icon = {

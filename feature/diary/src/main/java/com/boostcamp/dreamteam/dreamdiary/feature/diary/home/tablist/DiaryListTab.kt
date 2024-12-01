@@ -160,7 +160,7 @@ private fun DiaryListTabContent(
 ) {
     LazyColumn(
         modifier = modifier.fillMaxSize(),
-        contentPadding = PaddingValues(horizontal = 16.dp),
+        contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         items(
@@ -389,7 +389,7 @@ private fun SortDropDownMenu(
     }
 }
 
-data class SortItem(
+private data class SortItem(
     val name: String,
     val sortOrder: DiarySortOrder,
     val sortType: DiarySortType,
