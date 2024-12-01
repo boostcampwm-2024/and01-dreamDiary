@@ -9,6 +9,8 @@ import kotlinx.coroutines.flow.Flow
 import java.time.Instant
 
 interface DreamDiaryRepository {
+    suspend fun getSearchSuggestion(query: String): List<String>
+
     suspend fun addDreamDiary(
         title: String,
         body: String,
@@ -40,6 +42,8 @@ interface DreamDiaryRepository {
     )
 
     fun getDreamDiaries(): Flow<PagingData<Diary>>
+
+    fun getDreamDiariesByTitle(query: String): Flow<PagingData<Diary>>
 
     fun getDreamDiariesOrderBy(sort: DiarySort): Flow<PagingData<Diary>>
 
