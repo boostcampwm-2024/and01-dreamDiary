@@ -7,8 +7,10 @@ import android.os.Build
 import androidx.core.app.NotificationCompat
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
+import javax.inject.Inject
 
-class FirebaseMessagingService : FirebaseMessagingService() {
+class DreamDiaryFirebaseMessagingService @Inject constructor(
+) : FirebaseMessagingService() {
 
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
         super.onMessageReceived(remoteMessage)
