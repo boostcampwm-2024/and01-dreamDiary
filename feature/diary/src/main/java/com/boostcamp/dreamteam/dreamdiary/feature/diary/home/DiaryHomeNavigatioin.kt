@@ -62,7 +62,7 @@ fun NavGraphBuilder.diaryGraph(
                     navController.navigateToSearchScreen(
                         navOptions = navOptions {
                             launchSingleTop = true
-                        }
+                        },
                     )
                 },
             )

@@ -21,6 +21,10 @@ import javax.inject.Inject
 internal class DefaultDreamDiaryRepository @Inject constructor(
     private val dreamDiaryDao: DreamDiaryDao,
 ) : DreamDiaryRepository {
+    override suspend fun getSearchSuggestion(query: String): List<String> {
+        return dreamDiaryDao.getSearchSuggestions("%$query%")
+    }
+
     override suspend fun addDreamDiary(
         title: String,
         body: String,

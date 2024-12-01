@@ -9,6 +9,8 @@ import kotlinx.coroutines.flow.Flow
 import java.time.Instant
 
 interface DreamDiaryRepository {
+    suspend fun getSearchSuggestion(query: String): List<String>
+
     suspend fun addDreamDiary(
         title: String,
         body: String,
