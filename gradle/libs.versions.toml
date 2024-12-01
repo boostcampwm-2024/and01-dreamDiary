@@ -33,10 +33,12 @@ firebaseCrashlytics = "3.0.2"
 browser = "1.8.0"
 glance = "1.1.1"
 workRuntimeKtx = "2.10.0"
+androidxCoreSplashscreen = "1.0.1"
 
 [libraries]
 androidx-browser = { group = "androidx.browser", name = "browser", version.ref = "browser" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+androidx-core-splashscreen = { group = "androidx.core", name = "core-splashscreen", version.ref = "androidxCoreSplashscreen" }
 androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferences" }
 androidx-hilt-compiler = { module = "androidx.hilt:hilt-compiler", version.ref = "androidxHilt" }
 androidx-hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "androidxHilt" }
