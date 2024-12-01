@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.BottomAppBarDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
@@ -214,18 +215,25 @@ private fun CommunityListScreenContent(
         ),
     )
 
-    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
+    val topAppBarScrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
+    val bottomAppBarScrollBehavior = BottomAppBarDefaults.exitAlwaysScrollBehavior()
 
     Scaffold(
-        modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+        modifier = modifier
+            .fillMaxSize()
+            .nestedScroll(topAppBarScrollBehavior.nestedScrollConnection)
+            .nestedScroll(bottomAppBarScrollBehavior.nestedScrollConnection),
         topBar = {
             CenterAlignedTopAppBar(
                 title = { Text(text = stringResource(R.string.community_title)) },
-                scrollBehavior = scrollBehavior,
+                scrollBehavior = topAppBarScrollBehavior,
             )
         },
         bottomBar = {
-            HomeBottomNavigation(items = navigationItems)
+            HomeBottomNavigation(
+                items = navigationItems,
+                scrollBehavior = bottomAppBarScrollBehavior,
+            )
         },
         floatingActionButton = {
             FloatingActionButton(onClick = onClickFab) {

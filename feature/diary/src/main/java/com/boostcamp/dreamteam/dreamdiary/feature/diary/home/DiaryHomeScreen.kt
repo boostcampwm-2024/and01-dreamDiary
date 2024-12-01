@@ -12,6 +12,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Create
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material.icons.outlined.Sync
+import androidx.compose.material3.BottomAppBarDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
@@ -182,11 +183,13 @@ private fun DiaryHomeScreenContent(
     )
 
     val topAppBarScrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
+    val bottomAppBarScrollBehavior = BottomAppBarDefaults.exitAlwaysScrollBehavior()
 
     Scaffold(
         modifier = modifier
+            .fillMaxSize()
             .nestedScroll(topAppBarScrollBehavior.nestedScrollConnection)
-            .fillMaxSize(),
+            .nestedScroll(bottomAppBarScrollBehavior.nestedScrollConnection),
         topBar = {
             DiaryHomeScreenTopAppBar(
                 onSyncClick = onSyncClick,
@@ -198,7 +201,10 @@ private fun DiaryHomeScreenContent(
             )
         },
         bottomBar = {
-            HomeBottomNavigation(items = navigationItems)
+            HomeBottomNavigation(
+                items = navigationItems,
+                scrollBehavior = bottomAppBarScrollBehavior,
+            )
         },
         floatingActionButton = {
             FloatingActionButton(
