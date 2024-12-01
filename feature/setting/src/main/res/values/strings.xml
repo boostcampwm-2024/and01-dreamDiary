@@ -33,4 +33,8 @@
     <string name="setting_confirm">확인</string>
     <string name="setting_notification_authority">알림 권한</string>
     <string name="setting_notification_wakeup">기상 알림</string>
+    <string name="setting_theme_system">시스템</string>
+    <string name="setting_theme_light">라이트</string>
+    <string name="setting_theme_dark">다크</string>
+    <string name="setting_theme_title">테마 설정</string>
 </resources>
