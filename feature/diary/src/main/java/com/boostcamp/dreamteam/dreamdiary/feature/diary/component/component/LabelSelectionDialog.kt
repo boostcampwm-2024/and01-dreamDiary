@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
@@ -23,9 +24,12 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -48,74 +52,135 @@ internal fun LabelSelectionDialog(
     onClickLabelSave: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val (pendingLabelToDelete, setPendingLabelToDelete) = rememberSaveable { mutableStateOf<LabelUi?>(null) }
+
     Dialog(onDismissRequest = onDismissRequest) {
         Surface(
             shape = MaterialTheme.shapes.medium,
             color = MaterialTheme.colorScheme.surface,
             modifier = modifier,
         ) {
-            Column {
-                TextField(
-                    value = labelFilter,
-                    onValueChange = { onLabelFilterChange(it) },
-                    modifier = Modifier.fillMaxWidth(),
-                    label = { Text(stringResource(R.string.label_search)) },
-                    placeholder = { Text(stringResource(R.string.label_search_or_add)) },
-                    trailingIcon = {
-                        if (labelFilter.isNotEmpty()) {
-                            Icon(
-                                imageVector = Icons.Default.Add,
-                                contentDescription = "Add Label",
-                                modifier = Modifier.clickable {
-                                    onClickLabelSave()
-                                },
-                            )
-                        } else {
-                            Icon(
-                                imageVector = Icons.Default.Search,
-                                contentDescription = "Search Label",
-                            )
-                        }
+            if (pendingLabelToDelete != null) {
+                LabelDeleteConfirmDialog(
+                    onClickConfirm = {
+                        onDeleteLabel(pendingLabelToDelete)
+                        setPendingLabelToDelete(null)
                     },
-                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-                    keyboardActions = KeyboardActions(onDone = { onClickLabelSave() }),
-                    singleLine = true,
+                    onClickCancel = { setPendingLabelToDelete(null) },
+                    modifier = Modifier.padding(16.dp),
                 )
+            } else {
+                LabelSearchDialog(
+                    labelFilter = labelFilter,
+                    onLabelFilterChange = onLabelFilterChange,
+                    onClickLabelSave = onClickLabelSave,
+                    filteredLabels = filteredLabels,
+                    selectedLabels = selectedLabels,
+                    onCheckChange = onCheckChange,
+                    onDeleteLabel = { setPendingLabelToDelete(it) },
+                    onDismissRequest = onDismissRequest
+                )
+            }
+        }
+    }
+}
 
-                Column(
-                    modifier = Modifier
-                        .height(224.dp)
-                        .verticalScroll(rememberScrollState()),
-                ) {
-                    filteredLabels.forEach { filteredLabel ->
-                        LabelItem(
-                            modifier = Modifier.fillMaxWidth(),
-                            label = filteredLabel.name,
-                            isChecked = filteredLabel in selectedLabels,
-                            onLabelClick = onCheckChange,
-                            onDeleteLabel = { onDeleteLabel(filteredLabel) },
-                        )
-                    }
-                }
-                HorizontalDivider()
-                Spacer(modifier = Modifier.height(24.dp))
+@Composable
+private fun LabelDeleteConfirmDialog(
+    onClickConfirm: () -> Unit,
+    onClickCancel: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Column(modifier = modifier) {
+        Text(text = stringResource(R.string.label_delete_confirm), fontWeight = FontWeight.SemiBold)
+        Spacer(modifier = Modifier.height(24.dp))
 
-                Row(
-                    modifier = Modifier.align(Alignment.End),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                ) {
-                    TextButton(
-                        onClick = {
-                            onDismissRequest()
-                            onLabelFilterChange("")
+        Row(
+            modifier = Modifier.align(Alignment.End),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+        ) {
+            TextButton(onClick = onClickCancel) {
+                Text("취소하기")
+            }
+            TextButton(onClick = onClickConfirm) {
+                Text("삭제하기", color = MaterialTheme.colorScheme.error)
+            }
+        }
+    }
+}
+
+@Composable
+private fun LabelSearchDialog(
+    labelFilter: String,
+    onLabelFilterChange: (String) -> Unit,
+    onClickLabelSave: () -> Unit,
+    filteredLabels: List<LabelUi>,
+    selectedLabels: Set<LabelUi>,
+    onCheckChange: (labelUi: LabelUi) -> Unit,
+    onDeleteLabel: (labelUi: LabelUi) -> Unit,
+    onDismissRequest: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Column(modifier = modifier) {
+        TextField(
+            value = labelFilter,
+            onValueChange = { onLabelFilterChange(it) },
+            modifier = Modifier.fillMaxWidth(),
+            label = { Text(stringResource(R.string.label_search)) },
+            placeholder = { Text(stringResource(R.string.label_search_or_add)) },
+            trailingIcon = {
+                if (labelFilter.isNotEmpty()) {
+                    Icon(
+                        imageVector = Icons.Default.Add,
+                        contentDescription = "Add Label",
+                        modifier = Modifier.clickable {
+                            onClickLabelSave()
                         },
-                    ) {
-                        Text("취소")
-                    }
-                    TextButton(onClick = { onDismissRequest() }) {
-                        Text("확인")
-                    }
+                    )
+                } else {
+                    Icon(
+                        imageVector = Icons.Default.Search,
+                        contentDescription = "Search Label",
+                    )
                 }
+            },
+            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+            keyboardActions = KeyboardActions(onDone = { onClickLabelSave() }),
+            singleLine = true,
+        )
+
+        Column(
+            modifier = Modifier
+                .height(224.dp)
+                .verticalScroll(rememberScrollState()),
+        ) {
+            filteredLabels.forEach { filteredLabel ->
+                LabelItem(
+                    modifier = Modifier.fillMaxWidth(),
+                    label = filteredLabel.name,
+                    isChecked = filteredLabel in selectedLabels,
+                    onLabelClick = onCheckChange,
+                    onDeleteLabel = { onDeleteLabel(filteredLabel) },
+                )
+            }
+        }
+        HorizontalDivider()
+        Spacer(modifier = Modifier.height(24.dp))
+
+        Row(
+            modifier = Modifier.align(Alignment.End),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+        ) {
+            TextButton(
+                onClick = {
+                    onDismissRequest()
+                    onLabelFilterChange("")
+                },
+            ) {
+                Text("취소")
+            }
+            TextButton(onClick = { onDismissRequest() }) {
+                Text("확인")
             }
         }
     }
