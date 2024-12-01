@@ -13,10 +13,11 @@ import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.sample
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 import kotlin.time.Duration.Companion.seconds
 
@@ -48,12 +49,12 @@ class DiarySearchViewModel @Inject constructor(
 
     @OptIn(FlowPreview::class)
     private fun collectSearchSuggestions() {
-        viewModelScope.launch {
-            searchQuery.sample(0.5.seconds).collect { query ->
+        searchQuery
+            .sample(0.5.seconds)
+            .onEach { query ->
                 getSearchSuggestions(query).let { suggestions ->
                     _uiState.update { it.copy(searchSuggestions = suggestions) }
                 }
-            }
-        }
+            }.launchIn(viewModelScope)
     }
 }
