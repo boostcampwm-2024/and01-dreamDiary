@@ -32,6 +32,7 @@ firebaseCrashlytics = "3.0.2"
 browser = "1.8.0"
 glance = "1.1.1"
 workRuntimeKtx = "2.10.0"
+firebaseMessagingKtx = "24.1.0"
 
 [libraries]
 androidx-browser = { group = "androidx.browser", name = "browser", version.ref = "browser" }
@@ -90,6 +91,7 @@ androidx-glance-material3 = { group = "androidx.glance", name = "glance-material
 # build-logic의 dependencies
 android-gradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "agp" }
 kotlin-gradlePlugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
+firebase-messaging-ktx = { group = "com.google.firebase", name = "firebase-messaging-ktx", version.ref = "firebaseMessagingKtx" }
 
 [bundles]
 coil = ["coil-compose", "coil-network-okhttp"]
