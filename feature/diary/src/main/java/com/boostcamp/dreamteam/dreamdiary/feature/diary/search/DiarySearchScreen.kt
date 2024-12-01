@@ -88,7 +88,6 @@ private fun DiarySearchScreenContent(
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 8.dp)
                     .background(color = Color.Transparent),
             ) {
                 SearchTopBar(
@@ -109,8 +108,9 @@ private fun DiarySearchScreenContent(
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(innerPadding),
-            contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
+                .padding(innerPadding)
+                .padding(top = 8.dp),
+            contentPadding = PaddingValues(start = 16.dp, end = 16.dp, bottom = 8.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             if (searchResults.itemCount == 0) {
