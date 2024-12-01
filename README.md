@@ -48,8 +48,9 @@
   - 수면 시간, 작성 시간, 수정 시간 기준으로 꿈을 정렬할 수 있습니다.
 
 <img src="https://github.com/user-attachments/assets/3c295ef2-37fe-49a7-87fe-668030916788" height="400px">
-<img src="https://github.com/user-attachments/assets/038b70b2-c0c8-4209-9965-fbf9e9be6866" height="400px">
 <img src="https://github.com/user-attachments/assets/2ed756ab-d18e-45e0-bc72-ff34eb3e1466" height="400px">
+<img src="https://github.com/user-attachments/assets/5fd4652b-784a-4952-be74-ea2b65156a85" height="400px">
+
 
 
 **📅 달력으로 보기**
