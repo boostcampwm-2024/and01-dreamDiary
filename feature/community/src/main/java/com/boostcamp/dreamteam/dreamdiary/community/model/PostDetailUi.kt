@@ -14,6 +14,7 @@ data class PostDetailUi(
     val contents: List<PostContentUi>,
     val author: UserUi,
     val sharedAt: DisplayableDateTime,
+    val likeCount: Int,
     val isLiked: Boolean,
 ) {
     companion object {
@@ -23,6 +24,7 @@ data class PostDetailUi(
             contents = emptyList(),
             author = UserUi.EMPTY,
             sharedAt = DisplayableDateTime.EMPTY,
+            likeCount = 0,
             isLiked = false,
         )
     }
@@ -42,6 +44,7 @@ fun CommunityPostDetail.toUIState(): PostDetailUi =
             profileImageUrl = this.profileImageUrl,
         ),
         sharedAt = Instant.ofEpochSecond(this.createdAt).toDisplayableDateTime(),
+        likeCount = this.likeCount,
         isLiked = this.isLiked,
     )
 
@@ -51,5 +54,6 @@ internal val postDetailUiPreview = PostDetailUi(
     contents = listOf(PostContentUi.Text("내용")),
     author = userUiPreview1,
     sharedAt = Instant.now().toDisplayableDateTime(),
+    likeCount = 10,
     isLiked = false,
 )
