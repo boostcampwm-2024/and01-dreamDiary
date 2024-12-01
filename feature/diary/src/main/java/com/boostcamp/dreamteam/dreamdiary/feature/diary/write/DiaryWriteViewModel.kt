@@ -152,6 +152,11 @@ class DiaryWriteViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 deleteLabelUseCase(labelUi.name)
+                _uiState.update {
+                    it.copy(
+                        selectedLabels = it.selectedLabels.toMutableSet().apply { remove(labelUi) },
+                    )
+                }
             } catch (e: SQLiteConstraintException) {
                 Timber.d("deleteLabel: ${e.message}")
                 _event.trySend(DiaryWriteEvent.Label.DeleteFailure)
