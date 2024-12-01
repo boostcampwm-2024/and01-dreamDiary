@@ -109,6 +109,14 @@ fun NavGraphBuilder.diaryGraph(
         composable<DiaryGraph.DiarySearchRoute> {
             DiarySearchScreen(
                 onClickBack = navController::navigateUp,
+                onClickDiary = { diaryId ->
+                    navController.navigateToDetailScreen(
+                        diaryId = diaryId,
+                        navOptions = navOptions {
+                            launchSingleTop = true
+                        },
+                    )
+                },
             )
         }
     }

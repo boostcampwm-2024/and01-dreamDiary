@@ -1,8 +1,11 @@
 package com.boostcamp.dreamteam.dreamdiary.feature.diary.search
 
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -23,7 +26,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -33,22 +35,31 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.boostcamp.dreamteam.dreamdiary.designsystem.theme.DreamdiaryTheme
+import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.component.DiaryCard
+import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.DiaryUi
+import com.boostcamp.dreamteam.dreamdiary.ui.PagingIndexKey
 
 @Composable
 fun DiarySearchScreen(
     onClickBack: () -> Unit,
+    onClickDiary: (diaryId: String) -> Unit,
     modifier: Modifier = Modifier,
     viewmodel: DiarySearchViewModel = hiltViewModel(),
 ) {
     val searchQuery = viewmodel.searchQuery.collectAsStateWithLifecycle()
     val uiState by viewmodel.uiState.collectAsStateWithLifecycle()
+    val searchResults = viewmodel.searchResults.collectAsLazyPagingItems()
 
     DiarySearchScreenContent(
         onClickBack = onClickBack,
+        onClickDiary = onClickDiary,
         searchQuery = searchQuery,
         onSearchQueryChange = viewmodel::updateSearchQuery,
         searchSuggestions = uiState.searchSuggestions,
+        searchResults = searchResults,
         modifier = modifier,
     )
 }
@@ -56,9 +67,11 @@ fun DiarySearchScreen(
 @Composable
 private fun DiarySearchScreenContent(
     onClickBack: () -> Unit,
+    onClickDiary: (diaryId: String) -> Unit,
     searchQuery: State<String>,
     onSearchQueryChange: (String) -> Unit,
     searchSuggestions: List<String>,
+    searchResults: LazyPagingItems<DiaryUi>,
     modifier: Modifier = Modifier,
 ) {
     var expanded by rememberSaveable { mutableStateOf(true) }
@@ -67,7 +80,9 @@ private fun DiarySearchScreenContent(
         topBar = {
             Box(
                 modifier = Modifier
-                    .fillMaxWidth(),
+                    .fillMaxWidth()
+                    .padding(vertical = 8.dp)
+                    .background(color = Color.Transparent),
             ) {
                 SearchTopBar(
                     SearchTopBarState(
@@ -88,7 +103,27 @@ private fun DiarySearchScreenContent(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding),
+            contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
+            items(
+                count = searchResults.itemCount,
+                key = { searchResults.peek(it)?.id ?: PagingIndexKey(it) },
+            ) { index ->
+                searchResults[index]?.let { diary ->
+                    DiaryCard(
+                        diary = diary,
+                        onDiaryClick = { onClickDiary(diary.id) },
+                        onDiaryEdit = { },
+                        onDeleteDiary = { },
+                        onShareDiary = { },
+                        modifier = Modifier
+                            .animateItem()
+                            .fillMaxWidth(),
+                        isMenuButtonVisible = false,
+                    )
+                }
+            }
         }
     }
 }
@@ -163,11 +198,13 @@ private fun SearchTopBar(
 @Composable
 private fun DiarySearchScreenContentPreview() {
     DreamdiaryTheme {
-        DiarySearchScreenContent(
-            onClickBack = {},
-            searchQuery = remember { mutableStateOf("") },
-            onSearchQueryChange = {},
-            searchSuggestions = listOf("검색어 추천1", "검색어 추천2", "검색어 추천3"),
-        )
+//        DiarySearchScreenContent(
+//            onClickBack = {},
+//            searchQuery = remember { mutableStateOf("") },
+//            onSearchQueryChange = {},
+//            searchSuggestions = listOf("검색어 추천1", "검색어 추천2", "검색어 추천3"),
+//            searchResults = flowOf(PagingData.from(emptyList())).collectAsLazyPagingItems(),
+//            onClickDiary = { },
+//        )
     }
 }
