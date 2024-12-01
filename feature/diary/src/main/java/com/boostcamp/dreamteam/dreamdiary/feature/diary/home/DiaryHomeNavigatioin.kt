@@ -8,6 +8,7 @@ import androidx.navigation.navDeepLink
 import androidx.navigation.navOptions
 import androidx.navigation.navigation
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.detail.DiaryDetailScreen
+import com.boostcamp.dreamteam.dreamdiary.feature.diary.search.DiarySearchScreen
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.write.DiaryWriteScreen
 import kotlinx.serialization.Serializable
 
@@ -26,6 +27,9 @@ data object DiaryGraph {
     data class DiaryDetailRoute(
         val id: String,
     )
+
+    @Serializable
+    data object DiarySearchRoute
 }
 
 fun NavGraphBuilder.diaryGraph(
@@ -54,6 +58,13 @@ fun NavGraphBuilder.diaryGraph(
                 onNavigateToSetting = onSettingClick,
                 onNavigateToWriteScreen = { navController.navigate(DiaryGraph.DiaryWriteRoute()) },
                 onDialogConfirmClick = onDialogConfirmClick,
+                onClickSearch = {
+                    navController.navigateToSearchScreen(
+                        navOptions = navOptions {
+                            launchSingleTop = true
+                        }
+                    )
+                },
             )
         }
 
@@ -94,6 +105,12 @@ fun NavGraphBuilder.diaryGraph(
                 onDialogConfirmClick = onDialogConfirmClick,
             )
         }
+
+        composable<DiaryGraph.DiarySearchRoute> {
+            DiarySearchScreen(
+                onClickBack = navController::navigateUp,
+            )
+        }
     }
 }
 
@@ -109,4 +126,8 @@ private fun NavController.navigateToDetailScreen(
     navOptions: NavOptions? = null,
 ) {
     navigate(route = DiaryGraph.DiaryDetailRoute(diaryId), navOptions = navOptions)
+}
+
+private fun NavController.navigateToSearchScreen(navOptions: NavOptions? = null) {
+    navigate(route = DiaryGraph.DiarySearchRoute, navOptions = navOptions)
 }

@@ -73,6 +73,7 @@ fun DiaryHomeScreen(
     onNavigateToCommunity: () -> Unit,
     onNavigateToSetting: () -> Unit,
     onDialogConfirmClick: () -> Unit,
+    onClickSearch: () -> Unit,
     viewModel: DiaryHomeViewModel = hiltViewModel(),
     onNavigateToWriteScreen: () -> Unit,
 ) {
@@ -138,6 +139,7 @@ fun DiaryHomeScreen(
         },
         onChangeSort = viewModel::setSort,
         sortOption = sortOption,
+        onSearchClick = onClickSearch,
         syncState = syncState,
         onSyncClick = { SynchronizationWorker.runSynchronizationWorker(context) },
     )
@@ -164,7 +166,7 @@ private fun DiaryHomeScreenContent(
     syncState: SyncStateUi,
     onSyncClick: () -> Unit,
     modifier: Modifier = Modifier,
-    onSearchClick: () -> Unit = {},
+    onSearchClick: () -> Unit,
 ) {
     val (currentTabIndex, setCurrentTabIndex) = rememberSaveable { mutableIntStateOf(0) }
 
@@ -190,7 +192,7 @@ private fun DiaryHomeScreenContent(
         topBar = {
             DiaryHomeScreenTopAppBar(
                 onSyncClick = onSyncClick,
-                onSearchClick = { /* 검색 클릭 시 동작 */ },
+                onSearchClick = onSearchClick,
                 scrollBehavior = topAppBarScrollBehavior,
                 currentTabIndex = currentTabIndex,
                 onClickTab = setCurrentTabIndex,
