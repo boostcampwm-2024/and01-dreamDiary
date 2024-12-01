@@ -148,7 +148,6 @@ private fun NotSignInCommunityContent(
                         CommunityDiaryCard(
                             diary = diary,
                             onPostClick = null,
-                            onClickMenu = null,
                             onClickLike = null,
                             modifier = Modifier.alpha(1.0f - diaryIndex * 0.3f),
                         )
@@ -258,8 +257,8 @@ private fun CommunityListScreenContent(
                         CommunityDiaryCard(
                             diary = diary,
                             onPostClick = onPostClick,
-                            onClickMenu = { /* TODO: 메뉴 눌렀을 때 기능 추가하기 */ },
                             onClickLike = { onPostLikeClick(diary) },
+                            modifier = Modifier.animateItem(),
                         )
                     }
                 }

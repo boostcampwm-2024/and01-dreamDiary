@@ -8,6 +8,7 @@ import androidx.work.Configuration
 import androidx.work.CoroutineWorker
 import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
 import com.boostcamp.dreamteam.dreamdiary.core.data.database.dao.DreamDiaryDao
@@ -24,6 +25,9 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.EntryPointAccessors
 import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.transform
 import kotlinx.coroutines.withContext
 import timber.log.Timber
 import java.time.Instant
@@ -177,31 +181,36 @@ class SynchronizationWorker @AssistedInject constructor(
         }
 
         for (content in notDownloadedContents) {
-            when (content) {
-                is NotDownloadedContent.Image -> {
-                    val image = functionRepository.downloadImage(content.id)
-                    if (image != null) {
-                        dreamDiaryDao.insertImage(
-                            imageEntity = ImageEntity(
-                                id = content.id,
-                                path = image.path,
-                            ),
-                        )
-                        dreamDiaryDao.moveToDreamDiaryIfSynced(content.diaryId)
+            try {
+                when (content) {
+                    is NotDownloadedContent.Image -> {
+                        val image = functionRepository.downloadImage(content.id)
+                        if (image != null) {
+                            dreamDiaryDao.insertImage(
+                                imageEntity = ImageEntity(
+                                    id = content.id,
+                                    path = image.path,
+                                ),
+                            )
+                            dreamDiaryDao.moveToDreamDiaryIfSynced(content.diaryId)
+                        }
+                    }
+
+                    is NotDownloadedContent.Text -> {
+                        val text = functionRepository.downloadText(content.id)
+                        if (text != null) {
+                            dreamDiaryDao.insertText(
+                                textEntity = TextEntity(
+                                    id = content.id,
+                                    text = text.text,
+                                ),
+                            )
+                            dreamDiaryDao.moveToDreamDiaryIfSynced(content.diaryId)
+                        }
                     }
                 }
-                is NotDownloadedContent.Text -> {
-                    val text = functionRepository.downloadText(content.id)
-                    if (text != null) {
-                        dreamDiaryDao.insertText(
-                            textEntity = TextEntity(
-                                id = content.id,
-                                text = text.text,
-                            ),
-                        )
-                        dreamDiaryDao.moveToDreamDiaryIfSynced(content.diaryId)
-                    }
-                }
+            } catch (e: Exception) {
+                Timber.e(e, "$content 다운로드 중 에러")
             }
         }
     }
@@ -268,6 +277,23 @@ class SynchronizationWorker @AssistedInject constructor(
 
             workManager
                 .enqueueUniqueWork(UNIQUE_WORK_NAME, ExistingWorkPolicy.KEEP, request)
+        }
+
+        fun getWorkInfo(context: Context): Flow<SyncWorkState> {
+            val workManager = WorkManager.getInstance(context.applicationContext)
+
+            return workManager.getWorkInfosForUniqueWorkFlow(UNIQUE_WORK_NAME)
+                .transform {
+                    if (it.size > 0) {
+                        emit(it.last())
+                    }
+                }.map {
+                    if (it.state == WorkInfo.State.RUNNING) {
+                        SyncWorkState.RUNNING
+                    } else {
+                        SyncWorkState.IDLE
+                    }
+                }
         }
     }
 }
