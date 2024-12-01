@@ -24,7 +24,7 @@ import java.util.UUID
 
 @Dao
 interface DreamDiaryDao {
-    @Query("select diary.title from diary where deletedAt is null and title like :query limit 10")
+    @Query("select distinct diary.title from diary where deletedAt is null and title like :query limit 10")
     suspend fun getSearchSuggestions(query: String): List<String>
 
     @Insert
