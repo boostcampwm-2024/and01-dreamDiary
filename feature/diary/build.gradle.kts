@@ -28,6 +28,7 @@ dependencies {
     implementation(projects.core.model)
     implementation(projects.core.ui)
     implementation(projects.core.data)
+    implementation(projects.core.synchronization)
     implementation(projects.feature.widget)
 
     implementation(libs.androidx.core.ktx)
