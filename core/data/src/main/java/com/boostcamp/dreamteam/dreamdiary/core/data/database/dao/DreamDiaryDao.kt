@@ -137,11 +137,23 @@ interface DreamDiaryDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertLabels(labelEntities: List<LabelEntity>)
 
+    @Transaction
+    suspend fun deleteLabel(label: String) {
+        deleteDiaryLabelsByLabel(label)
+        privateDeleteLabel(label)
+    }
+
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertDreamDiaryLabels(dreamDiaryEntity: List<DreamDiaryLabelEntity>)
 
     @Query("delete from diary_label where diaryId = :diaryId")
     suspend fun deleteDreamDiaryLabels(diaryId: String)
+
+    @Query("delete from diary_label where labelId = :label")
+    suspend fun deleteDiaryLabelsByLabel(label: String)
+
+    @Query("delete from label where label = :label")
+    fun privateDeleteLabel(label: String)
 
     @Transaction
     suspend fun setLabelsToDreamDiary(

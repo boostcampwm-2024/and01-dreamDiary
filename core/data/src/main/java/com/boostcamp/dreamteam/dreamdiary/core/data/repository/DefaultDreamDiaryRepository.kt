@@ -135,6 +135,10 @@ internal class DefaultDreamDiaryRepository @Inject constructor(
         )
     }
 
+    override suspend fun deleteLabel(label: String) {
+        dreamDiaryDao.deleteLabel(label)
+    }
+
     override fun getLabels(search: String): Flow<List<Label>> {
         val formattedSearch: String? = if (search.isBlank()) {
             null
