@@ -31,6 +31,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
@@ -62,6 +63,7 @@ internal fun LabelSelectionDialog(
         ) {
             if (pendingLabelToDelete != null) {
                 LabelDeleteConfirmDialog(
+                    label = pendingLabelToDelete,
                     onClickConfirm = {
                         onDeleteLabel(pendingLabelToDelete)
                         setPendingLabelToDelete(null)
@@ -87,11 +89,20 @@ internal fun LabelSelectionDialog(
 
 @Composable
 private fun LabelDeleteConfirmDialog(
+    label: LabelUi,
     onClickConfirm: () -> Unit,
     onClickCancel: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier) {
+        Text(
+            text = label.name,
+            fontWeight = FontWeight.SemiBold,
+            modifier = Modifier.fillMaxWidth(),
+            textAlign = TextAlign.Center,
+            maxLines = 1,
+        )
+        Spacer(modifier = Modifier.height(12.dp))
         Text(text = stringResource(R.string.label_delete_confirm), fontWeight = FontWeight.SemiBold)
         Spacer(modifier = Modifier.height(24.dp))
 
