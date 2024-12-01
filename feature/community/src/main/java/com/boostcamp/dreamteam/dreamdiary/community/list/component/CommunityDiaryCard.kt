@@ -41,9 +41,9 @@ import com.boostcamp.dreamteam.dreamdiary.ui.util.conditional
 
 @Composable
 internal fun CommunityDiaryCard(
-    diary: PostUi,
+    post: PostUi,
     onPostClick: ((PostUi) -> Unit)?,
-    onClickLike: ((diary: PostUi) -> Unit)?,
+    onClickLike: ((post: PostUi) -> Unit)?,
     modifier: Modifier = Modifier,
 ) {
     DdCard(
@@ -54,7 +54,7 @@ internal fun CommunityDiaryCard(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
-                    text = diary.title,
+                    text = post.title,
                     fontWeight = FontWeight.SemiBold,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
@@ -64,17 +64,17 @@ internal fun CommunityDiaryCard(
         modifier = modifier
             .conditional(
                 condition = onPostClick != null,
-                ifTrue = { clickable { onPostClick?.invoke(diary) } },
+                ifTrue = { clickable { onPostClick?.invoke(post) } },
             ),
         overline = {
             Column(modifier = Modifier.fillMaxWidth()) {
                 AuthorHeader(
-                    author = diary.author,
+                    author = post.author,
                     modifier = Modifier.fillMaxWidth(),
-                    sharedAt = diary.sharedAt.formatted,
+                    sharedAt = post.sharedAt.formatted,
                 )
                 Spacer(modifier = Modifier.height(8.dp))
-                diary.images.firstOrNull()?.let { image ->
+                post.images.firstOrNull()?.let { image ->
                     DdAsyncImage(
                         model = image,
                         contentDescription = null,
@@ -98,7 +98,7 @@ internal fun CommunityDiaryCard(
                 )
 
                 Text(
-                    text = diary.commentCount.toString(),
+                    text = post.commentCount.toString(),
                     modifier = Modifier.padding(start = 4.dp),
                     style = MaterialTheme.typography.bodyLarge,
                 )
@@ -106,13 +106,13 @@ internal fun CommunityDiaryCard(
                 Spacer(Modifier.width(4.dp))
                 IconButton(
                     enabled = onClickLike != null,
-                    onClick = { onClickLike?.invoke(diary) },
+                    onClick = { onClickLike?.invoke(post) },
                     modifier = Modifier.size(24.dp),
                 ) {
                     Icon(
-                        imageVector = if (diary.isLiked) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
+                        imageVector = if (post.isLiked) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
                         contentDescription = stringResource(R.string.community_list_diary_card_like),
-                        tint = if (diary.isLiked) {
+                        tint = if (post.isLiked) {
                             MaterialTheme.colorScheme.error
                         } else {
                             MaterialTheme.colorScheme.onSurface
@@ -120,7 +120,7 @@ internal fun CommunityDiaryCard(
                     )
                 }
                 Text(
-                    text = diary.likeCount.toString(),
+                    text = post.likeCount.toString(),
                     modifier = Modifier.padding(start = 4.dp),
                     style = MaterialTheme.typography.bodyLarge,
                 )
@@ -128,7 +128,7 @@ internal fun CommunityDiaryCard(
         },
     ) {
         Text(
-            text = diary.previewText,
+            text = post.previewText,
             modifier = Modifier,
             maxLines = 3,
             overflow = TextOverflow.Ellipsis,
@@ -177,7 +177,7 @@ private fun AuthorHeader(
 private fun CommunityDiaryCardPreviewWithoutImage() {
     MaterialTheme {
         CommunityDiaryCard(
-            diary = postUiPreview1,
+            post = postUiPreview1,
             onPostClick = { },
             onClickLike = { },
         )
@@ -189,7 +189,7 @@ private fun CommunityDiaryCardPreviewWithoutImage() {
 private fun CommunityDiaryCardPreviewWithImage() {
     MaterialTheme {
         CommunityDiaryCard(
-            diary = postUiPreview2,
+            post = postUiPreview2,
             onPostClick = {},
             onClickLike = { },
         )
