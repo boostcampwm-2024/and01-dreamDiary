@@ -14,7 +14,6 @@ import javax.inject.Inject
 class MainViewModel @Inject constructor(
     private val settingThemeRepository: SettingThemeRepository,
 ) : ViewModel() {
-
     // TODO flowWithStarted로 변경
     val uiState = settingThemeRepository.getTheme()
         .map {

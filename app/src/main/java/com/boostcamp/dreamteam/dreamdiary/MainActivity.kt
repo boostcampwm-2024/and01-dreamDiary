@@ -62,6 +62,7 @@ class MainActivity : ComponentActivity() {
                 SettingThemeUiState.System, SettingThemeUiState.Loading -> {
                     isSystemInDarkTheme()
                 }
+
                 else -> {
                     settingTheme == SettingThemeUiState.Dark
                 }

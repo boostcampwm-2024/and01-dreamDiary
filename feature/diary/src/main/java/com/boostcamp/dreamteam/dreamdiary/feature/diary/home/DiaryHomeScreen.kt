@@ -260,7 +260,7 @@ private fun DiaryHomeScreenTopAppBar(
     Column(modifier = modifier) {
         CenterAlignedTopAppBar(
             colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                containerColor = Color.Transparent
+                containerColor = Color.Transparent,
             ),
             title = { Text(stringResource(R.string.home_my_dream)) },
             actions = {

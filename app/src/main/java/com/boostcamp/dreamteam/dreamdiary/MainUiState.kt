@@ -6,7 +6,10 @@ data class MainUiState(
 
 sealed class SettingThemeUiState {
     data object Loading : SettingThemeUiState()
+
     data object System : SettingThemeUiState()
-    data object Light: SettingThemeUiState()
-    data object Dark: SettingThemeUiState()
+
+    data object Light : SettingThemeUiState()
+
+    data object Dark : SettingThemeUiState()
 }

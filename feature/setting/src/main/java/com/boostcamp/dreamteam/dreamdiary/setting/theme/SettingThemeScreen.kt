@@ -60,7 +60,7 @@ fun SettingThemeScreenContent(
         topBar = {
             CenterAlignedTopAppBar(
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                    containerColor = Color.Transparent
+                    containerColor = Color.Transparent,
                 ),
                 title = {
                     Text(text = stringResource(R.string.setting_theme_title))
