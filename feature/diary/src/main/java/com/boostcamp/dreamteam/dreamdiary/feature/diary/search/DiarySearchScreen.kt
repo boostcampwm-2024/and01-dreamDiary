@@ -18,6 +18,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SearchBar
 import androidx.compose.material3.SearchBarDefaults
@@ -26,11 +27,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -38,7 +43,9 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.boostcamp.dreamteam.dreamdiary.designsystem.theme.DreamdiaryTheme
+import com.boostcamp.dreamteam.dreamdiary.feature.diary.R
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.component.DiaryCard
+import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.tablist.pagedDiariesPreview
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.DiaryUi
 import com.boostcamp.dreamteam.dreamdiary.ui.PagingIndexKey
 
@@ -106,6 +113,20 @@ private fun DiarySearchScreenContent(
             contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
+            if (searchResults.itemCount == 0) {
+                item {
+                    Text(
+                        text = stringResource(R.string.search_no_search_result),
+                        style = MaterialTheme.typography.displaySmall.copy(
+                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
+                        ),
+                        modifier = Modifier.fillMaxWidth(),
+                        textAlign = TextAlign.Center,
+                        fontWeight = FontWeight.Bold,
+                    )
+                }
+            }
+
             items(
                 count = searchResults.itemCount,
                 key = { searchResults.peek(it)?.id ?: PagingIndexKey(it) },
@@ -151,7 +172,7 @@ private fun SearchTopBar(
                 onSearch = { state.onExpandedChange(false) },
                 expanded = state.expanded,
                 onExpandedChange = { state.onExpandedChange(it) },
-                placeholder = { Text("검색어를 입력하세요") },
+                placeholder = { Text(stringResource(R.string.search_input_placeholder)) },
                 leadingIcon = {
                     AnimatedContent(state.expanded) { expanded ->
                         if (expanded) {
@@ -160,13 +181,13 @@ private fun SearchTopBar(
                             ) {
                                 Icon(
                                     Icons.AutoMirrored.Filled.ArrowBack,
-                                    contentDescription = "뒤로 가기",
+                                    contentDescription = stringResource(R.string.search_back),
                                 )
                             }
                         } else {
                             Icon(
                                 Icons.Outlined.Search,
-                                contentDescription = "검색",
+                                contentDescription = stringResource(R.string.search_search),
                             )
                         }
                     }
@@ -198,13 +219,13 @@ private fun SearchTopBar(
 @Composable
 private fun DiarySearchScreenContentPreview() {
     DreamdiaryTheme {
-//        DiarySearchScreenContent(
-//            onClickBack = {},
-//            searchQuery = remember { mutableStateOf("") },
-//            onSearchQueryChange = {},
-//            searchSuggestions = listOf("검색어 추천1", "검색어 추천2", "검색어 추천3"),
-//            searchResults = flowOf(PagingData.from(emptyList())).collectAsLazyPagingItems(),
-//            onClickDiary = { },
-//        )
+        DiarySearchScreenContent(
+            onClickBack = {},
+            searchQuery = remember { mutableStateOf("") },
+            onSearchQueryChange = {},
+            searchSuggestions = listOf("검색어 추천1", "검색어 추천2", "검색어 추천3"),
+            searchResults = pagedDiariesPreview.collectAsLazyPagingItems(),
+            onClickDiary = { },
+        )
     }
 }
