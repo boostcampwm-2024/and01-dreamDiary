@@ -86,26 +86,15 @@ internal fun LabelItem(
                 Text(text = label, maxLines = 1, overflow = TextOverflow.Ellipsis)
             },
             trailingContent = {
-                Row {
-                    IconButton(
-                        onClick = { isEditMode = true },
-                        content = {
-                            Icon(
-                                imageVector = Icons.Outlined.Edit,
-                                contentDescription = stringResource(R.string.label_dialog_edit),
-                            )
-                        },
-                    )
-                    IconButton(
-                        onClick = onDeleteLabel,
-                        content = {
-                            Icon(
-                                imageVector = Icons.Outlined.Delete,
-                                contentDescription = stringResource(R.string.label_dialog_delete),
-                            )
-                        },
-                    )
-                }
+                IconButton(
+                    onClick = onDeleteLabel,
+                    content = {
+                        Icon(
+                            imageVector = Icons.Outlined.Delete,
+                            contentDescription = stringResource(R.string.label_dialog_delete),
+                        )
+                    },
+                )
             },
         )
     }
