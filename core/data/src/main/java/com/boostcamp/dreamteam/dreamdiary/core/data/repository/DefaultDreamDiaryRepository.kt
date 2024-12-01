@@ -87,6 +87,19 @@ internal class DefaultDreamDiaryRepository @Inject constructor(
             }
         }
 
+    override fun getDreamDiariesByTitle(query: String): Flow<PagingData<Diary>> {
+        val formattedQuery = "%$query%"
+
+        return Pager(
+            config = PagingConfig(pageSize = 100),
+            pagingSourceFactory = { dreamDiaryDao.getDreamDiariesByTitle(formattedQuery) },
+        ).flow.map { pagingData ->
+            pagingData.map {
+                it.toDomain(parseBody(it.dreamDiary.body))
+            }
+        }
+    }
+
     override fun getDreamDiariesOrderBy(sort: DiarySort): Flow<PagingData<Diary>> =
         Pager(
             config = PagingConfig(pageSize = 100),

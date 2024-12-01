@@ -43,6 +43,8 @@ interface DreamDiaryRepository {
 
     fun getDreamDiaries(): Flow<PagingData<Diary>>
 
+    fun getDreamDiariesByTitle(query: String): Flow<PagingData<Diary>>
+
     fun getDreamDiariesOrderBy(sort: DiarySort): Flow<PagingData<Diary>>
 
     fun getDreamDiariesByLabel(labels: List<String>): Flow<PagingData<Diary>>

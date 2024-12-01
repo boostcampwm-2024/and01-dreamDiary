@@ -161,6 +161,9 @@ interface DreamDiaryDao {
     @Query("select * from diary where deletedAt is null order by updatedAt desc")
     fun getDreamDiaries(): PagingSource<Int, DreamDiaryWithLabels>
 
+    @Query("select * from diary where deletedAt is null and title like :query  order by updatedAt desc")
+    fun getDreamDiariesByTitle(query: String): PagingSource<Int, DreamDiaryWithLabels>
+
     @Query(
         """
             select Distinct diary.*
