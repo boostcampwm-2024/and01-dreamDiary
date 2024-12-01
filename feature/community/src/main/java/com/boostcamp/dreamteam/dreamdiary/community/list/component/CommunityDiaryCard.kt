@@ -15,7 +15,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.Comment
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
-import androidx.compose.material.icons.outlined.MoreVert
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -44,7 +43,6 @@ import com.boostcamp.dreamteam.dreamdiary.ui.util.conditional
 internal fun CommunityDiaryCard(
     diary: PostUi,
     onPostClick: ((PostUi) -> Unit)?,
-    onClickMenu: ((diary: PostUi) -> Unit)?,
     onClickLike: ((diary: PostUi) -> Unit)?,
     modifier: Modifier = Modifier,
 ) {
@@ -72,7 +70,6 @@ internal fun CommunityDiaryCard(
             Column(modifier = Modifier.fillMaxWidth()) {
                 AuthorHeader(
                     author = diary.author,
-                    onMenuClick = onClickMenu?.let { { it(diary) } },
                     modifier = Modifier.fillMaxWidth(),
                     sharedAt = diary.sharedAt.formatted,
                 )
@@ -112,7 +109,11 @@ internal fun CommunityDiaryCard(
                     Icon(
                         imageVector = if (diary.isLiked) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
                         contentDescription = stringResource(R.string.community_list_diary_card_like),
-                        tint = if (diary.isLiked) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface,
+                        tint = if (diary.isLiked) {
+                            MaterialTheme.colorScheme.error
+                        } else {
+                            MaterialTheme.colorScheme.onSurface
+                        },
                     )
                 }
             }
@@ -131,7 +132,6 @@ internal fun CommunityDiaryCard(
 private fun AuthorHeader(
     author: UserUi,
     sharedAt: String,
-    onMenuClick: (() -> Unit)?,
     modifier: Modifier = Modifier,
 ) {
     Row(modifier = modifier, verticalAlignment = Alignment.CenterVertically) {
@@ -161,12 +161,6 @@ private fun AuthorHeader(
                 ),
             )
         }
-        IconButton(
-            enabled = onMenuClick != null,
-            onClick = onMenuClick?.let { { it() } } ?: { },
-        ) {
-            Icon(imageVector = Icons.Outlined.MoreVert, contentDescription = null)
-        }
     }
 }
 
@@ -177,7 +171,6 @@ private fun CommunityDiaryCardPreviewWithoutImage() {
         CommunityDiaryCard(
             diary = postUiPreview1,
             onPostClick = { },
-            onClickMenu = { },
             onClickLike = { },
         )
     }
@@ -190,7 +183,6 @@ private fun CommunityDiaryCardPreviewWithImage() {
         CommunityDiaryCard(
             diary = postUiPreview2,
             onPostClick = {},
-            onClickMenu = { },
             onClickLike = { },
         )
     }
