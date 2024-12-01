@@ -80,7 +80,7 @@ internal fun LabelSelectionDialog(
                     selectedLabels = selectedLabels,
                     onCheckChange = onCheckChange,
                     onDeleteLabel = { setPendingLabelToDelete(it) },
-                    onDismissRequest = onDismissRequest
+                    onDismissRequest = onDismissRequest,
                 )
             }
         }

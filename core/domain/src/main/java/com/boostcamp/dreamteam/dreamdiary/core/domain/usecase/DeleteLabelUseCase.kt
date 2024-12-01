@@ -4,7 +4,7 @@ import com.boostcamp.dreamteam.dreamdiary.core.data.repository.DreamDiaryReposit
 import javax.inject.Inject
 
 class DeleteLabelUseCase @Inject constructor(
-    private val labelRepository: DreamDiaryRepository
+    private val labelRepository: DreamDiaryRepository,
 ) {
     suspend operator fun invoke(label: String) {
         labelRepository.deleteLabel(label)

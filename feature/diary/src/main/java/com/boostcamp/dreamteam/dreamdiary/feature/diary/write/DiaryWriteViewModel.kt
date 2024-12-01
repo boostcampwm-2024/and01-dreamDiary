@@ -162,7 +162,6 @@ class DiaryWriteViewModel @Inject constructor(
                 _event.trySend(DiaryWriteEvent.Label.DeleteFailure)
             }
         }
-
     }
 
     fun setSleepStartAt(sleepStartAt: ZonedDateTime) {
