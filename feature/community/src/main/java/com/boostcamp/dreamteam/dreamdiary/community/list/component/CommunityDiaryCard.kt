@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
@@ -18,7 +19,6 @@ import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ProvideTextStyle
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -89,22 +89,25 @@ internal fun CommunityDiaryCard(
         tail = {
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.End,
+                horizontalArrangement = Arrangement.Start,
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Outlined.Comment,
                     contentDescription = stringResource(R.string.community_list_diary_card_comment),
                 )
+
+                Text(
+                    text = diary.commentCount.toString(),
+                    modifier = Modifier.padding(start = 4.dp),
+                    style = MaterialTheme.typography.bodyLarge,
+                )
+
                 Spacer(Modifier.width(4.dp))
-                ProvideTextStyle(
-                    value = MaterialTheme.typography.bodyMedium,
-                ) {
-                    Text(text = diary.commentCount.toString())
-                }
                 IconButton(
                     enabled = onClickLike != null,
                     onClick = { onClickLike?.invoke(diary) },
+                    modifier = Modifier.size(24.dp),
                 ) {
                     Icon(
                         imageVector = if (diary.isLiked) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
@@ -116,6 +119,11 @@ internal fun CommunityDiaryCard(
                         },
                     )
                 }
+                Text(
+                    text = diary.likeCount.toString(),
+                    modifier = Modifier.padding(start = 4.dp),
+                    style = MaterialTheme.typography.bodyLarge,
+                )
             }
         },
     ) {

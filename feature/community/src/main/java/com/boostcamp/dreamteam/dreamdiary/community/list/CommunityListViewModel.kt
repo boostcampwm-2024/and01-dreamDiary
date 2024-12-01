@@ -45,9 +45,12 @@ class CommunityListViewModel @Inject constructor(
         .cachedIn(viewModelScope)
         .combine(toggledLikes) { pagingData, toggledLikesSet ->
             pagingData.map { postUi ->
+                val newIsLiked = !postUi.isLiked
+                val newLikeCount = if (newIsLiked) postUi.likeCount + 1 else postUi.likeCount - 1
                 if (toggledLikesSet.contains(postUi.id)) {
                     postUi.copy(
-                        isLiked = !postUi.isLiked,
+                        isLiked = newIsLiked,
+                        likeCount = newLikeCount,
                     )
                 } else {
                     postUi
