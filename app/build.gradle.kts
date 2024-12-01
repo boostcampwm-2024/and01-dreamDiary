@@ -45,6 +45,8 @@ android {
 }
 
 dependencies {
+    implementation(projects.core.data)
+    implementation(projects.core.model)
     implementation(projects.core.designsystem)
     implementation(projects.core.notification)
     implementation(projects.feature.auth)
@@ -55,6 +57,7 @@ dependencies {
     implementation(projects.core.synchronization)
 
     implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.core.splashscreen)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.hilt.navigation.compose)
