@@ -10,7 +10,7 @@
     <string name="setting_subscribe">구독중</string>
     <string name="setting_communication">커뮤니케이션</string>
     <string name="setting_picture">꿈 사진으로 보기</string>
-    <string name="setting_darkmode">다크모드 설정</string>
+    <string name="setting_darkmode">테마 설정</string>
     <string name="setting_information">정보</string>
     <string name="setting_lock_setting">잠금설정</string>
     <string name="setting_check_account">로그인된 SNS 계정 확인</string>

@@ -49,6 +49,7 @@ internal fun SettingScreen(
     onNavigateToCommunity: () -> Unit,
     onNavigateToSettingNotification: () -> Unit,
     onNavigateToSettingBackup: () -> Unit,
+    onNavigateToSettingTheme: () -> Unit,
     onGoToSignInClick: () -> Unit,
     modifier: Modifier = Modifier,
     settingViewModel: SettingViewModel = hiltViewModel(),
@@ -72,6 +73,7 @@ internal fun SettingScreen(
         onGoToSignInClick = onGoToSignInClick,
         onNavigateToSettingNotification = onNavigateToSettingNotification,
         onNavigateToSettingBackup = onNavigateToSettingBackup,
+        onNavigateToSettingTheme = onNavigateToSettingTheme,
         modifier = modifier,
         signInProvider = settingViewModel.getSignInProvider(),
         userEmail = email,
@@ -86,6 +88,7 @@ private fun SettingScreenContent(
     onGoToSignInClick: () -> Unit,
     onNavigateToSettingNotification: () -> Unit,
     onNavigateToSettingBackup: () -> Unit,
+    onNavigateToSettingTheme: () -> Unit,
     signInProvider: String?,
     onSignOut: () -> Unit,
     userEmail: String?,
@@ -110,6 +113,7 @@ private fun SettingScreenContent(
             onGoToSignInClick = onGoToSignInClick,
             onNavigateToSettingNotification = onNavigateToSettingNotification,
             onNavigateToSettingBackup = onNavigateToSettingBackup,
+            onNavigateToSettingTheme = onNavigateToSettingTheme,
             onSignOut = onSignOut,
             modifier = Modifier.padding(innerPadding),
         )
@@ -123,6 +127,7 @@ private fun SettingScreenBody(
     onGoToSignInClick: () -> Unit,
     onNavigateToSettingNotification: () -> Unit,
     onNavigateToSettingBackup: () -> Unit,
+    onNavigateToSettingTheme: () -> Unit,
     onSignOut: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -180,6 +185,9 @@ private fun SettingScreenBody(
         SettingOption(
             icon = Icons.Outlined.DarkMode,
             text = stringResource(R.string.setting_darkmode),
+            onClick = {
+                onNavigateToSettingTheme()
+            },
         )
         SettingOption(
             icon = Icons.Outlined.Lock,
@@ -237,6 +245,7 @@ private fun SettingScreenPreview() {
             onGoToSignInClick = {},
             onNavigateToSettingNotification = {},
             onNavigateToSettingBackup = {},
+            onNavigateToSettingTheme = {},
             signInProvider = "Google",
             onSignOut = {},
             userEmail = "someone@example.com",
