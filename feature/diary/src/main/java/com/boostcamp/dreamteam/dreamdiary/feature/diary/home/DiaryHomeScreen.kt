@@ -175,7 +175,7 @@ private fun DiaryHomeScreenContent(
         bottomBar = {
             HomeBottomNavigation(
                 items = navigationItems,
-                scrollBehavior = bottomAppBarScrollBehavior
+                scrollBehavior = bottomAppBarScrollBehavior,
             )
         },
         floatingActionButton = {
