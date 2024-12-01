@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.boostcamp.dreamteam.dreamdiary.core.domain.usecase.AddDreamDiaryWithContentsUseCase
 import com.boostcamp.dreamteam.dreamdiary.core.domain.usecase.AddLabelUseCase
+import com.boostcamp.dreamteam.dreamdiary.core.domain.usecase.DeleteLabelUseCase
 import com.boostcamp.dreamteam.dreamdiary.core.domain.usecase.GetDreamDiaryUseCase
 import com.boostcamp.dreamteam.dreamdiary.core.domain.usecase.GetLabelsUseCase
 import com.boostcamp.dreamteam.dreamdiary.core.domain.usecase.UpdateDreamDiaryWithContentsUseCase
@@ -40,6 +41,7 @@ class DiaryWriteViewModel @Inject constructor(
     private val updateDreamDiaryUseCase: UpdateDreamDiaryWithContentsUseCase,
     private val getDreamDiaryUseCase: GetDreamDiaryUseCase,
     private val addLabelUseCase: AddLabelUseCase,
+    private val deleteLabelUseCase: DeleteLabelUseCase,
     private val getLabelsUseCase: GetLabelsUseCase,
 ) : ViewModel() {
     private val diaryId: String? = savedStateHandle.get<String>("diaryId")
@@ -147,8 +149,15 @@ class DiaryWriteViewModel @Inject constructor(
     }
 
     fun deleteLabel(labelUi: LabelUi) {
-        // TODO: 라벨 삭제 기능 추가
-        _event.trySend(DiaryWriteEvent.Label.DeleteFailure)
+        viewModelScope.launch {
+            try {
+                deleteLabelUseCase(labelUi.name)
+            } catch (e: SQLiteConstraintException) {
+                Timber.d("deleteLabel: ${e.message}")
+                _event.trySend(DiaryWriteEvent.Label.DeleteFailure)
+            }
+        }
+
     }
 
     fun setSleepStartAt(sleepStartAt: ZonedDateTime) {
