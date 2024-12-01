@@ -11,6 +11,7 @@ data class CommunityPostList(
     val title: String,
     val commentCount: Long,
     val likeCount: Long,
+    val isLiked: Boolean,
     val diaryContents: List<DiaryContent>,
     val createdAt: Instant,
 )

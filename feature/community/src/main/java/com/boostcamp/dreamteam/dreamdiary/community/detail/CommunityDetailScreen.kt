@@ -2,6 +2,7 @@
 
 package com.boostcamp.dreamteam.dreamdiary.community.detail
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -39,6 +40,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -65,13 +67,21 @@ fun CommunityDetailScreen(
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val comments = viewModel.comments.collectAsLazyPagingItems()
     val focusManager = LocalFocusManager.current
-
+    val context = LocalContext.current
     LaunchedEffect(Unit) {
         viewModel.event.collect { event ->
             when (event) {
                 is CommunityDetailEvent.CommentAdd.Success -> {
                     comments.refresh()
                     focusManager.clearFocus()
+                }
+                is CommunityDetailEvent.LikePost.Success -> {}
+                is CommunityDetailEvent.LikePost.Fail -> {
+                    Toast.makeText(
+                        context,
+                        "좋아요 실패",
+                        Toast.LENGTH_SHORT,
+                    ).show()
                 }
             }
         }
@@ -80,14 +90,13 @@ fun CommunityDetailScreen(
     CommunityDetailScreenContent(
         onClickBack = onClickBack,
         post = state.post,
-        onClickLikePost = { post -> viewModel.toggleLikePost(post.id) },
+        onClickLikePost = viewModel::togglePostLike,
         comments = comments,
         commentContent = state.commentContent,
         onChangeCommentContent = viewModel::changeCommentContent,
         onSubmitComment = {
             viewModel.addComment()
         },
-        onClickLikeComment = { comment -> viewModel.toggleLikeComment(comment.id) },
     )
 }
 
@@ -95,12 +104,11 @@ fun CommunityDetailScreen(
 private fun CommunityDetailScreenContent(
     onClickBack: () -> Unit,
     post: PostDetailUi,
-    onClickLikePost: (PostDetailUi) -> Unit,
+    onClickLikePost: () -> Unit,
     comments: LazyPagingItems<CommentUi>,
     commentContent: String,
     onSubmitComment: () -> Unit,
     onChangeCommentContent: (String) -> Unit,
-    onClickLikeComment: (CommentUi) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val topAppBarScrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
@@ -137,7 +145,7 @@ private fun CommunityDetailScreenContent(
             item {
                 CommunityDetailPostCard(
                     post = post,
-                    onClickLikePost = { onClickLikePost(post) },
+                    onClickLikePost = { onClickLikePost() },
                     modifier = Modifier.fillMaxWidth(),
                 )
             }
@@ -150,7 +158,6 @@ private fun CommunityDetailScreenContent(
                 if (comment != null) {
                     CommunityDetailComment(
                         comment = comment,
-                        onClickLikeComment = { onClickLikeComment(comment) },
                     )
                 }
             }
@@ -164,6 +171,7 @@ private data class CommunityDetailTopAppbarState(
     val title: String,
 )
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun CommunityDetailTopAppBar(
     state: CommunityDetailTopAppbarState,
@@ -271,7 +279,6 @@ private fun CommunityDetailScreenContentPreview() {
             commentContent = "",
             onChangeCommentContent = { },
             comments = pagingCommentsUiPreview.collectAsLazyPagingItems(),
-            onClickLikeComment = { },
         )
     }
 }

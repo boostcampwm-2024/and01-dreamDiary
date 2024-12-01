@@ -1,5 +1,6 @@
 package com.boostcamp.dreamteam.dreamdiary.community.list
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -24,11 +25,13 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -58,6 +61,18 @@ fun CommunityListScreen(
 ) {
     val posts = viewModel.posts.collectAsLazyPagingItems()
 
+    val context = LocalContext.current
+    LaunchedEffect(Unit) {
+        viewModel.event.collect { event ->
+            when (event) {
+                is CommunityListEvent.LikePost.Success -> {}
+                is CommunityListEvent.LikePost.Failure -> {
+                    Toast.makeText(context, "좋아요 실패", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
+
     val contentModifier = Modifier
     if (viewModel.notSignIn()) {
         NotSignInCommunityContent(
@@ -74,6 +89,7 @@ fun CommunityListScreen(
             onNavigateToSetting = onNavigateToSetting,
             posts = posts,
             onPostClick = { diary -> onDiaryClick(diary.id) },
+            onPostLikeClick = viewModel::togglePostLike,
             modifier = contentModifier,
         )
     }
@@ -182,6 +198,7 @@ private fun CommunityListScreenContent(
     onNavigateToSetting: () -> Unit,
     posts: LazyPagingItems<PostUi>,
     onPostClick: (PostUi) -> Unit,
+    onPostLikeClick: (PostUi) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val navigationItems = listOf(
@@ -240,7 +257,7 @@ private fun CommunityListScreenContent(
                         CommunityDiaryCard(
                             diary = diary,
                             onPostClick = onPostClick,
-                            onClickLike = { /* TODO: 좋아요 눌렀을 때 기능 추가하기 */ },
+                            onClickLike = { onPostLikeClick(diary) },
                             modifier = Modifier.animateItem(),
                         )
                     }
@@ -260,6 +277,7 @@ private fun CommunityListScreenContentPreview() {
             onNavigateToSetting = { },
             posts = pagedPostPreview.collectAsLazyPagingItems(),
             onPostClick = { },
+            onPostLikeClick = { },
         )
     }
 }

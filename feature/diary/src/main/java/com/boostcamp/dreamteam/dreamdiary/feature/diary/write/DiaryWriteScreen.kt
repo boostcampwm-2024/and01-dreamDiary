@@ -243,7 +243,10 @@ private fun DiaryWriteScreenContent(
                 onContentTextPositionChange = { currentTextCursorPosition = it },
                 onContentImageDelete = onContentImageDelete,
             ),
-            modifier = Modifier.fillMaxSize().padding(innerPadding).consumeWindowInsets(innerPadding),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+                .consumeWindowInsets(innerPadding),
         )
     }
 }

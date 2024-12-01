@@ -33,6 +33,7 @@ class CommunityRepository @Inject constructor(
     private val firebaseStorage: FirebaseStorage,
 ) {
     private val communityCollection = firebaseFirestore.collection("community")
+    private val userCollection = firebaseFirestore.collection("users")
     private val imageStorage = firebaseStorage.reference.child("community").child("images")
 
     suspend fun saveCommunityPost(
@@ -115,7 +116,7 @@ class CommunityRepository @Inject constructor(
         return id
     }
 
-    fun getCommunityPosts(): Flow<PagingData<CommunityPostList>> {
+    fun getCommunityPosts(uid: String?): Flow<PagingData<CommunityPostList>> {
         return Pager(
             config = PagingConfig(
                 pageSize = 10,
@@ -124,6 +125,11 @@ class CommunityRepository @Inject constructor(
             pagingSourceFactory = { FirebaseCommunityPostPagingSource(communityCollection) },
         ).flow.map { postResponses ->
             postResponses.map { postResponse ->
+                val isLiked = if (uid == null) {
+                    false
+                } else {
+                    checkPostLike(postResponse.id, uid)
+                }
                 val diaryContents =
                     parseListPostContent(
                         content = postResponse.content,
@@ -139,9 +145,59 @@ class CommunityRepository @Inject constructor(
                     diaryContents = diaryContents,
                     commentCount = postResponse.commentCount,
                     likeCount = postResponse.likeCount,
+                    isLiked = isLiked,
                     createdAt = Instant.ofEpochSecond(postResponse.createdAt.seconds, postResponse.createdAt.nanoseconds.toLong()),
                 )
             }
+        }
+    }
+
+    private suspend fun checkPostLike(
+        postId: String,
+        userId: String,
+    ): Boolean {
+        val userLikeReference = userCollection.document(userId).collection("likes").document(postId)
+        return try {
+            userLikeReference.get().await().exists()
+        } catch (e: Exception) {
+            Timber.e(e, "Error checking like for post $postId by user $userId")
+            throw e
+        }
+    }
+
+    suspend fun togglePostLike(
+        postId: String,
+        userId: String,
+    ): Boolean {
+        val postLikeCollection = communityCollection.document(postId).collection("likes")
+        val userLikeReference = postLikeCollection.document(userId)
+
+        val userLikeCollection = userCollection.document(userId).collection("likes")
+        val userReference = userLikeCollection.document(postId)
+
+        return try {
+            firebaseFirestore.runTransaction { transaction ->
+                val snapshot = transaction.get(userLikeReference)
+                // 존재하면 마이너스
+                if (snapshot.exists()) {
+                    transaction.delete(userLikeReference)
+                    transaction.delete(userReference)
+                    transaction.update(communityCollection.document(postId), "likeCount", FieldValue.increment(-1))
+                    false
+                } else {
+                    val likeData = mapOf(
+                        "liked" to true,
+                        "likedAt" to FieldValue.serverTimestamp(),
+                    )
+                    transaction.set(userLikeReference, likeData)
+                    transaction.set(userReference, likeData)
+                    transaction.update(communityCollection.document(postId), "likeCount", FieldValue.increment(1))
+                    true
+                }
+            }.await()
+        } catch (e: Exception) {
+            Timber.e(e, "Error toggling like for post $postId by user $userId")
+            throw e
         }
     }
 
@@ -214,12 +270,18 @@ class CommunityRepository @Inject constructor(
         const val DELIMITER = ":"
     }
 
-    suspend fun getCommunityPostById(postId: String): CommunityPostDetail {
+    suspend fun getCommunityPostById(
+        postId: String,
+        userId: String,
+    ): CommunityPostDetail {
         return try {
+            val postReference = communityCollection.document(postId)
+            val userReference = userCollection.document(userId).collection("likes").document(postId)
             val documentSnapshot =
-                communityCollection.document(postId)
+                postReference
                     .get()
                     .await()
+            val userLikeSnapshot = userReference.get().await()
 
             if (!documentSnapshot.exists()) {
                 throw Exception("Community post with ID $postId not found")
@@ -238,10 +300,11 @@ class CommunityRepository @Inject constructor(
                 profileImageUrl = communityPostResponse.profileImageUrl,
                 title = communityPostResponse.title,
                 content = communityPostResponse.content,
-                likes = communityPostResponse.likes,
+                likeCount = communityPostResponse.likeCount,
                 commentCount = communityPostResponse.commentCount,
                 postContents = contents,
                 createdAt = communityPostResponse.createdAt.seconds,
+                isLiked = userLikeSnapshot.exists(),
             )
         } catch (e: Exception) {
             Timber.e(e, "Error fetching community post with ID $postId")

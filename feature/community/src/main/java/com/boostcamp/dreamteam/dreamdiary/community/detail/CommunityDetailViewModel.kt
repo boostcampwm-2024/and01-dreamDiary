@@ -11,6 +11,7 @@ import com.boostcamp.dreamteam.dreamdiary.community.model.toUIState
 import com.boostcamp.dreamteam.dreamdiary.core.domain.usecase.community.AddCommentUseCase
 import com.boostcamp.dreamteam.dreamdiary.core.domain.usecase.community.GetCommentUseCase
 import com.boostcamp.dreamteam.dreamdiary.core.domain.usecase.community.GetCommunityPostUseCase
+import com.boostcamp.dreamteam.dreamdiary.core.domain.usecase.community.TogglePostLikeUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
@@ -30,6 +31,7 @@ class CommunityDetailViewModel @Inject constructor(
     private val getCommunityPostUseCase: GetCommunityPostUseCase,
     private val getCommentsUseCase: GetCommentUseCase,
     private val addCommentUseCase: AddCommentUseCase,
+    private val togglePostLikeUseCase: TogglePostLikeUseCase,
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(CommunityDetailUiState())
     val uiState = _uiState.asStateFlow()
@@ -43,16 +45,22 @@ class CommunityDetailViewModel @Inject constructor(
         getPostDetail(postId)
     }
 
-    fun toggleLikePost(postId: String) {
-        // TODO: 포스트 좋아요 로직 추가
+    fun togglePostLike() {
+        if (postId != null) {
+            viewModelScope.launch {
+                try {
+                    togglePostLikeUseCase(postId)
+                    getPostDetail(postId)
+                    _event.trySend(CommunityDetailEvent.LikePost.Success)
+                } catch (e: Exception) {
+                    _event.trySend(CommunityDetailEvent.LikePost.Fail)
+                    Timber.e(e)
+                }
+            }
+        }
     }
 
     // TODO: 댓글 삭제 로직 추가
-
-    fun toggleLikeComment(commentId: String) {
-        // TODO: 댓글 좋아요 로직 추가
-    }
-
     private fun getPostDetail(postId: String?) {
         if (postId != null) {
             viewModelScope.launch {

@@ -20,7 +20,6 @@ data class PostUi(
     val author: UserUi,
 )
 
-// TODO CommunityPostList 마저 만들기
 fun CommunityPostList.toPostUi(): PostUi {
     return PostUi(
         id = this.id,
@@ -29,7 +28,7 @@ fun CommunityPostList.toPostUi(): PostUi {
         previewText = this.diaryContents.filterIsInstance<DiaryContent.Text>().joinToString("\n") { it.text },
         sharedAt = this.createdAt.toDisplayableDateTime(),
         commentCount = this.commentCount,
-        isLiked = true,
+        isLiked = this.isLiked,
         author = UserUi(
             uid = this.uid,
             username = this.author,
