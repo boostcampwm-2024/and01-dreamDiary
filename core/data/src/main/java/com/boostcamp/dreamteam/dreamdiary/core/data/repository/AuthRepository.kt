@@ -18,8 +18,8 @@ import javax.inject.Singleton
 @Singleton
 class AuthRepository @Inject constructor(
     @ApplicationContext private val context: Context,
+    private val auth: FirebaseAuth
 ) {
-    private val auth: FirebaseAuth = FirebaseAuth.getInstance()
 
     private val provider = OAuthProvider.newBuilder("github.com")
 
