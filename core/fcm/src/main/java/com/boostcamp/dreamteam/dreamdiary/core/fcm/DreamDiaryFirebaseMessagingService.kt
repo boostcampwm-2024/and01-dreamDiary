@@ -7,6 +7,7 @@ import android.os.Build
 import androidx.core.app.NotificationCompat
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
+import timber.log.Timber
 import javax.inject.Inject
 
 class DreamDiaryFirebaseMessagingService @Inject constructor(
@@ -14,7 +15,16 @@ class DreamDiaryFirebaseMessagingService @Inject constructor(
 
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
         super.onMessageReceived(remoteMessage)
+        Timber.d("onMessageReceived: ${remoteMessage.from}")
+        if (remoteMessage.data.isNotEmpty()) {
+            Timber.d("Message data payload: ${remoteMessage.data}")
 
+            if (true) {
+                // For long-running tasks (10 seconds or more) use WorkManager.
+            } else {
+                // Handle message within 10 seconds
+            }
+        }
         remoteMessage.notification?.let {
             sendNotification(it.title, it.body)
         }
