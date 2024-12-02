@@ -193,7 +193,9 @@ private fun ListBottomSheet(
                 headlineContent = {
                     Text(text = diary.title)
                 },
-                modifier = Modifier.clickable { onDiaryClick(diary) },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable { onDiaryClick(diary) },
                 overlineContent = {
                     Text(text = diary.sortKey.value.format(dateTimeFormatter))
                 },
