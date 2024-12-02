@@ -26,6 +26,7 @@ internal fun SettingOption(
     text: String,
     helpText: String? = null,
     switchOption: Boolean = false,
+    checked: Boolean = false,
     onClick: () -> Unit = {},
     modifier: Modifier = Modifier,
 ) {
@@ -59,8 +60,8 @@ internal fun SettingOption(
         }
         if (switchOption) {
             Switch(
-                checked = false,
-                onCheckedChange = { /* TODO */ },
+                checked = checked,
+                onCheckedChange = { onClick() },
             )
         }
     }
