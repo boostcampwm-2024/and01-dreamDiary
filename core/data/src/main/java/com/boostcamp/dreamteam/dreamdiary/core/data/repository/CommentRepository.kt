@@ -85,10 +85,12 @@ class CommentRepository @Inject constructor(
         title: String,
         content: String,
     ) {
-        val userSnapshot = firebaseFirestore.collection("users").document(uid).get().await()
+        Timber.d("uid $uid")
+        Timber.d("uid $title")
 
+        val userSnapshot = firebaseFirestore.collection("users").document(uid).get().await()
         val data = userSnapshot.data ?: throw Exception("User not found")
-        val fcmToken = data["fcmToken"]
+        val fcmToken = data["fcmToken"] ?: throw Exception("FCM token not found")
         val response = firebaseFunctions.getHttpsCallable("sendNotification")
             .call(mapOf("token" to fcmToken, "title" to title, "body" to "새로운 댓글이 달렸어요: $content"))
             .await()
