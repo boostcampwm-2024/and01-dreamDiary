@@ -10,13 +10,16 @@ import com.boostcamp.dreamteam.dreamdiary.core.model.Author
 import com.boostcamp.dreamteam.dreamdiary.core.model.Comment
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.functions.FirebaseFunctions
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.tasks.await
+import timber.log.Timber
 import javax.inject.Inject
 
 class CommentRepository @Inject constructor(
     private val firebaseFirestore: FirebaseFirestore,
+    private val firebaseFunctions: FirebaseFunctions,
 ) {
     suspend fun saveComment(
         postId: String,
@@ -74,5 +77,23 @@ class CommentRepository @Inject constructor(
                 )
             }
         }
+    }
+
+    // community post에서 uid 값을 가져온 뒤 uid에 해당하는 user 정보를 가져오기
+    suspend fun sendCommentNotification(
+        uid: String,
+        title: String,
+        content: String,
+    ) {
+        val userSnapshot = firebaseFirestore.collection("users").document(uid).get().await()
+
+        val data = userSnapshot.data ?: throw Exception("User not found")
+        val fcmToken = data["fcmToken"]
+        val response = firebaseFunctions.getHttpsCallable("sendNotification")
+            .call(mapOf("token" to fcmToken, "title" to title, "body" to "새로운 댓글이 달렸어요: $content"))
+            .await()
+            .data
+
+        Timber.d("Notification response: $response")
     }
 }

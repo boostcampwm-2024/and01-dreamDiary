@@ -11,6 +11,7 @@ import com.boostcamp.dreamteam.dreamdiary.community.model.toUIState
 import com.boostcamp.dreamteam.dreamdiary.core.domain.usecase.community.AddCommentUseCase
 import com.boostcamp.dreamteam.dreamdiary.core.domain.usecase.community.GetCommentUseCase
 import com.boostcamp.dreamteam.dreamdiary.core.domain.usecase.community.GetCommunityPostUseCase
+import com.boostcamp.dreamteam.dreamdiary.core.domain.usecase.community.SendCommentNotification
 import com.boostcamp.dreamteam.dreamdiary.core.domain.usecase.community.TogglePostLikeUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -32,6 +33,7 @@ class CommunityDetailViewModel @Inject constructor(
     private val getCommentsUseCase: GetCommentUseCase,
     private val addCommentUseCase: AddCommentUseCase,
     private val togglePostLikeUseCase: TogglePostLikeUseCase,
+    private val sendCommentNotification: SendCommentNotification,
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(CommunityDetailUiState())
     val uiState = _uiState.asStateFlow()
@@ -100,6 +102,14 @@ class CommunityDetailViewModel @Inject constructor(
                 try {
                     addCommentUseCase(postId, commentContent)
                     changeCommentContent("")
+                    // 알림 보내기
+                    val uid = _uiState.value.post.author.uid
+                    val title = _uiState.value.post.title
+                    sendCommentNotification(
+                        uid = uid,
+                        title = title,
+                        content = commentContent,
+                    )
                     _event.trySend(CommunityDetailEvent.CommentAdd.Success)
                 } catch (e: Exception) {
                     Timber.e(e)
