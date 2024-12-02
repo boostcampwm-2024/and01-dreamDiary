@@ -146,8 +146,8 @@ private fun SettingScreenBody(
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .padding(8.dp)
-            .verticalScroll(rememberScrollState),
+            .verticalScroll(rememberScrollState)
+            .padding(8.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         SettingCategory(text = stringResource(R.string.setting_alarm_setting))
