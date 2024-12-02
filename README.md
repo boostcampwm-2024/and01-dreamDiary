@@ -81,7 +81,7 @@
 - 꿈 기록 알림: 사용자가 수면 후 핸드폰을 오랜만에 사용할 경우 꿈 기록 알림을 발송하여 꿈을 놓치지 않고 기록할 수 있게 도와줍니다.
 - 댓글 알림: 공유한 꿈에 댓글(해몽)이 달리면 푸시 알림을 통해 빠르게 확인할 수 있습니다.
 
-<img src="https://github.com/user-attachments/assets/237a9640-9e08-4d52-8eee-f714659f9991" height="400px"/>
+<img src="https://github.com/user-attachments/assets/2712a0ec-2d85-43f0-90e1-3826ae71a2be" height="400px"/>
 <img src="https://github.com/user-attachments/assets/b476815e-b3c2-4366-83d6-3cac2e4a1973" height="400px"/>
 
 **📲 위젯**
