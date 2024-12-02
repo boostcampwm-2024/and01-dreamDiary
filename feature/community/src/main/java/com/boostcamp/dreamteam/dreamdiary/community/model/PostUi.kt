@@ -18,6 +18,7 @@ data class PostUi(
     val commentCount: Long,
     val isLiked: Boolean,
     val author: UserUi,
+    val likeCount: Long,
 )
 
 fun CommunityPostList.toPostUi(): PostUi {
@@ -29,6 +30,7 @@ fun CommunityPostList.toPostUi(): PostUi {
         sharedAt = this.createdAt.toDisplayableDateTime(),
         commentCount = this.commentCount,
         isLiked = this.isLiked,
+        likeCount = this.likeCount,
         author = UserUi(
             uid = this.uid,
             username = this.author,
@@ -46,6 +48,7 @@ internal val postUiPreview1 = PostUi(
     isLiked = false,
     images = emptyList(),
     author = userUiPreview1,
+    likeCount = 10,
 )
 
 internal val postUiPreview2 = PostUi(
@@ -57,6 +60,7 @@ internal val postUiPreview2 = PostUi(
     isLiked = true,
     images = listOf("https://picsum.photos/200/300"),
     author = userUiPreview2,
+    likeCount = 0,
 )
 
 private val postUiPreview3 = PostUi(
@@ -68,6 +72,7 @@ private val postUiPreview3 = PostUi(
     isLiked = false,
     images = listOf("https://picsum.photos/200/300", "https://picsum.photos/300/400"),
     author = userUiPreview3,
+    likeCount = 0,
 )
 
 internal val diariesUiPreview = listOf(

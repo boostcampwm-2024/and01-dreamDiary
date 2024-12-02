@@ -6,6 +6,6 @@ data class Comment(
     val author: String,
     val profileImageUrl: String,
     val content: String,
-    val likeCount: Int,
+    val likeCount: Long,
     val createdAt: Long,
 )
