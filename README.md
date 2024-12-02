@@ -81,6 +81,10 @@
 - 꿈 기록 알림: 사용자가 수면 후 핸드폰을 오랜만에 사용할 경우 꿈 기록 알림을 발송하여 꿈을 놓치지 않고 기록할 수 있게 도와줍니다.
 - 댓글 알림: 공유한 꿈에 댓글(해몽)이 달리면 푸시 알림을 통해 빠르게 확인할 수 있습니다.
 
+<img src="https://github.com/user-attachments/assets/4cc135fd-e993-45ea-af51-a096d0dda742" height="100px"/>
+<img src="https://https://github.com/user-attachments/assets/8463dcd5-f445-4a33-a344-de71f6f618fb" height="100px"/>
+
+
 **📲 위젯**
 
 - 꿈 기록 상태 확인: 위젯을 통해 꿈 일기를 기록했는지 여부를 확인할 수 있습니다.
@@ -94,8 +98,9 @@
 **🌙 다크모드**
 
 - 다크 모드 선택으로 사용자 맞춤 환경을 제공합니다.
-  <img src="https://github.com/user-attachments/assets/89e3022a-d93a-4386-b882-6698a591a95e" height="400px"/>
-  <img src="https://github.com/user-attachments/assets/76937280-0018-4fc9-bce0-4fbe4000ebbf" height="400px"/>
+
+<img src="https://github.com/user-attachments/assets/89e3022a-d93a-4386-b882-6698a591a95e" height="400px"/>
+<img src="https://github.com/user-attachments/assets/76937280-0018-4fc9-bce0-4fbe4000ebbf" height="400px"/>
 
 </br>
 
