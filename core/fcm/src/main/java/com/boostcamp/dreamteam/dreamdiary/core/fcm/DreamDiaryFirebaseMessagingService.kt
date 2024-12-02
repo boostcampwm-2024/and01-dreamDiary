@@ -17,6 +17,11 @@ class DreamDiaryFirebaseMessagingService : FirebaseMessagingService() {
     @Inject
     lateinit var authRepository: AuthRepository
 
+    override fun onCreate() {
+        super.onCreate()
+        Timber.d("onCreate")
+    }
+
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
         super.onMessageReceived(remoteMessage)
         Timber.d("onMessageReceived: ${remoteMessage.from}")
