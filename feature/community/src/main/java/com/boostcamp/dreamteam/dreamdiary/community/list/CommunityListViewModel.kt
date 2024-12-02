@@ -8,6 +8,7 @@ import com.boostcamp.dreamteam.dreamdiary.community.model.PostUi
 import com.boostcamp.dreamteam.dreamdiary.community.model.toPostUi
 import com.boostcamp.dreamteam.dreamdiary.core.data.repository.AuthRepository
 import com.boostcamp.dreamteam.dreamdiary.core.domain.usecase.community.GetCommunityPostsUseCase
+import com.boostcamp.dreamteam.dreamdiary.core.domain.usecase.community.GetPostIsLikeUseCase
 import com.boostcamp.dreamteam.dreamdiary.core.domain.usecase.community.TogglePostLikeUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -26,12 +27,14 @@ import javax.inject.Inject
 class CommunityListViewModel @Inject constructor(
     private val getCommunityPostsUseCase: GetCommunityPostsUseCase,
     private val togglePostLikeUseCase: TogglePostLikeUseCase,
+    private val getPostIsLikeUseCase: GetPostIsLikeUseCase,
     private val authRepository: AuthRepository,
 ) : ViewModel() {
     private val _event = Channel<CommunityListEvent>(64)
     val event = _event.receiveAsFlow()
 
-    private val toggledLikes = MutableStateFlow<Set<String>>(emptySet())
+    private val toggledLikes = MutableStateFlow<Map<String, Boolean>>(emptyMap())
+
     private val toggleLike = Channel<String>()
     private val toggleLikeFlow = toggleLike.consumeAsFlow()
         .onEach {
@@ -43,15 +46,20 @@ class CommunityListViewModel @Inject constructor(
             pagingData.map { it.toPostUi() }
         }
         .cachedIn(viewModelScope)
-        .combine(toggledLikes) { pagingData, toggledLikesSet ->
+        .combine(toggledLikes) { pagingData, toggledLikesMap ->
             pagingData.map { postUi ->
-                val newIsLiked = !postUi.isLiked
-                val newLikeCount = if (newIsLiked) postUi.likeCount + 1 else postUi.likeCount - 1
-                if (toggledLikesSet.contains(postUi.id)) {
-                    postUi.copy(
-                        isLiked = newIsLiked,
-                        likeCount = newLikeCount,
-                    )
+                val toggledIsLiked = toggledLikesMap[postUi.id]
+                if (toggledIsLiked != null) {
+                    if (toggledIsLiked != postUi.isLiked) {
+                        val likeCountDifference = if (toggledIsLiked) 1 else -1
+                        val newLikeCount = postUi.likeCount + likeCountDifference
+                        postUi.copy(
+                            isLiked = toggledIsLiked,
+                            likeCount = newLikeCount,
+                        )
+                    } else {
+                        postUi
+                    }
                 } else {
                     postUi
                 }
@@ -72,21 +80,24 @@ class CommunityListViewModel @Inject constructor(
 
     // 내부 함수: 실제로 좋아요 토글 처리
     private suspend fun togglePostLikeInternal(postId: String) {
-        val copiedToggledLikes = toggledLikes.value.toSet()
+        val previousToggledLikes = toggledLikes.value.toMap()
         try {
-            toggledLikes.update { currentSet ->
-                if (currentSet.contains(postId)) {
-                    currentSet - postId
-                } else {
-                    currentSet + postId
-                }
+            // 현재 상태 가져오기
+            val currentIsLiked = toggledLikes.value[postId] ?: getCurrentIsLiked(postId)
+            val newIsLiked = !currentIsLiked
+            toggledLikes.update { currentMap ->
+                currentMap + (postId to newIsLiked)
             }
             togglePostLikeUseCase(postId)
         } catch (e: Exception) {
-            // 실패하면 복원하기
-            toggledLikes.value = copiedToggledLikes
+            // 실패 시 이전 상태로 복원
+            toggledLikes.value = previousToggledLikes
             _event.trySend(CommunityListEvent.LikePost.Failure)
             Timber.e(e, "Failed to toggle like for post $postId")
         }
+    }
+
+    private suspend fun getCurrentIsLiked(postId: String): Boolean {
+        return getPostIsLikeUseCase(postId)
     }
 }
