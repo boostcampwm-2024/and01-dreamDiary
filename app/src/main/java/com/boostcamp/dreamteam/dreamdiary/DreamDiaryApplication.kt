@@ -2,7 +2,6 @@ package com.boostcamp.dreamteam.dreamdiary
 
 import android.app.Application
 import com.boostcamp.dreamteam.dreamdiary.core.synchronization.SynchronizationWorker
-import com.google.firebase.FirebaseApp
 import dagger.hilt.android.HiltAndroidApp
 import timber.log.Timber
 
@@ -10,7 +9,6 @@ import timber.log.Timber
 class DreamDiaryApplication : Application() {
     override fun onCreate() {
         super.onCreate()
-        FirebaseApp.initializeApp(this)
         initTimber()
         SynchronizationWorker.initWorker(this)
     }

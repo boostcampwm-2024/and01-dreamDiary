@@ -5,37 +5,38 @@ import android.app.NotificationManager
 import android.content.Context
 import android.os.Build
 import androidx.core.app.NotificationCompat
+import com.boostcamp.dreamteam.dreamdiary.core.data.repository.AuthRepository
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
+import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 import javax.inject.Inject
 
-class DreamDiaryFirebaseMessagingService @Inject constructor(
-) : FirebaseMessagingService() {
+@AndroidEntryPoint
+class DreamDiaryFirebaseMessagingService : FirebaseMessagingService() {
+    @Inject
+    lateinit var authRepository: AuthRepository
 
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
         super.onMessageReceived(remoteMessage)
         Timber.d("onMessageReceived: ${remoteMessage.from}")
         if (remoteMessage.data.isNotEmpty()) {
             Timber.d("Message data payload: ${remoteMessage.data}")
-
-            if (true) {
-                // For long-running tasks (10 seconds or more) use WorkManager.
-            } else {
-                // Handle message within 10 seconds
-            }
         }
         remoteMessage.notification?.let {
             sendNotification(it.title, it.body)
         }
     }
 
-    // token 받을시 update 로직 필요
     override fun onNewToken(token: String) {
         super.onNewToken(token)
+        Timber.d("onNewToken: $token")
     }
 
-    private fun sendNotification(title: String?, body: String?) {
+    private fun sendNotification(
+        title: String?,
+        body: String?,
+    ) {
         val channelId = "default_channel_id"
         val notificationManager =
             getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
@@ -44,7 +45,7 @@ class DreamDiaryFirebaseMessagingService @Inject constructor(
             val channel = NotificationChannel(
                 channelId,
                 "Default Channel",
-                NotificationManager.IMPORTANCE_DEFAULT
+                NotificationManager.IMPORTANCE_DEFAULT,
             )
             notificationManager.createNotificationChannel(channel)
         }

@@ -5,6 +5,7 @@ import com.boostcamp.dreamteam.dreamdiary.core.data.repository.DreamDiaryReposit
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.functions.FirebaseFunctions
+import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.storage.FirebaseStorage
 import dagger.Binds
 import dagger.Module
@@ -50,6 +51,12 @@ internal abstract class RepositoryModule {
             val auth = FirebaseAuth.getInstance()
 
             return auth
+        }
+
+        @Provides
+        @Singleton
+        fun provideFirebaseMessaging(): FirebaseMessaging {
+            return FirebaseMessaging.getInstance()
         }
     }
 }
