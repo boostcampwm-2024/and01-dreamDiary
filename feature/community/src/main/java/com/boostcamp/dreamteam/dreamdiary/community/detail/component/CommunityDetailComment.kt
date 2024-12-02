@@ -42,7 +42,7 @@ internal fun CommunityDetailComment(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 8.dp)
+                    .padding(horizontal = 16.dp, vertical = 8.dp),
             ) {
                 DdAsyncImage(
                     model = comment.author.profileImageUrl,
