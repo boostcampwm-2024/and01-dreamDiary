@@ -5,6 +5,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navOptions
 import androidx.navigation.navigation
+import com.boostcamp.dreamteam.dreamdiary.setting.theme.SettingThemeScreen
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -20,6 +21,9 @@ data object SettingGraph {
 
     @Serializable
     data class SettingDetailRoute(val id: Long)
+
+    @Serializable
+    data object SettingThemeRoute
 }
 
 fun NavGraphBuilder.settingGraph(
@@ -51,6 +55,14 @@ fun NavGraphBuilder.settingGraph(
                         },
                     )
                 },
+                onNavigateToSettingTheme = {
+                    navController.navigate(
+                        SettingGraph.SettingThemeRoute,
+                        navOptions = navOptions {
+                            launchSingleTop = true
+                        },
+                    )
+                },
                 onGoToSignInClick = onGoToSignInClick,
             )
         }
@@ -61,6 +73,11 @@ fun NavGraphBuilder.settingGraph(
         }
         composable<SettingGraph.SettingBackupRoute> {
             SettingBackupScreen(
+                onBackClick = navController::navigateUp,
+            )
+        }
+        composable<SettingGraph.SettingThemeRoute> {
+            SettingThemeScreen(
                 onBackClick = navController::navigateUp,
             )
         }
