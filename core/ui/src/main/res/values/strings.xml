@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="icon_text_my_dream">나의 꿈</string>
+    <string name="title_text_my_dream">나의 꿈</string>
+    <string name="icon_text_community">커뮤니티</string>
+    <string name="title_text_community">커뮤니티</string>
+    <string name="icon_text_settings">설정</string>
+    <string name="title_text_settings">설정</string>
+    <string name="dialog_signin_title">로그인 해주세요.</string>
+    <string name="dialog_signin_text">이 기능을 사용하려면 로그인이 필요해요.\n로그인 할까요?</string>
+    <string name="dialog_signin_confirm">확인</string>
+    <string name="dialog_signin_cancel">취소</string>
+</resources>

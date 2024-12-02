@@ -1,0 +1,4 @@
+/build
+
+# Ignore Google Services configuration file
+google-services.json

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="setting_title">설정</string>
+    <string name="setting_alarm_setting">알림 설정</string>
+    <string name="setting_schedule_alarm">일정 알림</string>
+    <string name="setting_comment_alarm">댓글 알림</string>
+    <string name="setting_data_restore">데이터 백업 및 복원</string>
+    <string name="setting_reset">초기화</string>
+    <string name="setting_block">차단한 사용자</string>
+    <string name="setting_subscribe">구독중</string>
+    <string name="setting_communication">커뮤니케이션</string>
+    <string name="setting_picture">꿈 사진으로 보기</string>
+    <string name="setting_darkmode">테마 설정</string>
+    <string name="setting_information">정보</string>
+    <string name="setting_lock_setting">잠금설정</string>
+    <string name="setting_check_account">로그인된 SNS 계정 확인</string>
+    <string name="setting_logout">로그아웃</string>
+    <string name="setting_withdraw">탈퇴</string>
+    <string name="setting_login_go">로그인 하러가기</string>
+    <string name="setting_notification_setting">알림 권한</string>
+    <string name="setting_notification_diary_on">일기 알림 기능 활성화</string>
+    <string name="setting_notification_diary_off">일기 알림 기능 비활성화</string>
+    <string name="setting_backup_title">데이터 백업 및 복원</string>
+    <string name="setting_back">뒤로가기</string>
+    <string name="setting_backup_data_backup">데이터 백업</string>
+    <string name="setting_backup_now_backup">지금 내보내기</string>
+    <string name="setting_backup_realtime_sync">실시간 동기화</string>
+    <string name="setting_backup_info">백업 정보</string>
+    <string name="setting_backup_alarm">백업 알림</string>
+    <string name="setting_backup_now_get">지금 가져오기</string>
+    <string name="setting_backup_reset">초기화</string>
+    <string name="setting_backup_restore">복원</string>
+    <string name="setting_confirm">확인</string>
+    <string name="setting_notification_authority">알림 권한</string>
+    <string name="setting_notification_wakeup">기상 알림</string>
+    <string name="setting_theme_system">시스템</string>
+    <string name="setting_theme_light">라이트</string>
+    <string name="setting_theme_dark">다크</string>
+    <string name="setting_theme_title">테마 설정</string>
+</resources>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="community_title">다른 사람 글</string>
+    <string name="community_list_card_create_date">공유 날짜</string>
+    <string name="community_list_card_create_at">공유 시각</string>
+    <string name="community_list_diary_card_like">좋아요</string>
+    <string name="community_list_diary_card_comment">댓글</string>
+    <string name="community_list_fab_add_diary_description">새로운 일기 공유</string>
+    <string name="community_list_not_signin">로그인을 하셔야 사용 가능한 기능입니다.</string>
+    <string name="community_list_go_to_signin">로그인 하러 가기</string>
+    <string name="community_write_event_add_failure">공유 실패</string>
+    <string name="community_write_editor_body_placeholder">내용을 입력하세요.</string>
+    <string name="community_write_editor_image_delete">이미지 삭제</string>
+    <string name="community_write_editor_image_description">본문 이미지</string>
+    <string name="community_write_editor_image_error">이미지 로드 실패</string>
+    <string name="community_write_editor_title_placeholder">제목을 입력하세요.</string>
+    <string name="community_write_title">공유 일기 작성</string>
+    <string name="community_write_toppappbar_action_save">공유하기</string>
+    <string name="community_write_toppappbar_navigate_back">뒤로 가기</string>
+    <string name="community_write_editor_bottombar_image_add">이미지 추가하기</string>
+    <string name="community_detail_toppappbar_navigate_back">뒤로 가기</string>
+    <string name="community_detail_bottombar_input_comment_hint">댓글을 남겨보세요 :)</string>
+    <string name="community_detail_bottombar_input_comment_icon">새 댓글 작성</string>
+    <string name="community_detail_bottombar_input_comment_submit">댓글 등록</string>
+    <string name="community_detail_comment_like">좋아요</string>
+    <string name="community_detail_comment_dislike">좋아요 취소</string>
+    <string name="community_detail_post_like">좋아요</string>
+    <string name="community_detail_post_dislike">좋아요 취소</string>
+</resources>

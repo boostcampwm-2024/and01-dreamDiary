@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="signIn_dream_diary">Dream Diary</string>
+    <string name="signIn_github_icon">깃허브 아이콘</string>
+    <string name="signIn_github_login">깃허브 로그인</string>
+    <string name="signIn_google_icon">구글 아이콘</string>
+    <string name="signIn_google_login">구글 로그인</string>
+    <string name="signIn_now_pass">비회원으로 계속하기</string>
+    <string name="signIn_fail">로그인을 실패하셨습니다.</string>
+    <string name="signIn_google_success">구글 로그인 성공</string>
+    <string name="signIn_github_success">깃허브 로그인 성공</string>
+    <string name="signIn_google_fail">구글 로그인 실패</string>
+    <string name="signIn_github_fail">깃허브 로그인 실패</string>
+    <string name="signIn_unkown_error">알수 없는 에러</string>
+    <string name="singIn_dream_diary_logo">dream diary 로고</string>
+</resources>
