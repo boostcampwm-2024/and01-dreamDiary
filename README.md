@@ -48,16 +48,17 @@
   - 수면 시간, 작성 시간, 수정 시간 기준으로 꿈을 정렬할 수 있습니다.
 
 <img src="https://github.com/user-attachments/assets/3c295ef2-37fe-49a7-87fe-668030916788" height="400px">
-<img src="https://github.com/user-attachments/assets/038b70b2-c0c8-4209-9965-fbf9e9be6866" height="400px">
+<img src="https://github.com/user-attachments/assets/2ed756ab-d18e-45e0-bc72-ff34eb3e1466" height="400px">
+<img src="https://github.com/user-attachments/assets/5fd4652b-784a-4952-be74-ea2b65156a85" height="400px">
+
 
 
 **📅 달력으로 보기**
 
 - 작성 날짜 확인: 달력 형태로 되어있어 꿈 일기를 확인할 수 있어 특정 날의 꿈을 쉽게 찾을 수 있습니다.
 
-<img src="https://github.com/user-attachments/assets/170a10a6-1035-4949-a2e1-6d76b0ea1956" height="400px">
-<img src="https://github.com/user-attachments/assets/be025163-c760-4706-9730-3279f17ae801" height="400px">
-
+<img src="https://github.com/user-attachments/assets/adf4548d-3f00-49b7-8c1c-3c75a8dbc6fd" height="400px">
+<img src="https://github.com/user-attachments/assets/1b0fa9f0-0eb4-49d1-9d18-d168e668f72a" height="400px">
 
 
 **🤝 꿈 공유 및 해몽하기**
@@ -65,11 +66,19 @@
 - 공유 기능: 작성한 꿈 일기를 선택적으로 다른 사용자와 공유할 수 있습니다.
 - 커뮤니티 해몽: 공유된 꿈에 대해 다른 사용자들로 부터 해석과 의견을 댓글로 받을 수 있습니다.
 
+<img src="https://github.com/user-attachments/assets/daa84dda-02ff-44d4-96cb-6492944691d4" height="400px">
+<img src="https://github.com/user-attachments/assets/5ba8ec69-8ea5-43b4-84a8-921e3f2372a5" height="400px">
+<img src="https://github.com/user-attachments/assets/4460b4b6-2051-4bab-9f47-6a8ace8dc708" height="400px">
+
+
 **☁️ 동기화**
 
 - 클라우드 저장: 로그인한 사용자는 꿈 일기 내용을 클라우드에 동기화하여 데이터 유실 걱정이 없습니다.
 - 다중 기기 지원: 백업을 하였으면 다른 기기에 접속하더라도 기존의 꿈 일기 내용을 확인할 수 있습니다.
 - 충돌 해결: 여러 기기에서 같은 꿈 일기를 수정하더라도 충돌을 해결하는 기능을 제공합니다.
+
+<img src="https://github.com/user-attachments/assets/c9f19423-f786-4d18-9180-9412fa0bb03a" height="400px">
+
 
 **🔔 알림 기능**
 
@@ -90,6 +99,11 @@
 **🌙 다크모드**
 
 - 다크 모드 선택으로 사용자 맞춤 환경을 제공합니다.
+<img src="https://github.com/user-attachments/assets/89e3022a-d93a-4386-b882-6698a591a95e" height="400px"/>
+<img src="https://github.com/user-attachments/assets/76937280-0018-4fc9-bce0-4fbe4000ebbf" height="400px"/>
+
+</br>
+
 
 ## 🪛주요 기술
 
@@ -108,4 +122,4 @@
 </br>
 
 
-### 📚 [WIKI에서 저희의 개발 이야기를 확인하세요](https://github.com/boostcampwm-2024/And01-DreamDiary/wiki)
+### 📚 [WIKI에서 저희의 개발 이야기를 확인하세요.](https://github.com/boostcampwm-2024/And01-DreamDiary/wiki)
