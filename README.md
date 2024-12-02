@@ -94,8 +94,9 @@
 **🌙 다크모드**
 
 - 다크 모드 선택으로 사용자 맞춤 환경을 제공합니다.
-  <img src="https://github.com/user-attachments/assets/89e3022a-d93a-4386-b882-6698a591a95e" height="400px"/>
-  <img src="https://github.com/user-attachments/assets/76937280-0018-4fc9-bce0-4fbe4000ebbf" height="400px"/>
+
+<img src="https://github.com/user-attachments/assets/89e3022a-d93a-4386-b882-6698a591a95e" height="400px"/>
+<img src="https://github.com/user-attachments/assets/76937280-0018-4fc9-bce0-4fbe4000ebbf" height="400px"/>
 
 </br>
 
