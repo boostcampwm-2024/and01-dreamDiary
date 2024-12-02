@@ -107,13 +107,23 @@ fun DiaryWriteScreen(
                                 }
 
                                 LabelAddFailureReason.UNKNOWN_ERROR -> {
-                                    Toast.makeText(context, context.getString(R.string.write_unknown_error), Toast.LENGTH_SHORT).show()
+                                    Toast
+                                        .makeText(
+                                            context,
+                                            context.getString(R.string.write_unknown_error),
+                                            Toast.LENGTH_SHORT,
+                                        ).show()
                                 }
                             }
                         }
 
                         is DiaryWriteEvent.Label.DeleteFailure -> {
-                            Toast.makeText(context, context.getString(R.string.diary_write_label_edit_error_unknown), Toast.LENGTH_SHORT).show()
+                            Toast
+                                .makeText(
+                                    context,
+                                    context.getString(R.string.diary_write_label_edit_error_unknown),
+                                    Toast.LENGTH_SHORT,
+                                ).show()
                         }
                     }
                 }
