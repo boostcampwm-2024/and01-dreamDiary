@@ -35,6 +35,7 @@ glance = "1.1.1"
 workRuntimeKtx = "2.10.0"
 firebaseMessagingKtx = "24.1.0"
 androidxCoreSplashscreen = "1.0.1"
+firebaseAuthKtx = "23.1.0"
 
 [libraries]
 androidx-browser = { group = "androidx.browser", name = "browser", version.ref = "browser" }
@@ -96,6 +97,7 @@ androidx-glance-material3 = { group = "androidx.glance", name = "glance-material
 android-gradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "agp" }
 kotlin-gradlePlugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
 firebase-messaging-ktx = { group = "com.google.firebase", name = "firebase-messaging-ktx", version.ref = "firebaseMessagingKtx" }
+google-firebase-auth-ktx = { group = "com.google.firebase", name = "firebase-auth-ktx", version.ref = "firebaseAuthKtx" }
 
 [bundles]
 coil = ["coil-compose", "coil-network-okhttp"]

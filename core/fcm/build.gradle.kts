@@ -17,17 +17,24 @@ android {
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
+                "proguard-rules.pro",
             )
         }
     }
 }
 
 dependencies {
+    implementation(projects.core.data)
+
     // Hilt
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)
 
+    implementation(platform(libs.firebase.bom))
+
     // firebase messaging
     implementation(libs.firebase.messaging.ktx)
+
+    // firestore database
+    implementation(libs.firebase.firestore)
 }
