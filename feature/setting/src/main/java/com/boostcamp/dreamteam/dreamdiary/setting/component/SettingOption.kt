@@ -32,8 +32,8 @@ internal fun SettingOption(
 ) {
     Row(
         modifier = modifier
-            .padding(8.dp)
-            .clickable(onClick = onClick),
+            .clickable(onClick = onClick)
+            .padding(8.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Icon(

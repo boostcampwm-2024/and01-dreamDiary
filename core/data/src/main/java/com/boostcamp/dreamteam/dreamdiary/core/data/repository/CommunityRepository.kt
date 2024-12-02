@@ -145,7 +145,7 @@ class CommunityRepository @Inject constructor(
         }
     }
 
-    private suspend fun checkPostLike(
+    suspend fun checkPostLike(
         postId: String,
         userId: String,
     ): Boolean {
