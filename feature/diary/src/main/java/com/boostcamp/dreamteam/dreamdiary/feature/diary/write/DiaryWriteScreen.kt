@@ -113,7 +113,7 @@ fun DiaryWriteScreen(
                         }
 
                         is DiaryWriteEvent.Label.DeleteFailure -> {
-                            Toast.makeText(context, "아직 삭제 기능 없지롱~", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(context, context.getString(R.string.diary_write_label_edit_error_unknown), Toast.LENGTH_SHORT).show()
                         }
                     }
                 }
