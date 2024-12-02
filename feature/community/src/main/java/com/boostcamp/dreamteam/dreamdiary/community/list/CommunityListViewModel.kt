@@ -42,29 +42,24 @@ class CommunityListViewModel @Inject constructor(
         }
 
     val posts = getCommunityPostsUseCase()
-        .map { pagingData ->
-            pagingData.map { it.toPostUi() }
-        }
+        .map { pagingData -> pagingData.map { it.toPostUi() } }
         .cachedIn(viewModelScope)
         .combine(toggledLikes) { pagingData, toggledLikesMap ->
             pagingData.map { postUi ->
-                val toggledIsLiked = toggledLikesMap[postUi.id]
-                if (toggledIsLiked != null) {
-                    if (toggledIsLiked != postUi.isLiked) {
-                        val likeCountDifference = if (toggledIsLiked) 1 else -1
-                        val newLikeCount = postUi.likeCount + likeCountDifference
-                        postUi.copy(
-                            isLiked = toggledIsLiked,
-                            likeCount = newLikeCount,
-                        )
-                    } else {
-                        postUi
-                    }
-                } else {
-                    postUi
-                }
+                postUi.applyToggleLike(toggledLikesMap[postUi.id])
             }
         }
+
+    private fun PostUi.applyToggleLike(toggleIsLike: Boolean?): PostUi {
+        return toggleIsLike?.let { toggled ->
+            if (toggled != isLiked) {
+                val adjustLikeCount = likeCount + if (toggled) 1 else -1
+                copy(isLiked = toggled, likeCount = adjustLikeCount)
+            } else {
+                this
+            }
+        } ?: this
+    }
 
     init {
         toggleLikeFlow.launchIn(viewModelScope)
