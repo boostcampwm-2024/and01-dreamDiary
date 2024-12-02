@@ -59,7 +59,7 @@ internal fun CommunityDetailComment(
             overlineContent = {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(4.dp)
+                    horizontalArrangement = Arrangement.spacedBy(4.dp),
                 ) {
                     DdAsyncImage(
                         model = comment.author.profileImageUrl,
@@ -73,7 +73,7 @@ internal fun CommunityDetailComment(
                         text = comment.author.username,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         style = MaterialTheme.typography.bodyMedium,
-                        maxLines = 1
+                        maxLines = 1,
                     )
                     Spacer(modifier = Modifier.weight(1f))
                     val context = LocalContext.current
@@ -84,7 +84,6 @@ internal fun CommunityDetailComment(
                             imageVector = Icons.Default.MoreVert,
                             contentDescription = stringResource(R.string.community_detail_more),
                         )
-
                     }
                 }
             },
