@@ -74,12 +74,10 @@ fun DiaryWriteScreen(
             when (writeEvent) {
                 is DiaryWriteEvent.DiaryAddSuccess -> {
                     updateWidget(context)
-                    Toast.makeText(context, "일기 작성 성공", Toast.LENGTH_SHORT).show()
                     onWriteSuccess(writeEvent.diaryId)
                 }
 
                 is DiaryWriteEvent.DiaryUpdateSuccess -> {
-                    Toast.makeText(context, "일기 수정 성공", Toast.LENGTH_SHORT).show()
                     onWriteSuccess(writeEvent.diaryId)
                 }
 
