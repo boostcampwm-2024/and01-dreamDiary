@@ -181,7 +181,13 @@ private fun DiaryWriteScreenContent(
         contract = ActivityResultContracts.PickVisualMedia(),
         onResult = { uri ->
             uri?.let {
-                context.contentResolver.takePersistableUriPermission(uri, Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                try {
+                    context.contentResolver.takePersistableUriPermission(
+                        uri,
+                        Intent.FLAG_GRANT_READ_URI_PERMISSION,
+                    )
+                } catch (ignored: SecurityException) {
+                }
                 coroutineScope.launch(Dispatchers.IO) {
                     val fileName = UUID.randomUUID().toString()
                     val inputStream = context.contentResolver.openInputStream(uri)
