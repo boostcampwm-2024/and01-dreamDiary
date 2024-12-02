@@ -1,14 +1,18 @@
 package com.boostcamp.dreamteam.dreamdiary.community.model
 
 import androidx.paging.PagingData
+import com.boostcamp.dreamteam.dreamdiary.community.model.vo.DisplayableDateTime
+import com.boostcamp.dreamteam.dreamdiary.community.model.vo.toDisplayableDateTime
 import com.boostcamp.dreamteam.dreamdiary.core.model.Comment
 import kotlinx.coroutines.flow.flowOf
+import java.time.Instant
 
 data class CommentUi(
     val id: String,
     val author: UserUi,
     val content: String,
     val isLiked: Boolean,
+    val createdAt: DisplayableDateTime,
 )
 
 fun Comment.toUIState(): CommentUi =
@@ -21,13 +25,18 @@ fun Comment.toUIState(): CommentUi =
         ),
         content = this.content,
         isLiked = true,
+        createdAt = Instant.ofEpochSecond(this.createdAt).toDisplayableDateTime(),
     )
 
 internal val commentUiPreview1 = CommentUi(
     id = "1",
     author = userUiPreview1,
-    content = "댓글 내용",
+    content = """
+        댓글 내용댓글 내용댓글 내용댓글 내용댓글 내용댓글 내용댓글 내용댓글 내용댓글 내용댓글 내용댓글 내용댓글 내용댓글 내용댓글 내용댓글 내용댓글
+        내용댓글 내용댓글 내용댓글 내용댓글 내용댓글 내용댓글 내용댓글 내용댓글 내용댓글 내용댓글 내용댓글 내용댓글 내용댓글 내용댓글 내용댓글 내용댓글 내용
+    """.trimIndent(),
     isLiked = true,
+    createdAt = Instant.ofEpochSecond(1733155061).toDisplayableDateTime(),
 )
 
 internal val commentUiPreview2 = CommentUi(
@@ -35,6 +44,7 @@ internal val commentUiPreview2 = CommentUi(
     author = userUiPreview2,
     content = "댓글 내용",
     isLiked = false,
+    createdAt = Instant.ofEpochSecond(1733165061).toDisplayableDateTime(),
 )
 
 private val commentUiPreview3 = CommentUi(
@@ -42,6 +52,7 @@ private val commentUiPreview3 = CommentUi(
     author = userUiPreview3,
     content = "댓글 내용",
     isLiked = true,
+    createdAt = Instant.ofEpochSecond(1733126000).toDisplayableDateTime(),
 )
 
 internal val commentsUiPreview = listOf(
