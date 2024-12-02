@@ -22,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.boostcamp.dreamteam.dreamdiary.community.model.CommentUi
@@ -29,6 +30,7 @@ import com.boostcamp.dreamteam.dreamdiary.community.model.commentUiPreview1
 import com.boostcamp.dreamteam.dreamdiary.community.model.commentUiPreview2
 import com.boostcamp.dreamteam.dreamdiary.designsystem.component.DdAsyncImage
 import com.boostcamp.dreamteam.dreamdiary.designsystem.theme.DreamdiaryTheme
+import com.boostcamp.dreamteam.dreamdiary.ui.util.notImplementedFeature
 
 @Composable
 internal fun CommunityDetailComment(
@@ -72,8 +74,9 @@ internal fun CommunityDetailComment(
                     )
                 }
             }
+            val context = LocalContext.current
             IconButton(
-                onClick = { },
+                onClick = { notImplementedFeature(context) },
                 modifier = Modifier
                     .align(Alignment.TopEnd)
                     .scale(0.7f),
