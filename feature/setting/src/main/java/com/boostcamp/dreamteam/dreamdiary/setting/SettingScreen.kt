@@ -133,6 +133,7 @@ private fun SettingScreenBody(
 ) {
     val rememberScrollState = rememberScrollState()
     var showSNSDialog by remember { mutableStateOf(false) }
+    var signOutDialog by remember { mutableStateOf(false) }
     if (showSNSDialog) {
         AlertDialog(
             onDismissRequest = { showSNSDialog = false },
@@ -140,6 +141,21 @@ private fun SettingScreenBody(
             text = { Text("$userEmail") },
             confirmButton = {
                 TextButton(onClick = { showSNSDialog = false }) { Text("확인") }
+            },
+        )
+    }
+    if (signOutDialog) {
+        AlertDialog(
+            onDismissRequest = { signOutDialog = false },
+            text = { Text(stringResource(R.string.setting_signout_dialog)) },
+            confirmButton = {
+                TextButton(onClick = {
+                    onSignOut()
+                    signOutDialog = false
+                }) { Text("확인") }
+            },
+            dismissButton = {
+                TextButton(onClick = { signOutDialog = false }) { Text("취소") }
             },
         )
     }
@@ -213,7 +229,9 @@ private fun SettingScreenBody(
             SettingOption(
                 icon = Icons.AutoMirrored.Outlined.Logout,
                 text = stringResource(R.string.setting_logout),
-                onClick = onSignOut,
+                onClick = {
+                    signOutDialog = true
+                },
             )
         }
 

@@ -37,4 +37,5 @@
     <string name="setting_theme_light">라이트</string>
     <string name="setting_theme_dark">다크</string>
     <string name="setting_theme_title">테마 설정</string>
+    <string name="setting_signout_dialog">정말 로그아웃 하시겠습니까?</string>
 </resources>
