@@ -18,7 +18,9 @@ import com.boostcamp.dreamteam.dreamdiary.core.data.database.model.Synchronizing
 import com.boostcamp.dreamteam.dreamdiary.core.data.database.model.SynchronizingLabelEntity
 import com.boostcamp.dreamteam.dreamdiary.core.data.database.model.TextEntity
 import com.boostcamp.dreamteam.dreamdiary.core.data.database.model.synchronization.DreamDiaryOnlyVersion
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.launch
 import java.time.Instant
 import java.util.UUID
 
@@ -74,6 +76,19 @@ interface DreamDiaryDao {
         body: String,
         sleepStartAt: Instant,
         sleepEndAt: Instant,
+        updatedAt: Instant = Instant.now(),
+        currentVersion: String = UUID.randomUUID().toString(),
+    )
+
+    @Query(
+        """
+            update diary
+            set updatedAt = :updatedAt, currentVersion = :currentVersion
+            where id = :diaryId
+        """,
+    )
+    suspend fun privateUpdateDreamDiary(
+        diaryId: String,
         updatedAt: Instant = Instant.now(),
         currentVersion: String = UUID.randomUUID().toString(),
     )
@@ -140,11 +155,35 @@ interface DreamDiaryDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertLabels(labelEntities: List<LabelEntity>)
 
+    @Transaction
+    suspend fun deleteLabel(label: String) {
+        val diaryIds = selectDiaryLabelsByLabel(label)
+
+        val now = Instant.now()
+        coroutineScope {
+            diaryIds.map { diaryId ->
+                launch { privateUpdateDreamDiary(diaryId, updatedAt = now) }
+            }
+        }
+
+        deleteDiaryLabelsByLabel(label)
+        privateDeleteLabel(label)
+    }
+
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertDreamDiaryLabels(dreamDiaryEntity: List<DreamDiaryLabelEntity>)
 
     @Query("delete from diary_label where diaryId = :diaryId")
     suspend fun deleteDreamDiaryLabels(diaryId: String)
+
+    @Query("select diary_label.diaryId from diary_label where labelId = :label")
+    suspend fun selectDiaryLabelsByLabel(label: String): List<String>
+
+    @Query("delete from diary_label where labelId = :label")
+    suspend fun deleteDiaryLabelsByLabel(label: String)
+
+    @Query("delete from label where label = :label")
+    fun privateDeleteLabel(label: String)
 
     @Transaction
     suspend fun setLabelsToDreamDiary(
