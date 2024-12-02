@@ -36,14 +36,16 @@ import com.boostcamp.dreamteam.dreamdiary.setting.R
 
 @Composable
 fun SettingThemeScreen(
-    settingThemeViewModel: SettingThemeViewModel = hiltViewModel(),
     onBackClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    settingThemeViewModel: SettingThemeViewModel = hiltViewModel(),
 ) {
     val settingTheme by settingThemeViewModel.settingTheme.collectAsStateWithLifecycle()
     SettingThemeScreenContent(
         onBackClick = onBackClick,
         settingTheme = settingTheme,
         onSettingThemeChange = settingThemeViewModel::setSettingTheme,
+        modifier = modifier,
     )
 }
 
@@ -53,10 +55,10 @@ fun SettingThemeScreenContent(
     onBackClick: () -> Unit,
     settingTheme: SettingTheme,
     onSettingThemeChange: (SettingTheme) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     Scaffold(
-        modifier = Modifier
-            .fillMaxSize(),
+        modifier = modifier.fillMaxSize(),
         topBar = {
             CenterAlignedTopAppBar(
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
@@ -105,9 +107,10 @@ fun SettingThemeRadio(
     text: String,
     selected: Boolean,
     onClick: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     Row(
-        Modifier
+        modifier = modifier
             .fillMaxWidth()
             .selectable(
                 selected = selected,
