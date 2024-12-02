@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -12,6 +13,7 @@ import androidx.compose.material.icons.outlined.Favorite
 import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -57,19 +59,28 @@ internal fun CommunityDetailPostCard(
             )
         },
         tail = {
-            IconButton(onClick = onClickLikePost) {
-                if (post.isLiked) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                IconButton(
+                    onClick = onClickLikePost,
+                    modifier = Modifier.size(24.dp),
+                ) {
                     Icon(
-                        imageVector = Icons.Outlined.Favorite,
-                        contentDescription = stringResource(R.string.community_detail_post_dislike),
-                        tint = MaterialTheme.colorScheme.error,
-                    )
-                } else {
-                    Icon(
-                        imageVector = Icons.Outlined.FavoriteBorder,
-                        contentDescription = stringResource(R.string.community_detail_post_like),
+                        imageVector = if (post.isLiked) Icons.Outlined.Favorite else Icons.Outlined.FavoriteBorder,
+                        contentDescription = if (post.isLiked) {
+                            stringResource(R.string.community_detail_post_dislike)
+                        } else {
+                            stringResource(R.string.community_detail_post_like)
+                        },
+                        tint = if (post.isLiked) MaterialTheme.colorScheme.error else LocalContentColor.current,
                     )
                 }
+                Text(
+                    text = post.likeCount.toString(),
+                    modifier = Modifier.padding(start = 4.dp),
+                    style = MaterialTheme.typography.bodyLarge,
+                )
             }
         },
         shape = RoundedCornerShape(0.dp),

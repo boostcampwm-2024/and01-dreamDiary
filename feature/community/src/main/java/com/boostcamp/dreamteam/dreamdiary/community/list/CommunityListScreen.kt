@@ -147,7 +147,7 @@ private fun NotSignInCommunityContent(
                     val diary = posts[diaryIndex]
                     if (diary != null) {
                         CommunityDiaryCard(
-                            diary = diary,
+                            post = diary,
                             onPostClick = null,
                             onClickLike = null,
                             modifier = Modifier.alpha(1.0f - diaryIndex * 0.3f),
@@ -263,7 +263,7 @@ private fun CommunityListScreenContent(
                     val diary = posts[diaryIndex]
                     if (diary != null) {
                         CommunityDiaryCard(
-                            diary = diary,
+                            post = diary,
                             onPostClick = onPostClick,
                             onClickLike = { onPostLikeClick(diary) },
                             modifier = Modifier.animateItem(),

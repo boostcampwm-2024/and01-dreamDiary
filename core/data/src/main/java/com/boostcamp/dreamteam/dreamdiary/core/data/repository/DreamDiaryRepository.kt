@@ -56,6 +56,8 @@ interface DreamDiaryRepository {
 
     suspend fun addLabel(label: String)
 
+    suspend fun deleteLabel(label: String)
+
     fun getLabels(search: String): Flow<List<Label>>
 
     suspend fun addDreamDiaryLabel(

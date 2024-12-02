@@ -1,14 +1,12 @@
 package com.boostcamp.dreamteam.dreamdiary.feature.diary.component.component
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Check
 import androidx.compose.material.icons.outlined.Delete
-import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -86,26 +84,15 @@ internal fun LabelItem(
                 Text(text = label, maxLines = 1, overflow = TextOverflow.Ellipsis)
             },
             trailingContent = {
-                Row {
-                    IconButton(
-                        onClick = { isEditMode = true },
-                        content = {
-                            Icon(
-                                imageVector = Icons.Outlined.Edit,
-                                contentDescription = stringResource(R.string.label_dialog_edit),
-                            )
-                        },
-                    )
-                    IconButton(
-                        onClick = onDeleteLabel,
-                        content = {
-                            Icon(
-                                imageVector = Icons.Outlined.Delete,
-                                contentDescription = stringResource(R.string.label_dialog_delete),
-                            )
-                        },
-                    )
-                }
+                IconButton(
+                    onClick = onDeleteLabel,
+                    content = {
+                        Icon(
+                            imageVector = Icons.Outlined.Delete,
+                            contentDescription = stringResource(R.string.label_dialog_delete),
+                        )
+                    },
+                )
             },
         )
     }

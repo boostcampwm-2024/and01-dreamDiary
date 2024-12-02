@@ -6,6 +6,6 @@ data class CommentRequest(
     val uid: String,
     val profileImageUrl: String,
     val author: String,
-    val likeCount: Int,
+    val likeCount: Long,
     val createdAt: Any,
 )

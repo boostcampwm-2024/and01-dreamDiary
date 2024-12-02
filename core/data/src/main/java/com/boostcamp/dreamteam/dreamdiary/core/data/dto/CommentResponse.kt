@@ -9,7 +9,7 @@ data class CommentResponse(
     val author: String = "",
     val profileImageUrl: String = "",
     val content: String = "",
-    val likeCount: Int = 0,
+    val likeCount: Long = 0,
     val createdAt: Timestamp = Timestamp.now(),
 )
 

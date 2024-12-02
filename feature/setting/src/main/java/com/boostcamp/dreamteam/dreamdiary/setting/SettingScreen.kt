@@ -49,6 +49,7 @@ internal fun SettingScreen(
     onNavigateToCommunity: () -> Unit,
     onNavigateToSettingNotification: () -> Unit,
     onNavigateToSettingBackup: () -> Unit,
+    onNavigateToSettingTheme: () -> Unit,
     onGoToSignInClick: () -> Unit,
     modifier: Modifier = Modifier,
     settingViewModel: SettingViewModel = hiltViewModel(),
@@ -72,6 +73,7 @@ internal fun SettingScreen(
         onGoToSignInClick = onGoToSignInClick,
         onNavigateToSettingNotification = onNavigateToSettingNotification,
         onNavigateToSettingBackup = onNavigateToSettingBackup,
+        onNavigateToSettingTheme = onNavigateToSettingTheme,
         modifier = modifier,
         signInProvider = settingViewModel.getSignInProvider(),
         userEmail = email,
@@ -86,6 +88,7 @@ private fun SettingScreenContent(
     onGoToSignInClick: () -> Unit,
     onNavigateToSettingNotification: () -> Unit,
     onNavigateToSettingBackup: () -> Unit,
+    onNavigateToSettingTheme: () -> Unit,
     signInProvider: String?,
     onSignOut: () -> Unit,
     userEmail: String?,
@@ -110,6 +113,7 @@ private fun SettingScreenContent(
             onGoToSignInClick = onGoToSignInClick,
             onNavigateToSettingNotification = onNavigateToSettingNotification,
             onNavigateToSettingBackup = onNavigateToSettingBackup,
+            onNavigateToSettingTheme = onNavigateToSettingTheme,
             onSignOut = onSignOut,
             modifier = Modifier.padding(innerPadding),
         )
@@ -123,11 +127,13 @@ private fun SettingScreenBody(
     onGoToSignInClick: () -> Unit,
     onNavigateToSettingNotification: () -> Unit,
     onNavigateToSettingBackup: () -> Unit,
+    onNavigateToSettingTheme: () -> Unit,
     onSignOut: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val rememberScrollState = rememberScrollState()
     var showSNSDialog by remember { mutableStateOf(false) }
+    var signOutDialog by remember { mutableStateOf(false) }
     if (showSNSDialog) {
         AlertDialog(
             onDismissRequest = { showSNSDialog = false },
@@ -135,6 +141,21 @@ private fun SettingScreenBody(
             text = { Text("$userEmail") },
             confirmButton = {
                 TextButton(onClick = { showSNSDialog = false }) { Text("확인") }
+            },
+        )
+    }
+    if (signOutDialog) {
+        AlertDialog(
+            onDismissRequest = { signOutDialog = false },
+            text = { Text(stringResource(R.string.setting_signout_dialog)) },
+            confirmButton = {
+                TextButton(onClick = {
+                    onSignOut()
+                    signOutDialog = false
+                }) { Text("확인") }
+            },
+            dismissButton = {
+                TextButton(onClick = { signOutDialog = false }) { Text("취소") }
             },
         )
     }
@@ -180,6 +201,9 @@ private fun SettingScreenBody(
         SettingOption(
             icon = Icons.Outlined.DarkMode,
             text = stringResource(R.string.setting_darkmode),
+            onClick = {
+                onNavigateToSettingTheme()
+            },
         )
         SettingOption(
             icon = Icons.Outlined.Lock,
@@ -205,7 +229,9 @@ private fun SettingScreenBody(
             SettingOption(
                 icon = Icons.AutoMirrored.Outlined.Logout,
                 text = stringResource(R.string.setting_logout),
-                onClick = onSignOut,
+                onClick = {
+                    signOutDialog = true
+                },
             )
         }
 
@@ -237,6 +263,7 @@ private fun SettingScreenPreview() {
             onGoToSignInClick = {},
             onNavigateToSettingNotification = {},
             onNavigateToSettingBackup = {},
+            onNavigateToSettingTheme = {},
             signInProvider = "Google",
             onSignOut = {},
             userEmail = "someone@example.com",
