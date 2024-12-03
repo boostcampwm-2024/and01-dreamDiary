@@ -32,9 +32,9 @@ class MainActivity : ComponentActivity() {
 
     @SuppressLint("SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         val splashScreen = installSplashScreen()
+        super.onCreate(savedInstanceState)
 
         val uiState = mutableStateOf(MainUiState())
 
