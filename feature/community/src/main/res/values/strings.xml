@@ -28,4 +28,9 @@
     <string name="community_detail_post_like">좋아요</string>
     <string name="community_detail_post_dislike">좋아요 취소</string>
     <string name="community_detail_more">더보기</string>
+    <string name="community_detail_comments_menu">메뉴</string>
+    <string name="community_detail_comments_menu_edit">편집</string>
+    <string name="community_detail_comments_menu_edit_icon">편집 아이콘</string>
+    <string name="community_detail_comments_menu_delete">삭제</string>
+    <string name="community_detail_comments_menu_delete_icon">삭제 아이콘</string>
 </resources>

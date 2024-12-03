@@ -32,9 +32,13 @@ class AuthRepository @Inject constructor(
     private val _emailFlow = MutableSharedFlow<String?>(replay = 1)
     val emailFlow: SharedFlow<String?> = _emailFlow
 
+    private val _uIdFlow = MutableSharedFlow<String?>(replay = 1)
+    val uIdFlow: SharedFlow<String?> = _uIdFlow
+
     init {
         auth.addAuthStateListener { firebaseAuth ->
             _emailFlow.tryEmit(firebaseAuth.currentUser?.email)
+            _uIdFlow.tryEmit(firebaseAuth.currentUser?.uid)
         }
     }
 
