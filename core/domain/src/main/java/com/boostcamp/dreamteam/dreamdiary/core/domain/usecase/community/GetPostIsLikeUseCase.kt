@@ -9,7 +9,8 @@ class GetPostIsLikeUseCase @Inject constructor(
     private val authRepository: AuthRepository,
 ) {
     suspend operator fun invoke(postId: String): Boolean {
-        val userId = authRepository.getUserUID() ?: throw IllegalStateException("User is not signed in")
+        val userId =
+            authRepository.getUserUID() ?: throw IllegalStateException("User is not signed in")
         return communityRepository.checkPostLike(
             postId = postId,
             userId = userId,
