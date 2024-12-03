@@ -32,6 +32,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -51,6 +52,7 @@ import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.boostcamp.dreamteam.dreamdiary.community.R
 import com.boostcamp.dreamteam.dreamdiary.community.detail.component.CommunityDetailComment
+import com.boostcamp.dreamteam.dreamdiary.community.detail.component.CommunityDetailMenuButton
 import com.boostcamp.dreamteam.dreamdiary.community.detail.component.CommunityDetailPostCard
 import com.boostcamp.dreamteam.dreamdiary.community.model.CommentUi
 import com.boostcamp.dreamteam.dreamdiary.community.model.PostDetailUi
@@ -75,6 +77,7 @@ fun CommunityDetailScreen(
                     comments.refresh()
                     focusManager.clearFocus()
                 }
+
                 is CommunityDetailEvent.LikePost.Success -> {}
                 is CommunityDetailEvent.LikePost.Fail -> {
                     Toast.makeText(
@@ -124,7 +127,8 @@ private fun CommunityDetailScreenContent(
                     onClickBack = onClickBack,
                     title = post.title,
                 ),
-            )
+
+                )
         },
         bottomBar = {
             NewCommentBottomBar(
@@ -135,7 +139,8 @@ private fun CommunityDetailScreenContent(
                 ),
             )
         },
-    ) { innerPadding ->
+
+        ) { innerPadding ->
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
@@ -177,6 +182,8 @@ private fun CommunityDetailTopAppBar(
     state: CommunityDetailTopAppbarState,
     modifier: Modifier = Modifier,
 ) {
+    var isMenuVisible by remember { mutableStateOf(false) }
+
     MediumTopAppBar(
         title = { Text(text = state.title) },
         modifier = modifier,
@@ -189,6 +196,14 @@ private fun CommunityDetailTopAppBar(
                     contentDescription = stringResource(R.string.community_detail_toppappbar_navigate_back),
                 )
             }
+        },
+        actions = {
+            CommunityDetailMenuButton(
+                onDeletePost = { },
+                onDiaryEdit = { },
+                isVisible = isMenuVisible,
+                onVisibleChange = { isMenuVisible = it },
+            )
         },
         scrollBehavior = state.topAppBarScrollBehavior,
     )
