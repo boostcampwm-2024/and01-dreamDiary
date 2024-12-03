@@ -1,5 +1,6 @@
 package com.boostcamp.dreamteam.dreamdiary.feature.diary.home
 
+import android.content.Context
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloatAsState
@@ -61,7 +62,6 @@ import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.tablist.DiaryListTa
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.tablist.pagedDiariesPreview
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.DiaryUi
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.LabelUi
-import com.boostcamp.dreamteam.dreamdiary.feature.widget.util.updateWidget
 import com.boostcamp.dreamteam.dreamdiary.ui.HomeBottomNavItem
 import com.boostcamp.dreamteam.dreamdiary.ui.HomeBottomNavigation
 import com.boostcamp.dreamteam.dreamdiary.ui.component.GoToSignInDialog
@@ -78,6 +78,7 @@ fun DiaryHomeScreen(
     onNavigateToSetting: () -> Unit,
     onDialogConfirmClick: () -> Unit,
     onClickSearch: () -> Unit,
+    updateDiaryWidget: (Context) -> Unit,
     viewModel: DiaryHomeViewModel = hiltViewModel(),
     onNavigateToWriteScreen: () -> Unit,
 ) {
@@ -104,11 +105,11 @@ fun DiaryHomeScreen(
         }
     }.collectAsStateWithLifecycle(SyncStateUi.IDLE)
 
-    LaunchedEffect(Unit) {
+    LaunchedEffect(updateDiaryWidget) {
         viewModel.event.collect {
             when (it) {
                 is DiaryHomeEvent.Delete.Success -> {
-                    updateWidget(context)
+                    updateDiaryWidget(context)
                 }
             }
         }

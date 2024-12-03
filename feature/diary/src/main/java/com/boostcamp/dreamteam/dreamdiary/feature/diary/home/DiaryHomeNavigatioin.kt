@@ -1,5 +1,6 @@
 package com.boostcamp.dreamteam.dreamdiary.feature.diary.home
 
+import android.content.Context
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
@@ -38,6 +39,7 @@ fun NavGraphBuilder.diaryGraph(
     onShareDiary: (diaryId: String) -> Unit,
     navController: NavController,
     onDialogConfirmClick: () -> Unit,
+    updateDiaryWidget: (Context) -> Unit,
 ) {
     navigation<DiaryGraph>(
         startDestination = DiaryGraph.DiaryHomeRoute,
@@ -65,6 +67,7 @@ fun NavGraphBuilder.diaryGraph(
                         },
                     )
                 },
+                updateDiaryWidget = updateDiaryWidget,
             )
         }
 
@@ -88,6 +91,7 @@ fun NavGraphBuilder.diaryGraph(
                         },
                     )
                 },
+                updateDiaryWidget = updateDiaryWidget,
             )
         }
 
@@ -103,6 +107,7 @@ fun NavGraphBuilder.diaryGraph(
                 onEditDiary = { diaryId -> navController.navigateToWriteScreen(diaryId = diaryId) },
                 onShareDiary = onShareDiary,
                 onDialogConfirmClick = onDialogConfirmClick,
+                updateDiaryWidget = updateDiaryWidget,
             )
         }
 

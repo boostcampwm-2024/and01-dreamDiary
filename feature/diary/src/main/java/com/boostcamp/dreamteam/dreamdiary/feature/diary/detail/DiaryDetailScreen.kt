@@ -1,5 +1,6 @@
 package com.boostcamp.dreamteam.dreamdiary.feature.diary.detail
 
+import android.content.Context
 import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -40,7 +41,6 @@ import com.boostcamp.dreamteam.dreamdiary.feature.diary.detail.model.DiaryDetail
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.DiaryContentUi
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.LabelUi
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.filteredLabelsPreview
-import com.boostcamp.dreamteam.dreamdiary.feature.widget.util.updateWidget
 import com.boostcamp.dreamteam.dreamdiary.ui.component.GoToSignInDialog
 import timber.log.Timber
 import java.io.File
@@ -52,18 +52,19 @@ fun DiaryDetailScreen(
     onEditDiary: (diaryId: String) -> Unit,
     onShareDiary: (diaryId: String) -> Unit,
     onDialogConfirmClick: () -> Unit,
+    updateDiaryWidget: (Context) -> Unit,
     viewModel: DiaryDetailViewModel = hiltViewModel(),
 ) {
     val context = LocalContext.current
     val email by viewModel.email.collectAsStateWithLifecycle()
     var showDialog by remember { mutableStateOf(false) }
 
-    LaunchedEffect(onBackClick, context) {
+    LaunchedEffect(onBackClick, updateDiaryWidget) {
         viewModel.event.collect { event ->
             Timber.d("DiaryDetailScreen event: $event")
             when (event) {
                 is DiaryDetailEvent.DeleteDiary.Success -> {
-                    updateWidget(context)
+                    updateDiaryWidget(context)
                     Toast.makeText(context, "삭제 성공", Toast.LENGTH_SHORT).show()
                 }
 

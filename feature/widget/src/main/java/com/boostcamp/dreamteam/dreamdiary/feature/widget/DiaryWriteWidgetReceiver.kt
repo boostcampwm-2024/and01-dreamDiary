@@ -22,7 +22,7 @@ import java.time.temporal.ChronoUnit
 import javax.inject.Inject
 
 @AndroidEntryPoint
-internal class DiaryWriteWidgetReceiver : GlanceAppWidgetReceiver() {
+class DiaryWriteWidgetReceiver : GlanceAppWidgetReceiver() {
     override val glanceAppWidget: GlanceAppWidget = DiaryWriteWidget()
 
     @Inject
