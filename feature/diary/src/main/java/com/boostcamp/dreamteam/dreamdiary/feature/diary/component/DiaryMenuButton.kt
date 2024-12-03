@@ -6,7 +6,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.Edit
-import androidx.compose.material.icons.outlined.Share
+import androidx.compose.material.icons.outlined.PostAdd
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
@@ -49,7 +49,12 @@ internal fun DiaryMenuButton(
                     onDiaryEdit()
                     onVisibleChange(false)
                 },
-                leadingIcon = { Icon(imageVector = Icons.Outlined.Edit, contentDescription = null) },
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.Outlined.Edit,
+                        contentDescription = stringResource(R.string.home_list_edit_icon),
+                    )
+                },
             )
             DropdownMenuItem(
                 text = { Text(text = stringResource(R.string.home_list_card_menu_delete)) },
@@ -57,7 +62,12 @@ internal fun DiaryMenuButton(
                     onDeleteDiary()
                     onVisibleChange(false)
                 },
-                leadingIcon = { Icon(imageVector = Icons.Outlined.Delete, contentDescription = null) },
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.Outlined.Delete,
+                        contentDescription = stringResource(R.string.home_list_delete_icon),
+                    )
+                },
             )
             DropdownMenuItem(
                 text = { Text(text = stringResource(R.string.home_list_card_menu_share)) },
@@ -65,7 +75,12 @@ internal fun DiaryMenuButton(
                     onShareDiary()
                     onVisibleChange(false)
                 },
-                leadingIcon = { Icon(imageVector = Icons.Outlined.Share, contentDescription = null) },
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.Outlined.PostAdd,
+                        contentDescription = stringResource(R.string.home_list_post_icon),
+                    )
+                },
             )
         }
     }
