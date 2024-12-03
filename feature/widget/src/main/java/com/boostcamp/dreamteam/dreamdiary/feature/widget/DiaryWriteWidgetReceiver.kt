@@ -1,6 +1,7 @@
 package com.boostcamp.dreamteam.dreamdiary.feature.widget
 
 import android.appwidget.AppWidgetManager
+import android.appwidget.AppWidgetManager.ACTION_APPWIDGET_OPTIONS_CHANGED
 import android.appwidget.AppWidgetManager.ACTION_APPWIDGET_UPDATE
 import android.content.Context
 import android.content.Intent
@@ -44,7 +45,7 @@ class DiaryWriteWidgetReceiver : GlanceAppWidgetReceiver() {
         super.onReceive(context = context, intent = intent)
         if (intent.action == ACTION_APPWIDGET_MANUAL_UPDATE ||
             intent.action == ACTION_APPWIDGET_UPDATE ||
-            intent.action == "android.appwidget.action.APPWIDGET_UPDATE_OPTIONS"
+            intent.action == ACTION_APPWIDGET_OPTIONS_CHANGED
         ) {
             collectData(context = context)
         }
