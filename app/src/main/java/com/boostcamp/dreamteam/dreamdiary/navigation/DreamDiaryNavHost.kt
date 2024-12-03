@@ -57,35 +57,35 @@ fun DreamDiaryNavHost(
                 },
             )
 
-        diaryGraph(
-            onShareDiary = { navController.navigateToCommunityWrite(it) },
-            onCommunityClick = {
-                val options = NavOptions.Builder()
-                    .setPopUpTo(DiaryGraph, inclusive = false, saveState = true)
-                    .setLaunchSingleTop(true)
-                    .setRestoreState(true)
-                    .build()
-                navController.navigate(CommunityGraph, options)
-            },
-            onSettingClick = {
-                val options = NavOptions.Builder()
-                    .setPopUpTo(DiaryGraph, inclusive = false, saveState = true)
-                    .setLaunchSingleTop(true)
-                    .setRestoreState(true)
-                    .build()
-                navController.navigate(SettingGraph, options)
-            },
-            navController = navController,
-            onDialogConfirmClick = {
-                val options = NavOptions.Builder()
-                    .setPopUpTo(DiaryGraph, inclusive = true)
-                    .build()
-                navController.navigate(SignInRoute, options)
-            },
-            updateDiaryWidget = { context ->
-                diaryWidgetManger.update(context)
-            },
-        )
+            diaryGraph(
+                onShareDiary = { navController.navigateToCommunityWrite(it) },
+                onCommunityClick = {
+                    val options = NavOptions.Builder()
+                        .setPopUpTo(DiaryGraph, inclusive = false, saveState = true)
+                        .setLaunchSingleTop(true)
+                        .setRestoreState(true)
+                        .build()
+                    navController.navigate(CommunityGraph, options)
+                },
+                onSettingClick = {
+                    val options = NavOptions.Builder()
+                        .setPopUpTo(DiaryGraph, inclusive = false, saveState = true)
+                        .setLaunchSingleTop(true)
+                        .setRestoreState(true)
+                        .build()
+                    navController.navigate(SettingGraph, options)
+                },
+                navController = navController,
+                onDialogConfirmClick = {
+                    val options = NavOptions.Builder()
+                        .setPopUpTo(DiaryGraph, inclusive = true)
+                        .build()
+                    navController.navigate(SignInRoute, options)
+                },
+                updateDiaryWidget = { context ->
+                    diaryWidgetManger.update(context)
+                },
+            )
 
             communityGraph(
                 navController = navController,
