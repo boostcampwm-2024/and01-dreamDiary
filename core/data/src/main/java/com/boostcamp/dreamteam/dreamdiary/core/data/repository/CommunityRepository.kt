@@ -296,6 +296,7 @@ class CommunityRepository @Inject constructor(
                 likeCount = communityPostResponse.likeCount,
                 commentCount = communityPostResponse.commentCount,
                 postContents = contents,
+                uid = communityPostResponse.uid,
                 createdAt = communityPostResponse.createdAt.seconds,
                 isLiked = userLikeSnapshot.exists(),
             )

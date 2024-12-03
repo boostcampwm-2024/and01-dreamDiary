@@ -9,7 +9,6 @@ import timber.log.Timber
 class DreamDiaryApplication : Application() {
     override fun onCreate() {
         super.onCreate()
-
         initTimber()
         SynchronizationWorker.initWorker(this)
     }

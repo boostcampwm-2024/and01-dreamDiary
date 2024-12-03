@@ -39,7 +39,7 @@ fun CommunityPostDetail.toUIState(): PostDetailUi =
             content.toPostContentUi()
         },
         author = UserUi(
-            uid = this.author,
+            uid = this.uid,
             username = this.author,
             profileImageUrl = this.profileImageUrl,
         ),
