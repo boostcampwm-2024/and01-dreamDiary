@@ -225,7 +225,13 @@ private fun DiaryWriteScreenContent(
         topBar = {
             DiaryWriteTopBar(
                 onBackClick = onBackClick,
-                onClickSave = onClickSave,
+                onClickSave = {
+                    if (title.isNotEmpty() && diaryContents != listOf(DiaryContentUi.Text(""))) {
+                        onClickSave()
+                    } else {
+                        Toast.makeText(context, context.getString(R.string.write_not_empty), Toast.LENGTH_SHORT).show()
+                    }
+                },
             )
         },
         bottomBar = {

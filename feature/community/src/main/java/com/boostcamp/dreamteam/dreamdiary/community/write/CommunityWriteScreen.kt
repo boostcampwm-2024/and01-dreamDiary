@@ -77,7 +77,13 @@ fun CommunityWriteScreen(
         onContentImageAdd = viewModel::addContentImage,
         topAppbarState = CommunityWriteTopAppbarState(
             onClickBack = onClickBack,
-            onClickSave = viewModel::writePost,
+            onClickSave = {
+                if (state.editorState.title.isNotEmpty() && state.editorState.contents != listOf(PostContentUi.Text(""))) {
+                    viewModel.writePost()
+                } else {
+                    Toast.makeText(context, context.getString(R.string.community_write_not_empty), Toast.LENGTH_SHORT).show()
+                }
+            },
         ),
         editorState = CommunityEditorState(
             title = state.editorState.title,

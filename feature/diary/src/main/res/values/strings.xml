@@ -17,6 +17,7 @@
     <string name="write_content_image">이미지</string>
     <string name="write_add_image">이미지 추가</string>
     <string name="write_content_image_delete">이미지 삭제</string>
+    <string name="write_not_empty">제목과 내용이 비어있으면 안됩니다.</string>
     <string name="login_dream_diary">Dream Diary</string>
     <string name="login_github_icon">깃허브 아이콘</string>
     <string name="login_github_login">깃허브 로그인</string>
