@@ -6,7 +6,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.Edit
-import androidx.compose.material.icons.outlined.PostAdd
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
@@ -17,15 +16,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.boostcamp.dreamteam.dreamdiary.community.R
 import com.boostcamp.dreamteam.dreamdiary.designsystem.theme.DreamdiaryTheme
 
 @Composable
 internal fun CommentsMenuButton(
     isVisible: Boolean,
     onVisibleChange: (Boolean) -> Unit,
-    onDeleteDiary: () -> Unit,
-    onDiaryEdit: () -> Unit,
-    onShareDiary: () -> Unit,
+    onDeleteComment: () -> Unit,
+    onCommentEdit: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Box(modifier = modifier) {
@@ -34,7 +33,7 @@ internal fun CommentsMenuButton(
         ) {
             Icon(
                 imageVector = Icons.Default.MoreVert,
-                contentDescription = stringResource(R.string.home_list_card_menu),
+                contentDescription = stringResource(R.string.community_detail_comments_menu),
                 modifier = Modifier.height(16.dp),
             )
         }
@@ -43,41 +42,28 @@ internal fun CommentsMenuButton(
             onDismissRequest = { onVisibleChange(false) },
         ) {
             DropdownMenuItem(
-                text = { Text(text = stringResource(R.string.home_list_card_menu_edit)) },
+                text = { Text(text = stringResource(R.string.community_detail_comments_menu_edit)) },
                 onClick = {
-                    onDiaryEdit()
+                    onCommentEdit()
                     onVisibleChange(false)
                 },
                 leadingIcon = {
                     Icon(
                         imageVector = Icons.Outlined.Edit,
-                        contentDescription = stringResource(R.string.home_list_edit_icon),
+                        contentDescription = stringResource(R.string.community_detail_comments_menu_edit_icon),
                     )
                 },
             )
             DropdownMenuItem(
-                text = { Text(text = stringResource(R.string.home_list_card_menu_delete)) },
+                text = { Text(text = stringResource(R.string.community_detail_comments_menu_delete)) },
                 onClick = {
-                    onDeleteDiary()
+                    onDeleteComment()
                     onVisibleChange(false)
                 },
                 leadingIcon = {
                     Icon(
                         imageVector = Icons.Outlined.Delete,
-                        contentDescription = stringResource(R.string.home_list_delete_icon),
-                    )
-                },
-            )
-            DropdownMenuItem(
-                text = { Text(text = stringResource(R.string.home_list_card_menu_share)) },
-                onClick = {
-                    onShareDiary()
-                    onVisibleChange(false)
-                },
-                leadingIcon = {
-                    Icon(
-                        imageVector = Icons.Outlined.PostAdd,
-                        contentDescription = stringResource(R.string.home_list_post_icon),
+                        contentDescription = stringResource(R.string.community_detail_comments_menu_delete_icon),
                     )
                 },
             )
@@ -92,9 +78,8 @@ private fun DiaryEditDropDownMenuPreview() {
         CommentsMenuButton(
             isVisible = true,
             onVisibleChange = { },
-            onDeleteDiary = { },
-            onDiaryEdit = { },
-            onShareDiary = { },
+            onDeleteComment = { },
+            onCommentEdit = { },
         )
     }
 }

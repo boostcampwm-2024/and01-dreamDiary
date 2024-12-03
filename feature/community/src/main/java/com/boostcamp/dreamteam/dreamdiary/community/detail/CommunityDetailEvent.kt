@@ -5,6 +5,10 @@ sealed class CommunityDetailEvent {
         data object Success : CommentAdd()
     }
 
+    sealed class CommentDelete : CommunityDetailEvent() {
+        data object Success : CommentDelete()
+    }
+
     sealed class LikePost : CommunityDetailEvent() {
         data object Success : LikePost()
 
