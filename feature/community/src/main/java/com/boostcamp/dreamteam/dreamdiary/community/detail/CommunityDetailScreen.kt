@@ -63,7 +63,7 @@ import com.boostcamp.dreamteam.dreamdiary.ui.PagingIndexKey
 
 @Composable
 fun CommunityDetailScreen(
-    onClickBack: () -> Unit,
+    onClickBack: (deletedPostId: String?) -> Unit,
     viewModel: CommunityDetailViewModel = hiltViewModel(),
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
@@ -73,6 +73,9 @@ fun CommunityDetailScreen(
     LaunchedEffect(Unit) {
         viewModel.event.collect { event ->
             when (event) {
+                is CommunityDetailEvent.PostDelete.Success -> {
+                    onClickBack(state.post.id)
+                }
                 is CommunityDetailEvent.CommentAdd.Success -> {
                     comments.refresh()
                     focusManager.clearFocus()
@@ -82,7 +85,7 @@ fun CommunityDetailScreen(
                     focusManager.clearFocus()
                 }
                 is CommunityDetailEvent.LikePost.Success -> {}
-                is CommunityDetailEvent.LikePost.Fail -> {
+                is CommunityDetailEvent.LikePost.Failure -> {
                     Toast.makeText(
                         context,
                         "좋아요 실패",
@@ -99,6 +102,7 @@ fun CommunityDetailScreen(
         onClickLikePost = viewModel::togglePostLike,
         comments = comments,
         commentContent = state.commentContent,
+        onDeletePost = viewModel::deletePost,
         onChangeCommentContent = viewModel::changeCommentContent,
         onSubmitComment = {
             viewModel.addComment()
@@ -109,11 +113,12 @@ fun CommunityDetailScreen(
 
 @Composable
 private fun CommunityDetailScreenContent(
-    onClickBack: () -> Unit,
+    onClickBack: (deletedPostId: String?) -> Unit,
     post: PostDetailUi,
     onClickLikePost: () -> Unit,
     comments: LazyPagingItems<CommentUi>,
     commentContent: String,
+    onDeletePost: () -> Unit,
     onSubmitComment: () -> Unit,
     onChangeCommentContent: (String) -> Unit,
     onDeleteComment: (String) -> Unit,
@@ -130,7 +135,9 @@ private fun CommunityDetailScreenContent(
                 state = CommunityDetailTopAppbarState(
                     topAppBarScrollBehavior = topAppBarScrollBehavior,
                     onClickBack = onClickBack,
+                    onDeletePost = onDeletePost,
                     title = post.title,
+                    isMine = post.isMine,
                 ),
             )
         },
@@ -143,8 +150,7 @@ private fun CommunityDetailScreenContent(
                 ),
             )
         },
-
-        ) { innerPadding ->
+    ) { innerPadding ->
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
@@ -177,8 +183,10 @@ private fun CommunityDetailScreenContent(
 
 private data class CommunityDetailTopAppbarState(
     val topAppBarScrollBehavior: TopAppBarScrollBehavior,
-    val onClickBack: () -> Unit,
+    val onClickBack: (String?) -> Unit,
+    val onDeletePost: () -> Unit,
     val title: String,
+    val isMine: Boolean,
 )
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -194,7 +202,7 @@ private fun CommunityDetailTopAppBar(
         modifier = modifier,
         navigationIcon = {
             IconButton(
-                onClick = state.onClickBack,
+                onClick = { state.onClickBack(null) },
             ) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.ArrowBack,
@@ -203,12 +211,14 @@ private fun CommunityDetailTopAppBar(
             }
         },
         actions = {
-            CommunityDetailMenuButton(
-                onDeletePost = { },
-                onDiaryEdit = { },
-                isVisible = isMenuVisible,
-                onVisibleChange = { isMenuVisible = it },
-            )
+            if (state.isMine) {
+                CommunityDetailMenuButton(
+                    onDeletePost = state.onDeletePost,
+                    onPostEdit = { },
+                    isVisible = isMenuVisible,
+                    onVisibleChange = { isMenuVisible = it },
+                )
+            }
         },
         scrollBehavior = state.topAppBarScrollBehavior,
     )
@@ -295,6 +305,7 @@ private fun CommunityDetailScreenContentPreview() {
             onClickBack = { },
             onClickLikePost = { },
             onSubmitComment = { },
+            onDeletePost = { },
             post = postDetailUiPreview,
             commentContent = "",
             onChangeCommentContent = { },

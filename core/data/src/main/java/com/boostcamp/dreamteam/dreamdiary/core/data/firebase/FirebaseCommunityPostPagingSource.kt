@@ -14,7 +14,7 @@ class FirebaseCommunityPostPagingSource(
     override suspend fun load(params: LoadParams<Query>): LoadResult<Query, FirestoreGetCommunityPostResponse> {
         return try {
             val query = params.key ?: communityCollection
-                .whereEqualTo("isDeleted", false)
+                .whereEqualTo("deleted", false)
                 .orderBy("createdAt", Query.Direction.DESCENDING)
                 .limit(params.loadSize.toLong())
 

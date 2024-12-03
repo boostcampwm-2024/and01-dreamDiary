@@ -11,6 +11,7 @@ import com.boostcamp.dreamteam.dreamdiary.community.model.toUIState
 import com.boostcamp.dreamteam.dreamdiary.core.data.repository.AuthRepository
 import com.boostcamp.dreamteam.dreamdiary.core.domain.usecase.community.AddCommentUseCase
 import com.boostcamp.dreamteam.dreamdiary.core.domain.usecase.community.DeleteCommentUseCase
+import com.boostcamp.dreamteam.dreamdiary.core.domain.usecase.community.DeleteCommunityPostUseCase
 import com.boostcamp.dreamteam.dreamdiary.core.domain.usecase.community.GetCommentUseCase
 import com.boostcamp.dreamteam.dreamdiary.core.domain.usecase.community.GetCommunityPostUseCase
 import com.boostcamp.dreamteam.dreamdiary.core.domain.usecase.community.SendCommentNotificationUseCase
@@ -37,6 +38,7 @@ class CommunityDetailViewModel @Inject constructor(
     private val deleteCommentUseCase: DeleteCommentUseCase,
     private val togglePostLikeUseCase: TogglePostLikeUseCase,
     private val sendCommentNotificationUseCase: SendCommentNotificationUseCase,
+    private val deleteCommunityPostUseCase: DeleteCommunityPostUseCase,
     private val authRepository: AuthRepository,
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(CommunityDetailUiState())
@@ -67,7 +69,7 @@ class CommunityDetailViewModel @Inject constructor(
                     getPostDetail(postId)
                     _event.trySend(CommunityDetailEvent.LikePost.Success)
                 } catch (e: Exception) {
-                    _event.trySend(CommunityDetailEvent.LikePost.Fail)
+                    _event.trySend(CommunityDetailEvent.LikePost.Failure)
                     Timber.e(e)
                 }
             }
@@ -80,10 +82,23 @@ class CommunityDetailViewModel @Inject constructor(
                 _uiState.value = _uiState.value.copy(isLoading = true)
                 try {
                     val communityDetail = getCommunityPostUseCase(postId)
-                    _uiState.value = _uiState.value.copy(post = communityDetail.toUIState(), isLoading = false)
+                    _uiState.value = _uiState.value.copy(post = communityDetail.toUIState(uId.value), isLoading = false)
                 } catch (e: Exception) {
                     Timber.e(e)
                     _uiState.value = _uiState.value.copy(isLoading = false)
+                }
+            }
+        }
+    }
+
+    fun deletePost() {
+        if (postId != null) {
+            viewModelScope.launch {
+                try {
+                    deleteCommunityPostUseCase(postId)
+                    _event.trySend(CommunityDetailEvent.PostDelete.Success)
+                } catch (e: Exception) {
+                    Timber.e(e)
                 }
             }
         }

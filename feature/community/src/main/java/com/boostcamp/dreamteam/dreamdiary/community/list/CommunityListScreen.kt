@@ -46,6 +46,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
@@ -71,7 +72,7 @@ fun CommunityListScreen(
     viewModel: CommunityListViewModel = hiltViewModel(),
 ) {
     val posts = viewModel.posts.collectAsLazyPagingItems()
-
+    val deletedPostId = viewModel.deletedPostId.collectAsStateWithLifecycle()
     val context = LocalContext.current
     LaunchedEffect(Unit) {
         viewModel.event.collect { event ->
@@ -81,6 +82,13 @@ fun CommunityListScreen(
                     Toast.makeText(context, "좋아요 실패", Toast.LENGTH_SHORT).show()
                 }
             }
+        }
+    }
+
+    LaunchedEffect(deletedPostId.value) {
+        if (deletedPostId.value != null) {
+            posts.refresh()
+            viewModel.setDeletedPostId(null)
         }
     }
 

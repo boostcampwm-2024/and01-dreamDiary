@@ -13,6 +13,7 @@ import com.boostcamp.dreamteam.dreamdiary.core.domain.usecase.community.TogglePo
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.consumeAsFlow
 import kotlinx.coroutines.flow.launchIn
@@ -32,6 +33,10 @@ class CommunityListViewModel @Inject constructor(
 ) : ViewModel() {
     private val _event = Channel<CommunityListEvent>(64)
     val event = _event.receiveAsFlow()
+
+    // Todo uiState 로 옮기기
+    private val _deletedPostId = MutableStateFlow<String?>(null)
+    val deletedPostId = _deletedPostId.asStateFlow()
 
     private val toggledLikes = MutableStateFlow<Map<String, Boolean>>(emptyMap())
 
@@ -71,6 +76,10 @@ class CommunityListViewModel @Inject constructor(
 
     fun notSignIn(): Boolean {
         return authRepository.getUserEmail() == null
+    }
+
+    fun setDeletedPostId(id: String?) {
+        _deletedPostId.value = id
     }
 
     // 내부 함수: 실제로 좋아요 토글 처리

@@ -24,7 +24,7 @@ internal fun CommunityDetailMenuButton(
     isVisible: Boolean,
     onVisibleChange: (Boolean) -> Unit,
     onDeletePost: () -> Unit,
-    onDiaryEdit: () -> Unit,
+    onPostEdit: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Box(modifier = modifier) {
@@ -44,7 +44,7 @@ internal fun CommunityDetailMenuButton(
             DropdownMenuItem(
                 text = { Text(text = "편집") },
                 onClick = {
-                    onDiaryEdit()
+                    onPostEdit()
                     onVisibleChange(false)
                 },
                 leadingIcon = {
@@ -79,7 +79,7 @@ private fun DiaryEditDropDownMenuPreview() {
             isVisible = true,
             onVisibleChange = { },
             onDeletePost = { },
-            onDiaryEdit = { },
+            onPostEdit = { },
         )
     }
 }
