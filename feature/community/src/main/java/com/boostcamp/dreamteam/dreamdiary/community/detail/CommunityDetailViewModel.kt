@@ -52,6 +52,11 @@ class CommunityDetailViewModel @Inject constructor(
 
     init {
         getPostDetail(postId)
+        viewModelScope.launch {
+            authRepository.uIdFlow.collect { newUId ->
+                _uId.value = newUId
+            }
+        }
     }
 
     fun togglePostLike() {
