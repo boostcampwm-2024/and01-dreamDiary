@@ -31,6 +31,9 @@ dependencies {
 
     implementation(libs.androidx.ui.text.google.fonts)
 
+    // Shimmer
+    api(libs.shimmer)
+
     // Coil
     implementation(libs.bundles.coil)
 }
