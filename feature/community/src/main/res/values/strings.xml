@@ -26,4 +26,5 @@
     <string name="community_detail_comment_dislike">좋아요 취소</string>
     <string name="community_detail_post_like">좋아요</string>
     <string name="community_detail_post_dislike">좋아요 취소</string>
+    <string name="community_detail_more">더보기</string>
 </resources>
