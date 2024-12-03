@@ -26,4 +26,5 @@
     <string name="community_detail_comment_dislike">좋아요 취소</string>
     <string name="community_detail_post_like">좋아요</string>
     <string name="community_detail_post_dislike">좋아요 취소</string>
+    <string name="community_write_not_empty">제목과 내용이 비어있으면 안됩니다.</string>
 </resources>
