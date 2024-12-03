@@ -1,6 +1,8 @@
 package com.boostcamp.dreamteam.dreamdiary.community.detail.component
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -45,6 +47,7 @@ internal fun CommunityDetailPostCard(
         headline = {
             CardUserHeader(
                 user = post.author,
+                sharedAt = post.sharedAt.formatted,
                 modifier = Modifier.fillMaxWidth(),
             )
         },
@@ -90,6 +93,7 @@ internal fun CommunityDetailPostCard(
 @Composable
 private fun CardUserHeader(
     user: UserUi,
+    sharedAt: String,
     modifier: Modifier = Modifier,
 ) {
     Row(modifier = modifier, verticalAlignment = Alignment.CenterVertically) {
@@ -103,12 +107,22 @@ private fun CardUserHeader(
             contentScale = ContentScale.Crop,
         )
         Spacer(modifier = Modifier.width(16.dp))
-        Text(
-            text = user.username,
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis,
-            style = MaterialTheme.typography.titleMedium,
-        )
+        Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.SpaceBetween) {
+            Text(
+                text = user.username,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                style = MaterialTheme.typography.titleMedium,
+            )
+            Text(
+                text = sharedAt,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                style = MaterialTheme.typography.bodySmall.copy(
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
+                ),
+            )
+        }
     }
 }
 
