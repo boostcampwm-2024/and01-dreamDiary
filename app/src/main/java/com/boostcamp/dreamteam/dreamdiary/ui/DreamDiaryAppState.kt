@@ -23,5 +23,5 @@ fun rememberAppState(
 class DreamDiaryAppState(
     val navController: NavHostController,
     coroutineScope: CoroutineScope,
-    val diaryWidgetManger: DiaryWidgetManger
+    val diaryWidgetManger: DiaryWidgetManger,
 )
