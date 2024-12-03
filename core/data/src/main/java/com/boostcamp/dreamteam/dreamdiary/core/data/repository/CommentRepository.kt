@@ -52,6 +52,14 @@ class CommentRepository @Inject constructor(
         return commentRef.id
     }
 
+    suspend fun deleteComment(
+        postId: String,
+        commentId: String,
+    ) {
+        firebaseFirestore.collection("community")
+            .document(postId).collection("comments").document(commentId).delete().await()
+    }
+
     fun getComments(postId: String): Flow<PagingData<Comment>> {
         return Pager(
             config = PagingConfig(
