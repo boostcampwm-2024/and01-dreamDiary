@@ -42,7 +42,10 @@ class DiaryWriteWidgetReceiver : GlanceAppWidgetReceiver() {
         intent: Intent,
     ) {
         super.onReceive(context = context, intent = intent)
-        if (intent.action == ACTION_APPWIDGET_UPDATE || intent.action == "android.appwidget.action.APPWIDGET_UPDATE_OPTIONS") {
+        if (intent.action == ACTION_APPWIDGET_MANUAL_UPDATE ||
+            intent.action == ACTION_APPWIDGET_UPDATE ||
+            intent.action == "android.appwidget.action.APPWIDGET_UPDATE_OPTIONS"
+        ) {
             collectData(context = context)
         }
     }
@@ -71,5 +74,10 @@ class DiaryWriteWidgetReceiver : GlanceAppWidgetReceiver() {
                 }
             }
         }
+    }
+
+    companion object {
+        const val ACTION_APPWIDGET_MANUAL_UPDATE =
+            "com.boostcamp.dreamteam.dreamdiary.feature.widget.ACTION_APPWIDGET_MANUAL_UPDATE"
     }
 }
