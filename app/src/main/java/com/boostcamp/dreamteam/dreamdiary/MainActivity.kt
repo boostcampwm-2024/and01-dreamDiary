@@ -1,6 +1,7 @@
 package com.boostcamp.dreamteam.dreamdiary
 
 import android.content.SharedPreferences
+import android.content.pm.ActivityInfo
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
@@ -57,6 +58,7 @@ class MainActivity : ComponentActivity() {
         }
 
         setContent {
+            requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
             val settingTheme = uiState.value.settingThemeUiState
             val darkTheme = when (settingTheme) {
                 SettingThemeUiState.System, SettingThemeUiState.Loading -> {
