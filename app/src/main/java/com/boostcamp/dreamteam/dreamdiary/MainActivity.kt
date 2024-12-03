@@ -1,5 +1,6 @@
 package com.boostcamp.dreamteam.dreamdiary
 
+import android.annotation.SuppressLint
 import android.content.SharedPreferences
 import android.content.pm.ActivityInfo
 import android.os.Bundle
@@ -29,9 +30,12 @@ class MainActivity : ComponentActivity() {
 
     private val viewModel: MainViewModel by viewModels()
 
+    @SuppressLint("SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState: Bundle?) {
-        val splashScreen = installSplashScreen()
         super.onCreate(savedInstanceState)
+
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+        val splashScreen = installSplashScreen()
 
         val uiState = mutableStateOf(MainUiState())
 
@@ -58,7 +62,6 @@ class MainActivity : ComponentActivity() {
         }
 
         setContent {
-            requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
             val settingTheme = uiState.value.settingThemeUiState
             val darkTheme = when (settingTheme) {
                 SettingThemeUiState.System, SettingThemeUiState.Loading -> {
