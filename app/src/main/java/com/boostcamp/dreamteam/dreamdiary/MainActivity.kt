@@ -1,6 +1,8 @@
 package com.boostcamp.dreamteam.dreamdiary
 
+import android.annotation.SuppressLint
 import android.content.SharedPreferences
+import android.content.pm.ActivityInfo
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
@@ -28,7 +30,9 @@ class MainActivity : ComponentActivity() {
 
     private val viewModel: MainViewModel by viewModels()
 
+    @SuppressLint("SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState: Bundle?) {
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         val splashScreen = installSplashScreen()
         super.onCreate(savedInstanceState)
 
