@@ -44,7 +44,6 @@ class DiaryWriteWidgetReceiver : GlanceAppWidgetReceiver() {
     ) {
         super.onReceive(context = context, intent = intent)
         if (intent.action == ACTION_APPWIDGET_MANUAL_UPDATE ||
-            intent.action == ACTION_APPWIDGET_UPDATE ||
             intent.action == ACTION_APPWIDGET_OPTIONS_CHANGED
         ) {
             collectData(context = context)
