@@ -1,7 +1,7 @@
 package com.boostcamp.dreamteam.dreamdiary.feature.widget
 
 import android.appwidget.AppWidgetManager
-import android.appwidget.AppWidgetManager.ACTION_APPWIDGET_UPDATE
+import android.appwidget.AppWidgetManager.ACTION_APPWIDGET_OPTIONS_CHANGED
 import android.content.Context
 import android.content.Intent
 import androidx.glance.appwidget.GlanceAppWidget
@@ -22,7 +22,7 @@ import java.time.temporal.ChronoUnit
 import javax.inject.Inject
 
 @AndroidEntryPoint
-internal class DiaryWriteWidgetReceiver : GlanceAppWidgetReceiver() {
+class DiaryWriteWidgetReceiver : GlanceAppWidgetReceiver() {
     override val glanceAppWidget: GlanceAppWidget = DiaryWriteWidget()
 
     @Inject
@@ -42,7 +42,9 @@ internal class DiaryWriteWidgetReceiver : GlanceAppWidgetReceiver() {
         intent: Intent,
     ) {
         super.onReceive(context = context, intent = intent)
-        if (intent.action == ACTION_APPWIDGET_UPDATE || intent.action == "android.appwidget.action.APPWIDGET_UPDATE_OPTIONS") {
+        if (intent.action == ACTION_APPWIDGET_MANUAL_UPDATE ||
+            intent.action == ACTION_APPWIDGET_OPTIONS_CHANGED
+        ) {
             collectData(context = context)
         }
     }
@@ -71,5 +73,10 @@ internal class DiaryWriteWidgetReceiver : GlanceAppWidgetReceiver() {
                 }
             }
         }
+    }
+
+    companion object {
+        const val ACTION_APPWIDGET_MANUAL_UPDATE =
+            "com.boostcamp.dreamteam.dreamdiary.feature.widget.ACTION_APPWIDGET_MANUAL_UPDATE"
     }
 }

@@ -25,6 +25,7 @@ fun DreamDiaryNavHost(
     modifier: Modifier = Modifier,
 ) {
     val navController = appState.navController
+    val diaryWidgetManger = appState.diaryWidgetManger
 
     Surface(
         color = MaterialTheme.colorScheme.background,
@@ -80,6 +81,9 @@ fun DreamDiaryNavHost(
                         .setPopUpTo(DiaryGraph, inclusive = true)
                         .build()
                     navController.navigate(SignInRoute, options)
+                },
+                updateDiaryWidget = { context ->
+                    diaryWidgetManger.update(context)
                 },
             )
 

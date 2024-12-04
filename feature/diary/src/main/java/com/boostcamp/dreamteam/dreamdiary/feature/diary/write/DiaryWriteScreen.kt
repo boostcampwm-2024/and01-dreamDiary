@@ -1,5 +1,6 @@
 package com.boostcamp.dreamteam.dreamdiary.feature.diary.write
 
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.widget.Toast
@@ -49,7 +50,6 @@ import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.filteredLabelsPrev
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.selectedLabelsPreview
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.write.model.DiaryWriteEvent
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.write.model.LabelAddFailureReason
-import com.boostcamp.dreamteam.dreamdiary.feature.widget.util.updateWidget
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -63,17 +63,18 @@ import java.util.UUID
 fun DiaryWriteScreen(
     onBackClick: () -> Unit,
     onWriteSuccess: (diaryId: String) -> Unit,
+    updateDiaryWidget: (Context) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: DiaryWriteViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     val context = LocalContext.current
-    LaunchedEffect(onBackClick, onWriteSuccess) {
+    LaunchedEffect(onBackClick, onWriteSuccess, updateDiaryWidget) {
         viewModel.event.collectLatest { writeEvent ->
             when (writeEvent) {
                 is DiaryWriteEvent.DiaryAddSuccess -> {
-                    updateWidget(context)
+                    updateDiaryWidget(context)
                     onWriteSuccess(writeEvent.diaryId)
                 }
 
