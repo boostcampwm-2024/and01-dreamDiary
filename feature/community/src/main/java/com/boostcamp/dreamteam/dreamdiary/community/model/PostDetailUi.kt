@@ -16,6 +16,7 @@ data class PostDetailUi(
     val sharedAt: DisplayableDateTime,
     val likeCount: Int,
     val isLiked: Boolean,
+    val isMine: Boolean,
 ) {
     companion object {
         val EMPTY = PostDetailUi(
@@ -26,11 +27,12 @@ data class PostDetailUi(
             sharedAt = DisplayableDateTime.EMPTY,
             likeCount = 0,
             isLiked = false,
+            isMine = false,
         )
     }
 }
 
-fun CommunityPostDetail.toUIState(): PostDetailUi =
+fun CommunityPostDetail.toUIState(authorUid: String?): PostDetailUi =
     PostDetailUi(
         id = this.id,
         title = this.title,
@@ -46,6 +48,7 @@ fun CommunityPostDetail.toUIState(): PostDetailUi =
         sharedAt = Instant.ofEpochSecond(this.createdAt).toDisplayableDateTime(),
         likeCount = this.likeCount,
         isLiked = this.isLiked,
+        isMine = this.uid == authorUid,
     )
 
 internal val postDetailUiPreview = PostDetailUi(
@@ -56,4 +59,5 @@ internal val postDetailUiPreview = PostDetailUi(
     sharedAt = Instant.now().toDisplayableDateTime(),
     likeCount = 10,
     isLiked = false,
+    isMine = true,
 )

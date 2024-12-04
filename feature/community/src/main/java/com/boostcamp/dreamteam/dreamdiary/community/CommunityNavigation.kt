@@ -1,5 +1,7 @@
 package com.boostcamp.dreamteam.dreamdiary.community
 
+import androidx.compose.runtime.LaunchedEffect
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
@@ -9,6 +11,7 @@ import androidx.navigation.navOptions
 import androidx.navigation.navigation
 import com.boostcamp.dreamteam.dreamdiary.community.detail.CommunityDetailScreen
 import com.boostcamp.dreamteam.dreamdiary.community.list.CommunityListScreen
+import com.boostcamp.dreamteam.dreamdiary.community.list.CommunityListViewModel
 import com.boostcamp.dreamteam.dreamdiary.community.write.CommunityWriteScreen
 import kotlinx.serialization.Serializable
 
@@ -37,7 +40,13 @@ fun NavGraphBuilder.communityGraph(
     navigation<CommunityGraph>(
         startDestination = CommunityGraph.CommunityListRoute,
     ) {
-        composable<CommunityGraph.CommunityListRoute> {
+        composable<CommunityGraph.CommunityListRoute> { entry ->
+            val viewModel: CommunityListViewModel = hiltViewModel()
+            val deletedPostId = entry.savedStateHandle.get<String>("deletedPostId")
+            LaunchedEffect(deletedPostId) {
+                viewModel.setDeletedPostId(deletedPostId)
+                entry.savedStateHandle["deletedPostId"] = null
+            }
             CommunityListScreen(
                 onClickFab = { navController.navigateToCommunityWrite() },
                 onNavigateToDiary = onDiaryClick,
@@ -53,7 +62,10 @@ fun NavGraphBuilder.communityGraph(
         }
         composable<CommunityGraph.CommunityDetailRoute> {
             CommunityDetailScreen(
-                onClickBack = { navController.popBackStack() },
+                onClickBack = { deletedPostId ->
+                    navController.previousBackStackEntry?.savedStateHandle?.set("deletedPostId", deletedPostId)
+                    navController.popBackStack()
+                },
             )
         }
         composable<CommunityGraph.CommunityWriteRoute> {

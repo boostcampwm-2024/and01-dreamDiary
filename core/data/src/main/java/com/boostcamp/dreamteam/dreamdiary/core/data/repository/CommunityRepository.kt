@@ -97,7 +97,9 @@ class CommunityRepository @Inject constructor(
             profileImageUrl = profileImageUrl,
             likeCount = 0,
             commentCount = 0,
+            deleted = false,
         )
+        Timber.d("request: $request")
 
         firebaseFirestore.runBatch { batch ->
             batch.set(postReference, request)
@@ -142,6 +144,16 @@ class CommunityRepository @Inject constructor(
                     createdAt = Instant.ofEpochSecond(postResponse.createdAt.seconds, postResponse.createdAt.nanoseconds.toLong()),
                 )
             }
+        }
+    }
+
+    suspend fun deleteCommunityPost(postId: String) {
+        try {
+            val postReference = communityCollection.document(postId)
+            postReference.update("deleted", true).await()
+        } catch (e: Exception) {
+            Timber.e(e, "Error deleting community post with ID $postId")
+            throw e
         }
     }
 

@@ -16,4 +16,5 @@ data class FirestoreAddCommunityPostRequest(
     val commentCount: Long,
     @Transient
     val createdAt: FieldValue = FieldValue.serverTimestamp(),
+    val deleted: Boolean,
 )

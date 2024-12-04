@@ -33,4 +33,5 @@
     <string name="community_detail_comments_menu_edit_icon">편집 아이콘</string>
     <string name="community_detail_comments_menu_delete">삭제</string>
     <string name="community_detail_comments_menu_delete_icon">삭제 아이콘</string>
+    <string name="community_detail_more_vert">더보기</string>
 </resources>
