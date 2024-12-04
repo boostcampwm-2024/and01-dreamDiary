@@ -2,7 +2,6 @@ package com.boostcamp.dreamteam.dreamdiary.feature.widget
 
 import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetManager.ACTION_APPWIDGET_OPTIONS_CHANGED
-import android.appwidget.AppWidgetManager.ACTION_APPWIDGET_UPDATE
 import android.content.Context
 import android.content.Intent
 import androidx.glance.appwidget.GlanceAppWidget
