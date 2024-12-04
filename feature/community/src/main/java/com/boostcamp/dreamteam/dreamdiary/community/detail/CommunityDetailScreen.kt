@@ -75,6 +75,10 @@ fun CommunityDetailScreen(
                     comments.refresh()
                     focusManager.clearFocus()
                 }
+                is CommunityDetailEvent.CommentDelete.Success -> {
+                    comments.refresh()
+                    focusManager.clearFocus()
+                }
                 is CommunityDetailEvent.LikePost.Success -> {}
                 is CommunityDetailEvent.LikePost.Fail -> {
                     Toast.makeText(
@@ -97,6 +101,7 @@ fun CommunityDetailScreen(
         onSubmitComment = {
             viewModel.addComment()
         },
+        onDeleteComment = viewModel::deleteComment,
     )
 }
 
@@ -109,6 +114,7 @@ private fun CommunityDetailScreenContent(
     commentContent: String,
     onSubmitComment: () -> Unit,
     onChangeCommentContent: (String) -> Unit,
+    onDeleteComment: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val topAppBarScrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
@@ -158,6 +164,7 @@ private fun CommunityDetailScreenContent(
                 if (comment != null) {
                     CommunityDetailComment(
                         comment = comment,
+                        onDeleteComment = onDeleteComment,
                     )
                 }
             }
@@ -278,6 +285,7 @@ private fun CommunityDetailScreenContentPreview() {
             post = postDetailUiPreview,
             commentContent = "",
             onChangeCommentContent = { },
+            onDeleteComment = { },
             comments = pagingCommentsUiPreview.collectAsLazyPagingItems(),
         )
     }
