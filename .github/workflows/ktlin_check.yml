@@ -36,5 +36,24 @@ jobs:
           GOOGLE_SERVICES_JSON: ${{ secrets.GOOGLE_SERVICES_JSON }}
         run: echo "$GOOGLE_SERVICES_JSON" > ./app/google-services.json
 
+      - name: Decode Release Keystore
+        env:
+          RELEASE_KEYSTORE_BASE64: ${{ secrets.RELEASE_KEYSTORE_BASE64 }}
+        run: |
+          mkdir -p ./keystore
+          echo "$RELEASE_KEYSTORE_BASE64" | base64 -d > ./keystore/release.jks
+
+      - name: Configure Keystore Properties
+        run: |
+          echo "RELEASE_KEYSTORE_PATH=./keystore/release.jks" >> local.properties
+          echo "RELEASE_KEYSTORE_PASSWORD=${{ secrets.RELEASE_KEYSTORE_PASSWORD }}" >> local.properties
+          echo "RELEASE_KEY_ALIAS=${{ secrets.RELEASE_KEY_ALIAS }}" >> local.properties
+          echo "RELEASE_KEY_PASSWORD=${{ secrets.RELEASE_KEY_PASSWORD }}" >> local.properties
+
+      - name: Debug Local Properties
+        run: |
+          cat local.properties
+          ls -la ./keystore
+
       - name: Run ktlintCheck
         run: ./gradlew ktlintCheck --no-daemon
