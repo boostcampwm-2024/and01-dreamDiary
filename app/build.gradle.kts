@@ -24,6 +24,24 @@ android {
                 file("${System.getProperty("user.home")}/.android/debug.keystore")
             }
         }
+
+        create("release") {
+            val keystoreProperties = Properties().apply {
+                val file = rootProject.file("local.properties")
+                if (file.exists()) {
+                    load(file.inputStream())
+                }
+            }
+            val keyStorePath = keystoreProperties.getProperty("RELEASE_KEYSTORE_PATH")
+            val storePasswordValue = keystoreProperties.getProperty("RELEASE_KEYSTORE_PASSWORD")
+            val keyAliasValue = keystoreProperties.getProperty("RELEASE_KEY_ALIAS")
+            val keyPasswordValue = keystoreProperties.getProperty("RELEASE_KEY_PASSWORD")
+
+            storeFile = file(keyStorePath)
+            storePassword = storePasswordValue
+            keyAlias = keyAliasValue
+            keyPassword = keyPasswordValue
+        }
     }
     namespace = "com.boostcamp.dreamteam.dreamdiary"
 
@@ -37,6 +55,7 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro",
             )
+            signingConfig = signingConfigs.getByName("release")
         }
     }
     buildFeatures {
