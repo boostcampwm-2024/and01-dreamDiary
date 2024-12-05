@@ -16,3 +16,5 @@ local.properties
 .idea/
 .kotlin/
 *.keystore
+*.jks
+/app/release
