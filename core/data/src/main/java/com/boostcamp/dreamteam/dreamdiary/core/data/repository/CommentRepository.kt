@@ -56,6 +56,8 @@ class CommentRepository @Inject constructor(
         postId: String,
         commentId: String,
     ) {
+        val postRef = firebaseFirestore.collection("community").document(postId)
+        postRef.update("commentCount", FieldValue.increment(-1)).await()
         firebaseFirestore.collection("community")
             .document(postId).collection("comments").document(commentId).delete().await()
     }

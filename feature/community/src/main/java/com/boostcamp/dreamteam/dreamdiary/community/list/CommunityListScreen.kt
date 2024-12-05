@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
-import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -236,14 +235,6 @@ private fun CommunityListScreenContent(
     val topAppBarScrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
     val bottomAppBarScrollBehavior = BottomAppBarDefaults.exitAlwaysScrollBehavior()
 
-    val listState = rememberLazyListState()
-    var previousRefreshState by remember { mutableStateOf(posts.loadState.refresh) }
-    LaunchedEffect(posts.loadState.refresh) {
-        if (previousRefreshState is LoadState.Loading && posts.loadState.refresh is LoadState.NotLoading) {
-            listState.animateScrollToItem(0)
-        }
-        previousRefreshState = posts.loadState.refresh
-    }
     Scaffold(
         modifier = modifier
             .fillMaxSize()
@@ -272,7 +263,6 @@ private fun CommunityListScreenContent(
     ) { innerPadding ->
         PostList(
             posts = posts,
-            listState = listState,
             onPostClick = onPostClick,
             onPostLikeClick = onPostLikeClick,
             modifier = Modifier
@@ -286,17 +276,31 @@ private fun CommunityListScreenContent(
 @OptIn(ExperimentalMaterial3Api::class)
 private fun PostList(
     posts: LazyPagingItems<PostUi>,
-    listState: LazyListState,
     onPostClick: (PostUi) -> Unit,
     onPostLikeClick: (PostUi) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val isRefreshing by remember { derivedStateOf { posts.loadState.refresh is LoadState.Loading } }
     val isInitialLoading by remember { derivedStateOf { isRefreshing && posts.itemCount <= 1 } }
+    val listState = rememberLazyListState()
+
+    var wasRefreshing by remember { mutableStateOf(false) }
+    var shouldScrollToTop by remember { mutableStateOf(false) }
+
+    LaunchedEffect(posts.loadState.refresh) {
+        if (wasRefreshing && !isRefreshing && shouldScrollToTop) {
+            listState.animateScrollToItem(0)
+            shouldScrollToTop = false
+        }
+        wasRefreshing = isRefreshing
+    }
 
     PullToRefreshBox(
         isRefreshing = !isInitialLoading && isRefreshing,
-        onRefresh = posts::refresh,
+        onRefresh = {
+            shouldScrollToTop = true
+            posts.refresh()
+        },
         modifier = modifier,
     ) {
         LazyColumn(
