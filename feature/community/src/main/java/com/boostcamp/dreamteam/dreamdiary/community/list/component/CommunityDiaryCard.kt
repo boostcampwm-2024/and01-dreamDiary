@@ -16,6 +16,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.Comment
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -62,6 +63,7 @@ internal fun CommunityDiaryCard(
             }
         },
         modifier = modifier
+            .clip(CardDefaults.shape)
             .conditional(
                 condition = onPostClick != null,
                 ifTrue = { clickable { onPostClick?.invoke(post) } },

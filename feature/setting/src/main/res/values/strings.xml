@@ -12,7 +12,7 @@
     <string name="setting_picture">꿈 사진으로 보기</string>
     <string name="setting_darkmode">테마 설정</string>
     <string name="setting_information">정보</string>
-    <string name="setting_lock_setting">잠금설정</string>
+    <string name="setting_lock_setting">잠금 설정</string>
     <string name="setting_check_account">로그인된 SNS 계정 확인</string>
     <string name="setting_logout">로그아웃</string>
     <string name="setting_withdraw">탈퇴</string>
@@ -37,4 +37,5 @@
     <string name="setting_theme_light">라이트</string>
     <string name="setting_theme_dark">다크</string>
     <string name="setting_theme_title">테마 설정</string>
+    <string name="setting_signout_dialog">정말 로그아웃 하시겠습니까?</string>
 </resources>

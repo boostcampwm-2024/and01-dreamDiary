@@ -133,6 +133,7 @@ private fun SettingScreenBody(
 ) {
     val rememberScrollState = rememberScrollState()
     var showSNSDialog by remember { mutableStateOf(false) }
+    var signOutDialog by remember { mutableStateOf(false) }
     if (showSNSDialog) {
         AlertDialog(
             onDismissRequest = { showSNSDialog = false },
@@ -143,11 +144,26 @@ private fun SettingScreenBody(
             },
         )
     }
+    if (signOutDialog) {
+        AlertDialog(
+            onDismissRequest = { signOutDialog = false },
+            text = { Text(stringResource(R.string.setting_signout_dialog)) },
+            confirmButton = {
+                TextButton(onClick = {
+                    onSignOut()
+                    signOutDialog = false
+                }) { Text("확인") }
+            },
+            dismissButton = {
+                TextButton(onClick = { signOutDialog = false }) { Text("취소") }
+            },
+        )
+    }
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .padding(8.dp)
-            .verticalScroll(rememberScrollState),
+            .verticalScroll(rememberScrollState)
+            .padding(8.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         SettingCategory(text = stringResource(R.string.setting_alarm_setting))
@@ -213,7 +229,9 @@ private fun SettingScreenBody(
             SettingOption(
                 icon = Icons.AutoMirrored.Outlined.Logout,
                 text = stringResource(R.string.setting_logout),
-                onClick = onSignOut,
+                onClick = {
+                    signOutDialog = true
+                },
             )
         }
 

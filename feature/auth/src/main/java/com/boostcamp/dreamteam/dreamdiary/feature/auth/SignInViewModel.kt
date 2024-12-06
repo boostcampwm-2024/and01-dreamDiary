@@ -33,6 +33,7 @@ class SignInViewModel @Inject constructor(
             try {
                 authRepository.signInWithGoogle(idToken)
                 _signInState.value = SignInState.Success
+                authRepository.updateFCMToken()
                 _event.trySend(SignInEvent.GoogleSignInSuccess)
             } catch (e: Exception) {
                 Timber.e(e)

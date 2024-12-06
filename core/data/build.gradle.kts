@@ -28,6 +28,7 @@ android {
 
 dependencies {
     implementation(projects.core.model)
+    implementation(libs.firebase.messaging.ktx)
     // Hilt
     ksp(libs.hilt.compiler)
     implementation(libs.hilt.android)

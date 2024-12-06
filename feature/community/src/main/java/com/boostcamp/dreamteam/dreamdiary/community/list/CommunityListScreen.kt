@@ -8,9 +8,12 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListScope
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.BottomAppBarDefaults
@@ -27,6 +30,11 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -37,6 +45,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
@@ -44,6 +53,7 @@ import com.boostcamp.dreamteam.dreamdiary.community.R
 import com.boostcamp.dreamteam.dreamdiary.community.list.component.CommunityDiaryCard
 import com.boostcamp.dreamteam.dreamdiary.community.model.PostUi
 import com.boostcamp.dreamteam.dreamdiary.community.model.pagedPostPreview
+import com.boostcamp.dreamteam.dreamdiary.designsystem.component.ShimmerCard
 import com.boostcamp.dreamteam.dreamdiary.designsystem.theme.DreamdiaryTheme
 import com.boostcamp.dreamteam.dreamdiary.ui.HomeBottomNavItem
 import com.boostcamp.dreamteam.dreamdiary.ui.HomeBottomNavigation
@@ -61,7 +71,7 @@ fun CommunityListScreen(
     viewModel: CommunityListViewModel = hiltViewModel(),
 ) {
     val posts = viewModel.posts.collectAsLazyPagingItems()
-
+    val deletedPostId = viewModel.deletedPostId.collectAsStateWithLifecycle()
     val context = LocalContext.current
     LaunchedEffect(Unit) {
         viewModel.event.collect { event ->
@@ -71,6 +81,13 @@ fun CommunityListScreen(
                     Toast.makeText(context, "좋아요 실패", Toast.LENGTH_SHORT).show()
                 }
             }
+        }
+    }
+
+    LaunchedEffect(deletedPostId.value) {
+        if (deletedPostId.value != null) {
+            posts.refresh()
+            viewModel.setDeletedPostId(null)
         }
     }
 
@@ -244,34 +261,83 @@ private fun CommunityListScreenContent(
             }
         },
     ) { innerPadding ->
-        PullToRefreshBox(
-            isRefreshing = posts.loadState.refresh is LoadState.Loading,
-            onRefresh = { posts.refresh() },
+        PostList(
+            posts = posts,
+            onPostClick = onPostClick,
+            onPostLikeClick = onPostLikeClick,
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding),
+        )
+    }
+}
+
+@Composable
+@OptIn(ExperimentalMaterial3Api::class)
+private fun PostList(
+    posts: LazyPagingItems<PostUi>,
+    onPostClick: (PostUi) -> Unit,
+    onPostLikeClick: (PostUi) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    val isRefreshing by remember { derivedStateOf { posts.loadState.refresh is LoadState.Loading } }
+    val isInitialLoading by remember { derivedStateOf { isRefreshing && posts.itemCount <= 1 } }
+    val listState = rememberLazyListState()
+
+    var wasRefreshing by remember { mutableStateOf(false) }
+    var shouldScrollToTop by remember { mutableStateOf(false) }
+
+    LaunchedEffect(posts.loadState.refresh) {
+        if (wasRefreshing && !isRefreshing && shouldScrollToTop) {
+            listState.animateScrollToItem(0)
+            shouldScrollToTop = false
+        }
+        wasRefreshing = isRefreshing
+    }
+
+    PullToRefreshBox(
+        isRefreshing = !isInitialLoading && isRefreshing,
+        onRefresh = {
+            shouldScrollToTop = true
+            posts.refresh()
+        },
+        modifier = modifier,
+    ) {
+        LazyColumn(
+            state = listState,
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+            contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
+            userScrollEnabled = !isInitialLoading,
         ) {
-            LazyColumn(
-                modifier = Modifier.fillMaxSize(),
-                verticalArrangement = Arrangement.spacedBy(16.dp),
-                contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
-            ) {
-                items(
-                    count = posts.itemCount,
-                    key = { posts.peek(it)?.id ?: PagingIndexKey(it) },
-                ) { diaryIndex ->
-                    val diary = posts[diaryIndex]
-                    if (diary != null) {
-                        CommunityDiaryCard(
-                            post = diary,
-                            onPostClick = onPostClick,
-                            onClickLike = { onPostLikeClick(diary) },
-                            modifier = Modifier.animateItem(),
-                        )
-                    }
+            if (isInitialLoading) {
+                loadingPostsWithShimmer(modifier = Modifier.fillMaxWidth())
+            }
+            items(
+                count = posts.itemCount,
+                key = { posts.peek(it)?.id ?: PagingIndexKey(it) },
+            ) { diaryIndex ->
+                val diary = posts[diaryIndex]
+                if (diary != null) {
+                    CommunityDiaryCard(
+                        post = diary,
+                        onPostClick = onPostClick,
+                        onClickLike = { onPostLikeClick(diary) },
+                        modifier = Modifier.animateItem(),
+                    )
                 }
             }
         }
+    }
+}
+
+fun LazyListScope.loadingPostsWithShimmer(modifier: Modifier = Modifier) {
+    items(count = 4) {
+        ShimmerCard(
+            modifier = modifier,
+            showAuthor = true,
+            showImage = true,
+        )
     }
 }
 

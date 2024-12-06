@@ -73,19 +73,19 @@ internal fun SettingNotificationScreen(
                 onClick = { viewModel.goToLaunchNotificationSetting(activity) },
             )
             SettingCategory(text = stringResource(R.string.setting_notification_wakeup))
-            if (!onTracking) {
-                SettingOption(
-                    icon = Icons.Default.Bedtime,
-                    text = stringResource(R.string.setting_notification_diary_on),
-                    onClick = { viewModel.startTracking(context) },
-                )
-            } else {
-                SettingOption(
-                    icon = Icons.Default.BedtimeOff,
-                    text = stringResource(R.string.setting_notification_diary_off),
-                    onClick = { viewModel.stopTracking(context) },
-                )
-            }
+            SettingOption(
+                icon = if (onTracking) Icons.Default.BedtimeOff else Icons.Default.Bedtime,
+                text = if (onTracking) {
+                    stringResource(
+                        R.string.setting_notification_diary_off,
+                    )
+                } else {
+                    stringResource(R.string.setting_notification_diary_on)
+                },
+                onClick = { if (onTracking) viewModel.stopTracking(context) else viewModel.startTracking(context) },
+                switchOption = true,
+                checked = onTracking,
+            )
             SettingCategory(text = stringResource(R.string.setting_comment_alarm))
             SettingOption(
                 icon = Icons.AutoMirrored.Outlined.Comment,

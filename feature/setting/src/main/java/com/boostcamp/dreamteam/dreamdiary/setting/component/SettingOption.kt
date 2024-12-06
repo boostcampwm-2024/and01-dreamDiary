@@ -16,9 +16,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.boostcamp.dreamteam.dreamdiary.designsystem.theme.DreamdiaryTheme
+import com.boostcamp.dreamteam.dreamdiary.ui.util.notImplementedFeature
 
 @Composable
 internal fun SettingOption(
@@ -26,13 +28,20 @@ internal fun SettingOption(
     text: String,
     helpText: String? = null,
     switchOption: Boolean = false,
-    onClick: () -> Unit = {},
+    checked: Boolean = false,
+    onClick: (() -> Unit)? = null,
     modifier: Modifier = Modifier,
 ) {
+    val context = LocalContext.current
+
+    val safeOnClick = onClick ?: {
+        notImplementedFeature(context)
+    }
+
     Row(
         modifier = modifier
-            .padding(8.dp)
-            .clickable(onClick = onClick),
+            .clickable(onClick = safeOnClick)
+            .padding(8.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Icon(
@@ -59,8 +68,8 @@ internal fun SettingOption(
         }
         if (switchOption) {
             Switch(
-                checked = false,
-                onCheckedChange = { /* TODO */ },
+                checked = checked,
+                onCheckedChange = { safeOnClick() },
             )
         }
     }

@@ -1,5 +1,6 @@
 package com.boostcamp.dreamteam.dreamdiary.feature.diary.home
 
+import android.content.Context
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloatAsState
@@ -8,6 +9,8 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Create
 import androidx.compose.material.icons.outlined.Search
@@ -59,7 +62,6 @@ import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.tablist.DiaryListTa
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.home.tablist.pagedDiariesPreview
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.DiaryUi
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.LabelUi
-import com.boostcamp.dreamteam.dreamdiary.feature.widget.util.updateWidget
 import com.boostcamp.dreamteam.dreamdiary.ui.HomeBottomNavItem
 import com.boostcamp.dreamteam.dreamdiary.ui.HomeBottomNavigation
 import com.boostcamp.dreamteam.dreamdiary.ui.component.GoToSignInDialog
@@ -76,6 +78,7 @@ fun DiaryHomeScreen(
     onNavigateToSetting: () -> Unit,
     onDialogConfirmClick: () -> Unit,
     onClickSearch: () -> Unit,
+    updateDiaryWidget: (Context) -> Unit,
     viewModel: DiaryHomeViewModel = hiltViewModel(),
     onNavigateToWriteScreen: () -> Unit,
 ) {
@@ -102,11 +105,11 @@ fun DiaryHomeScreen(
         }
     }.collectAsStateWithLifecycle(SyncStateUi.IDLE)
 
-    LaunchedEffect(Unit) {
+    LaunchedEffect(updateDiaryWidget) {
         viewModel.event.collect {
             when (it) {
                 is DiaryHomeEvent.Delete.Success -> {
-                    updateWidget(context)
+                    updateDiaryWidget(context)
                 }
             }
         }
@@ -170,7 +173,16 @@ private fun DiaryHomeScreenContent(
     modifier: Modifier = Modifier,
     onSearchClick: () -> Unit,
 ) {
+    val tabs = listOf(stringResource(R.string.home_tab_dream), stringResource(R.string.home_tab_calendar))
+
     val (currentTabIndex, setCurrentTabIndex) = rememberSaveable { mutableIntStateOf(0) }
+    val pagerState = rememberPagerState { tabs.size }
+    LaunchedEffect(currentTabIndex) {
+        pagerState.animateScrollToPage(currentTabIndex)
+    }
+    LaunchedEffect(pagerState.currentPage) {
+        setCurrentTabIndex(pagerState.currentPage)
+    }
 
     val navigationItems = listOf(
         HomeBottomNavItem.MyDream.toNavigationItem(
@@ -198,6 +210,7 @@ private fun DiaryHomeScreenContent(
                 onSyncClick = onSyncClick,
                 onSearchClick = onSearchClick,
                 scrollBehavior = topAppBarScrollBehavior,
+                tabs = tabs,
                 currentTabIndex = currentTabIndex,
                 onClickTab = setCurrentTabIndex,
                 syncState = syncState,
@@ -220,13 +233,14 @@ private fun DiaryHomeScreenContent(
             }
         },
     ) { innerPadding ->
-        Column(
+        HorizontalPager(
+            state = pagerState,
             modifier = Modifier
-                .padding(innerPadding)
-                .fillMaxSize(),
-        ) {
+                .fillMaxSize()
+                .padding(innerPadding),
+        ) { index ->
             val tabModifier = Modifier.fillMaxSize()
-            when (currentTabIndex) {
+            when (index) {
                 0 -> DiaryListTab(
                     diaries = diaries,
                     labels = labels,
@@ -259,12 +273,11 @@ private fun DiaryHomeScreenTopAppBar(
     onSyncClick: () -> Unit,
     onSearchClick: () -> Unit,
     scrollBehavior: TopAppBarScrollBehavior,
+    tabs: List<String>,
     currentTabIndex: Int,
     onClickTab: (Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val tabs = listOf(stringResource(R.string.home_tab_dream), stringResource(R.string.home_tab_calendar))
-
     Column(modifier = modifier) {
         CenterAlignedTopAppBar(
             colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
@@ -332,10 +345,9 @@ private fun DiarySyncIconButton(
         onClick = onSyncClick,
     ) {
         Icon(
-            modifier = Modifier
-                .graphicsLayer {
-                    rotationZ = 360f - currentRotation
-                },
+            modifier = Modifier.graphicsLayer {
+                rotationZ = 360f - currentRotation
+            },
             imageVector = Icons.Outlined.Sync,
             contentDescription = stringResource(R.string.home_alarm_description),
         )

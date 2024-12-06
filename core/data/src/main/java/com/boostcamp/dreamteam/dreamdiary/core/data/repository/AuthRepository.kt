@@ -8,27 +8,37 @@ import androidx.credentials.CredentialManager
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.OAuthProvider
+import com.google.firebase.firestore.FieldValue
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.messaging.FirebaseMessaging
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.tasks.await
+import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class AuthRepository @Inject constructor(
     @ApplicationContext private val context: Context,
+    private val auth: FirebaseAuth,
+    private val firebaseFirestore: FirebaseFirestore,
+    private val firebaseMessaging: FirebaseMessaging,
 ) {
-    private val auth: FirebaseAuth = FirebaseAuth.getInstance()
-
+    private val userCollection = firebaseFirestore.collection("users")
     private val provider = OAuthProvider.newBuilder("github.com")
 
     private val _emailFlow = MutableSharedFlow<String?>(replay = 1)
     val emailFlow: SharedFlow<String?> = _emailFlow
 
+    private val _uIdFlow = MutableSharedFlow<String?>(replay = 1)
+    val uIdFlow: SharedFlow<String?> = _uIdFlow
+
     init {
         auth.addAuthStateListener { firebaseAuth ->
             _emailFlow.tryEmit(firebaseAuth.currentUser?.email)
+            _uIdFlow.tryEmit(firebaseAuth.currentUser?.uid)
         }
     }
 
@@ -78,5 +88,30 @@ class AuthRepository @Inject constructor(
 
     fun getUserPhotoUrl(): Uri? {
         return auth.currentUser?.photoUrl
+    }
+
+    suspend fun updateFCMToken(): String? {
+        val uid = getUserUID() ?: return null
+
+        val fcmToken = firebaseMessaging.token
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    Timber.d(task.result)
+                } else {
+                    Timber.e(task.exception, "Failed to get FCM token ${task.exception}")
+                }
+            }.await()
+        try {
+            val userDoc = userCollection.document(uid)
+            val snapshot = userDoc.get().await()
+            if (!snapshot.exists()) {
+                userDoc.set(mapOf("createdAt" to FieldValue.serverTimestamp())).await()
+            }
+            userDoc.update("fcmToken", fcmToken).await()
+            return uid
+        } catch (e: Exception) {
+            Timber.e(e, "Failed to update FCM token for UID: $uid")
+            throw e
+        }
     }
 }

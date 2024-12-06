@@ -1,5 +1,6 @@
 package com.boostcamp.dreamteam.dreamdiary.feature.diary.write
 
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.widget.Toast
@@ -49,7 +50,6 @@ import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.filteredLabelsPrev
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.model.selectedLabelsPreview
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.write.model.DiaryWriteEvent
 import com.boostcamp.dreamteam.dreamdiary.feature.diary.write.model.LabelAddFailureReason
-import com.boostcamp.dreamteam.dreamdiary.feature.widget.util.updateWidget
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -63,23 +63,22 @@ import java.util.UUID
 fun DiaryWriteScreen(
     onBackClick: () -> Unit,
     onWriteSuccess: (diaryId: String) -> Unit,
+    updateDiaryWidget: (Context) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: DiaryWriteViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     val context = LocalContext.current
-    LaunchedEffect(onBackClick, onWriteSuccess) {
+    LaunchedEffect(onBackClick, onWriteSuccess, updateDiaryWidget) {
         viewModel.event.collectLatest { writeEvent ->
             when (writeEvent) {
                 is DiaryWriteEvent.DiaryAddSuccess -> {
-                    updateWidget(context)
-                    Toast.makeText(context, "일기 작성 성공", Toast.LENGTH_SHORT).show()
+                    updateDiaryWidget(context)
                     onWriteSuccess(writeEvent.diaryId)
                 }
 
                 is DiaryWriteEvent.DiaryUpdateSuccess -> {
-                    Toast.makeText(context, "일기 수정 성공", Toast.LENGTH_SHORT).show()
                     onWriteSuccess(writeEvent.diaryId)
                 }
 
@@ -109,13 +108,23 @@ fun DiaryWriteScreen(
                                 }
 
                                 LabelAddFailureReason.UNKNOWN_ERROR -> {
-                                    Toast.makeText(context, context.getString(R.string.write_unknown_error), Toast.LENGTH_SHORT).show()
+                                    Toast
+                                        .makeText(
+                                            context,
+                                            context.getString(R.string.write_unknown_error),
+                                            Toast.LENGTH_SHORT,
+                                        ).show()
                                 }
                             }
                         }
 
                         is DiaryWriteEvent.Label.DeleteFailure -> {
-                            Toast.makeText(context, "아직 삭제 기능 없지롱~", Toast.LENGTH_SHORT).show()
+                            Toast
+                                .makeText(
+                                    context,
+                                    context.getString(R.string.diary_write_label_edit_error_unknown),
+                                    Toast.LENGTH_SHORT,
+                                ).show()
                         }
                     }
                 }
@@ -181,7 +190,13 @@ private fun DiaryWriteScreenContent(
         contract = ActivityResultContracts.PickVisualMedia(),
         onResult = { uri ->
             uri?.let {
-                context.contentResolver.takePersistableUriPermission(uri, Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                try {
+                    context.contentResolver.takePersistableUriPermission(
+                        uri,
+                        Intent.FLAG_GRANT_READ_URI_PERMISSION,
+                    )
+                } catch (ignored: SecurityException) {
+                }
                 coroutineScope.launch(Dispatchers.IO) {
                     val fileName = UUID.randomUUID().toString()
                     val inputStream = context.contentResolver.openInputStream(uri)
@@ -211,7 +226,13 @@ private fun DiaryWriteScreenContent(
         topBar = {
             DiaryWriteTopBar(
                 onBackClick = onBackClick,
-                onClickSave = onClickSave,
+                onClickSave = {
+                    if (title.isNotEmpty() && diaryContents != listOf(DiaryContentUi.Text(""))) {
+                        onClickSave()
+                    } else {
+                        Toast.makeText(context, context.getString(R.string.write_not_empty), Toast.LENGTH_SHORT).show()
+                    }
+                },
             )
         },
         bottomBar = {

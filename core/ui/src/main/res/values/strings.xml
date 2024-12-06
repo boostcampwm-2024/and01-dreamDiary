@@ -10,4 +10,5 @@
     <string name="dialog_signin_text">이 기능을 사용하려면 로그인이 필요해요.\n로그인 할까요?</string>
     <string name="dialog_signin_confirm">확인</string>
     <string name="dialog_signin_cancel">취소</string>
+    <string name="not_implemented_feature">미구현 기능입니다. 다음 업데이트를 기대해주세요! :)</string>
 </resources>

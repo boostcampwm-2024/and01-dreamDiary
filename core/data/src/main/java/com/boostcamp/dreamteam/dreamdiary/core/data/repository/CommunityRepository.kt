@@ -97,7 +97,9 @@ class CommunityRepository @Inject constructor(
             profileImageUrl = profileImageUrl,
             likeCount = 0,
             commentCount = 0,
+            deleted = false,
         )
+        Timber.d("request: $request")
 
         firebaseFirestore.runBatch { batch ->
             batch.set(postReference, request)
@@ -145,7 +147,17 @@ class CommunityRepository @Inject constructor(
         }
     }
 
-    private suspend fun checkPostLike(
+    suspend fun deleteCommunityPost(postId: String) {
+        try {
+            val postReference = communityCollection.document(postId)
+            postReference.update("deleted", true).await()
+        } catch (e: Exception) {
+            Timber.e(e, "Error deleting community post with ID $postId")
+            throw e
+        }
+    }
+
+    suspend fun checkPostLike(
         postId: String,
         userId: String,
     ): Boolean {
@@ -296,6 +308,7 @@ class CommunityRepository @Inject constructor(
                 likeCount = communityPostResponse.likeCount,
                 commentCount = communityPostResponse.commentCount,
                 postContents = contents,
+                uid = communityPostResponse.uid,
                 createdAt = communityPostResponse.createdAt.seconds,
                 isLiked = userLikeSnapshot.exists(),
             )
