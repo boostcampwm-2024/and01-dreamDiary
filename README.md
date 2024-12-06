@@ -57,6 +57,13 @@
 <img src="https://github.com/user-attachments/assets/1b0fa9f0-0eb4-49d1-9d18-d168e668f72a" height="400px">
 
 
+**🔍 꿈 검색**
+
+- 제목 검색: 제목을 검색해서 작성한 꿈을 쉽게 찾을 수 있습니다.
+
+<img src="https://github.com/user-attachments/assets/f3c610d4-a82b-4bf1-8632-8aeff0826687" height="400px">
+
+
 **🤝 꿈 공유 및 해몽하기**
 
 - 공유 기능: 작성한 꿈 일기를 선택적으로 다른 사용자와 공유할 수 있습니다.
