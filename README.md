@@ -61,7 +61,7 @@
 
 - 제목 검색: 제목을 검색해서 작성한 꿈을 쉽게 찾을 수 있습니다.
 
-<img src="https://github.com/user-attachments/assets/f3c610d4-a82b-4bf1-8632-8aeff0826687" height="400px">
+<img src="https://github.com/user-attachments/assets/19016ae2-fe13-4054-9045-d7fd5e96328b" height="400px">
 
 
 **🤝 꿈 공유 및 해몽하기**
